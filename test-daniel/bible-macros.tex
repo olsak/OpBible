@@ -1,0 +1,435 @@
+%% Bible-TeX macros, see bibletex-doc.pdf
+
+   \_doc
+   Basic settings:
+   \_cod
+
+\load[vlna]
+\load[mte]
+
+\isfile{f-biblon.opm}\iftrue 
+   \fontfam[biblon]
+\else 
+   \fontfam[lmfonts]
+\fi
+
+\chyph
+\enablemte
+
+\typosize[11/13]
+\hyperlinks\Blue\Blue
+
+\raggedbottom
+\parindent=20pt
+
+   \_doc
+   Fonts:
+   \_cod
+
+\fontdef\bookfont{\setfontsize{at19.pt}\bf}
+\fontdef\chapfont{\setfontsize{at13.pt}\bf}
+\fontdef\markfont{\setfontsize{at7pt}\rm}
+
+   \_doc
+   <full-vref> is full reference to verse in the format
+               <book-mark>/<chapter-num>:<verse-num>\nl
+   `\alist:<full-vref>` expands to the list of replace action numbers applied 
+   for given verse. The actions are referenced by its number. Each new action has newly
+   allocated action-number.\nl
+   `\action:<number>` expands to the replace action, we suppose that the
+   corresponding verse in saved to `\tmpb`\nl
+   `\newaction{<full-vref>}{<action-body>}` allocates new action.
+   \_cod
+
+\newcount\actionnum
+\def\newaction#1#2{\incr\actionnum
+   \unless\ifcsname alist:#1\endcsname \sxdef{alist:#1}{}\fi
+   \sxdef{alist:#1}{\cs{alist:#1}\the\actionnum,}%
+   \global\sdef{action:\the\actionnum}{#2}%
+}
+
+   \_doc
+   `\replpre{<prefix>}{<text>}{<fail>}` replaces first occurence of <text>
+   by `<prefix>{<text>}` in `\tmpb` macro. If the <text> is empty then
+   `<prefix>{}` is inserted at the beginning of the `\tmpb`.\nl
+   If <text> does not exists then <fail> is processed. The <fail>
+   macro can use `\text` where <text> is saved.
+   \_cod
+
+\def\replpre#1#2#3{%
+   \ifx^#2^\def\tmp{#1{}}\ea\ea\ea\def\ea\ea\ea\tmpb\ea\ea\ea{\ea\tmp\tmpb}%
+   \else
+      \def\replpredo##1#2##2\end{%
+         \ifx^##2^\def\text{#2}#3% <fail>
+         \else \replsave ##1#1{#2}##2\end \fi
+      }%
+      \def\replsave##1#2\end{\def\tmpb{##1}}%
+      \ea\replpredo\tmpb#2\end
+   \fi
+}
+
+   \_doc
+   `\_wdef {<text>} <word-list> ;` binds <book-mark>/<text> to <word-list>. 
+   If <text> (used in `\Note`) is bound to <word-list> then <text> is not
+   searched directly in the given verse but words from <word-list> are used
+   instead. First one is used.\nl
+   The <word-list> is one or more pairs `{<word>}{<repl-word>}`. The
+   `<word>` is used for searching in given verse but <repl-word> is actually
+   printed in the note. You can use `{<word>}{}` which means that
+   `<repl-word>` is the same as `<word>`.\nl
+   Example:
+   \begtt
+   \CommentedBook{Da}
+   \wdef {text} {wordA}{wordB} {wordC}{} ;
+   \Note 1:13 {text} Note text.
+   \endtt
+   If given verse Da 1:13 includes wordA then it is replaced by `<prefix>{<wordA>}`
+   and `{<wordB>}` is actualy printed in the note. Else: if the verse
+   includes wordC then it is replaced by `<prefix>{WordC}` and wordC is
+   actualy printed. Else: the warning is printed.\nl
+   The `\wdef` creates binding described above which depends on current
+   `\CommentedBook`, so you can use the same <text> in different books
+   without any influence. If you apply `\wdef` to the same <text> in the
+   same book secondly or more, then warning is printed and `\wdef` is
+   ignored.
+   \_cod
+
+\def\wdef #1#2;{%
+   \ifcsname wordlist:\the\CommentedBook/#1\endcsname
+      \printwarn{\noexpand\wdef{#1} used secondly in book
+                 "\the\CommentedBook", ignored}%
+   \else
+      \global\sdef{wordlist:\the\CommentedBook/#1}{#2}%
+   \fi
+}
+
+   \_doc
+   The <gen-vref> is generalized reference to the verse. It can be
+   `<chapter-num>:<verse>` (the <book-mark> is appended from
+   `\CommentedBook` token list) or `<chapter-num>:<verse-from>-<verse-to>`
+   (only <verse-from> is used for generating <gen-vref>.\nl
+   `\gentovref{<gen-vref>}` expands to <full-vref>. 
+   \_cod
+
+\newtoks\CommentedBook
+\def\gentovref#1{\the\CommentedBook/\gentovrefA#1-\end}
+\def\gentovrefA#1-#2\end{#1}
+
+   \_doc
+   The <word> given as a paremeter of the `\Note` macro (see bellow) is used as a word
+   phrase which should be be searched in the given verse. This parameter <word>
+   is transformed first by expansion of `\transformword{<word>}` to the <tword> variant and the
+   <tword> is actually used for searching. The `\transformword{<word>}`
+   expands to the variant of the <word> declared by `\wdef`. If not declared then
+   it expands to the variant of the <word> declared by `\vdef`. If not declared then it
+   expands to the <word> itself, i.e <tword> is equal to <word> in this case.
+   \_cod
+
+\def\transformword#1{%
+   \ifcsname wdef:\the\CommentedBook/#1\endcsname \lastnamedcs
+   \else \ifcsname vdef:#1\endcsname \lastnamedcs
+   \else #1\fi\fi
+}
+
+   \_doc
+   `\Note <gen-vref> <space> {<word>} <text> <empty-line>`
+   transforms <word> to the <tword> (see above),
+   saves <text> and activates replace-action of <tword> to
+   `\doNote{<note-num>}{<tword>}` in given verse. 
+   \nl
+   `\Note` does following:
+   \begitems
+   * Allocates new <note-num>,
+   * Transforms <gen-vref> to <full-vref> using `\gentovref`.
+   * Transforms <word> to <tword> (to be searched and printed) by `\transformword`.
+   * Reads <pword> (word to be printed in the note) if alternative syntax
+     with `={<pword>}` is used. Else <pword> is equal to <tword>. 
+   * Defines `\notetext:<note-num>` as <text>.
+   * Defines `\noteref:<note-num>` as <full-vref>.
+   * Defines `\notepre:<note-num>` as <gen-vref>.
+   * Defines `\pword:<note-num>` as <pword>,
+   * Does
+   `\newaction{<full-vref>}{\replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}}`.
+   \enditems
+   The `\Note` macro has an alternative syntax 
+   `\Note <gen-vref> <space> {<word>}={<pword>} <text> <empty-line>`.
+   If <pword> is given then is is printed in the note instead <tword>.
+   More preciselly: transformed <word> is used for searching
+   (and it is kept in the verse unchanged) but <pword> is
+   printed in the note.
+   \_cod
+
+\newcount\notenum
+\outer\def\Note #1 #2{%
+   \incr\notenum
+   \sxdef{notepre:\the\notenum}{#1}%
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\tword{\transformword{#2}}%
+   \isnextchar={\NoteA}{\NoteA={}}%
+}
+\def\NoteA=#1 #2\par{%
+   \global\sdef{notetext:\the\notenum}{#2}%
+   \sxdef{noteref:\the\notenum}{\fullvref}%
+   \ifx^#1^\sxdef{pword:\the\notenum}{\tword}\else \global\sdef{pword:\the\notenum}{#1}\fi
+   \edef\tmp{%
+      \noexpand\newaction{\fullvref}%
+         {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
+   \tmp
+}
+\def\notefail#1{%
+   \printwarn{\csstring\\Note: \currverse: The text "\unexpanded\ea{\text}" not found}%
+   \replpre{\doNote{#1}}{}{}% \Note is registered with the beginning of the verse
+}
+\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
+
+   \_doc
+   When bible-text (from sword) is processed then book mark is saved to
+   `\currbook` and each input line is separated to the
+   <chapter-num>:<verse-num> and <verse-text>.
+   The `\processverse <full-vref><space><verse-text>\end` is repeatedly processed.
+   \_cod
+
+\eoldef\processline#1{\processverse \currbook/#1\end}
+
+   \_doc
+   `\processverse <full-vref><space><verse-text>\end` does
+   \begitems
+   * defines `\currverse` as <full-vref>,
+   * prepares `\currversenum`, `\currchapnum` from <full-vref>,
+   * defines `\tmpb` as <verse-text>,
+   * processes all actions from `\alist:<full-vref>`,
+   * if `\currchapnum` changed, prints new chapter by `\printchap` 
+   * prints verse from `\tmpb` using `\printverse`
+   \enditems
+   \_cod
+
+\newcount\chapnum
+\def\processverse #1 #2\end{%
+   \edef\currverse{#1}%
+   \preparechapverse #1
+   \def\tmpb{#2}\def\tmpc{}%
+   \ifcsname alist:#1\endcsname \ea\ea\ea\processactions \csname alist:#1\endcsname 0,\fi
+   \ifnum\currchapnum=\chapnum \else \chapnum=\currchapnum\relax \printchap \fi
+   \printverse
+}
+\def\processactions #1,{\ifnum #1=0
+   \else \cs{action:#1}%
+   \ea \processactions \fi
+}
+\def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}\def\currversenum{#3}}
+
+   \_doc
+   `\printverse` prints verse from `\currversenum` and (possibly changed) `\tmpb`.
+   It prints the single raised verse number first.\nl
+   `\printchap` prints beginning od new chapter.
+   `\printbeforefirst` is a macro which is executed just before first verse
+   of the chapter, after all material from `\fmtpre` is executed. I.e after
+   printing a chatper name (if declered by `\fmtpre`). 
+   \_cod
+
+\def\printverse{%
+   \tmpc % material accumulated by \fmtpre
+   \ifnum\currversenum=1 \printbeforefirst \fi
+   \quitvmode \trymakedest{v:\currverse}%
+   \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversenum\fi}%
+   \tmpb \space
+}
+\def\printchap{\bigskip}
+%   \par\removelastskip
+%   \medskip
+%   {\chapfont\Red \the\chapnum}\par\nobreak\medskip
+%}
+\def\printbeforefirst{%
+   \par\nobreak
+   \vbox to0pt{\null\vskip-1ex
+      \hbox to\parindent{\hss \chapfont\Red \the\chapnum\ \hss}\vss}\nobreak \vskip-2ex
+   \noindent \hangindent=\parindent \hangafter=-2 \relax}
+
+   \_doc
+   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\tmpc`, i.e.\ at the
+   beginning of the verse.\nl
+   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\tmpb`, i.e.\ at the end
+   of the verse.\nl
+   `\fmtins {<gen-wref>}{<text>}{<what>}` inserts <what> after <text> in the
+   verse. If <text> is not found th <what> is inserted like `\fmtpre` does it\nl
+   All these commands allocate new action using `\newaction`. 
+   \_cod
+
+\let\FormatedBook=\CommentedBook
+\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\tmpc{#2}}}
+\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\tmpb{#2}}}
+\def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
+\def\fmtafter#1#2{#2#1}
+\def\fmtfail#1{\fmtwarn\addto\tmpc{#1}}
+\def\fmtwarn{\printwarn{\string\fmtins: \currverse: The text "\unexpanded\ea{\text}" not found}}
+
+   \_doc
+   `\begcenter` starts the centering mode. It opens a group and does
+   setting. User must use paired `\endcenter` in order to close this group.
+   The `\centeringmode` status is checked by `\encenter` because curious error
+   (about `#` character) should be occurr without this checking.
+   \_cod
+
+\newdimen\centermargin \centermargin=4em
+\def\begcenter{\par \medskip
+   \bgroup
+   \def\centeringmode{y}
+   \parindent=0pt
+   \leftskip=\centermargin plus1fill
+   \rightskip=\leftskip
+}
+\def\endcenter{\par
+   \ifx\centeringmode\undefined
+      \printwarn{\noexpand\endcenter ignored: no \noexpand\begcenter precedes}
+   \else \egroup \medskip \fi}
+
+%% Makra pro tvorbu linků specifikovaných jako <link>
+
+   \_doc
+   `\bref <link-spec>>` creates a ling given by <link-spec> and prints
+   <link-spec>. See user manual for variants of the format of <link-spec>.
+   We will set \code{\<} as active character with meaning `\bref`, so
+   user can type \code{\<}<link-spec>\code{\>} for link specification.\nl
+   Internal full link specification is <link-pre>:<book-mark>/<chapter-num>:<verse-num>.
+   The macro `\bref` reads <link-spec> and creates internal full link
+   specification saved in `\linkpe:\linkfspec` macros. Moreover, it creates
+   macro `\linktext` wich expands to the text to be printed as active link.\nl
+   \_cod
+
+\def\bref {\futurelet\next\brefC}
+
+   \_doc
+   Macro `\brefC` scans `"` as a potential first character and
+   saves <word> (from `"<word>"` specification) to `\linktext`.
+   If there isn't `"` then `\linktext` is set as empty macro. 
+   The next specification will be addet to the `\linktex` later.
+   \_cod
+
+\def\brefB {\futurelet\next\brefC}
+\def\brefC {\ifx\next"\def\nextdo"##1"{\def\linktext{##1}\brefD}%
+            \else \def\linktext{}\def\nextdo{\brefD}%
+            \fi \nextdo
+}
+
+   \_doc
+   If there si a space between `"<word>"` and the next `<link-spec>`, then
+   it is saved as no-breakable space into `\linktext`. 
+   \_cod
+
+\def\brefD {\futurelet\next\brefE}
+\def\brefE {\ea\ifx\space\next \addto\linktext{~}\def\nextdo{\afterassignment\brefF \let\next= }%
+            \else \def\nextdo{\brefF}%
+            \fi \nextdo
+}
+
+   \_doc
+   Next <link-spec> is processed by macros `\brefF` ... `\brefJ`.
+   \_cod
+
+\def\brefF #1>{\brefG #1 >} 
+\def\brefG #1 #2>{\ifx^#2^\edef\linkfspec{\currbook/}\afterfi{\brefH #1:>}%
+                  \else \addto\linktext{#1~}\def\linkfspec{#1/}\afterfi{\brefGH#2:>}%
+                  \fi
+}
+\def\brefGH #1 {\brefH #1}
+\def\brefH #1:#2>{\ifx^#2^\ea\addto\ea\linkfspec\ea{\the\chapnum:}\afterfi{\brefI #1->}%
+                  \else \addto\linktext{#1:}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
+                  \fi
+}
+\def\brefHI #1:{\brefI #1}
+
+\def\brefI #1-#2>{\addto\linktext{#1}\addto\linkfspec{#1}%
+                  \ifx^#2^\afterfi{\futurelet\next\brefK}%
+                  \else \afterfi{\brefJ#2}\fi
+}
+\def\brefJ#1-{\addto\linktext{--#1}\futurelet\next\brefK}
+
+\def\brefK{\def\linkpre{v}% default
+   \ea\striptocomma\linkfspec,\end\linkfspec
+   \ifx n\next \def\linkpre{n}\ea\brefKK\fi
+   \brefL
+}
+\def\brefKK #1\brefL#2{\brefL}
+
+\def\striptocomma #1,#2\end#3{\def#3{#1}}
+
+   \_doc
+   Macro `\brefL` creates the link `\linkpre:\linkfspec` with the text `\linktext`.
+   \_cod
+
+\def\brefL{\ensuredest \createlink}
+
+   \_doc
+   `\createlink` creates link only if it refeneces the place of printed book
+   because we don't want to see many warnings about unreferenced links when
+   we try to print only selected books. It creates link 
+   `\linkpre:\linkfspec` with the text `\linktext`
+   \_cod
+
+\def\createlink{\ea\isprintedbook\linkfspec \iftrue
+   \link[\linkpre:\linkfspec]{\Blue}{\linktext}%
+   \else {\Blue\linktext}\fi
+}
+\def\isprintedbook #1/#2\iftrue{\ifcsname pbook!#1\endcsname}
+
+
+\adef<{\bref}
+
+   \_doc
+   We don't create destinations for all verses, notes etc. but only for
+   those which are referenced.
+   Macro `\ensuredest` creates the item `\Xcreatedest` to .ref file
+   and it is read in the second \TeX/ run.
+   The `\trymakedest` macro is used ad the begining of each verse, note etc.
+   Only referenced destinations are created.
+   \_cod
+
+\def\ensuredest{\openref \immediate\_wref\Xcreatedest{{\linkpre:\linkfspec}}}
+\refdecl{
+   \def\Xcreatedest#1{\sxdef{dest!#1}{}}
+}
+\def\trymakedest#1{\ifcsname dest!#1\endcsname \dest[#1]%
+   \global \ea\let\csname dest!#1\endcsname \undefined \fi}
+
+
+   \_doc
+   The temporary macros are here. I plan to rewrite them.
+   \_cod
+
+%% Nasledujici makra jsou zatim provizorni a nedokumentovana.
+
+\def\chaptit#1{\ifhmode \setbox0=\lastbox \par \nobreak\vskip-\baselineskip \fi
+   \medskip{\chapfont\Red#1}\endgraf\nobreak\medskip}
+
+\def\prevtmpb{}
+\def\doNote#1#2{%
+   \edef\tmpb{\cs{notepre:#1}}\replstring\tmpb{-}{--}%
+   \fnote{%
+      \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
+      \trymakedest{n:\currverse}%
+      {\bf \expandafter \ifx \csname pword:#1\endcsname \empty \else \cs{pword:#1}. \fi}%
+      \cs{notetext:#1}}{\Red#2}%
+}
+\def\_printfnotemark{}
+\def\_textindent#1{\noindent}
+
+\newcount \chapnum
+\def\source#1{}
+\def\BibleBook#1#2{\def\currbook{#2}%
+   \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
+
+\def\x/#1/{#1}
+
+\def\dopsat{{\Red !!! DOPSAT !!! }}
+
+\def\setvariant#1{}
+\def\bibleinput#1 {\bgroup
+   \catcode`##=13 \bgroup\lccode`~=`## \lowercase{\egroup\let~}=\processline 
+   \input #1
+   \egroup
+}
+
+\sxdef{pbook!Da}{} % zaradit do makra zpracovavajici seznam tistenych knih.
+
+\endinput
+\_endcode

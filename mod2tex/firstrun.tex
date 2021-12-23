@@ -1,0 +1,26 @@
+\newwrite\abbreviations
+
+\catcode`\<=\active
+\def<#1>{}%the verses are ignored
+\def\kniha#1{}
+\begingroup
+\catcode`\%=11
+\xdef\percentsign{%}
+\catcode`\|=1
+\catcode`\^=2
+\catcode`\{=11
+\catcode`\}=11
+\xdef\leftbracket|{^
+\xdef\rightbracket|}^
+\endgroup
+
+\immediate\openout\abbreviations=abbreviations.tex
+\immediate\write\abbreviations{\noexpand\def\noexpand\chapterslist\leftbracket\percentsign } 
+\def\zkratka#1{\immediate\write\abbreviations{,#1\percentsign}}
+\input Geneva.tex
+\immediate\write\abbreviations{,\rightbracket}
+
+
+
+
+\bye

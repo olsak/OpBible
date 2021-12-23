@@ -1,0 +1,5 @@
+= OpBible
+
+== Processing commented Bible texts using OpTeX
+
+This project funded by Šimon Konečný is under construction now.

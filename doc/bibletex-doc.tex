@@ -1,0 +1,510 @@
+\cslang
+\fontfam[schola]
+\def\TODO{{\Red TODO}}
+\verbchar`
+\everytt{\typosize[9/]\catcode`<=13 }
+\everyintt{\catcode`<=13 \Magenta}
+\catcode`<=13 \def<#1>{{$\langle$\it#1$\rangle$}}
+
+\tit OP-Bible -- zpracování komentovaných biblí \TeX/em
+
+OP-Bible je sada nástojů (maker a dalšího podpůrného softwaru) na
+zpracování biblických textů. Hlavním cílem je umožnit navázat na z internetu
+stažené úplné texty Bible a propojit je s doplněnými poznámkami podle
+požadovaných kritérií popsaných níže. Výsledkem po zpracování \TeX/em je
+komentovaná Bible, tj. Bible vytištěná společně s poznámkami. PDF soubor je
+navic bohatě prolinkovaný hypertextovými odkazy.
+
+Úplný text Bible je na internetu k dispozici v různých překladech a české
+překlady jsou nejméně čtyři. Je možné si stáhnout třeba jen jeden překlad
+(dále mu říkáme \uv{základní text}) a doplňovat jej poznámkami, které
+zapisujeme do přidružených souborů tak, že není nutná žádná editace či jiný
+zásah do základního textu. Je též možné poznámky psát tak, že jsou víceméně
+univerzální například pro kterýkoli z českých překladů, takže pozměněním jen
+výchozí konfigurace v hlavním souboru zpracování \TeX/ načte jiný základní
+text se stejnými poznámkami, které se navíc automaticky modifikují podle
+vyjadřovacích zvyklostí toho kterého překladu.
+
+Pro zpracování \TeX/em je tedy třeba mít odpovídající verzi základního textu
+(předzpracovanou způsobem, popsaným v sekci~\ref[zakladni]) a dále soubory s
+poznámkami (jejich syntaxe je uvedena v sekcích \ref[note] a \ref[glosy]).
+\TeX/ přečte hlavní soubor se základními pokyny, pak načte data všech
+potřebných souborů a vytvoří PDF knihy -- komentované Bible. V ní je jednak
+(typicky větším písmem) základní text a (typicky menším písmem, například
+pod čarou a třeba ve dvou sloupcích) poznámky k textu. Je respektován
+základní požadavek, že k jednotlivým frázím základního textu jsou poznámky
+umístěny na stejné stránce jako samotné fráze základního textu. O rozmístění
+objektů na stránkách se \TeX/ stará víceméně automaticky podle nastavených
+typografických pravidel, které se dají modifikovat dle potřeby. Požadavky na
+typografickou úpravu nebo další specifické požadavky, které se dají
+algoritmicky popsat, jsou implementovány makry \TeX/u a \TeX/ je během
+zpracování přečte a automaticky provede.
+
+Veškerá data, která \TeX/ zpracovává (konfigurace, základní text, texty
+poznámek, maker) mají textový formát, tj. dají se prohlížet a případně
+upravovat běžným textovým editorem.
+
+
+\sec[zakladni] Formát základního textu
+
+Předpokládá se, že základní text Bible je uložen v souborech s příponou `.txs`
+(text source). Každá z~66~knih Bible je uložena ve svém `.txs` souboru.
+Názvy `.txs` souborů je možné deklarovat pomocí příkazu `\def\txsfile` v
+hlavním souboru (viz~sekci~\ref[hlavni]). Název `.txs` souboru by měl obsahovat
+jednak značku použitého překladu Bible a dále zkratku knihy. Například
+`CzeBKR-Da.txs` obsahuje základní text překladu Bible Kralické, knihy
+Daniel.
+
+Každý řádek `.txs` souboru obsahuje jeden verš Bible uvozený 
+`#<číslo-kapitoly>:<číslo-verše>`. Verše musejí být uvedeny ve správném
+pořadí. Například začátek souboru `CzeBKR-Da.txs` vypadá takto (části textu
+jsou v ukázce vynechány):
+
+\begtt
+#1:1 Léta třetího kralování Joakima krále Judského, ... a oblehl jej.
+#1:2 I vydal Pán v ruku jeho Joakima ... do domu pokladu boha svého.
+...
+\endtt
+
+Základní texty Bible lze získat například z modulů Swordu
+\url{https://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles}.
+Jednotlivé `.txs` soubory je pak možné vygenerovat následujícím postupem.
+
+ZIP stažený z uvedené www stránky (tzv modul) někam rozbalte. Je třeba
+mít dále v počítači instalován balíček `libsword-dev` a dále program
+`mod2tex`, který je součástí OP-Bible. Pomocí `installmgr -l` zjistíte
+seznam stažených modulů. Máte-li nastaven aktuální adresář v místě, kam jste
+rozbalili ZIPy a vznikl tam adresář `modules`, pak jsou takové moduly
+nalezeny. Moduly obsahují texty v binárním formátu, my je potřebujeme
+převíst do textového formátu. K tomu stačí napsat do příkazového řádku: 
+\begtt 
+mod2tex modul > soubor
+\endtt 
+kde `modul` je název modulu. Ve výsledném souboru
+máte kompletní základní text daného překladu (modulu).
+Například po
+\begtt
+mod2tex CzeBKR > CzeBKR.out
+\endtt
+je v souboru `CzeBKR.out` kompletní překlad Bible Kralické.
+Ten nyní můžete rozdělit do `.txs` souborů příkazem
+\begtt
+maketxs CzeBKR.out
+\endtt
+Uvedený příkaz kromě 66 `.txs` soborů vytvoří soubor `CzeBKR-books.tex`, ve
+kterém jsou tituly a zkratky jednotlivých knih, tedy je tam:
+\begtt
+\BookTitle Gen Gen {Genesis}
+\BookTitle Exod Exod {Exodus}
+\BookTitle Lev Lev {Leviticus}
+\BookTitle Num Num {Numbers}
+\BookTitle Deut Deut {Deuteronomy}
+\BookTitle Josh Josh {Joshua}
+\BookTitle Judg Judg {Judges}
+...
+\endtt
+Tyto tituly nejsou v češtině, protože je zdroj Sword neobsahuje. Je tedy
+třeba tento soubor manuálně upravit a vložit místo anglických české názvy.
+Zkratky knih jsou uvedeny dvakrát stejně. První ponechte a druhou zkratku 
+můžete pozměnit podle zvyklostí českého jazyka, viz též sekci~\ref[hlavni].
+
+Jednotlivé `.txs` soubory můžete vložit do
+separátního adreáře projektu, například s názvem `sources/`. 
+Odtud si je \TeX/ bude číst, pokud mu jejich umístění oznámíte v konfiguraci
+v hlavním souboru, viz sekci~\ref[hlavni]. Se soubory nadále nebudete
+potřebovat nijak manipulovat, není potřebné je editovat ani doplňovat. V
+adresáři `sources/` tedy můžete mít \uv{datový sklad} všech základních textů
+Bible pro všechny použité překlady najednou.
+
+
+\sec[note] Formát poznámek s vazbou na fráze v základním textu
+
+Hlavním smyslem nástroje OP-Bible je vytvořit PDF ze základního textu nejen
+se samotným textem Bible, ale s propojenými poznámkami. K tomu slouží
+mimo jiné soubory `notes-*.tex` (například `notes-Ge.tex` pro knihu Genesis), ve
+kterých jsou zapsány poznámky k jednotlivým frázím základního textu dle
+následujícího smluveného formátu. Jednotlivá poznámka má tvar:
+
+\begtt
+\Note <číslo-kapitoly>:<číslo-knihy> {<fráze>} <text-poznámky> 
+<prázdný řádek>
+\endtt
+Například:
+\begtt
+\Note 1:2 {nádobí} Odkaz na nádobí z vypleněného chrámu, nikoliv na deportaci zajatců.
+
+\endtt
+Příklad je ze souboru `notes-Da.tex`, tedy ze souboru s poznámkami ke knize
+Daniel. Konkrétně se poznámka váže na kapitolu první, verš druhý a na frázi
+\uv{nádobí}. Tato fráze musí být bezpodmínečně ve stanoveném verši
+základního textu obsažena. Pak ji \TeX/ propojí s odpovídajícím místem v
+základním textu, tj. zajistí, že výskyt fráze i samotné poznámky je na
+společné stránce. 
+
+Povšimněmě si, že fráze se váže na překlad Bible Kralické, zatímco v
+překladu ekumenickém je použit ve stejném verši termín \uv{nádob}. Jak
+zařídit, aby se stejná poznámka automaticky mírně modifikovala podle
+pužitého překladu, je popsáno v sekci~\ref[ruzne-preklady].
+
+Pokud <fráze> není ve stanoveném verši základního textu doslovně obsažena,
+\TeX/ během zpracování oznámí do logu a a na terminál o tom varování a
+poznámku zařadí k danému verši, jakoby <fráze> byla na začátku verše..
+
+Vytištěná poznámka (v závislosti na typografickém nastavení) obsahuje
+například zopakování čísla kapitoly a verše, pak následuje komentovaná fráze
+(například tučně) a za ní je vlastní text poznámky.
+
+Někdy je třeba v základním textu vyhledat mírně jinou frázi, než jakou pak
+chceme zapsat do vytištěné poznámky (např. v základním textu je slovo v
+jiném pádě nebo je to mírně jinak formulovaná fráze). Pak je možné těsně za
+`{<fráze>}` napsat rovnítko následované `{<fráze-k-tisku>}`, tedy
+
+\begtt
+\Note <číslo-kapitoly>:<číslo-knihy> {<fráze>}={<fráze k tisku>} <text-poznámky> 
+<prázdný řádek>
+\endtt
+V takovém případě se v základním textu hledá <fráze>, ale ve vlastní
+poznámce se vytiskne jako heslo poznámky <fráze-k-tisku>. Například:
+\begtt
+\Note 1:2 {vydal Pán}={Pán vydal} Porážka Izraele Babylónem není vysvětlitelná
+   jen pouhou vojenskou a politickou analýzou oné doby. Bůh vždy jednal svrchovaně 
+   v záležitostech národů. Babylóňany použil jako nástroj potrestání svého vlastního
+   lidu za porušení smluvních závazků.
+
+\endtt
+V tomto příkladě se hledá ve verši druhém základního textu \uv{vydal Pán} 
+ale v poznámce je vytišteno heslo \uv{Pán vydal}.
+
+Povšimněte si, že tato poznámka se rovněž váže na verš druhý kapitoly první
+knihy Daniel (protože je v souboru `notes-Da.tex`). Je tedy možné mít více
+poznámek k různým frázím, které se váží na stejný biblický verš. 
+
+Jednotlivé poznámky ve zdrojovém souboru poznámek jsou odděleny prázdnými
+řádky. To je nutné, jinak by \TeX/ při jejich čtení nepoznal, kde končí text
+poznámky. Také se tím zvyšuje přehlednost zdrojového souboru. Další řádky
+poznámky můžete (ale nemusíte) odsadit. Obecná pravidla pro zápis
+zdrojových textů pro \TeX/ nejsou předmětem tohoto manuálu, najdete je v
+různých učebnicích k~\TeX/u.
+
+Pokud se poznámka váže k celému verši (tj. bez specifikované fráze), pište
+`{}`, tedy prázdnou frázi k vyhledání. Například:
+\begtt
+\Note 1:1-21 {}={Uchování rituální čistoty}  Prorok uvozuje kontext své knihy vyprávěním
+   osobní historie (své i svých přátel) zajetí, vzdělání, věrnosti Bohu a služby 
+   králi Nabuchodonozorovi.
+\endtt
+Tato ukázka navíc demonstruje, že je také možné uvést celý rozsah čísel veršů.
+Je-li <fráze> pro vyhledání prázdná (jako v tomto příkladě), pak se poznámka
+umístí na stejnou stranu, kde je začátek prvního verše z uvedeného rozsahu.
+Je-li <fráze> neprázdná, musí se vyskytovat v prvním verši z uvedeného
+rozsahu veršů. Rozsah veršů bude stejně vytištěn v úvodu poznámky.
+Symbol pro rozsah „`-`“ je jediný znak \uv{mínus} běžně dosažitelný na
+klávesnici. Nesmí to být žádný speciání znak vypadající třeba podobně jako
+vodorovná čárka.
+
+
+
+\sec[glosy] Formát dalších vložených poznámek (glosy, články)
+
+\TODO...
+
+\sec[fmt] Údaje určující formátování základního textu
+
+Základní text stažený z internetu a generovaný programem `mod2tex` neobsahuje
+žádné formátovací ani doplňkové údaje, jakými jsou například názvy kapitol
+nebo místa, kde se má ukončit odstavec či přejít z formátování v bloku do
+formátování na střed řádků a zpět.
+
+Potože do základního textu nechceme nijak zasahovat, je třeba tyto doplňkové
+údaje deklarovat k příslušným veršům pomocí speciálních příkazů `\fmtadd`,
+`\fmtpre` a `\fmtins`. Tyto příkazy jsou typicky v souborech `fmt-*.tex`,
+například `fmt-BKR-Da.tex`. Je vhodné udržovat tyto formátovací soubory
+závislé jednak na knize (Daniel v uvedené příkladu), ale také na použitém
+překladu (Bible Kralická v příkladu). Je sice možné začít s jedním souborem
+pro každou knihu a soubory pro ostatní překlady pořídit jako kopie výchozích,
+ale nakonec bude asi potřebné pro rozličné varianty základního textu
+formátovací pokyny mírně modifikovat v souladu s použitým překladem.
+
+Syntaxe použití uvedených příkazů je následující:
+\begtt
+\FormatedBook{<zkratka-knihy>}
+\fmtpre{<číslo-kapitoly>:<číslo-verše>}{<fmt-pokyn>}
+\fmtadd{<číslo-kapitoly>:<číslo-verše>}{<fmt-pokyn>}
+\fmtins{<číslo-kapitoly>:<číslo-verše>}{<fráze>}{<fmt-pokyn>}
+\endtt
+Na začátku souboru nebo skupiny
+příkazů `\fmt*` je třeba nejprve deklarovat pomocí `\FormatedBook`, které
+biblické knihy se formátování týká, protože v prvním parametru příkazů `\fmt*` je už
+jen uvedeno číslo kapitoly a číslo verše. 
+
+<fmt-pokyn> je \uv{vzkaz}, který je předán \TeX/u k formátování.
+Například `\endgraf` značí konec odstavce. `\begcenter` otvírá pasáž s
+centrovaným textem a ta musí být uzavřena pomocí `\endcenter`. Nebo 
+`\chaptit{<text>}` vloží <text> jako titul kapitoly.
+
+Příkaz `\fmtpre` vkládá <fmt-pokyn>
+na začátek uvedeného verše (ještě před případně vytištěné číslo verše horním
+indexem). Příkaz `\fmtadd` vkládá <fmt-pokyn> na konec uvedeného verše.
+Konečně `\fmtins` vkládá <fmt-pokyn> dovnitř verše za první výskyt stanovené
+<fráze>, která ve verši musí doslovně existovat. Jinak \TeX/ vypíše varování
+a <fmt-pokyn> nezařadí vůbec.
+
+Jak může vypadat použití příkazů `\fmt*` je vidět například v souboru
+`fmt-BKR-Da.tex`.
+
+
+\sec[ruzne-preklady] Různé (ale podobné) verze základního textu
+
+Existuje například více českých překladů Bible, které používají různé zvyklosti pro
+vyjádření některých frází. Máme tedy různé varianty základního textu a
+chceme k nim připojit společný poznámkový aparát, ve kterém se budou
+označené fráze automaticky měnit podle zvoleného překladu. K tomu slouží příkazy
+popsané v této sekci.
+\TODO: zatím neimplementováno, ale implementace není složitá.
+
+V hlavním souboru lze zvolit
+\begtt
+\variants <počet-variant> {<varianta-A>} {<varianta-B>} {<varianta-C>} {<varianta-D>}
+\setvariant {<jméno-zpracovávané-varianty>}
+\endtt
+a všechny variantní fráze (které jsou pro různé případy popsány níže) se přizpůsobí
+variantě zvolené v `\setvarinat`. Seznam variant uvedených ve svorkách 
+v parametrech příkazu `\variants` může být libovolný a musí obsahovat 
+přesně tolik variant, kolik je <počet-variant>.
+
+Variantní fráze v textech poznámek se uvedou pomocí `\x/<fráze-A>/` a
+deklarují se pomocí
+\begtt
+\vdef {<fráze-A>} {<fráze-B>} {<fráze-C>} {<fráze-D>}
+\endtt
+přičemž `\vdef` musejí mít přesně tolik parametrů, kolik jich je stanoveno
+jako <počet-variant> v příkaze `\variants`. 
+Fráze první varianty <fráze-A> jsou ve zdrojovém textu poznámek 
+skutečně použity (v příkazech `\x`), takže tuto variantu překladu 
+označujeme jako \uv{výchozí}.
+
+Uvedeme si příklad se třemi variantami: varianta `BKR` pro Kralický
+překlad (výchozí), dále `CEP` pro ekumenický překlad a `CSP` pro studijní
+překlad. V hlavním souboru máme
+\begtt
+\variants 3 {BKR} {CEP} {CSP}
+\setvariant {CEP}
+\endtt
+Dále například v souboru `vars.tex` jsou deklarace
+\begtt
+%      BKR              CEP            CSP
+\vdef {Baltazar}       {Beltšasar}    {Beltšasar}
+\vdef {Nabuchodonozor} {Nebúkadnesar} {Nebúkadnesar}
+\vdef {sedm let}       {sedm let}     {sedm časů}
+\endtt
+Jestliže v textu použijeme `\x/Baltazar/` pak tento text se vytiskne jako
+\uv{Baltazar} pokud není `\setvariant` nastaveno vůbec nebo má parametr
+`{BKR}`. Pokud ale je `\setvaraiant{CEP}`, pak `\x/Baltazar/` se
+vytiskne jako \uv{Beltšasar}. Například poznámka v knize Daniel uvedená 
+v~sekci~\ref[note] by mohla znít:
+\begtt
+\Note 1:1-21 {}={Uchování rituální čistoty}  Prorok uvozuje kontext své knihy vyprávěním
+   osobní historie (své i svých přátel) zajetí, vzdělání, věrnosti Bohu a služby 
+   králi \x/Nabuchodonozor/ovi.
+\endtt
+a tato poznámka při `\setvariant{CEP}` na svém konci zní
+\uv{\dots a služby králi Nebúkadnesarovi}, zatímco při
+`\setvariant{CEP}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
+
+Vyhledávaná <fráze> uvedená v parametru `\Note`, tedy
+\begtt
+\Note <číslo-kapitoly>:<číslo-verše> {<fráze>} <text-poznámky>
+\endtt
+se před vyhledáním fráze ve stanoveném verši automaticky promění podle aktuální varianty
+předkladu následujícím způsobem:
+\begitems
+* Je-li <fráze> deklarována pomocí `\wdef`, 
+  použije se místo ní odpovídající variantní fráze, 
+* jinak, je-li <fráze> deklarována pomocí `\vdef`, 
+  použije se místo ní odpovídající variantní fráze,
+* jinak, použije se přímo <fráze>.
+\enditems
+Syntaktické pravidlo `\wdef` je následující
+\begtt
+\CommentedBook {<zkratka-knihy>}
+\wdef <číslo-kapitoly>:<číslo-verše> {<fráze>} {<fráze-B>} {<fráze-C>} 
+\endtt
+Počet deklarovaných frází (včetně první <fráze>) musí být roven 
+<počtu-variant> deklarovaných v~příkaze `\variants`.
+Deklarace variantní <fráze> pomocí `\wdef` se použije jen pro
+vyhledávání konkrétního biblického verše, zatímco `\vdef` deklaruje varianty
+frází požitelné v celém textu Bible. 
+
+Variantní fráze deklarované pomocí `\wdef` mají rozšířenou syntaxi: může
+těsně následovat rovnítko a `{<fráze-pro-tisk>}`. Takže například na poznámku
+`\Note` uvedenou sekci~\ref[note] může navazovat deklarace `\wdef` takto:
+\begtt
+\CommentedBook {Da}
+\wdef 1:2 {vydal Pán} {Hospodin mu vydal}={Hospodin vydal} {Hospodin vydal}
+\endtt
+Tento příklad funguje následovně: Při zpracování první varianty základního textu
+(překlad BKR v~našem příkladě) se vyhledává \uv{vydal Pán} a tiskne se \uv{Pán vydal}
+(odlišná fráze pro tisk je přímo v parametru `\Note`). Při
+zpracování druhé varianty základního textu se vyhledá \uv{Hospodin mu vydal}
+a vytiskne se v poznámce \uv{Hospodin vydal} a konečně při zpracování třetí
+varianty se vyhledá \uv{Hospodin vydal} a vytiskne se též 
+\uv{Hospodin vydal}, protože třetí varianta nemá těsně následované rovnítko
+s odlišnou frází pro tisk.  
+
+Může se stát, že v odlišném překladu než implicitním je třeba poznámku
+navázat na jiné číslo verše než je uvedeno v parametru `\Note` a `\wdef`.
+To lze zajistit těsně následovaným znakem `~` a
+<číslem-kapitoly>:<číslem-verše> za variantní frází v parametrech `\wdef`. 
+Například
+\begtt
+\Note 4:16 {srdce zvířecí} \x/Nebukadnesar/ byl postižen mentální ...
+\endtt
+a v souboru variants:
+\begtt
+%           BKR             CEP                  CSP
+\wdef 4:16 {srdce zvířecí} {srdce zvířecí}~4:13 {srdce zvířecí}
+\endtt
+Příklad ukazuje výjimečnou situaci, kdy v překladu BKR (implicitním) máme
+frázi \uv{srdce zvířecí} ve verši 4:16 knihy Daniel 
+zatímco v překladu CEP je tatáž fráze ve verši 4:13 a tam ji má \TeX/ najít,
+pokud zrovna zpracovává ekumenický překlad.
+
+
+\sec[odkazy] Metody vytváření hyperlinkových odkazů
+
+Odkazy na verše se píší
+mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
+aktivní odkaz na konkrétní verš, ale musí mít předepsaný formát, aby
+\TeX/ poznal, na jaký verš má propojit hypertextový odkaz.
+Specifikace odkazu má tyto mořžnosti:
+
+\begitems
+* "<slovo>" <údaj> ... vytiskne se aktivní <slovo> <údaj>
+* <údaj> ... vytiskne se aktivní <údaj>
+\enditems
+%
+`<údaj>` může být zapsán jako
+`<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy, <kapitola>
+je číslo kapitoly a <verš> může obsahovat číslo jediného verše
+nebo úsek veršů ve tvaru `<od>-<do>`. Je-li uveden úsek veršů, pak link
+odkazuje na první verš úseku.
+
+Údaj nemusí obsahovat `<kniha>`, pak link odkazuje na verš aktuální knihy.
+Neobsahuje-li údaj `<kniha>`, pak nemusí obsahovat ani `<kapitola>:`, link
+odkazuje na verš aktuální knihy a kapitoly.
+
+Za uzavíracím znakem \code{>} může těsně následovat písmeno `n`, které určí, že
+link neodkazuje na verš, ale na poznámku k verši.
+
+Příklady:
+
+\begtt \catcode`<=12
+<13> vysiskne se 13 jako odkaz na verš 13 aktuální knihy a kapitoly
+<"verš" 13> vytiskne se "verš~13" jako odkaz na verš 13
+<"konec verše" Gn 2:11> vytiskne se "konec verše~Gn~2:11" a odkazuje na Gn 2:11.
+<"ponznámku" 13>n vytiskne se "poznámku~13" a odkazuje na poznámku k verši 13.
+\endtt
+
+
+\sec[hlavni] Hlavní soubor s údaji o všech dalších souborech
+
+Hlavní soubor je soubor, který se \TeX/u předloží jako první. Například je
+uveden na příkazvém řádku pro spuštění \TeX/u. V něm jsou informace, jaké
+další soubory si má \TeX/ přečíst. Nakonec \TeX/ vytvoří soubor PDF stejného
+názvu, jako je název hlavního souboru.
+
+Hlavní soubor pro použití OP-Bible může vypadat takto:
+
+\begtt
+\load[op-bible]  % macros OP-Bible
+
+\def\tmark     {CzeBKR}            % Variant of translation
+\input {sources/\tmark-books.tex}  % Book titles and marks
+
+\def\txsfile   {sources/\tmark-\bmark.txs}     % Localization of .txs files
+\def\fmtfile   {formats/fmt-\tmark-\bmark.tex} % Localisation of fmts
+\def\notesfile {notes/notes-\bmark.tex}        % Localisation of notes
+
+\def\printedbooks {%
+   Gn Ex Lv Nu Dt Joz Sd Rt 1S 2S 1Kr 2Kr 1CPa 2Pa Ezd Neh
+   Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
+   Na Abk Sf Ag Za Mal 
+   Mt Mk L J Sk Ř 1K 2K Ga Ef Fp Ko 1Te 2Te 1Tm 2Tm 
+   Tt Fm Žd Jk 1Pt 2Pt 1J 2J 3J Ju Zj
+}
+\processbooks % Generates books declared in \printedbooks
+\bye
+\endtt
+
+Pomocí `\load[op-bible]` načte \TeX/ makra OP-Bible.
+
+`\tmark` je označení překladu, které se používá v názvech dále čtených
+souborů. Je nutno je definovat pomocí `\def`. V ukázce je označení pro
+český překlad podle Bible Kralické.
+
+`\input {sources/\tmark-books.tex}` přečte soubor, kde jsou pomocí
+`\BookTitle` deklarovány potřebné vazby mezi `<b-značkou>`, `<a-značkou>` a
+titulem knihy. Formát příkazu `\BookTilte` je následující:
+
+\begtt
+\BookTitle <b-značka> <a-značka> {<titul knihy>}
+\endtt
+Začátek takto čteného souboru může vypadat třeba takto:
+
+\begtt
+\BookTitle Gen  Gn  {První Mojžíšova (Genesis)}
+\BookTitle Exod Ex  {Druhá Mojžíšova (Exodus)}
+\BookTitle Lev  Lv  {Třetí Mojžíšova (Levicitus)}
+\BookTitle Num  Nu  {Čtvrtá Mojžíšova (Numeri)}
+\BookTitle Deut Dt  {Pátá Mojžíšova (Deuteronomium)}
+\BookTitle Josh Joz {Jozue}
+\BookTitle Judg Sd  {Soudců}
+...
+\endtt
+V prvním sloupci za `BookTitle` je `<b-značka>`, která je dále používána v
+názvech souborů jako `\bmark`. Ve druhém sloupci je `<a-značka>`, tedy
+aktuální značka knihy, která je používána v konkrétním překladu a bude
+použita v textu knihy napřiklad při sestavování obsahu či v odkazech. V ukázce
+máme český překlad, tj. `<a-značka>` knihy Soudců je Sd, zatímco `<b-značka>`
+je Judg. Pro názvy souborů se doporučuje ponechat anglické značky, 
+abychom nemuseli mít v názvech souborů např. české znaky, takže číst se bude
+soubor v jehož názvu je Judg, protože taková je zde <b-značka>, zatímco v
+textu Bible bude tato kniha Soudců označena jako Sd.
+
+Soubor s 66 údaji `\BookTitle` je připraven po extrakci základních textů z
+Swordu pomocí `mod2tex` a `maketxs`. Je možné je použít, ovšem `<a-značky>`
+a tituly knih je potřeba manuálně upravit podle zvyklostí daného překladu,
+jak je předvedeno v ukázce výše. 
+
+`\txsfile` deklaruje umístění základních textů Bible, tedy `.txs` souborů,
+viz sekci~\ref[zakladni]. V umístění může být specifikován adresář (v ukázce
+je `sources/`) a názvy souborů mohou obsahovat `\tmark`, což se nahradí
+definovaným označením překladu a dále by měl obsahovat `\bmark`, což se
+nahradí `<b-značkou>` knihy. 
+
+`\notesfile` deklaruje umístění souborů s texty poznámek. Jejich formát je
+popsán v sekci~\ref[note].
+
+`\fmtfile` deklaruje umístění souborů s formátovacími pokyny. Jejich smysl
+je vyložen v sekci~\ref[fmt].
+
+`\printedbooks` obsahuje `<a-značky>` těch knih, které chcete \TeX/em zpracovat.
+Pokud děláte třeba jen testovací tisky, můžete zpracovat jen některé
+biblické knihy a mít tedy alternativní definici, například
+`\def\printedbooks{Da}`.
+
+`\processbooks` spostí cyklus přes všechny biblické knihy podle jejich `<a-značek>`
+uložených v `\printedbooks`. Pro každou takovou knihu nejprve
+načte soubor s poznámkami (umístěný podle `\notesfile`), dále přečte soubor
+s formátovacími údaji (umístěný podle `fmtfile`) a konečně přečte základní
+text umístěný v `\txsfile` a vytvoří sazbu tohoto textu společně s
+poznámkami podle stanovených formátovacích pokynů. 
+
+Před provedením `\processbook` je možné pomocí `\input` načít další makra,
+která nějakým způsobem ovlivní sazbu výsledné Bible. 
+
+\sec Způsob zpracování \TeX/em
+
+...
+
+\bye

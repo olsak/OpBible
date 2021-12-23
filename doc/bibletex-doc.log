@@ -1,0 +1,51 @@
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  23 DEC 2021 07:11
+ restricted system commands enabled.
+**bibletex-doc
+(./bibletex-doc.tex
+This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
+(./bibletex-doc.ref)
+\openout0 = bibletex-doc.ref
+
+Loading hyphenation Czech: (cs) \language=115
+
+(/usr/local/texlive/2021/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-cs.
+tex) (/home/olsak/texmf/tex/optex/base/f-schola.opm
+luaotfload | conf : Root cache directory is "/usr/local/texlive/2021/texmf-var/l
+uatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2021-05-20.lua" from kpse-res
+olved path "/usr/local/texlive/2021/texmf-dist/tex/luatex/luaotfload/fontloader-
+2021-05-20.lua".
+"luaotfload@noligature"=\attribute2
+"luaotfload@syllabe"=\attribute3
+luaotfload | init : Context OpenType loader version 3.116
+"luaotfload_color_attribute"=\attribute4
+luaotfload | conf : Root cache directory is "/usr/local/texlive/2021/texmf-var/l
+uatex-cache/generic/names".
+"luaotfload.letterspace_done"=\attribute5
+luaotfload | db : Font names database loaded from /usr/local/texlive/2021/texmf-
+var/luatex-cache/generic/names/luaotfload-names.luc
+FONT: [Schola] -- \Schola (TeX Gyre Schola fonts based on New Century)
+ mods:{\caps } vars:{\rm \bf \it \bi } math:{Schola}
+Modifier:
+ \caps ...... caps & small caps
+ 
+MATH-FONT: "[texgyreschola-math]" -- unicode math prepared.
+(/home/olsak/texmf/tex/optex/base/unimath-codes.opm
+Uni math codes <2021-09-15>
+
+(/home/olsak/texmf/tex/optex/base/mathclass.opm)
+(/home/olsak/texmf/tex/optex/base/unimath-table.opm))) [1{/usr/local/texlive/202
+1/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6] [7])</usr/l
+ocal/texlive/2021/texmf-dist/fonts/opentype/public/tex-gyre/texgyreschola-italic
+.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/tex-gyre-math/tex
+gyreschola-math.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm
+/lmmono10-regular.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/
+tex-gyre/texgyreschola-regular.otf></usr/local/texlive/2021/texmf-dist/fonts/ope
+ntype/public/tex-gyre/texgyreschola-bold.otf>
+Output written on bibletex-doc.pdf (7 pages, 61343 bytes).
+
+PDF statistics: 61 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 131072)
+ 1 words of extra memory for PDF output out of 10000 (max. 100000000)
+

@@ -1,0 +1,695 @@
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.9.24)  27 NOV 2021 16:49
+ restricted system commands enabled.
+**bibledoc.tex
+(./bibledoc.tex This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
+(/home/olsak/texmf/tex/optex/base/doc.opm
+Macros for documentation printing <2021-05-15>
+
+(/home/olsak/texmf/tex/optex/base/f-lmfonts.opm
+luaotfload | conf : Root cache directory is "/usr/local/texlive/2021/texmf-var/l
+uatex-cache/generic/names".
+luaotfload | init : Loading fontloader "fontloader-2021-05-20.lua" from kpse-res
+olved path "/usr/local/texlive/2021/texmf-dist/tex/luatex/luaotfload/fontloader-
+2021-05-20.lua".
+"luaotfload@noligature"=\attribute2
+"luaotfload@syllabe"=\attribute3
+luaotfload | init : Context OpenType loader version 3.116
+"luaotfload_color_attribute"=\attribute4
+luaotfload | conf : Root cache directory is "/usr/local/texlive/2021/texmf-var/l
+uatex-cache/generic/names".
+"luaotfload.letterspace_done"=\attribute5
+luaotfload | db : Font names database loaded from /usr/local/texlive/2021/texmf-
+var/luatex-cache/generic/names/luaotfload-names.luc
+FONT: [Latin Modern] -- \LMfonts (TeX Gyre fonts based on Coputer Modern)
+ mods:{\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital \dunhill s
+ubmods:\caps \slant \nbold \bolder } vars:{\rm \bf \it \bi \tt } math:{LM}
+Modifiers (selects subfamily):
+ \modreset .. implicit values (serif, bold extended, nocaps)
+ \sans ...... sans serif subfamily
+ \quotset ... quotation subfamily
+ \ttset ..... typewriter subfamily
+ \ttprop .... proportional typewriter-like subfamily
+ \ttlight ... light typewriter subfamily
+ \ttcond .... condensed typewriter subfamily
+ \upital .... upright italic (only \rm )
+ \dunhill ... dunhill roman subfamily (only \rm , \it )
+Sub-modifiers (selects special variants of given subfamily):
+ \caps ...... caps & small caps (available only at limited shapes)
+ \slant ..... slanted (default in some subfamilies)
+ \nbold ..... normal bold (extended bold is default)
+ \bolder .... extended bold
+Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.
+ Use another CM-like family if optical sizes not wanted: \fontfam [NewCM]. 
+MATH-FONT: "[latinmodern-math]" -- unicode math prepared.
+(/home/olsak/texmf/tex/optex/base/unimath-codes.opm
+Uni math codes <2021-09-15>
+
+(/home/olsak/texmf/tex/optex/base/mathclass.opm)
+(/home/olsak/texmf/tex/optex/base/unimath-table.opm)))
+\_maxlines=\count299
+)
+doc.opm: catcodes of < and ` activated, catcode of . is letter.
+ (./bible-macros.tex
+[1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (17.97595pt too wide) in paragraph at lines 151--153
+ []\_tenrm Does []. |
+
+\hbox(7.5+2.5)x455.24408, glue set - 1.0, direction TLT
+.\glue(\leftskip) 20.0
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\hbox(4.45+0.0)x0.0, glue set - 10.0fil, direction TLT
+..\glue 0.0 plus 1.0fil minus 1.0fil
+..\mathon
+..\_mF •
+..\mathoff
+..\kern5.0
+.\_tenrm D
+.\_tenrm o
+.\kern0.28 (font)
+.\_tenrm e
+.\_tenrm s
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\hbox(7.5+2.5)x426.92003, direction TLT
+..\_tentt \
+..\_tentt n
+..\_tentt e
+..\_tentt w
+..\_tentt a
+..\_tentt c
+..\_tentt t
+..\_tentt i
+..\_tentt o
+..\_tentt n
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(7.05+2.05)x35.54002, direction TLT
+...\_tenit f
+...\_tenit u
+...\_tenit l
+...\kern0.77 (font)
+...\_tenit l
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit v
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit e
+...\_tenit f
+...\kern1.65 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\_tentt {
+..\_tentt \
+..\_tentt r
+..\_tentt e
+..\_tentt p
+..\_tentt l
+..\_tentt p
+..\_tentt r
+..\_tentt e
+..\_tentt {
+..\_tentt \
+..\_tentt d
+..\_tentt o
+..\_tentt N
+..\_tentt o
+..\_tentt t
+..\_tentt e
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(6.26+0.11)x41.84, direction TLT
+...\_tenit n
+...\_tenit o
+...\_tenit t
+...\_tenit e
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit n
+...\_tenit u
+...\_tenit m
+...\kern0.44 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\_tentt }
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(6.94+0.11)x24.58002, direction TLT
+...\_tenit t
+...\_tenit w
+...\_tenit o
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit d
+...\kern0.69 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\_tentt {
+..\_tentt \
+..\_tentt n
+..\_tentt o
+..\_tentt t
+..\_tentt e
+..\_tentt f
+..\_tentt a
+..\_tentt i
+..\_tentt l
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(6.26+0.11)x41.84, direction TLT
+...\_tenit n
+...\_tenit o
+...\_tenit t
+...\_tenit e
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit n
+...\_tenit u
+...\_tenit m
+...\kern0.44 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\_tentt }
+..\_tentt }
+.\_tenrm .
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+.\rule(*+*)x5.0
+
+
+Overfull \hbox (27.79602pt too wide) in paragraph at lines 154--160
+\_tenrm The [] macro has an al-ter-na-tive syn-tax [].|
+
+\hbox(7.5+2.5)x455.24408, glue set - 1.0, direction TLT
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\_tenrm T
+.\_tenrm h
+.\_tenrm e
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\hbox(6.94+0.83)x26.25, direction TLT
+..\_tentt \
+..\_tentt N
+..\_tentt o
+..\_tentt t
+..\_tentt e
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm m
+.\_tenrm a
+.\_tenrm c
+.\_tenrm r
+.\_tenrm o
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm h
+.\_tenrm a
+.\_tenrm s
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm a
+.\_tenrm n
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm a
+.\_tenrm l
+.\discretionary (penalty 50)
+..< \_tenrm -
+.\_tenrm t
+.\_tenrm e
+.\_tenrm r
+.\discretionary (penalty 50)
+..< \_tenrm -
+.\_tenrm n
+.\_tenrm a
+.\discretionary (penalty 50)
+..< \_tenrm -
+.\_tenrm t
+.\_tenrm i
+.\_tenrm v
+.\kern-0.28 (font)
+.\_tenrm e
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm s
+.\_tenrm y
+.\_tenrm n
+.\discretionary (penalty 50)
+..< \_tenrm -
+..= \kern-0.28 (font)
+.\_tenrm t
+.\_tenrm a
+.\_tenrm x
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\hbox(7.5+2.5)x294.1301, direction TLT
+..\_tentt \
+..\_tentt N
+..\_tentt o
+..\_tentt t
+..\_tentt e
+..\glue(\spaceskip) 5.25
+..\mathon
+..\_mF ⟨
+..\hbox(7.05+2.05)x36.03003, direction TLT
+...\_tenit g
+...\_tenit e
+...\_tenit n
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit v
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit e
+...\_tenit f
+...\kern1.65 (italic)
+..\_mF ⟩
+..\mathoff
+..\glue(\spaceskip) 5.25
+..\mathon
+..\_mF ⟨
+..\hbox(4.42+1.94)x22.77002, direction TLT
+...\_tenit s
+...\_tenit p
+...\kern-0.51 (font)
+...\_tenit a
+...\_tenit c
+...\kern-0.51 (font)
+...\_tenit e
+...\kern0.28 (italic)
+..\_mF ⟩
+..\mathoff
+..\glue(\spaceskip) 5.25
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(6.94+0.11)x21.26001, direction TLT
+...\_tenit w
+...\_tenit o
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit d
+...\kern0.69 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\_tentt =
+..\_tentt {
+..\mathon
+..\_mF ⟨
+..\hbox(6.94+1.94)x26.37001, direction TLT
+...\_tenit p
+...\_tenit w
+...\_tenit o
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit d
+...\kern0.69 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt }
+..\glue(\spaceskip) 5.25
+..\mathon
+..\_mF ⟨
+..\hbox(6.26+0.11)x16.49002, direction TLT
+...\_tenit t
+...\_tenit e
+...\_tenit x
+...\_tenit t
+...\kern0.61 (italic)
+..\_mF ⟩
+..\mathoff
+..\glue(\spaceskip) 5.25
+..\mathon
+..\_mF ⟨
+..\hbox(6.94+2.05)x45.78001, direction TLT
+...\_tenit e
+...\_tenit m
+...\_tenit p
+...\_tenit t
+...\_tenit y
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit l
+...\_tenit i
+...\_tenit n
+...\_tenit e
+...\kern0.28 (italic)
+..\_mF ⟩
+..\mathoff
+.\_tenrm .
+.\glue(\rightskip) 0.0
+.\rule(*+*)x5.0
+
+[2]
+Overfull \hbox (6.54803pt too wide) in paragraph at lines 185--185
+[][][]         \_tentt {\no-ex-pand\re-pl-pre{\no-ex-pand\doNote{\the\notenum}}
+{\tword}{\no-ex-pand\note-fail{\the\notenum}}}}% |
+
+\hbox(8.0+5.0)x455.24408, direction TLT
+.\localpar
+..\localinterlinepenalty=0
+..\localbrokenpenalty=0
+..\localleftbox=null
+..\localrightbox=null
+.\hbox(8.0+5.0)x0.0, glue set - 455.24408fil, direction TLT
+..\rule(8.0+5.0)x455.24408
+..\glue 0.0 plus 1.0fil minus 1.0fil
+.\hbox(0.0+0.0)x20.0, direction TLT
+.\hbox(3.78558+0.1176)x0.0, glue set - 13.9607fil, direction TLT
+..\glue 0.0 plus 1.0fil minus 1.0fil
+..\_tenrm 1
+..\_tenrm 7
+..\_tenrm 6
+..\kern5.03993
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\glue(\spaceskip) 4.248
+.\_tentt {
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt e
+.\_tentt x
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt p
+.\_tentt a
+.\_tentt n
+.\_tentt d
+.\_tentt \
+.\_tentt r
+.\_tentt e
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt p
+.\_tentt l
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt p
+.\_tentt r
+.\_tentt e
+.\_tentt {
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt e
+.\_tentt x
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt p
+.\_tentt a
+.\_tentt n
+.\_tentt d
+.\_tentt \
+.\_tentt d
+.\_tentt o
+.\_tentt N
+.\_tentt o
+.\_tentt t
+.\_tentt e
+.\_tentt {
+.\_tentt \
+.\_tentt t
+.\_tentt h
+.\_tentt e
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\_tentt t
+.\_tentt e
+.\_tentt n
+.\_tentt u
+.\_tentt m
+.\_tentt }
+.\_tentt }
+.\_tentt {
+.\_tentt \
+.\_tentt t
+.\_tentt w
+.\_tentt o
+.\_tentt r
+.\_tentt d
+.\_tentt }
+.\_tentt {
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt e
+.\_tentt x
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt p
+.\_tentt a
+.\_tentt n
+.\_tentt d
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\_tentt t
+.\_tentt e
+.\discretionary (penalty 50)
+..< \_tentt -
+.\_tentt f
+.\_tentt a
+.\_tentt i
+.\_tentt l
+.\_tentt {
+.\_tentt \
+.\_tentt t
+.\_tentt h
+.\_tentt e
+.\_tentt \
+.\_tentt n
+.\_tentt o
+.\_tentt t
+.\_tentt e
+.\_tentt n
+.\_tentt u
+.\_tentt m
+.\_tentt }
+.\_tentt }
+.\_tentt }
+.\_tentt }
+.\_tentt %
+.\penalty 10000
+.\glue(\parfillskip) 0.0 plus 1.0fil
+.\glue(\rightskip) 0.0
+.\rule(*+*)x5.0
+
+
+Overfull \hbox (49.98605pt too wide) in paragraph at lines 186--190
+\_tenrm sep-a-rated to the $\_mF ⟨[]⟩$\_tenrm :$\_mF ⟨[]⟩$ \_tenrm and 
+$\_mF ⟨[]⟩$\_tenrm . The []|
+
+\hbox(7.5+2.5)x455.24408, glue set - 1.0, direction TLT
+.\_tenrm s
+.\_tenrm e
+.\_tenrm p
+.\discretionary (penalty 50)
+..< \_tenrm -
+.\_tenrm a
+.\discretionary (penalty 50)
+..< \_tenrm -
+.\_tenrm r
+.\_tenrm a
+.\_tenrm t
+.\_tenrm e
+.\_tenrm d
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm t
+.\_tenrm o
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm t
+.\_tenrm h
+.\_tenrm e
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\mathon
+.\_mF ⟨
+.\hbox(6.94+1.94)x55.26001, direction TLT
+..\_tenit c
+..\_tenit h
+..\_tenit a
+..\_tenit p
+..\_tenit t
+..\_tenit e
+..\_tenit r
+..\discretionary (penalty 50)
+...< \_tenit -
+...= \_tenit -
+..\_tenit n
+..\_tenit u
+..\_tenit m
+..\kern0.44 (italic)
+.\_mF ⟩
+.\mathoff
+.\_tenrm :
+.\mathon
+.\_mF ⟨
+.\hbox(4.42+0.11)x45.3, direction TLT
+..\_tenit v
+..\_tenit e
+..\_tenit r
+..\_tenit s
+..\_tenit e
+..\discretionary (penalty 50)
+...< \_tenit -
+...= \_tenit -
+..\_tenit n
+..\_tenit u
+..\_tenit m
+..\kern0.44 (italic)
+.\_mF ⟩
+.\mathoff
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\_tenrm a
+.\_tenrm n
+.\_tenrm d
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\mathon
+.\_mF ⟨
+.\hbox(6.26+0.11)x42.18004, direction TLT
+..\_tenit v
+..\_tenit e
+..\_tenit r
+..\_tenit s
+..\_tenit e
+..\discretionary (penalty 50)
+...< \_tenit -
+...= \_tenit -
+..\_tenit t
+..\_tenit e
+..\_tenit x
+..\_tenit t
+..\kern0.61 (italic)
+.\_mF ⟩
+.\mathoff
+.\_tenrm .
+.\glue(\spaceskip) 4.44 plus 4.99498 minus 0.37
+.\_tenrm T
+.\_tenrm h
+.\_tenrm e
+.\glue(\spaceskip) 3.33 plus 1.665 minus 1.11
+.\hbox(7.5+2.5)x218.33008, direction TLT
+..\_tentt \
+..\_tentt p
+..\_tentt r
+..\_tentt o
+..\discretionary (penalty 50)
+...< \_tentt -
+..\_tentt c
+..\_tentt e
+..\_tentt s
+..\_tentt s
+..\discretionary (penalty 50)
+...< \_tentt -
+..\_tentt v
+..\_tentt e
+..\_tentt r
+..\_tentt s
+..\_tentt e
+..\glue(\spaceskip) 5.25
+..\mathon
+..\_mF ⟨
+..\hbox(7.05+2.05)x35.54002, direction TLT
+...\_tenit f
+...\_tenit u
+...\_tenit l
+...\kern0.77 (font)
+...\_tenit l
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit v
+...\_tenit r
+...\kern-0.51 (font)
+...\_tenit e
+...\_tenit f
+...\kern1.65 (italic)
+..\_mF ⟩
+..\mathoff
+..\mathon
+..\_mF ⟨
+..\hbox(4.42+1.94)x22.77002, direction TLT
+...\_tenit s
+...\_tenit p
+...\kern-0.51 (font)
+...\_tenit a
+...\_tenit c
+...\kern-0.51 (font)
+...\_tenit e
+...\kern0.28 (italic)
+..\_mF ⟩
+..\mathoff
+..\mathon
+..\_mF ⟨
+..\hbox(6.26+0.11)x42.18004, direction TLT
+...\_tenit v
+...\_tenit e
+...\_tenit r
+...\_tenit s
+...\_tenit e
+...\discretionary (penalty 50)
+....< \_tenit -
+....= \_tenit -
+...\_tenit t
+...\_tenit e
+...\_tenit x
+...\_tenit t
+...\kern0.61 (italic)
+..\_mF ⟩
+..\mathoff
+..\_tentt \
+..\_tentt e
+..\_tentt n
+..\_tentt d
+.\glue(\rightskip) 0.0
+.\rule(*+*)x5.0
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 274--282
+
+
+\hbox(0.0+0.0)x455.24408, direction TLT
+.\glue(\rightskip) 0.0
+
+[4]) [5])</usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm/lmmono10-r
+egular.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm/lmroman1
+0-italic.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm-math/l
+atinmodern-math.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm
+/lmroman8-regular.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public/
+lm/lmmono8-regular.otf></usr/local/texlive/2021/texmf-dist/fonts/opentype/public
+/lm/lmroman10-regular.otf>
+Output written on bibledoc.pdf (5 pages, 51426 bytes).
+
+PDF statistics: 69 PDF objects out of 1000 (max. 8388607)
+ 43 compressed objects within 1 object stream
+ 5 named destinations out of 1000 (max. 131072)
+ 1 words of extra memory for PDF output out of 10000 (max. 100000000)
+
