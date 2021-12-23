@@ -6,4 +6,4 @@ ukaze seznam pristupnych modulu
 ./mod2tex modul > modul.out
 vznikne TeX soubor
 ./maketxs modul.out
-vznikne 64 txs souboru a jeden books soubor.
+vznikne 66 txs souboru a jeden books soubor.
