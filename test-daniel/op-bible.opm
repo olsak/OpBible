@@ -411,7 +411,7 @@
    or something more special here.
    \_cod
 
-\outer\def\BookException #1 #2{\sxdef{bex!#1}{#2}}
+\outer\def\BookException #1 #2{\global\sdef{bex!#1}{#2}}
 
    \_doc
    The `\processbooks` macro does two loops over all `\printedbooks`.
