@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  23 DEC 2021 07:42
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  28 DEC 2021 16:03
  restricted system commands enabled.
 **main-Dan
 (./main-Dan.tex This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
@@ -45,7 +45,8 @@ tex)
 \notenum=\count300
 \chapnum=\count301
 \centermargin=\dimen293
-\chapnum=\count302
+\numvariants=\count302
+\chapnum=\count303
 ) (./CzeBKR-books.tex)
 ** Daniel **
 (./fmt-CzeBKR-Dan.tex) (./notes-Dan.tex) (./CzeBKR-Dan.txs [1{/usr/local/texlive

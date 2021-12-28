@@ -457,6 +457,48 @@
 }
 
    \_doc
+   `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`
+   sets `\numvariants=<number-of-variants>` and does
+   `\def\var!1{<tmark-A>}` `\def\var!2{<tmark-B>}` etc.
+   \_cod
+
+\newcount\numvariants
+\outer\def\variants{\tmpnum=0 \afterassignment\variantsA \numvariants}
+\def\variantsA{%
+   \ifnum\tmpnum<\numvariants
+      \advance\tmpnum by1
+      \afterfi{\variantsB{\the\tmpnum}}%
+   \fi
+}
+\def\variantsB#1#2{\sxdef{var!#1}{#2}\variantsA}
+
+   \_doc
+   `\vdef {phrase-A} {phrase-B} {phrase-C} ...` does
+   `\def\w!tmark-B!phrase-A{phrase-B}`
+   `\def\w!tmark-C!phrase-A{phrase-C}` etc.
+   \_cod
+
+\outer\def\vdef#1{\def\tmp{#1}\tmpnum=1 \vdefA}
+\def\vdefA{%
+   \ifnum\tmpnum<\numvariants
+      \advance\tmpnum by1
+      \afterfi{\vdefB{\the\tmpnum}}%
+   \fi
+}
+\def\vdefB#1#2{\sxdef{w!\cs{var!#1}!\tmp}{#2}\vdefA}
+
+   \_doc
+   `\x/<phrase>/` expands to `\w!<tmark>!<phrase>` if such control sequence
+   is defined else it expands simply to `<phrase>`.
+   The `<tmark>` is actual value of the `\tmark` macro.\nl
+   Note that if `\tmark` expands to `<t-markA>` (used in the `\``variants`
+   macro), then the `\w!<tmark>!<phrase>` is not defined and the `\x` macro
+   expands to the <phrase> directly.
+   \_cod
+
+\def\x/#1/{\trycs{w!\tmark!#1}{#1}}
+
+   \_doc
    The temporary macros are here. I plan to rewrite them.
    \_cod
 
@@ -481,8 +523,6 @@
 \def\source#1{}
 \def\BibleBook#1#2{\def\currbook{#2}%
    \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
-
-\def\x/#1/{#1}
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
 

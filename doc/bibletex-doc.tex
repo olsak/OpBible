@@ -265,10 +265,10 @@ popsané v této sekci.
 V hlavním souboru lze zvolit
 \begtt
 \variants <počet-variant> {<varianta-A>} {<varianta-B>} {<varianta-C>} {<varianta-D>}
-\setvariant {<jméno-zpracovávané-varianty>}
+\def\tmark {<jméno-zpracovávané-varianty>}
 \endtt
 a všechny variantní fráze (které jsou pro různé případy popsány níže) se přizpůsobí
-variantě zvolené v `\setvarinat`. Seznam variant uvedených ve svorkách 
+variantě zvolené podle `\tmark`. Seznam variant uvedených ve svorkách
 v parametrech příkazu `\variants` může být libovolný a musí obsahovat 
 přesně tolik variant, kolik je <počet-variant>.
 
@@ -287,8 +287,8 @@ Uvedeme si příklad se třemi variantami: varianta `BKR` pro Kralický
 překlad (výchozí), dále `CEP` pro ekumenický překlad a `CSP` pro studijní
 překlad. V hlavním souboru máme
 \begtt
-\variants 3 {BKR} {CEP} {CSP}
-\setvariant {CEP}
+\variants 3 {CzeBKR} {CzeCEP} {CzeCSP}
+\def\tmark  {CzeCEP}
 \endtt
 Dále například v souboru `vars.tex` jsou deklarace
 \begtt
