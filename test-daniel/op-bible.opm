@@ -148,11 +148,13 @@
    * Defines `\noteref!<note-num>` as <full-vref>.
    * Defines `\notepre!<note-num>` as <gen-vref>.
    * Defines `\pword!<note-num>` as <pword>,
-   * Does
+   * Does\nl
    `\newaction{<full-vref>}{\replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}}`.
    \enditems
    The `\Note` macro has an alternative syntax 
-   `\Note <gen-vref> <space> {<word>}={<pword>} <text> <empty-line>`.
+   \begtt \catcode`<=13
+   \Note <gen-vref> <space> {<word>}={<pword>} <text> <empty-line>
+   \endtt
    If <pword> is given then is is printed in the note instead <tword>.
    More preciselly: transformed <word> is used for searching
    (and it is kept in the verse unchanged) but <pword> is
@@ -173,7 +175,7 @@
    \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
    \edef\tmp{%
       \noexpand\newaction{\fullvref}%
-         {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
+       {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
    \tmp
 }
 \def\notefail#1{%
@@ -185,7 +187,7 @@
    \_doc
    When bible-text (from sword) is processed then book mark is saved to
    `\currbook` and each input line is separated to the
-   <chapter-num>:<verse-num> and <verse-text>.
+   <chapter-num>:<verse-num> and <verse-text>.\nl
    The `\processverse <full-vref><space><verse-text>\end` is repeatedly processed.
    \_cod
 
@@ -293,7 +295,7 @@
    Internal full link specification is <link-pre>:<book-mark>/<chapter-num>:<verse-num>.
    The macro `\bref` reads <link-spec> and creates internal full link
    specification saved in `\linkpe:\linkfspec` macros. Moreover, it creates
-   macro `\linktext` wich expands to the text to be printed as active link.\nl
+   macro `\linktext` wich expands to the text to be printed as active link.
    \_cod
 
 \def\bref {\futurelet\next\brefC}
@@ -372,9 +374,6 @@
 }
 \def\isprintedbook #1/#2\iftrue{\ifcsname pbook!#1\endcsname}
 
-
-\adef<{\bref}
-
    \_doc
    We don't create destinations for all verses, notes etc. but only for
    those which are referenced.
@@ -416,14 +415,14 @@
    \_doc
    The `\processbooks` macro does two loops over all `\printedbooks`.
    The `\printedbooks` list can or cannot be finalized by a space.
-   The first loop body sets \pbook!<a-mark> used for hyperlinks.
+   The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
    The second loop body does:
    \begitems
    * Defines `\bmark` as <b-mark> (a mark of the book used in file names)
    * Defines `\amark` as <a-mark> (an actual mark of the book used in text)
    * Defines `\btit` as the book title.
-   * Calls \bex!<a-mark> in order to set something extra.
-   * Calls \BibleBook{<title>}{<a-mark>}
+   * Calls `\bex!<a-mark>` in order to set something extra.
+   * Calls `\BibleBook{<title>}{<a-mark>}`
    * Prints title of the book to the terminal and to the log.
    * Inputs format definition file.
    * Inputs notes file.
@@ -447,7 +446,7 @@
       \begingroup
          \ea\BibleBook\ea{\btit}{#1}
          \cs{bex!#1}
-         \wterm{** \cs{btit!#1} **}
+         \wterm{** \cs{btit!#1} {#1} **}
          \input{\fmtfile}
          \input{\notesfile}
          \bibleinput{\txsfile}
@@ -457,9 +456,9 @@
 }
 
    \_doc
-   `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`
-   sets `\numvariants=<number-of-variants>` and does
-   `\def\var!1{<tmark-A>}` `\def\var!2{<tmark-B>}` etc.
+   `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
+   sets `\numvariants=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
+   `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
    \_cod
 
 \newcount\numvariants
@@ -470,10 +469,15 @@
       \afterfi{\variantsB{\the\tmpnum}}%
    \fi
 }
-\def\variantsB#1#2{\sxdef{var!#1}{#2}\variantsA}
+\def\variantsB#1#2{%
+   \ifnum#1=1 \gdef\tmarkA{#2}%
+   \else \sxdef{var!#1}{#2}%
+   \fi
+   \variantsA
+}
 
    \_doc
-   `\vdef {phrase-A} {phrase-B} {phrase-C} ...` does
+   `\vdef {phrase-A} {phrase-B} {phrase-C} ...` does\nl
    `\def\w!tmark-B!phrase-A{phrase-B}`
    `\def\w!tmark-C!phrase-A{phrase-C}` etc.
    \_cod
@@ -489,14 +493,20 @@
 
    \_doc
    `\x/<phrase>/` expands to `\w!<tmark>!<phrase>` if such control sequence
-   is defined else it expands simply to `<phrase>`.
+   is defined else it expands simply to `<phrase>` using `\xA`.
    The `<tmark>` is actual value of the `\tmark` macro.\nl
    Note that if `\tmark` expands to `<t-markA>` (used in the `\``variants`
    macro), then the `\w!<tmark>!<phrase>` is not defined and the `\x` macro
-   expands to the <phrase> directly.
+   expands to the <phrase> directly.\nl
+   `\xA <phrase>/` expands to `<phrase>` and prints warning, if `\tmark`
+   is not the first `<t-markA>`.
    \_cod
 
-\def\x/#1/{\trycs{w!\tmark!#1}{#1}}
+\def\x/#1/{\trycs{w!\tmark!#1}{\xA#1/}}
+\def\xA#1/{#1\ifx\tmarkA\undefined \else \ifx\tmark\tmarkA \else
+   \printwarn{\string\x/#1/ -- this phrase is undefined by \csstring\\vdef}%
+   \fi\fi
+}
 
    \_doc
    The temporary macros are here. I plan to rewrite them.
@@ -532,6 +542,8 @@
    \input #1
    \egroup
 }
+
+\adef<{\bref}
 
 \endinput
 \_endcode
