@@ -260,82 +260,97 @@ vyjádření některých frází. Máme tedy různé varianty základního textu
 chceme k nim připojit společný poznámkový aparát, ve kterém se budou
 označené fráze automaticky měnit podle zvoleného překladu. K tomu slouží příkazy
 popsané v této sekci.
-\TODO: zatím neimplementováno, ale implementace není složitá.
 
-V hlavním souboru lze zvolit
+Nejsou-li varianty deklarovány příkazem `\vdef` (viz níže), pak
+příkaz `\x/<fráze>/` použitý v textu vypíše <fráze>. Je ovšem možné
+deklarovat varianty překladu pomocí 
+
 \begtt
 \variants <počet-variant> {<varianta-A>} {<varianta-B>} {<varianta-C>} {<varianta-D>}
-\def\tmark {<jméno-zpracovávané-varianty>}
 \endtt
-a všechny variantní fráze (které jsou pro různé případy popsány níže) se přizpůsobí
-variantě zvolené podle `\tmark`. Seznam variant uvedených ve svorkách
-v parametrech příkazu `\variants` může být libovolný a musí obsahovat 
-přesně tolik variant, kolik je <počet-variant>.
+(zde `<varianta-D>` nemusí být poslední, počet parametrů je určen hodnotou
+`<počet-variant>`). Tyto parametry jsou značkami pro konrétní překlad, např.
+`CzeBKR` pro překlad podle Bible Kralické nebo `CzeCEP` pro ekumenický překlad.
 
-Variantní fráze v textech poznámek se uvedou pomocí `\x/<fráze-A>/` a
-deklarují se pomocí
+Následně je možné definovat varianty frází pro jednotlivé varianty překladu:
 \begtt
 \vdef {<fráze-A>} {<fráze-B>} {<fráze-C>} {<fráze-D>}
 \endtt
-přičemž `\vdef` musejí mít přesně tolik parametrů, kolik jich je stanoveno
-jako <počet-variant> v příkaze `\variants`. 
-Fráze první varianty <fráze-A> jsou ve zdrojovém textu poznámek 
-skutečně použity (v příkazech `\x`), takže tuto variantu překladu 
-označujeme jako \uv{výchozí}.
+Zde musí být stejný počet parametrů jako je `<počet-variant>` uvedený v
+předchozím příkazu `\variants`.
+Pokud je nyní v hlavním souboru například uvedeno:
+\begtt
+\def\tmark {<varianta-C>}
+\endtt
+pak `\x/<fráze-A>/` se promění na <fráze-C>.
 
-Uvedeme si příklad se třemi variantami: varianta `BKR` pro Kralický
-překlad (výchozí), dále `CEP` pro ekumenický překlad a `CSP` pro studijní
-překlad. V hlavním souboru máme
+Je-li ovšem v hlavním souboru
+definováno `\def\tmark {<varianta-A>}`, pak `\x/<fráze-A>/` vypíše
+`<fráze-A>`, jako kdyby žádné varianty překladu nebyly deklarovány.
+
+Ilustrujme si toto na příkladu. Předpokládejme, že máme soubor `vars.tex`,
+který je čten z hlavního souboru pomocí `\input` a soubor obsahuje:
+
 \begtt
-\variants 3 {CzeBKR} {CzeCEP} {CzeCSP}
-\def\tmark  {CzeCEP}
+\variants 3 {CzeBKR}         {CzeCEP}       {CzeCSP}
+\vdef       {Baltazar}       {Beltšasar}    {Beltšasar}
+\vdef       {Nabuchodonozor} {Nebúkadnesar} {Nebúkadnesar}
+\vdef       {sedm let}       {sedm let}     {sedm časů}
 \endtt
-Dále například v souboru `vars.tex` jsou deklarace
+
+Je-li v hlavním souboru `\def\tmark{CzeBKR}`, pak
 \begtt
-%      BKR              CEP            CSP
-\vdef {Baltazar}       {Beltšasar}    {Beltšasar}
-\vdef {Nabuchodonozor} {Nebúkadnesar} {Nebúkadnesar}
-\vdef {sedm let}       {sedm let}     {sedm časů}
+\x/Baltazar/        vypíše Baltazar
+\x/Nabuchodonozor/  vypíše Nabuchodonozor
+\x/sedm let/        vypíše sedm let
+\x/cokoli/          vypíše cokoli
 \endtt
-Jestliže v textu použijeme `\x/Baltazar/` pak tento text se vytiskne jako
-\uv{Baltazar} pokud není `\setvariant` nastaveno vůbec nebo má parametr
-`{BKR}`. Pokud ale je `\setvaraiant{CEP}`, pak `\x/Baltazar/` se
-vytiskne jako \uv{Beltšasar}. Například poznámka v knize Daniel uvedená 
+
+Je-li ale v hlavním souboru `\def\tmark{CzeCEP}`, pak
+\begtt
+\x/Baltazar/        vypíše Beltšasar
+\x/Nabuchodonozor/  vypíše Nebúkadnesar
+\x/sedm let/        vypíše sedm let
+\x/cokoli/          vypíše cokoli a na terminálu bude varování,
+                                  že fráze /cokoli/ nemá deklarován překlad.
+\endtt
+Například poznámka v knize Daniel uvedená
 v~sekci~\ref[note] by mohla znít:
 \begtt
 \Note 1:1-21 {}={Uchování rituální čistoty}  Prorok uvozuje kontext své knihy vyprávěním
    osobní historie (své i svých přátel) zajetí, vzdělání, věrnosti Bohu a služby 
    králi \x/Nabuchodonozor/ovi.
 \endtt
-a tato poznámka při `\setvariant{CEP}` na svém konci zní
+a tato poznámka při `\def\tmark{CzeCEP}` na svém konci zní
 \uv{\dots a služby králi Nebúkadnesarovi}, zatímco při
-`\setvariant{CEP}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
+`\def\tmark{CzeBKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
 
-Vyhledávaná <fráze> uvedená v parametru `\Note`, tedy
+Kromě `\vdef`, což deklaruje varianty překladu platné pro celou Bibli je
+možné použít `\wdef`, což deklauje varianty překladu jen pro konkrétní verš
+konkrétní knihy a jen pro spárování poznámek `\Note` s výchozím textem.
+Syntaxe je následující:
+\begtt
+\CommentedBook {<zkratka-knihy>}
+\wdef <číslo-kapitoly>:<číslo-verše> {<fráze-A>} {<fráze-B>} {<fráze-C>}
+\endtt
+kde počet parametrů pro fráze se musí shodovat s hodnotou `<počet-variant>` v
+příkazu `\variants`.
+
+Pro každý příkaz `\Note`:
 \begtt
 \Note <číslo-kapitoly>:<číslo-verše> {<fráze>} <text-poznámky>
 \endtt
-se před vyhledáním fráze ve stanoveném verši automaticky promění podle aktuální varianty
-předkladu následujícím způsobem:
+se před vyhledáním `<fráze>` ve stanoveném verši tato `<fráze>`
+automaticky promění podle aktuální varianty `\tmark` předkladu následujícím způsobem:
 \begitems
-* Je-li <fráze> deklarována pomocí `\wdef`, 
-  použije se místo ní odpovídající variantní fráze, 
-* jinak, je-li <fráze> deklarována pomocí `\vdef`, 
-  použije se místo ní odpovídající variantní fráze,
-* jinak, použije se přímo <fráze>.
+* Je-li `<fráze>` deklarována jako `<fráze-A>` pomocí `\wdef` pro konkrétní
+  verš, použije se místo ní odpovídající variantní fráze, jinak
+* je-li `<fráze>` deklarována jako `<fráze-A>` pomocí `\vdef`,
+  použije se místo ní odpovídající variantní fráze bez ohledu na knihu a číslo verše,
+* jinak se použije pro vyhledání v textu přímo `<fráze>`.
 \enditems
-Syntaktické pravidlo `\wdef` je následující
-\begtt
-\CommentedBook {<zkratka-knihy>}
-\wdef <číslo-kapitoly>:<číslo-verše> {<fráze>} {<fráze-B>} {<fráze-C>} 
-\endtt
-Počet deklarovaných frází (včetně první <fráze>) musí být roven 
-<počtu-variant> deklarovaných v~příkaze `\variants`.
-Deklarace variantní <fráze> pomocí `\wdef` se použije jen pro
-vyhledávání konkrétního biblického verše, zatímco `\vdef` deklaruje varianty
-frází požitelné v celém textu Bible. 
 
-Variantní fráze deklarované pomocí `\wdef` mají rozšířenou syntaxi: může
+Variantní fráze deklarované pomocí `\wdef` mají také rozšířenou syntaxi: může
 těsně následovat rovnítko a `{<fráze-pro-tisk>}`. Takže například na poznámku
 `\Note` uvedenou sekci~\ref[note] může navazovat deklarace `\wdef` takto:
 \begtt
@@ -343,7 +358,7 @@ těsně následovat rovnítko a `{<fráze-pro-tisk>}`. Takže například na poz
 \wdef 1:2 {vydal Pán} {Hospodin mu vydal}={Hospodin vydal} {Hospodin vydal}
 \endtt
 Tento příklad funguje následovně: Při zpracování první varianty základního textu
-(překlad BKR v~našem příkladě) se vyhledává \uv{vydal Pán} a tiskne se \uv{Pán vydal}
+(překlad CzeBKR v~našem příkladě) se vyhledává \uv{vydal Pán} a tiskne se \uv{Pán vydal}
 (odlišná fráze pro tisk je přímo v parametru `\Note`). Při
 zpracování druhé varianty základního textu se vyhledá \uv{Hospodin mu vydal}
 a vytiskne se v poznámce \uv{Hospodin vydal} a konečně při zpracování třetí
@@ -351,23 +366,34 @@ varianty se vyhledá \uv{Hospodin vydal} a vytiskne se též
 \uv{Hospodin vydal}, protože třetí varianta nemá těsně následované rovnítko
 s odlišnou frází pro tisk.  
 
-Může se stát, že v odlišném překladu než implicitním je třeba poznámku
-navázat na jiné číslo verše než je uvedeno v parametru `\Note` a `\wdef`.
-To lze zajistit těsně následovaným znakem `~` a
-<číslem-kapitoly>:<číslem-verše> za variantní frází v parametrech `\wdef`. 
-Například
+Je-li `<fráze-pro-tisk>` deklarována jednak v parametru `\Note` a jednak
+pomocí `\wdef`, má přednost údaj z `\wdef`.
+
+Některé varianty překladu mají jiné číslování veršů. V takovém případě je
+možné použít příkaz `\renum` takto:
+
 \begtt
-\Note 4:16 {srdce zvířecí} \x/Nebukadnesar/ byl postižen mentální ...
+\renum <zkratka-knihy> <č-kapitoly>:<výchozí-č-verše> = <varianta-překladu> <č-verše> <počet-veršů>
 \endtt
-a v souboru variants:
+kde `<varianta-překladu>` je značka pro konkrétní překlad.
+Místo `<výchozí-č-verše>` se použije při `\def\tmark{<varianta-překladu>}`
+ve skutečnosti `<č-verše>`.
+Takové přečíslování se netýká jen
+jednoho (prvního) verše, ale celého úseku veršů v délce `<počet-veršů>`.
+
+Například:
 \begtt
-%           BKR             CEP                  CSP
-\wdef 4:16 {srdce zvířecí} {srdce zvířecí}~4:13 {srdce zvířecí}
+\renum Da 4:16 = CzeCSP 13 21
 \endtt
-Příklad ukazuje výjimečnou situaci, kdy v překladu BKR (implicitním) máme
-frázi \uv{srdce zvířecí} ve verši 4:16 knihy Daniel 
-zatímco v překladu CEP je tatáž fráze ve verši 4:13 a tam ji má \TeX/ najít,
-pokud zrovna zpracovává ekumenický překlad.
+znamená, že `\Note 4:16 {sedm let} Sedm období neurčené ...` je poznámka,
+která ve výchozím překladu <varianta-A> (CzeBKR v našem předchozím příkladě)
+se váže na text `sedm let`, který je umístěn skutečně ve verši Da~4:16.
+Ale když je `\def\tmark{CzeCEP}`, pak tato poznámka
+se váže na verš Da~4:13 tohoto překladu, ve kterém je vyhledána fráze
+`sedm let`. A k přečíslování dojde i pro následujících 20 veršů, takže
+4:16 dle BKR je 4:13 dle CEP, 4:17 dle BKR je 4:14 dle CEP, atd., až
+4:37 dle BKR je 4:34 dle CEP.
+\TODO: bude implementováno.
 
 
 \sec[odkazy] Metody vytváření hyperlinkových odkazů
