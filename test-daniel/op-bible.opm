@@ -542,8 +542,7 @@
    \input #1
    \egroup
 }
-
-\adef<{\bref}
+\def\_afterload{\adef<{\bref}}
 
 \endinput
 \_endcode

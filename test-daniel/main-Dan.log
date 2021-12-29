@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 07:27
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 11:02
  restricted system commands enabled.
 **main-Dan
 (./main-Dan.tex This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
@@ -53,13 +53,15 @@ tex)
 /2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
 [7]
 WARNING l.200: pg-label [danielovavize] unknown. Try to TeX me again.
-[8] [9] [10] [11] [12] [13]) [14])</home/olsak/texmf/fonts/opentype/biblon/Biblo
-nITC-Italic.otf></home/olsak/texmf/fonts/opentype/biblon/BiblonITC.otf></home/ol
-sak/texmf/fonts/opentype/biblon/BiblonITC-Bold.otf>
-Output written on main-Dan.pdf (14 pages, 220153 bytes).
+[8] [9] [10] [11] [12] [13]) [14])
+warning  (pdf backend): unreferenced destination with name 'n:Da/8:3'
+</home/olsak/texmf/fonts/opentype/biblon/BiblonITC-Italic.otf></home/olsak/texmf
+/fonts/opentype/biblon/BiblonITC.otf></home/olsak/texmf/fonts/opentype/biblon/Bi
+blonITC-Bold.otf>
+Output written on main-Dan.pdf (14 pages, 223443 bytes).
 
-PDF statistics: 86 PDF objects out of 1000 (max. 8388607)
- 60 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 131072)
+PDF statistics: 157 PDF objects out of 1000 (max. 8388607)
+ 130 compressed objects within 2 object streams
+ 43 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 
