@@ -18,11 +18,12 @@ def writeBuff():
         
 books = []
 abbvs = []
-
+inside_fence = False
 
 with open(filename,'r', encoding = 'utf-8') as f:
-    for line in f:
+    for iline,line in enumerate(f):
         if(line[:6] == "\kniha"):
+            assert inside_fence == False, iline+1
             if(buffname):
                 writeBuff()
             buff = []
@@ -30,12 +31,23 @@ with open(filename,'r', encoding = 'utf-8') as f:
             buff.append("% source: "+filename+", book: "+book+"\n")
             books.append(book)
         elif(line[:8] == "\zkratka"):
+            assert inside_fence == False, iline+1
             buffname = line.split('{')[1][:-2]
             abbvs.append(buffname)
-        elif(len(line)<2):
-            continue
         else:
-            buff.append("#"+line[1:-2]+"\n")
+            line = line.strip()
+            if line == "": continue
+            if line.startswith("<"):
+                assert inside_fence == False, iline+1
+                inside_fence = True
+                line = "#"+line[1:]
+            assert inside_fence == True, iline+1
+            if line.endswith(">"):
+                inside_fence = False
+                line = line[:-1]+"\n"
+            else: line = line+' '
+            buff.append(line)
+    assert inside_fence == False
     writeBuff()
 
 with open(mainname+"-books.tex", "w", encoding = 'utf-8') as f_books:
