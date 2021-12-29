@@ -1,9 +1,9 @@
-This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 17:55
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 17:37
  restricted system commands enabled.
-**main-Dan
-(./main-Dan.tex This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
-(./main-Dan.ref)
-\openout0 = main-Dan.ref
+**pok
+(./pok.tex This is OpTeX (Olsak's Plain TeX), version <1.04+ Aug.2021>
+(./pok.ref)
+\openout0 = pok.ref
  (./op-bible.opm (/home/olsak/texmf/tex/optex/pkg/vlna.opm
 Preventing single-chars prepositions and more <2021-01-08>
 \_vlna_preventsinglestatus=\attribute2
@@ -47,21 +47,17 @@ tex)
 \centermargin=\dimen293
 \numvariants=\count302
 \chapnum=\count303
-) (./CzeBKR-books.tex)
-** Daniel {Da} **
-(./fmt-CzeBKR-Dan.tex) (./notes-Dan.tex) (./CzeBKR-Dan.txs [1{/usr/local/texlive
-/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5] [6]
-[7]
-WARNING l.200: pg-label [danielovavize] unknown. Try to TeX me again.
-[8] [9] [10] [11] [12] [13]) [14])
-warning  (pdf backend): unreferenced destination with name 'n:Da/8:3'
-</home/olsak/texmf/fonts/opentype/biblon/BiblonITC-Italic.otf></home/olsak/texmf
-/fonts/opentype/biblon/BiblonITC.otf></home/olsak/texmf/fonts/opentype/biblon/Bi
-blonITC-Bold.otf>
-Output written on main-Dan.pdf (14 pages, 223443 bytes).
+) sxdef{rn!CzeCEP!4:16}{13} sxdef{rn!CzeCEP!4:17}{14}
+sxdef{rn!CzeCEP!4:18}{15} sxdef{rn!CzeCEP!4:19}{16} sxdef{rn!CzeCEP!4:20}{17}
+sxdef{rn!CzeCEP!4:21}{18} sxdef{rn!CzeCEP!4:22}{19} sxdef{rn!CzeCEP!4:23}{20}
+sxdef{rn!CzeCEP!4:24}{21} sxdef{rn!CzeCEP!4:25}{22} sxdef{rn!CzeCEP!4:26}{23}
+sxdef{rn!CzeCEP!4:27}{24} sxdef{rn!CzeCEP!4:28}{25} sxdef{rn!CzeCEP!4:29}{26}
+sxdef{rn!CzeCEP!4:30}{27} sxdef{rn!CzeCEP!4:31}{28} sxdef{rn!CzeCEP!4:32}{29}
+sxdef{rn!CzeCEP!4:33}{30} sxdef{rn!CzeCEP!4:34}{31} sxdef{rn!CzeCEP!4:35}{32}
+sxdef{rn!CzeCEP!4:36}{33} sxdef{rn!CzeCEP!4:37}{34})
+warning  (pdf backend): no pages of output.
 
-PDF statistics: 157 PDF objects out of 1000 (max. 8388607)
- 130 compressed objects within 2 object streams
- 43 named destinations out of 1000 (max. 131072)
+PDF statistics: 0 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 

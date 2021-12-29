@@ -373,24 +373,25 @@ Některé varianty překladu mají jiné číslování veršů. V takovém pří
 možné použít příkaz `\renum` takto:
 
 \begtt
-\renum <zkratka-knihy> <č-kapitoly>:<výchozí-č-verše> = <varianta-překladu> <č-verše> <počet-veršů>
+\renum <zkratka-knihy> <č-kapitoly>:<výchozí-č-verše> = <varianta-překladu> <číslo-od>..<číslo-do>
 \endtt
 kde `<varianta-překladu>` je značka pro konkrétní překlad.
 Místo `<výchozí-č-verše>` se použije při `\def\tmark{<varianta-překladu>}`
-ve skutečnosti `<č-verše>`.
+ve skutečnosti `<číslo-od>`.
 Takové přečíslování se netýká jen
-jednoho (prvního) verše, ale celého úseku veršů v délce `<počet-veršů>`.
+tohoto verše, ale celého úseku veršů vymezeného rozsahem
+`<číslo-od>..<číslo-do>`.
 
 Například:
 \begtt
-\renum Da 4:16 = CzeCSP 13 21
+\renum Da 4:16 = CzeCEP 13..34
 \endtt
 znamená, že `\Note 4:16 {sedm let} Sedm období neurčené ...` je poznámka,
 která ve výchozím překladu <varianta-A> (CzeBKR v našem předchozím příkladě)
 se váže na text `sedm let`, který je umístěn skutečně ve verši Da~4:16.
-Ale když je `\def\tmark{CzeCEP}`, pak tato poznámka
+Když ale je `\def\tmark{CzeCEP}`, pak uvedená poznámka `\Note 4:16`
 se váže na verš Da~4:13 tohoto překladu, ve kterém je vyhledána fráze
-`sedm let`. A k přečíslování dojde i pro následujících 20 veršů, takže
+`sedm let`. A k přečíslování dojde i pro následující verše, takže
 4:16 dle BKR je 4:13 dle CEP, 4:17 dle BKR je 4:14 dle CEP, atd., až
 4:37 dle BKR je 4:34 dle CEP.
 \TODO: bude implementováno.

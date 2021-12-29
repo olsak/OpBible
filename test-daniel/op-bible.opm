@@ -81,6 +81,12 @@
 \def\gentovrefA#1-#2\end{#1}
 
    \_doc
+   `\renumref <full-vref>\relax` does re-caclulating of <full-vref> using `\renum` data.
+   \_cod
+
+\def\renumvref #1:#2\relax{#1:\trycs{rn!\tmark!#1:#2}{#2}}
+
+   \_doc
    The <word> given as a parameter of the `\Note` macro (see bellow) is used as a word
    phrase which should be be searched in the given verse. This parameter <word>
    is transformed first by expansion of `\transformword{<word>}` to the <tword> variant and the
@@ -131,18 +137,19 @@
    \incr\notenum
    \sxdef{notepre!\the\notenum}{#1}%
    \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
    \edef\tword{\transformword{#2}}%
    \edef\oword{#2}%
    \isnextchar={\NoteA}{\NoteA={}}%
 }
 \def\NoteA=#1 #2\par{%
    \global\sdef{notetext!\the\notenum}{#2}%
-   \sxdef{noteref!\the\notenum}{\fullvref}%
+   \sxdef{noteref!\the\notenum}{\fullvrefm}%
    \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\fi
    \ifcsname ww!\fullvref!\tmark!\oword \endcsname \global\slet{pword!\the\notenum}{}\fi
    \ifx^#1^\else \global\sdef{pword!\the\notenum}{#1}\fi
    \edef\tmp{%
-      \noexpand\newaction{\fullvref}%
+      \noexpand\newaction{\fullvrefm}%
        {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
    \tmp
 }
@@ -477,12 +484,13 @@
 }
 
    \_doc
-   `\wdef <chap-num:verse-num> {phrase-A}={phrase-XA} {phrase-B}={phrase-XB} {phrase-C}={phrase-XC} ...`
+   `\wdef <chap-num:verse-num> {phrase-A}={phrase-XA} {phrase-B}={phrase-XB}`\nl `{phrase-C}={phrase-XC} ...`
    declares
    \begtt \catcode`<=13
    \def\w!fv!tmark-A!phrase-A{phrase-A} \def\ww!fv!tmark-A!phrase-A{phrase-XA}
    \def\w!fv!tmark-B!phrase-A{phrase-B} \def\ww!fv!tmark-B!phrase-A{phrase-XB}
    \def\w!fv!tmark-C!phrase-A{phrase-C} \def\ww!fv!tmark-C!phrase-A{phrase-XC}
+   ...
    \endtt
    where `fv` is <full-vref>.
    The number of parameters must be equal to `\numvariants` declared by
@@ -505,6 +513,23 @@
           \ifx^#1^\sxdef{w!\fv!\cs{var!\the\tmpnum}!\phraseA}{#1}\fi
    \fi
    \wdefA
+}
+
+   \_doc
+   `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <from>..<to>`
+   does
+   \begtt
+   \def \rn!<t-mark>!<full-vref>{<from>}
+   \def \rn!<t-mark>!<full-vref+1>{<from+1>}
+   \def \rn!<t-mark>!<full-vref+2>{<from+2>}
+   ... etc.
+   \def \rn!<t-mark>!<full-vref+n>{<to>}
+   \endtt
+   \_cod
+
+\def\renum #1 #2:#3 = #4 #5..#6 {%
+   \tmpnum=#3\relax
+   \fornum #5..#6 \do {\sxdef{rn!#4!#2:\the\tmpnum}{##1}\incr\tmpnum}%
 }
 
    \_doc

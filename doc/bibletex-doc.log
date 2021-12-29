@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 15:15
+This is LuaTeX, Version 1.13.2 (TeX Live 2021)  (format=optex 2021.12.21)  29 DEC 2021 17:19
  restricted system commands enabled.
 **bibletex-doc
 (./bibletex-doc.tex
@@ -176,7 +176,7 @@ ublic/tex-gyre-math/texgyreschola-math.otf></usr/local/texlive/2021/texmf-dist/f
 onts/opentype/public/lm/lmmono10-regular.otf></usr/local/texlive/2021/texmf-dist
 /fonts/opentype/public/tex-gyre/texgyreschola-regular.otf></usr/local/texlive/20
 21/texmf-dist/fonts/opentype/public/tex-gyre/texgyreschola-bold.otf>
-Output written on bibletex-doc.pdf (7 pages, 62711 bytes).
+Output written on bibletex-doc.pdf (7 pages, 62594 bytes).
 
 PDF statistics: 61 PDF objects out of 1000 (max. 8388607)
  36 compressed objects within 1 object stream
