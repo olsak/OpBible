@@ -504,7 +504,28 @@ a tituly knih je potřeba manuálně upravit podle zvyklostí daného překladu,
 jak je předvedeno v ukázce výše. 
 
 Do tohoto souboru je možné přidat další informace o jednotlivých knihách
-pomocí příkazů `\BookException`, `\BookPre`, `\BookPost`, viz ...
+pomocí příkazů `\BookException`, `\BookPre`, `\BookPost`, viz ...\TODO
+
+Pokud chcete mít v názvech souborů <a-značky>, je to možné, ale doporučuje
+se kromě toho použít následující sadu výjimek, které odstraňují diakritiku
+z~`\amark` v názvech souborů, ale ponechávají ji v textech Bible:
+
+\begtt
+\BookException Ž   {\def\amark{Z}}
+\BookException Př  {\def\amark{Pr}}
+\BookException Pís {\def\amark{Pis}}
+\BookException Ř   {\def\amark{R}}
+\BookException Žd  {\def\amark{Zd}}
+\endtt
+
+Je také možné mít některé typy souborů pojmenované podle <b-značky> a jiné
+podle <a-značky>, například:
+
+\begtt
+\def\txsfile   {sources/\tmark-\bmark.txs}        % Localization of .txs files
+\def\fmtfile   {formats/fmt-\tmark-\amark.tex}    % Localisation of fmts
+\def\notesfile {notes/notes-\amark.tex}           % Localisation of notes
+\endtt
 
 `\txsfile` deklaruje umístění základních textů Bible, tedy `.txs` souborů,
 viz sekci~\ref[zakladni]. V umístění může být specifikován adresář (v ukázce
@@ -512,11 +533,11 @@ je `sources/`) a názvy souborů mohou obsahovat `\tmark`, což se nahradí
 definovaným označením překladu a dále by měl obsahovat `\bmark`, což se
 nahradí `<b-značkou>` knihy. 
 
-`\notesfile` deklaruje umístění souborů s texty poznámek. Jejich formát je
-popsán v sekci~\ref[note].
-
 `\fmtfile` deklaruje umístění souborů s formátovacími pokyny. Jejich smysl
 je vyložen v sekci~\ref[fmt].
+
+`\notesfile` deklaruje umístění souborů s texty poznámek. Jejich formát je
+popsán v sekci~\ref[note].
 
 `\printedbooks` obsahuje `<a-značky>` těch knih, které chcete \TeX/em zpracovat.
 Pokud děláte třeba jen testovací tisky, můžete zpracovat jen některé
@@ -524,9 +545,10 @@ biblické knihy a mít tedy alternativní definici, například
 `\def\printedbooks{Da}`.
 
 `\processbooks` spostí cyklus přes všechny biblické knihy podle jejich `<a-značek>`
-uložených v `\printedbooks`. Pro každou takovou knihu nejprve
+uložených v~`\printedbooks`. Pro každou takovou knihu \TeX/ nejprve
 načte soubor s poznámkami (umístěný podle `\notesfile`), dále přečte soubor
-s formátovacími údaji (umístěný podle `fmtfile`) a konečně přečte základní
+s formátovacími údaji (umístěný podle `fmtfile`) a data z~těchto souborů si
+uloží přechodně do paměti. Konečně \TeX/ přečte základní
 text umístěný v `\txsfile` a vytvoří sazbu tohoto textu společně s
 poznámkami podle stanovených formátovacích pokynů. 
 

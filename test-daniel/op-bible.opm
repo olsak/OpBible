@@ -380,12 +380,15 @@
 \outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
 
    \_doc
-   The `\BookException` macro saves a code which is used in`\processbooks`
+   The `\BookException <a-mark> {<code>}` macro saves a <code> which is used in`\processbooks`
    loop in the group before files are read. You can redefine some filenames
    or something more special here.
    \_cod
 
-\outer\def\BookException #1 #2{\global\sdef{bex!#1}{#2}}
+\outer\def\BookException #1 #2{%
+   \ifcsname bex!#1\endcsname \else \sxdef{bex!#1}{}\fi
+   \global\ea\addto\csname bex!#1\endcsname{#2}%
+}
 
    \_doc
    The `\processbooks` macro does two loops over all `\printedbooks`.
