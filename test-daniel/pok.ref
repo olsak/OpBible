@@ -1,4 +1,0 @@
-%% OpTeX <1.04+ Aug.2021> - REF file
-\Xrefversion{6}
-% \refdecl:
- \def \Xcreatedest #1{\sxdef {dest!#1}{}} 
