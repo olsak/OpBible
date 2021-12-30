@@ -380,15 +380,18 @@
 \outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
 
    \_doc
-   The `\BookException <a-mark> {<code>}` macro saves a <code> which is used in`\processbooks`
+   The `\BookException <a-mark> {<code>}` macro adds the <code> to the
+   \bex!<a-mark> macro. It is used in`\processbooks`
    loop in the group before files are read. You can redefine some filenames
-   or something more special here.
+   or something more special here.\nl
+   Macros `\BookPre` and `\BokkPost` are defined similarly.
    \_cod
 
-\outer\def\BookException #1 #2{%
-   \ifcsname bex!#1\endcsname \else \sxdef{bex!#1}{}\fi
-   \global\ea\addto\csname bex!#1\endcsname{#2}%
-}
+\long\def\myaddto#1#2{\ifcsname#1\endcsname
+   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
+\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
+\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
+\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
 
    \_doc
    The `\processbooks` macro does two loops over all `\printedbooks`.
@@ -404,8 +407,10 @@
    * Prints title of the book to the terminal and to the log.
    * Inputs format definition file.
    * Inputs notes file.
+   * Calls `\bpr!<a-mark>` in order to print a preface of the book,
    * Inputs txs file with original text of the Bible using `\bibleinput`,
-     i.e.\ prints the text. 
+     i.e.\ prints the text.
+   * Calls `\bpo!<a-mark>` in order to print a closing text of the book.
    \enditems
    \_cod
 
@@ -427,7 +432,9 @@
          \wterm{** \cs{btit!#1} {#1} **}
          \input{\fmtfile}
          \input{\notesfile}
+         \cs{bpr!#1}
          \bibleinput{\txsfile}
+         \cs{bpo!#1}
       \endgroup
       \ea \processbooksB
    \fi
