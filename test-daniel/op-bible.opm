@@ -84,7 +84,7 @@
    `\renumref <full-vref>\relax` does re-caclulating of <full-vref> using `\renum` data.
    \_cod
 
-\def\renumvref #1:#2\relax{#1:\trycs{rn!\tmark!#1:#2}{#2}}
+\def\renumvref #1/#2\relax{#1/\trycs{rn!\tmark!#1/#2}{#2}}
 
    \_doc
    The <word> given as a parameter of the `\Note` macro (see bellow) is used as a word
@@ -526,20 +526,20 @@
 }
 
    \_doc
-   `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <from>..<to>`
+   `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
    does
    \begtt
-   \def \rn!<t-mark>!<full-vref>{<from>}
-   \def \rn!<t-mark>!<full-vref+1>{<from+1>}
-   \def \rn!<t-mark>!<full-vref+2>{<from+2>}
+   \def \rn!<t-mark>!<full-vref>{<chap-num>:<from>}
+   \def \rn!<t-mark>!<full-vref+1>{<chap-num>:<from+1>}
+   \def \rn!<t-mark>!<full-vref+2>{<chap-num>:<from+2>}
    ... etc.
-   \def \rn!<t-mark>!<full-vref+n>{<to>}
+   \def \rn!<t-mark>!<full-vref+n>{<chap-num>:<to>}
    \endtt
    \_cod
 
-\def\renum #1 #2:#3 = #4 #5..#6 {%
+\def\renum #1 #2:#3 = #4 #5:#6-#7 {%
    \tmpnum=#3\relax
-   \fornum #5..#6 \do {\sxdef{rn!#4!#2:\the\tmpnum}{##1}\incr\tmpnum}%
+   \fornum #6..#7 \do {\sxdef{rn!#4!#1/#2:\the\tmpnum}{#5:##1}\incr\tmpnum}%
 }
 
    \_doc
