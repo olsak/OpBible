@@ -8,12 +8,12 @@
 
 \tit OP-Bible -- zpracování komentovaných biblí \TeX/em
 
-OP-Bible je sada nástojů (maker a dalšího podpůrného softwaru) na
+OP-Bible je sada nástrojů (maker a dalšího podpůrného softwaru) na
 zpracování biblických textů. Hlavním cílem je umožnit navázat na z internetu
 stažené úplné texty Bible a propojit je s doplněnými poznámkami podle
 požadovaných kritérií popsaných níže. Výsledkem po zpracování \TeX/em je
 komentovaná Bible, tj. Bible vytištěná společně s poznámkami. PDF soubor je
-navic bohatě prolinkovaný hypertextovými odkazy.
+navíc bohatě prolinkovaný hypertextovými odkazy.
 
 Úplný text Bible je na internetu k dispozici v různých překladech a české
 překlady jsou nejméně čtyři. Je možné si stáhnout třeba jen jeden překlad
@@ -91,7 +91,7 @@ Ten nyní můžete rozdělit do `.txs` souborů příkazem
 \begtt
 maketxs CzeBKR.out
 \endtt
-Uvedený příkaz kromě 66 `.txs` soborů vytvoří soubor `CzeBKR-books.tex`, ve
+Uvedený příkaz kromě 66 `.txs` souborů vytvoří soubor `CzeBKR-books.tex`, ve
 kterém jsou tituly a zkratky jednotlivých knih, tedy je tam:
 \begtt
 \BookTitle Gen Gen {Genesis}
@@ -109,7 +109,7 @@ Zkratky knih jsou uvedeny dvakrát stejně. První ponechte a druhou zkratku
 můžete pozměnit podle zvyklostí českého jazyka, viz též sekci~\ref[hlavni].
 
 Jednotlivé `.txs` soubory můžete vložit do
-separátního adreáře projektu, například s názvem `sources/`. 
+separátního adresáře projektu, například s názvem `sources/`. 
 Odtud si je \TeX/ bude číst, pokud mu jejich umístění oznámíte v konfiguraci
 v hlavním souboru, viz sekci~\ref[hlavni]. Se soubory nadále nebudete
 potřebovat nijak manipulovat, není potřebné je editovat ani doplňovat. V
@@ -141,10 +141,10 @@ základního textu obsažena. Pak ji \TeX/ propojí s odpovídajícím místem v
 základním textu, tj. zajistí, že výskyt fráze i samotné poznámky je na
 společné stránce. 
 
-Povšimněmě si, že fráze se váže na překlad Bible Kralické, zatímco v
+Povšimněme si, že fráze se váže na překlad Bible Kralické, zatímco v
 překladu ekumenickém je použit ve stejném verši termín \uv{nádob}. Jak
 zařídit, aby se stejná poznámka automaticky mírně modifikovala podle
-pužitého překladu, je popsáno v sekci~\ref[ruzne-preklady].
+použitého překladu, je popsáno v sekci~\ref[ruzne-preklady].
 
 Pokud <fráze> není ve stanoveném verši základního textu doslovně obsažena,
 \TeX/ během zpracování oznámí do logu a a na terminál o tom varování a
@@ -173,7 +173,7 @@ poznámce se vytiskne jako heslo poznámky <fráze-k-tisku>. Například:
 
 \endtt
 V tomto příkladě se hledá ve verši druhém základního textu \uv{vydal Pán} 
-ale v poznámce je vytišteno heslo \uv{Pán vydal}.
+ale v poznámce je vytištěno heslo \uv{Pán vydal}.
 
 Povšimněte si, že tato poznámka se rovněž váže na verš druhý kapitoly první
 knihy Daniel (protože je v souboru `notes-Da.tex`). Je tedy možné mít více
@@ -199,7 +199,7 @@ umístí na stejnou stranu, kde je začátek prvního verše z uvedeného rozsah
 Je-li <fráze> neprázdná, musí se vyskytovat v prvním verši z uvedeného
 rozsahu veršů. Rozsah veršů bude stejně vytištěn v úvodu poznámky.
 Symbol pro rozsah „`-`“ je jediný znak \uv{mínus} běžně dosažitelný na
-klávesnici. Nesmí to být žádný speciání znak vypadající třeba podobně jako
+klávesnici. Nesmí to být žádný speciální znak vypadající třeba podobně jako
 vodorovná čárka.
 
 
@@ -269,14 +269,14 @@ deklarovat varianty překladu pomocí
 \variants <počet-variant> {<varianta-A>} {<varianta-B>} {<varianta-C>} {<varianta-D>}
 \endtt
 (zde `<varianta-D>` nemusí být poslední, počet parametrů je určen hodnotou
-`<počet-variant>`). Tyto parametry jsou značkami pro konrétní překlad, např.
+`<počet-variant>`). Tyto parametry jsou značkami pro konkrétní překlad, např.
 `CzeBKR` pro překlad podle Bible Kralické nebo `CzeCEP` pro ekumenický překlad.
 
 Následně je možné definovat varianty frází pro jednotlivé varianty překladu:
 \begtt
 \vdef {<fráze-A>} {<fráze-B>} {<fráze-C>} {<fráze-D>}
 \endtt
-Zde musí být stejný počet parametrů jako je `<počet-variant>` uvedený v
+Zde musí být stejný počet parametrů pro fráze jako je `<počet-variant>` uvedený v
 předchozím příkazu `\variants`.
 Pokud je nyní v hlavním souboru například uvedeno:
 \begtt
@@ -326,7 +326,7 @@ a tato poznámka při `\def\tmark{CzeCEP}` na svém konci zní
 `\def\tmark{CzeBKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
 
 Kromě `\vdef`, což deklaruje varianty překladu platné pro celou Bibli je
-možné použít `\wdef`, což deklauje varianty překladu jen pro konkrétní verš
+možné použít `\wdef`, což deklaruje varianty překladu jen pro konkrétní verš
 konkrétní knihy a jen pro spárování poznámek `\Note` s výchozím textem.
 Syntaxe je následující:
 \begtt
@@ -341,7 +341,7 @@ Pro každý příkaz `\Note`:
 \Note <číslo-kapitoly>:<číslo-verše> {<fráze>} <text-poznámky>
 \endtt
 se před vyhledáním `<fráze>` ve stanoveném verši tato `<fráze>`
-automaticky promění podle aktuální varianty `\tmark` předkladu následujícím způsobem:
+automaticky promění podle aktuální varianty `\tmark` překladu následujícím způsobem:
 \begitems
 * Je-li `<fráze>` deklarována jako `<fráze-A>` pomocí `\wdef` pro konkrétní
   verš, použije se místo ní odpovídající variantní fráze, jinak
@@ -406,7 +406,7 @@ Odkazy na verše se píší
 mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
 aktivní odkaz na konkrétní verš, ale musí mít předepsaný formát, aby
 \TeX/ poznal, na jaký verš má propojit hypertextový odkaz.
-Specifikace odkazu má tyto mořžnosti:
+Specifikace odkazu má tyto možnosti:
 
 \begitems
 * "<slovo>" <údaj> ... vytiskne se aktivní <slovo> <údaj>
@@ -429,7 +429,7 @@ link neodkazuje na verš, ale na poznámku k verši.
 Příklady:
 
 \begtt \catcode`<=12
-<13> vysiskne se 13 jako odkaz na verš 13 aktuální knihy a kapitoly
+<13> vytiskne se 13 jako odkaz na verš 13 aktuální knihy a kapitoly
 <"verš" 13> vytiskne se "verš~13" jako odkaz na verš 13
 <"konec verše" Gn 2:11> vytiskne se "konec verše~Gn~2:11" a odkazuje na Gn 2:11.
 <"ponznámku" 13>n vytiskne se "poznámku~13" a odkazuje na poznámku k verši 13.
@@ -494,7 +494,7 @@ Začátek takto čteného souboru může vypadat třeba takto:
 V prvním sloupci za `BookTitle` je `<b-značka>`, která je dále používána v
 názvech souborů jako `\bmark`. Ve druhém sloupci je `<a-značka>`, tedy
 aktuální značka knihy, která je používána v konkrétním překladu a bude
-použita v textu knihy napřiklad při sestavování obsahu či v odkazech. V ukázce
+použita v textu knihy například při sestavování obsahu či v odkazech. V ukázce
 máme český překlad, tj. `<a-značka>` knihy Soudců je Sd, zatímco `<b-značka>`
 je Judg. Pro názvy souborů se doporučuje ponechat anglické značky, 
 abychom nemuseli mít v názvech souborů např. české znaky, takže číst se bude
@@ -547,7 +547,7 @@ Pokud děláte třeba jen testovací tisky, můžete zpracovat jen některé
 biblické knihy a mít tedy alternativní definici, například
 `\def\printedbooks{Da}`.
 
-`\processbooks` spostí cyklus přes všechny biblické knihy podle jejich `<a-značek>`
+`\processbooks` spustí cyklus přes všechny biblické knihy podle jejich `<a-značek>`
 uložených v~`\printedbooks`. Pro každou takovou knihu \TeX/ nejprve
 načte soubor s poznámkami (umístěný podle `\notesfile`), dále přečte soubor
 s formátovacími údaji (umístěný podle `fmtfile`) a data z~těchto souborů si
