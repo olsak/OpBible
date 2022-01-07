@@ -138,16 +138,15 @@
    \sxdef{notepre!\the\notenum}{#1}%
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \edef\tword{\transformword{#2}}%
-   \edef\oword{#2}%
+   {\def\printwarn##1{}\xdef\tword{\transformword{#2}}%
+                       \xdef\oword{#2}}%
    \isnextchar={\NoteA}{\NoteA={}}%
 }
 \def\NoteA=#1 #2\par{%
    \global\sdef{notetext!\the\notenum}{#2}%
    \sxdef{noteref!\the\notenum}{\fullvrefm}%
-   \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\fi
-   \ifcsname ww!\fullvref!\tmark!\oword \endcsname \global\slet{pword!\the\notenum}{}\fi
-   \ifx^#1^\else \global\sdef{pword!\the\notenum}{#1}\fi
+   \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
+   \ifcsname ww!\fullvref!\tmark!\oword \endcsname \global\slet{pword!\the\notenum}{ww!\fullvref!\tmark!\oword}\fi
    \edef\tmp{%
       \noexpand\newaction{\fullvrefm}%
        {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
@@ -517,10 +516,11 @@
 }
 \def\wdefB #1{\def\tmp{#1}\isnextchar={\wdefC}{\wdefC={}}}
 \def\wdefC =#1{%
-   \ifcsname w!\fv!\cs{var!\the\tmpnum}!\phraseA\endcsname
+   \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
+   \ifcsname w!\fv!\tmpa!\phraseA\endcsname
       \printwarn{\noexpand\wdef used secondly for verse \vf, ignored}%
-   \else  \sxdef{w!\fv!\cs{var!\the\tmpnum}!\phraseA}{\tmp}%
-          \ifx^#1^\sxdef{w!\fv!\cs{var!\the\tmpnum}!\phraseA}{#1}\fi
+   \else  \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
+          \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
    \fi
    \wdefA
 }

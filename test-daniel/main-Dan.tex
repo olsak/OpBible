@@ -1,11 +1,15 @@
 \load[op-bible]  % macros OP-Bible
 
-\def\tmark     {CzeBKR}                     % Variant of translation
+\def\tmark     {CzeCEP}                     % Variant of translation
 \def\txsfile   {./\tmark-\bmark.txs}        % Localization of .txs files
 \def\fmtfile   {./fmt-\tmark-\amark.tex}    % Localisation of fmts
 \def\notesfile {./notes-\amark.tex}         % Localisation of notes
 
-\input {./\tmark-books.tex}  % Book titles
+\loggingall
+
+\input {vars.tex}         % Language variants
+
+\input {./Cze-books.tex}  % Czech book titles
 
 \def\printedbooks {%
    Gn Ex Lv Nu Dt Joz Sd Rt 1S 2S 1Kr 2Kr 1CPa 2Pa Ezd Neh
