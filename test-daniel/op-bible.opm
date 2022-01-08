@@ -507,7 +507,10 @@
    then the relevant control sequence is undefined.
    \_cod
 
-\def\wdef #1 #2{\edef\fv{\the\CommentedBook/#1}\def\phraseA{#2}\tmpnum=0 \wdefA{#2}}
+\def\wdef #1 #2{\edef\fv{\the\CommentedBook/#1}\def\phraseA{#2}\tmpnum=0 
+   \ifcsname w!\fv!\tmarkA!#2\endcsname
+       \printwarn{\noexpand\wdef used secondly for verse \fv, ignored}\fi
+   \wdefA{#2}}
 \def\wdefA{%
    \ifnum\tmpnum<\numvariants
       \advance\tmpnum by1
@@ -517,10 +520,9 @@
 \def\wdefB #1{\def\tmp{#1}\isnextchar={\wdefC}{\wdefC={}}}
 \def\wdefC =#1{%
    \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
-   \ifcsname w!\fv!\tmpa!\phraseA\endcsname
-      \printwarn{\noexpand\wdef used secondly for verse \vf, ignored}%
-   \else  \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
-          \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
+   \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
+      \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
+      \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
    \fi
    \wdefA
 }
