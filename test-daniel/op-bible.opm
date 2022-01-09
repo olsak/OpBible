@@ -378,8 +378,14 @@
    \def\ltextV{#6}%
    \ifx\ltextN\empty \else
       \ifx\ltextA\ltextAA
-          \isinlist\ltextN{:}\iffalse \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}%
-   \fi\fi\fi
+          \isinlist\ltextN{:}\iftrue
+             \ifcsname rn!\tmark!#1/\ltextN\endcsname \edef\ltextN{\cs{rn!\tmark!#1/\ltextN}}\fi
+          \else \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}\fi
+      \else \let\tmp=\ignoreit % \ltextN is a list of verses, for example 7,9,13
+          \ea\foreach\ltextN,\do ##1,{\edef\tmp{\tmp,\the\numexpr#6+##1-#3}}%
+          \let\ltextN=\tmp
+      \fi
+   \fi
 }
 \def\ltextAA{--}
 
