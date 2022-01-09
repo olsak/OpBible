@@ -286,7 +286,7 @@
 %% Makra pro tvorbu linků specifikovaných jako <link>
 
    \_doc
-   `\bref <link-spec>>` creates a ling given by <link-spec> and prints
+   `\bref <link-spec>>` creates a link given by <link-spec> and prints
    <link-spec>. See user manual for variants of the format of <link-spec>.
    We will set \code{\<} as active character with meaning `\bref`, so
    user can type \code{\<}<link-spec>\code{\>} for link specification.\nl
@@ -294,30 +294,33 @@
    The macro `\bref` reads <link-spec> and creates internal full link
    specification saved in `\linkpe:\linkfspec` macros. Moreover, it creates
    macro `\linktext` wich expands to the text to be printed as active link.
+   The `\linktext` consists from `\ltextP` (the text before a link),
+   `\ltextB` (the book mark), `\ltextC` (the chapter number), `\ltextV` (the verse number),
+   `\ltextA` (comma or `--`), `\ltextN` (next text after `\ltextA`).
+   Each of these macros (except `\ltextV`) can be empty.
    \_cod
 
-\def\bref {\futurelet\next\brefC}
+\def\bref {\def\ltextP{}\def\ltextB{}\def\ltextC{}\def\ltextA{}\def\ltextN{}\futurelet\next\brefC}
+\def\linktext{\ltextP\ltextB\ifx\ltextC\empty\else\ltextC:\fi\ltextV\ltextA\ltextN}
 
    \_doc
    Macro `\brefC` scans `"` as a potential first character and
-   saves <word> (from `"<word>"` specification) to `\linktext`.
-   If there isn't `"` then `\linktext` is set as empty macro. 
-   The next specification will be addet to the `\linktex` later.
+   saves <word> (from `"<word>"` specification) to `\ltextP`.
    \_cod
 
 \def\brefB {\futurelet\next\brefC}
-\def\brefC {\ifx\next"\def\nextdo"##1"{\def\linktext{##1}\brefD}%
-            \else \def\linktext{}\def\nextdo{\brefD}%
+\def\brefC {\ifx\next"\def\nextdo"##1"{\def\ltextP{##1}\brefD}%
+            \else \def\nextdo{\brefD}%
             \fi \nextdo
 }
 
    \_doc
    If there si a space between `"<word>"` and the next `<link-spec>`, then
-   it is saved as no-breakable space into `\linktext`. 
+   it is saved as no-breakable space into `\ltextP`.
    \_cod
 
 \def\brefD {\futurelet\next\brefE}
-\def\brefE {\ea\ifx\space\next \addto\linktext{~}\def\nextdo{\afterassignment\brefF \let\next= }%
+\def\brefE {\ea\ifx\space\next \addto\ltextP{~}\def\nextdo{\afterassignment\brefF \let\next= }%
             \else \def\nextdo{\brefF}%
             \fi \nextdo
 }
@@ -328,36 +331,57 @@
 
 \def\brefF #1>{\brefG #1 >} 
 \def\brefG #1 #2>{\ifx^#2^\edef\linkfspec{\currbook/}\afterfi{\brefH #1:>}%
-                  \else \addto\linktext{#1~}\def\linkfspec{#1/}\afterfi{\brefGH#2:>}%
+                  \else \def\ltextB{#1~}\def\linkfspec{#1/}\afterfi{\brefGH#2:>}%
                   \fi
 }
 \def\brefGH #1 {\brefH #1}
 \def\brefH #1:#2>{\ifx^#2^\ea\addto\ea\linkfspec\ea{\the\chapnum:}\afterfi{\brefI #1->}%
-                  \else \addto\linktext{#1:}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
+                  \else \def\ltextC{#1}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
                   \fi
 }
 \def\brefHI #1:{\brefI #1}
 
-\def\brefI #1-#2>{\addto\linktext{#1}\addto\linkfspec{#1}%
+\def\brefI #1-#2>{\def\ltextV{#1}\addto\linkfspec{#1}%
                   \ifx^#2^\afterfi{\futurelet\next\brefK}%
                   \else \afterfi{\brefJ#2}\fi
 }
-\def\brefJ#1-{\addto\linktext{--#1}\futurelet\next\brefK}
+\def\brefJ#1-{\def\ltextA{--}\def\ltextN{#1}\futurelet\next\brefK}
 
 \def\brefK{\def\linkpre{v}% default
    \ea\striptocomma\linkfspec,\end\linkfspec
+   \ea\striptocomma\ltextV,\end\ltextV
+   \ifx\tmp\empty\else \def\ltextA{,}\edef\ltextN{\tmp}\fi
    \ifx n\next \def\linkpre{n}\ea\brefKK\fi
    \brefL
 }
 \def\brefKK #1\brefL#2{\brefL}
 
-\def\striptocomma #1,#2\end#3{\def#3{#1}}
+\def\striptocomma #1,#2\end#3{\def#3{#1}\def\tmp{#2}}
 
    \_doc
-   Macro `\brefL` creates the link `\linkpre:\linkfspec` with the text `\linktext`.
+   Macro `\brefL` recalculates `\linkfspec` and `\linktext` due to `\renum` data and
+   creates the link `\linkpre:\linkfspec` with the text `\linktext`.\nl
+   `\renumlinktext <full-vref-ori>\relax<full-vref-modified>\relax`
+   does re-calculation of the parts of the `\linktext` macro.
    \_cod
 
-\def\brefL{\ensuredest \createlink}
+\def\brefL{%
+   \edef\linkfspecm{\ea\renumvref\linkfspec\relax}%
+   \ifx\linkfspec\linkfspecm \else
+      \ea\ea\ea\renumlinktext \ea\linkfspec \ea\relax \linkfspecm \relax
+      \let\linkfspec=\linkfspecm
+   \fi
+   \ensuredest \createlink
+}
+\def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
+   \ifx\ltextC\empty \else \def\ltextC{#5}\fi
+   \def\ltextV{#6}%
+   \ifx\ltextN\empty \else
+      \ifx\ltextA\ltextAA
+          \isinlist\ltextN{:}\iffalse \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}%
+   \fi\fi\fi
+}
+\def\ltextAA{--}
 
    \_doc
    `\createlink` creates link only if it refeneces the place of printed book
