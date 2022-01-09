@@ -112,12 +112,16 @@
    \begitems
    * Allocates new <note-num>,
    * Transforms <gen-vref> to <full-vref> using `\gentovref`.
+   * Modifies <full-vref> if `\renum` was declared using `\renumvref` and
+     saves the result to `\fullvrefm`.
    * Transforms <word> to <tword> (to be searched and printed) by `\transformword`.
    * Reads <pword> (word to be printed in the note) if alternative syntax
      with `={<pword>}` is used. Else <pword> is equal to <tword>. 
    * Defines `\notetext!<note-num>` as <text>.
    * Defines `\noteref!<note-num>` as <full-vref>.
-   * Defines `\notepre!<note-num>` as <gen-vref>.
+   * Defines `\notepre!<note-num>` as numeric part of modified <full-vref>
+     and calculates <from>-<to> part (if exists in <gen-vref>) using `\renumlabel` macro.
+     This is printed prefix of the `\Note`.
    * Defines `\pword!<note-num>` as <pword>,
    * Does\nl
    `\newaction{<full-vref>}{\replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}}`.
@@ -135,9 +139,9 @@
 \newcount\notenum
 \outer\def\Note #1 #2{%
    \incr\notenum
-   \sxdef{notepre!\the\notenum}{#1}%
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \def\tmp{#1}\sxdef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
    {\def\printwarn##1{}\xdef\tword{\transformword{#2}}%
                        \xdef\oword{#2}}%
    \isnextchar={\NoteA}{\NoteA={}}%
@@ -157,6 +161,26 @@
    \replpre{\doNote{#1}}{}{}% \Note is registered with the beginning of the verse
 }
 \def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
+
+   \_doc
+   `\renumlabel` `<full-vref>\relax` expands to the numeric part of
+   <full-vref> and appends the `--<to>` part if the `\tmp` macro is in the
+   format `<chapter>:<from>-<to>`. The <to> part is re-calulated in order to
+   the the number of verses between `<from>` and `<to>` be kept.
+   If the `<to>` part is in the format <chapter>:<verse>
+   then it is unchanged. The `\renumlabel` macro must be expandable, so we
+   cannot use `\isinlist` and we prepare special exandable macros `\isdivis`
+   and `\iscolon`.
+   \_cod
+
+\def\renumlabel#1/#2\relax{#2%
+   \ea\isdivis\tmp-\iffalse\else --\ea\renumlabelA\tmp\relax#2\relax \fi
+}
+\def\renumlabelA#1:#2-#3\relax#4:#5\relax{%
+   \iscolon#3:\iffalse \the\numexpr#5+#3-#2\relax \else #3\fi
+}
+\def\isdivis#1-#2\iffalse{\ifx^#2^}
+\def\iscolon#1:#2\iffalse{\ifx^#2^}
 
    \_doc
    When bible-text (from sword) is processed then book mark is saved to
@@ -555,7 +579,7 @@
 
 \def\prevtmpb{}
 \def\doNote#1#2{%
-   \edef\tmpb{\cs{notepre!#1}}\replstring\tmpb{-}{--}%
+   \edef\tmpb{\cs{notepre!#1}}%
    \fnote{%
       \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
       \trymakedest{n:\currverse}%
