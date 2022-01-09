@@ -295,13 +295,14 @@
    specification saved in `\linkpe:\linkfspec` macros. Moreover, it creates
    macro `\linktext` wich expands to the text to be printed as active link.
    The `\linktext` consists from `\ltextP` (the text before a link),
-   `\ltextB` (the book mark), `\ltextC` (the chapter number), `\ltextV` (the verse number),
-   `\ltextA` (comma or `--`), `\ltextN` (next text after `\ltextA`).
+   `\ltextB` (the book mark followed by `~`), `\ltextC` (the chapter number followed by `:`),
+   `\ltextV` (the verse number), `\ltextS` (separator comma or `--`),
+   `\ltextN` (the next text after `\ltextS`).
    Each of these macros (except `\ltextV`) can be empty.
    \_cod
 
-\def\bref {\def\ltextP{}\def\ltextB{}\def\ltextC{}\def\ltextA{}\def\ltextN{}\futurelet\next\brefC}
-\def\linktext{\ltextP\ltextB\ifx\ltextC\empty\else\ltextC:\fi\ltextV\ltextA\ltextN}
+\def\bref {\def\ltextP{}\def\ltextB{}\def\ltextC{}\def\ltextS{}\def\ltextN{}\futurelet\next\brefC}
+\def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextN}
 
    \_doc
    Macro `\brefC` scans `"` as a potential first character and
@@ -336,7 +337,7 @@
 }
 \def\brefGH #1 {\brefH #1}
 \def\brefH #1:#2>{\ifx^#2^\ea\addto\ea\linkfspec\ea{\the\chapnum:}\afterfi{\brefI #1->}%
-                  \else \def\ltextC{#1}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
+                  \else \def\ltextC{#1:}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
                   \fi
 }
 \def\brefHI #1:{\brefI #1}
@@ -345,12 +346,12 @@
                   \ifx^#2^\afterfi{\futurelet\next\brefK}%
                   \else \afterfi{\brefJ#2}\fi
 }
-\def\brefJ#1-{\def\ltextA{--}\def\ltextN{#1}\futurelet\next\brefK}
+\def\brefJ#1-{\def\ltextS{--}\def\ltextN{#1}\futurelet\next\brefK}
 
 \def\brefK{\def\linkpre{v}% default
    \ea\striptocomma\linkfspec,\end\linkfspec
    \ea\striptocomma\ltextV,\end\ltextV
-   \ifx\tmp\empty\else \def\ltextA{,}\edef\ltextN{\tmp}\fi
+   \ifx\tmp\empty\else \def\ltextS{,}\edef\ltextN{\tmp}\fi
    \ifx n\next \def\linkpre{n}\ea\brefKK\fi
    \brefL
 }
@@ -374,10 +375,10 @@
    \ensuredest \createlink
 }
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
-   \ifx\ltextC\empty \else \def\ltextC{#5}\fi
+   \ifx\ltextC\empty \else \def\ltextC{#5:}\fi
    \def\ltextV{#6}%
    \ifx\ltextN\empty \else
-      \ifx\ltextA\ltextAA
+      \ifx\ltextS\ltextDD
           \isinlist\ltextN{:}\iftrue
              \ifcsname rn!\tmark!#1/\ltextN\endcsname \edef\ltextN{\cs{rn!\tmark!#1/\ltextN}}\fi
           \else \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}\fi
@@ -387,7 +388,7 @@
       \fi
    \fi
 }
-\def\ltextAA{--}
+\def\ltextDD{--}
 
    \_doc
    `\createlink` creates link only if it refeneces the place of printed book
