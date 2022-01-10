@@ -1,0 +1,27 @@
+\load[op-bible]  % macros OP-Bible
+
+\def\tmark     {CzeBKR}                     % Variant of translation
+\def\txsfile   {./\tmark-\bmark.txs}        % Localization of .txs files
+\def\fmtfile   {./fmt-\tmark-\amark.tex}    % Localisation of fmts
+\def\notesfile {./notes-\amark.tex}         % Localisation of notes
+
+%\loggingall
+
+\input {vars.tex}         % Language variants
+
+\input {./Cze-books.tex}  % Czech book titles
+
+\def\printedbooks {%
+   Gn Ex Lv Nu Dt Joz Sd Rt 1S 2S 1Kr 2Kr 1CPa 2Pa Ezd Neh
+   Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
+   Na Abk Sf Ag Za Mal
+   Mt Mk L J Sk Ř 1K 2K Ga Ef Fp Ko 1Te 2Te 1Tm 2Tm
+   Tt Fm Žd Jk 1Pt 2Pt 1J 2J 3J Ju Zj
+}
+\def\printedbooks {Da}
+
+\hfill Varianta: \tmark
+
+\processbooks % Generates books declared in \printedbooks
+
+\bye
