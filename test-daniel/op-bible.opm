@@ -519,6 +519,7 @@
    `\vdef {phrase-A} {phrase-B} {phrase-C} ...` does\nl
    `\def\v!tmark-B!phrase-A{phrase-B}`
    `\def\v!tmark-C!phrase-A{phrase-C}` etc.
+   Empty data are interpreted as undefined data.
    \_cod
 
 \def\vdef#1{\def\tmp{#1}\tmpnum=1 \vdefA}
@@ -528,7 +529,7 @@
       \afterfi{\vdefB{\the\tmpnum}}%
    \fi
 }
-\def\vdefB#1#2{\sxdef{v!\cs{var!#1}!\tmp}{#2}\vdefA}
+\def\vdefB#1#2{\ifx^#2^\else\sxdef{v!\cs{var!#1}!\tmp}{#2}\fi\vdefA}
 
    \_doc
    `\x/<phrase>/` expands to `\v!<tmark>!<phrase>` if such control sequence
@@ -574,11 +575,12 @@
 }
 \def\wdefB #1{\def\tmp{#1}\isnextchar={\wdefC}{\wdefC={}}}
 \def\wdefC =#1{%
-   \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
-   \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
-      \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
-      \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
-   \fi
+   \ea\ifx\ea^\tmp#1^\else
+      \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
+      \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
+         \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
+         \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
+   \fi\fi
    \wdefA
 }
 
