@@ -600,6 +600,15 @@
 }
 
    \_doc
+   The phrase `{<word>}` used in notes must be exactly the same as the word used in
+   the `.txs` text. But we want to capitalize the first letter of the <word>
+   when printing. You can say `\let\upcasefirts=\relax` if you don't want
+   this feature.
+   \_cod
+
+\def\upcasefirst #1{\uppercase{#1}}
+
+   \_doc
    The temporary macros are here. I plan to rewrite them.
    \_cod
 
@@ -614,7 +623,8 @@
    \fnote{%
       \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
       \trymakedest{n:\currverse}%
-      {\bf \expandafter \ifx \csname pword!#1\endcsname \empty \else \cs{pword!#1}. \fi}%
+      {\bf \ea \ifx \csname pword!#1\endcsname \empty
+                \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
       \cs{notetext!#1}}{\Red#2}%
 }
 \def\_printfnotemark{}
