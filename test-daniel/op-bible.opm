@@ -357,7 +357,17 @@
 }
 \def\brefKK #1\brefL#2{\brefL}
 
-\def\striptocomma #1,#2\end#3{\def#3{#1}\def\tmp{#2}}
+   \_doc
+   `\striptocomma <text>,\end \macro` defines `\macro` as the first part of
+   `<text>` separated by first comma. the rest of the `<text>` is saved to
+   the `\tmp` macro.
+   \_cod
+
+\def\striptocomma #1,#2\end#3{\def#3{#1}%
+   \def\tmp{#2}%
+   \unless\ifx\tmp\empty \striptocommaA #2\end \fi
+}
+\def\striptocommaA #1,\end{\def\tmp{#1}}
 
    \_doc
    Macro `\brefL` recalculates `\linkfspec` and `\linktext` due to `\renum` data and
