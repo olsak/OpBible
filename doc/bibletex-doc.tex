@@ -402,43 +402,150 @@ Má-li se přečíslování týkat jediného verše, je třeba uvést shodné
 
 \sec[odkazy] Metody vytváření hyperlinkových odkazů
 
-Odkazy na verše se píší
-mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
-aktivní odkaz na konkrétní verš, ale musí mít předepsaný formát, aby
+Odkaz je úsek textu, podle kterého čtenář i po vytištění pozná, na jaké jiné místo
+v textu (nebo v~internetu) se může podívat. Obsahuje tedy číselný údaj o
+stránce nebo o čísle kapitoly, sekce atd. Navíc, pokud čtenář pracuje s PDF
+prohlížečem, pak tento úsek textu je {\em aktivní}, tj. po najetí myším
+kurzorem nad tento text je možné klikout a PDF prohlížeč přejde na stanovené
+místo v dokumentu (nebo do internetu). Bible je neměnným způsobem
+strukturovaný text. Obsahuje 66 knih s ustálenými značkami pro tyto knihy,
+každá kniha má své kapitoly číslované od jedné a každá kapitola má verše
+číslované od jedné. Není tedy potřeba nechat \TeX/, aby generoval tato čísla
+automaticky (jako to dělá při sazbě třeba odborného textu členícího se na
+kapitoly a sekce) a není tedy vesměs potřeba používat lejblíky ve zdrojovém
+dokumentu (které \TeX/ při zpracování přiřadí k vygenerovaným číslům) a odkazovat pomocí
+těchto lejblíků, jak je popsáno v sekci 1.4.3 v dokumentaci \OpTeX/u. Je
+daleko účelnější odkazovat přímo do konkrétního místa v Bibli, které má už
+po mnohá staletí pevné oznažení knihy, čísla kapitoly a čísla verše.
+
+\secc Odkazy na verše a poznámky k verši
+
+Tyto odkazy píšeme mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
+aktivní odkaz na konkrétní verš nebo poznámku k verši, ale musí mít předepsaný formát, aby
 \TeX/ poznal, na jaký verš má propojit hypertextový odkaz.
 Specifikace odkazu má tyto možnosti:
 
 \begitems
-* "<slovo>" <údaj> ... vytiskne se aktivní <slovo> <údaj>
+* "<text>" <údaj> ... vytiskne se aktivní <text> <údaj>
 * <údaj> ... vytiskne se aktivní <údaj>
 \enditems
 %
 `<údaj>` může být zapsán jako
-`<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy, <kapitola>
-je číslo kapitoly a <verš> může obsahovat číslo jediného verše
-nebo úsek veršů ve tvaru `<od>-<do>`. Je-li uveden úsek veršů, pak link
-odkazuje na první verš úseku.
+`<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy, `<kapitola>`
+je číslo kapitoly a `<verš>` je číslo verše.
+Takovému údaji říkáme {\em úplný údaj}. Kromě toho mohou v odkaze existovat neúplné
+údaje, což popíšeme za chvíli.
 
-Údaj nemusí obsahovat `<kniha>`, pak link odkazuje na verš aktuální knihy.
-Neobsahuje-li údaj `<kniha>`, pak nemusí obsahovat ani `<kapitola>:`, link
-odkazuje na verš aktuální knihy a kapitoly.
-
-Za uzavíracím znakem \code{>} může těsně následovat písmeno `n`, které určí, že
-link neodkazuje na verš, ale na poznámku k verši.
-
-Příklady:
+Je-li v odkaze přítomný `<text>`, stává se součástí aktivního odkazu,
+srovnejte:
 
 \begtt \catcode`<=12
-<13> vytiskne se 13 jako odkaz na verš 13 aktuální knihy a kapitoly
-<"verš" 13> vytiskne se "verš~13" jako odkaz na verš 13
-<"konec verše" Gn 2:11> vytiskne se "konec verše~Gn~2:11" a odkazuje na Gn 2:11.
-<"ponznámku" 13>n vytiskne se "poznámku~13" a odkazuje na poznámku k verši 13.
+... viz také verš <Jr 8:13>
+... viz také <"verš" Jr 8:13>
 \endtt
+V prvním případě se vytiskne ... viz také verš {\Blue Jr 8:13} a ve druhém
+... viz také {\Blue verš Jr 8:13}. Aktivní (umožňující proklik) bude v obou případech
+oblast zde vyznačena modře.
 
-Pokud odkaz směřuje na verš nebo poznámku k verši, který má odlišné
-číslování specifikované makrem `\renum`, pak do odkazu zapište odkaz podle
+Někdy dokáže umístění verše čtenář stanovit z kontextu, takže `<údaj>`
+nemusí být úplný. V~neúplném údaji může chybět `<kniha>` nebo
+`<kniha>:<kapitola>`. Například:
+
+\begtt \catcode`<=12
+... analogii vidíme též ve <"verších" Jr 8:13>, <9:7> a <11:3>
+... viz verše <Jr 8:13>, <15>, <17>
+... viz všechny <"verše" Jr 8:13>--<22>.
+\endtt
+Vytiskne se:
+... analogii vidíme též ve {\Blue verších Jr 8:13}, {\Blue 9:7} a {\Blue 11:3}
+... viz verše {\Blue Jr 8:13}, {\Blue 15}, {\Blue 17}
+... viz všechny {\Blue verše Jr 8:13}--{\Blue 22}.
+
+Údaje `9:7`, `11:3`, `15`, `17` a `22` v těchto příkladech jsou neúplné. Čtenář ví, že se týkají
+knihy Jeremjáš a že v druhém a třetím případě, že se týkají kapitoly 8 knihy
+Jeremjáš. Ví to i \TeX/ a přidělí těm neúplným odkazům správné interní
+odkazy (podle kterých se provede proklik), protože pracuje podle
+následujícího pravidla:
+\begitems
+* Chybí-li v údaji `<kniha>`, použije se `<kniha>` naposledy uvedeného úplného
+  údaje.
+* Chybí-li též `<kapitola>`, použije se kapitola z naposledy uvedeného údaje, kde je
+  číslo kapitoly uvedeno.
+\enditems
+
+Toto pravidlo předpokládá, že první `<údaj>` musí být úplný. To ale není
+pravda, v každé poznámce `\Note` text začíná s předpokladem, je případná
+chybějící kniha se doplní aktuálně zpracovávanou knihou a chybějící kapitola
+atuálně zpracovávanou kapitolou. Takže, pokud jsme v kapitole 4 knihy
+Daniel, pak
+\begtt \catcode`<=12
+\Note 4.2 {} Viz též <8>.
+
+\Note 4.7 {} Podívejte se také na <7:11>.
+\endtt
+vytvoří příslušné odkazy, v první ukázce proklik směřuje na Da 4:8 a ve druhé na Da 7:11.
+
+Chcete-li v poznámce nejprve odkazovat na vzdálené místo (například na jinou
+knihu) a poté na blízké místo (tj. do aktuálně zpracovávané knihy či
+kapitoly) neúplným odkazem, je potřeba před tímto blízkým neúplným odkazem napsat
+`\`. Například v knize Daniel:
+
+\begtt \catcode`<=12
+\Note 4.5 {} Myšlenka se opakuje v <Jr 3:5>. Ale také v \<8:3> najdete o tom zmínku.
+\endtt
+Zde druhý odkaz proklikne na Da 8:3, ale kdyby tam nebyl `\`, prokliknul by
+na Jr 8:3.
+
+Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
+číslování specifikované makrem `\renum`, pak do odkazu zapište údaj podle
 výchozího číslování a \TeX/ si jej sám přepočítá podle dat uvedených v
 `\renum`.
+
+Kromě odkazů na verše lze zcela analogicky odkazovat na poznámky k danému
+verši. Formát odkazu i pravidla sestavení odkazu jsou stejné, jako u odkazů
+na verše. Ale těsně za zavírací závorkou `>` je navíc písmeno `n`, které se
+netiskne. Takže třeba
+
+\begtt \catcode`\<=12
+... viz <"poznámku" Jr 7:4>n, kde je uvedeno více informací.
+\endtt
+vytiskne ... viz {\Blue poznámku Jr 7:4}, kde je uvedeno více informací.
+Proklik vede na první poznámku k~verši Jr~7:4, nikoli k verši samotnému.
+
+\TODO: Možná analogicky odkazy na glosy a další podobné záležitosti.
+
+Je-li uveden odkaz na neexistující verš nebo neexistující poznámku, pak
+nastanou dvě možnosti. Je-li to odkaz na knihu, která se záměrně netiskne
+(protože například pracujeme s testovacím výtiskem jen vybraných knih Bible,
+viz též `\printedbooks` v sekci~\ref[hlavni]), pak odkaz je sice obarven,
+jakoby byl aktivní, ale aktivní není a v logu při zpracování \TeX/em se
+neobjeví žádé varování. Pokud ale odkaz směžuje na neexistující verš nebo
+poznámku tištěné části Bible, pak odkaz je aktivní, proklik směřuje na
+poslední stránku PDF souboru a v logu se objeví o tom varování, že odkaz
+není správný. Při prvním zpracování \TeX/em jsou ale neošetřeny všechny
+odkazy a v logu je velké množství varování a nesprávných odkazech.
+Teprve při následujícím zpracování \TeX/em jsou odkazy směřující do
+existujícího místa správně prolinkovány.
+
+\secc Odkazy na kapitoly a na knihy
+
+Chcete-li odkázat na knihu s proklikem na začátek této knihy, pište
+`\cref[<kniha>]`, například `\cref[Gn]` vytiskne {\Blue Gn} s proklikem na
+začátek knihy Genesis. Podobně `\cref[Gn 2]` vytiskne {\Blue Gn~2} s~proklikem
+na začátek kapitoly Den odpočinutí. Chcete-li vytisknout něco jiného, pak za
+údajem `[...]` musí těsně následovat `{<text>}`, kde `<text>` je text, který
+se má vytisknout a stát se aktivním odkazem. Takže třeba
+`\cref[Gn 2]{Den opdočinutí}` vytiskne {\Blue Den odpočinutí} s proklikem na
+odpovídající kapitolu.
+
+\secc Odkazy na stránky
+
+Ve svém textu můžete umístit netištěný cíl odkazu na stránku pomocí `\pglabel[<lejblík>]` a
+pak můžete odkazovat na stránku pomocí `\pgref[<lejblík>]`. V místě
+`\pgref[<lejblík>]` se vytiskne číslo strany, které je možné prokliknout.
+Podobně jako v případě `\cref` se dá pomocí příkazu `\pgref[<lejblík>]{<text>}`
+vytisknout jiný `<text>` než číslo strany, který proklikne na místo, kde
+je umístěný `\pglabel[<lejblík>]`.
 
 
 \sec[hlavni] Hlavní soubor s údaji o všech dalších souborech
