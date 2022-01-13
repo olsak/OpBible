@@ -416,7 +416,7 @@ kapitoly a sekce) a není tedy vesměs potřeba používat lejblíky ve zdrojov�
 dokumentu (které \TeX/ při zpracování přiřadí k vygenerovaným číslům) a odkazovat pomocí
 těchto lejblíků, jak je popsáno v sekci 1.4.3 v dokumentaci \OpTeX/u. Je
 daleko účelnější odkazovat přímo do konkrétního místa v Bibli, které má už
-po mnohá staletí pevné oznažení knihy, čísla kapitoly a čísla verše.
+po mnohá staletí pevné označení knihy, čísla kapitoly a čísla verše.
 
 \secc Odkazy na verše a poznámky k verši
 
@@ -431,10 +431,11 @@ Specifikace odkazu má tyto možnosti:
 \enditems
 %
 `<údaj>` může být zapsán jako
-`<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy, `<kapitola>`
-je číslo kapitoly a `<verš>` je číslo verše.
-Takovému údaji říkáme {\em úplný údaj}. Kromě toho mohou v odkaze existovat neúplné
-údaje, což popíšeme za chvíli.
+`<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy (za ní musí být
+mezera), `<kapitola>` je číslo kapitoly a `<verš>` je číslo verše.
+Takovému údaji říkáme {\em úplný údaj}. 
+Odkaz s úplným údajem je {\em úplný odkaz}.
+Kromě toho mohou existovat neúplné údaje/odkazy, což popíšeme za chvíli.
 
 Je-li v odkaze přítomný `<text>`, stává se součástí aktivního odkazu,
 srovnejte:
@@ -448,8 +449,8 @@ V prvním případě se vytiskne ... viz také verš {\Blue Jr 8:13} a ve druhé
 oblast zde vyznačena modře.
 
 Někdy dokáže umístění verše čtenář stanovit z kontextu, takže `<údaj>`
-nemusí být úplný. V~neúplném údaji může chybět `<kniha>` nebo
-`<kniha>:<kapitola>`. Například:
+nemusí být úplný. V~{\em neúplném údaji} může chybět `<kniha>` nebo
+`<kniha> <kapitola>:`. Například:
 
 \begtt \catcode`<=12
 ... analogii vidíme též ve <"verších" Jr 8:13>, <9:7> a <11:3>
@@ -462,44 +463,68 @@ Vytiskne se:
 ... viz všechny {\Blue verše Jr 8:13}--{\Blue 22}.
 
 Údaje `9:7`, `11:3`, `15`, `17` a `22` v těchto příkladech jsou neúplné. Čtenář ví, že se týkají
-knihy Jeremjáš a že v druhém a třetím případě, že se týkají kapitoly 8 knihy
+knihy Jeremjáš a že v případě, kdy není uvedena ani kapitola, se týkají kapitoly 8 knihy
 Jeremjáš. Ví to i \TeX/ a přidělí těm neúplným odkazům správné interní
 odkazy (podle kterých se provede proklik), protože pracuje podle
 následujícího pravidla:
 \begitems
-* Chybí-li v údaji `<kniha>`, použije se `<kniha>` naposledy uvedeného úplného
+* Chybí-li v údaji `<kniha>`, použije se `<kniha>` předchozího naposledy uvedeného úplného
   údaje.
-* Chybí-li též `<kapitola>`, použije se kapitola z naposledy uvedeného údaje, kde je
+* Chybí-li též `<kapitola>`, použije se kapitola z předchozího naposledy uvedeného údaje, kde je
   číslo kapitoly uvedeno.
 \enditems
+Předchozí údaje uvedené v těchto pravidlech musejí být v textu
+společné poznámky, glosy, atd. 
 
-Toto pravidlo předpokládá, že první `<údaj>` musí být úplný. To ale není
-pravda, v každé poznámce `\Note` text začíná s předpokladem, je případná
-chybějící kniha se doplní aktuálně zpracovávanou knihou a chybějící kapitola
-atuálně zpracovávanou kapitolou. Takže, pokud jsme v kapitole 4 knihy
-Daniel, pak
+Pokud v jedné poznámce nepředcházejí žádné úplné odkazy, pak jsou neúplné odkazy
+interpretovány jako {\em lokální}, tj. proklik vede na aktuální knihu nebo
+též (při vynechaném čísle kapitoly) na aktuální kapitolu. Například v knize Daniel může být poznámka:
+
 \begtt \catcode`<=12
-\Note 4.2 {} Viz též <8>.
-
-\Note 4.7 {} Podívejte se také na <7:11>.
+\Note 3:2  {} Analogii vidíme též ve verších <7>, <11> a <13>.
 \endtt
-vytvoří příslušné odkazy, v první ukázce proklik směřuje na Da 4:8 a ve druhé na Da 7:11.
+a ta má odkazy {\Blue 7}, {\Blue 11} a {\Blue 13} interně směřující na 
+Da 3:7, Da 3:11 a Da 3:13.
+
+Naopak úplný údaj může odkazovat do aktuálně zpracovávané knihy. Pak \TeX/ zkratku
+knihy nevytiskne. Například píšeme poznámku v knize Daniel ve tvaru
+
+{\everyintt{\Magenta}
+\begtt \catcode`<=12
+\Note 8:2 {} ... srovnejte to též s <Da 5:4>.
+\endtt
+Vytiskne se jen ... srovnejte to též s {\Blue 5:4}. Chcete-li, aby údaj o
+knize (ačkoli lokální) nezmizel, je třeba před otevírací závorku napsat `\`,
+tedy psát `\<Da 5:4>`. 
+
+Pokud údaj odkazuje do kapitoly, ve které je odkaz uveden, údaj o kapitole
+nemizí (nebo ano? ale to vede ke komplikacím.\TODO??).
 
 Chcete-li v poznámce nejprve odkazovat na vzdálené místo (například na jinou
-knihu) a poté na blízké místo (tj. do aktuálně zpracovávané knihy či
-kapitoly) neúplným odkazem, je potřeba před tímto blízkým neúplným odkazem napsat
-`\`. Například v knize Daniel:
+knihu) a poté použít lokální odkaz, je potřeba lokální odkaz vždy napsat
+jako úplný. \TeX/ jej automaticky zkrátí dle pravidla uvedeného výše. 
+Tedy v knize Daniel může být
 
 \begtt \catcode`<=12
-\Note 4.5 {} Myšlenka se opakuje v <Jr 3:5>. Ale také v \<8:3> najdete o tom zmínku.
+\Note 4.5 {} Myšlenka se opakuje v <Jr 3:5>. Ale také v <Da 8:3> najdete o tom zmínku.
 \endtt
-Zde druhý odkaz proklikne na Da 8:3, ale kdyby tam nebyl `\`, prokliknul by
-na Jr 8:3.
+Zde druhý odkaz se vytiskne jen jako {\Blue 8:3}. Kdybyste v druhém odkaze
+nenapsali `Da`, směřoval by do Jr 8:3. Když napíšete `\<Da 8:3>`, údaj o
+knize Da se vytiskne, ačkoli je lokální.
 
 Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
 číslování specifikované makrem `\renum`, pak do odkazu zapište údaj podle
 výchozího číslování a \TeX/ si jej sám přepočítá podle dat uvedených v
 `\renum`.
+
+Údaj (úplný i neúplný) může mít také formát {\em rozsahu}. Místo čísla verše
+je uvedeno `<od>-<do>`, kde `<od>` je číslo prvního verše rozsahu a `<do>` je
+číslo posledního verše rozsahu. Například `<Jr 3:1-13>` nebo `<5:7-9>` nebo
+`<7-11>`. Takový údaj se vytiskne s pomlčkou a proklik vede vždy jen na první
+verš rozsahu. Takže v našem příkladě dostaneme {\Blue Jr 3:1--13} nebo
+{\Blue 5:7--9} nebo {\Blue 7--11}. Upozornění: ve formátu `<od>-<do>` se
+píše spojovník (ASCII 45) a \TeX/ jej nahradí automaticky pomlčkou. 
+}
 
 Kromě odkazů na verše lze zcela analogicky odkazovat na poznámky k danému
 verši. Formát odkazu i pravidla sestavení odkazu jsou stejné, jako u odkazů
@@ -519,13 +544,18 @@ nastanou dvě možnosti. Je-li to odkaz na knihu, která se záměrně netiskne
 (protože například pracujeme s testovacím výtiskem jen vybraných knih Bible,
 viz též `\printedbooks` v sekci~\ref[hlavni]), pak odkaz je sice obarven,
 jakoby byl aktivní, ale aktivní není a v logu při zpracování \TeX/em se
-neobjeví žádé varování. Pokud ale odkaz směžuje na neexistující verš nebo
+neobjeví žádné varování. Pokud ale odkaz směřuje na neexistující verš nebo
 poznámku tištěné části Bible, pak odkaz je aktivní, proklik směřuje na
 poslední stránku PDF souboru a v logu se objeví o tom varování, že odkaz
 není správný. Při prvním zpracování \TeX/em jsou ale neošetřeny všechny
 odkazy a v logu je velké množství varování a nesprávných odkazech.
 Teprve při následujícím zpracování \TeX/em jsou odkazy směřující do
 existujícího místa správně prolinkovány.
+
+Shrnutí. Odkaz zapisujeme ve formátu
+{\def\o{\everyintt{\catcode`\<=13 \Blue}}\Magenta \tt
+{\o`\`}\char60{\o`"<text>" <kniha> <kapitola>:`}`<verš>`{\o`-<verš-do>`}\char62{\o`n`}}
+kde části vyznačené modře je možné vynechat.
 
 \secc Odkazy na kapitoly a na knihy
 
@@ -551,7 +581,7 @@ je umístěný `\pglabel[<lejblík>]`.
 \sec[hlavni] Hlavní soubor s údaji o všech dalších souborech
 
 Hlavní soubor je soubor, který se \TeX/u předloží jako první. Například je
-uveden na příkazvém řádku pro spuštění \TeX/u. V něm jsou informace, jaké
+uveden na příkazovém řádku pro spuštění \TeX/u. V něm jsou informace, jaké
 další soubory si má \TeX/ přečíst. Nakonec \TeX/ vytvoří soubor PDF stejného
 názvu, jako je název hlavního souboru.
 
