@@ -146,7 +146,12 @@
                        \xdef\oword{#2}}%
    \isnextchar={\NoteA}{\NoteA={}}%
 }
-\def\NoteA=#1 #2\par{%
+\ifx\_partokenset\undefined
+   \def\defnoteA{\def\NoteA=##1 ##2\par}
+\else
+   \def\defnoteA{\def\NoteA=##1 ##2\_par}
+\fi
+\defnoteA{%
    \global\sdef{notetext!\the\notenum}{#2}%
    \sxdef{noteref!\the\notenum}{\fullvrefm}%
    \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
