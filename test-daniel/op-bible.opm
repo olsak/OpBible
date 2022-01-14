@@ -297,7 +297,7 @@
    user can type \code{\<}<link-spec>\code{\>} for link specification.\nl
    Internal full link specification is <link-pre>:<book-mark>/<chapter-num>:<verse-num>.
    The macro `\bref` reads <link-spec> and creates internal full link
-   specification saved in `\linkpe:\linkfspec` macros. Moreover, it creates
+   specification saved in `\linkpre:\linkfspec` macros. Moreover, it creates
    macro `\linktext` wich expands to the text to be printed as active link.
    The `\linktext` consists from `\ltextP` (the text before a link),
    `\ltextB` (the book mark followed by `~`), `\ltextC` (the chapter number followed by `:`),
@@ -642,7 +642,7 @@
       \trymakedest{n:\currverse}%
       {\bf \ea \ifx \csname pword!#1\endcsname \empty
                 \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
-      \cs{notetext!#1}}{\Red#2}%
+      \cs{notetext!#1}\unskip\vadjust{\penalty0}}{\Red#2}%
 }
 \def\_printfnotemark{}
 \def\_textindent#1{\noindent}
@@ -662,6 +662,29 @@
 }
 \def\_afterload{\adef<{\bref}}
 \_afterload
+
+% two columns for notes, experimental macros:
+
+\_def\_pagecontents{\_pagedest % destination of the page
+  \_ifvoid\_topins \_else \_unvbox\_topins\_fi
+  \_dimen0=\_dp255 \_unvbox255 % open up \box255
+  \_ifvoid\_footins \_else % footnote info is present
+    \unskip
+    \_vskip\_skip\_footins
+    \_footnoterule
+    \bigskip
+    \setbox\_footins=\vbox{\penalty0 \unvbox\_footins}
+    \_setbox0=\_vsplit\_footins to0pt \def\_Ncols{2}
+    \_dimen0=.5\_ht\_footins \_setbox6=\_box\_footins
+    \_balancecolumns
+    \vfil
+    \_fi
+  \_kern-\_dimen0 \_vskip \_pgbottomskip
+}
+\addto\_fnset{\widowpenalty=20 \clubpenalty=20 \hsize=.5\hsize \advance\hsize by-1em \relax}
+\_count\_footins=510 % footnote magnification factor (1 to 1)
+\_dimen\_footins=\maxdimen % maximum footnotes per page
+
 
 \endinput
 \_endcode
