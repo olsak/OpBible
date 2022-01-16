@@ -19,7 +19,7 @@
 \typosize[11/13]
 \hyperlinks\Blue\Blue
 
-\raggedbottom
+%\raggedbottom
 \parindent=20pt
 
    \_doc
@@ -667,7 +667,7 @@
 
 \_def\_pagecontents{\_pagedest % destination of the page
   \_ifvoid\_topins \_else \_unvbox\_topins\_fi
-  \_dimen0=\_dp255 \_unvbox255 % open up \box255
+  \_dimen5=\_dp255 \_unvbox255 % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
     \unskip
     \_vskip\_skip\_footins
@@ -679,10 +679,12 @@
     \_balancecolumns
     \vfil
     \_fi
-  \_kern-\_dimen0 \_vskip \_pgbottomskip
+  \_kern-\_dimen5 \_vskip \_pgbottomskip
 }
-\addto\_fnset{\widowpenalty=20 \clubpenalty=20 \hsize=.5\hsize \advance\hsize by-1em \relax}
-\_count\_footins=510 % footnote magnification factor (1 to 1)
+\addto\_fnset{\widowpenalty=20 \clubpenalty=20
+   \hbadness=3000
+   \hsize=.5\hsize \advance\hsize by-1em \relax}
+\_count\_footins=500 % footnote magnification factor (1 to 1)
 \_dimen\_footins=\maxdimen % maximum footnotes per page
 
 
