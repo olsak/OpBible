@@ -1,4 +1,6 @@
 \cslang
+\margins/1 a4 (20,,,)mm
+\fixmnotes\right
 \fontfam[schola]
 \def\TODO{{\Red TODO}}
 \verbchar`
@@ -420,6 +422,7 @@ po mnohá staletí pevné označení knihy, čísla kapitoly a čísla verše.
 
 \secc Odkazy na verše a poznámky k verši
 
+\mnote{Základní pravidlo}
 Tyto odkazy píšeme mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
 aktivní odkaz na konkrétní verš nebo poznámku k verši, ale musí mít předepsaný formát, aby
 \TeX/ poznal, na jaký verš má propojit hypertextový odkaz.
@@ -433,11 +436,13 @@ Specifikace odkazu má tyto možnosti:
 `<údaj>` může být zapsán jako
 `<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy (za ní musí být
 mezera), `<kapitola>` je číslo kapitoly a `<verš>` je číslo verše.
+\mnote{Úplný údaj}%
 Takovému údaji říkáme {\em úplný údaj}. 
 Odkaz s úplným údajem je {\em úplný odkaz}.
 Kromě toho mohou existovat neúplné údaje/odkazy, což popíšeme za chvíli.
 
-Je-li v odkaze přítomný `<text>`, stává se součástí aktivního odkazu,
+\mnote{Předsunutý text}
+Je-li v odkaze přítomný předsunutý `<text>`, stává se součástí aktivního odkazu,
 srovnejte:
 
 \begtt \catcode`<=12
@@ -448,6 +453,7 @@ V prvním případě se vytiskne ... viz také verš {\Blue Jr 8:13} a ve druhé
 ... viz také {\Blue verš Jr 8:13}. Aktivní (umožňující proklik) bude v obou případech
 oblast zde vyznačena modře.
 
+\mnote{Neúplný údaj}
 Někdy dokáže umístění verše čtenář stanovit z kontextu, takže `<údaj>`
 nemusí být úplný. V~{\em neúplném údaji} může chybět `<kniha>` nebo
 `<kniha> <kapitola>:`. Například:
@@ -474,58 +480,77 @@ následujícího pravidla:
   číslo kapitoly uvedeno.
 \enditems
 Předchozí údaje uvedené v těchto pravidlech musejí být v textu
-společné poznámky, glosy, atd. 
-
-Pokud v jedné poznámce nepředcházejí žádné úplné odkazy, pak jsou neúplné odkazy
-interpretovány jako {\em lokální}, tj. proklik vede na aktuální knihu nebo
-též (při vynechaném čísle kapitoly) na aktuální kapitolu. Například v knize Daniel může být poznámka:
+společné poznámky, glosy, atd. Nejsou-li tam, jsou neúplné odkazy 
+interpretovány jako \mnote{Lokální údaj}{\em lokální}, tj. proklik vede na
+aktuální knihu nebo též (při vynechaném čísle kapitoly) na aktuální
+kapitolu. Například v knize Daniel může být poznámka:
 
 \begtt \catcode`<=12
 \Note 3:2  {} Analogii vidíme též ve verších <7>, <11> a <13>.
 \endtt
-a ta má odkazy {\Blue 7}, {\Blue 11} a {\Blue 13} interně směřující na 
+a vytisknou se odkazy {\Blue 7}, {\Blue 11} a {\Blue 13} interně směřující na 
 Da 3:7, Da 3:11 a Da 3:13.
 
-Naopak úplný údaj může odkazovat do aktuálně zpracovávané knihy. Pak \TeX/ zkratku
-knihy nevytiskne. Například píšeme poznámku v knize Daniel ve tvaru
-
-{\everyintt{\Magenta}
+\mnote{Údaj uvozený \code{\\}}
+Lokální neúplný údaj můžete zapsat také pomocí \code{\\<...>}, tedy
+přidáním znaku `\` před otevírací závorku odkazu. Takový údaj je interpretován
+jako lokální, ačkoli před ním předchází třeba úplný údaj odkazující na
+vzdálené místo v Bibli. Například:
 \begtt \catcode`<=12
-\Note 8:2 {} ... srovnejte to též s <Da 5:4>.
+\Note 4.5 {} Myšlenka se opakuje v <Jr 4:5>. Ale také v \<8:3> najdete o tom zmínku.
 \endtt
-Vytiskne se jen ... srovnejte to též s {\Blue 5:4}. Chcete-li, aby údaj o
-knize (ačkoli lokální) nezmizel, je třeba před otevírací závorku napsat `\`,
-tedy psát `\<Da 5:4>`. 
+Zde odkaz {\Blue 8.3} vede na verš 3 kapitoly 8 aktuální knihy. Kdyby tam
+znak `\` nebyl, pak by tento odkaz vedl na 8:3 knihy Jeremjáš.
 
-Pokud údaj odkazuje do kapitoly, ve které je odkaz uveden, údaj o kapitole
-nemizí (nebo ano? ale to vede ke komplikacím.\TODO??).
-
-Chcete-li v poznámce nejprve odkazovat na vzdálené místo (například na jinou
-knihu) a poté použít lokální odkaz, je potřeba lokální odkaz vždy napsat
-jako úplný. \TeX/ jej automaticky zkrátí dle pravidla uvedeného výše. 
-Tedy v knize Daniel může být
-
-\begtt \catcode`<=12
-\Note 4.5 {} Myšlenka se opakuje v <Jr 3:5>. Ale také v <Da 8:3> najdete o tom zmínku.
-\endtt
-Zde druhý odkaz se vytiskne jen jako {\Blue 8:3}. Kdybyste v druhém odkaze
-nenapsali `Da`, směřoval by do Jr 8:3. Když napíšete `\<Da 8:3>`, údaj o
-knize Da se vytiskne, ačkoli je lokální.
-
+\mnote{Přečíslování odkazu}
 Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
 číslování specifikované makrem `\renum`, pak do odkazu zapište údaj podle
 výchozího číslování a \TeX/ si jej sám přepočítá podle dat uvedených v
 `\renum`.
 
-Údaj (úplný i neúplný) může mít také formát {\em rozsahu}. Místo čísla verše
-je uvedeno `<od>-<do>`, kde `<od>` je číslo prvního verše rozsahu a `<do>` je
-číslo posledního verše rozsahu. Například `<Jr 3:1-13>` nebo `<5:7-9>` nebo
-`<7-11>`. Takový údaj se vytiskne s pomlčkou a proklik vede vždy jen na první
-verš rozsahu. Takže v našem příkladě dostaneme {\Blue Jr 3:1--13} nebo
-{\Blue 5:7--9} nebo {\Blue 7--11}. Upozornění: ve formátu `<od>-<do>` se
-píše spojovník (ASCII 45) a \TeX/ jej nahradí automaticky pomlčkou. 
-}
+\mnote{Údaj ve formě rozsahu}
+Údaj (úplný i neúplný) může mít také formát {\em rozsahu}. Toho dosáhnete
+tak, že za údaj podle předchozích pravidel připojíte spojovník (znak `-`,
+ASCII 45) a pak následuje další `<verš>` nebo `<kapitola>:<verš>`. Příklady:
 
+\begtt \catcode`<=12
+<Jr 8:3-7>,
+<Jr 8:3-9:5>,
+<3-7>,
+<8:3-7>.
+\endtt
+Vytiskne se místo spojovníku automaticky pomlčka. 
+Celý takový odkaz umožňuje prokliknout jen na první místo rozsahu, takže
+třeba první odkaz z předchozího příkladu se vytiskne jako {\Blue Jr 8:3--7}
+a nabízí proklik jen na Jr~8:3.
+
+\mnote{Redukce údajů}
+Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
+závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}
+uvozujících předsunutý `<text>`). To je ale možné změnit. 
+Možná budete chtít do závorek pro odkaz psát úplné údaje a požadovat jejich automatickou 
+redukci na neúplné, odkazují-li na aktuální knihu.
+Neodkazují-li na aktuální knihu, údaj zůstane úplný. Toho můžete docílit
+přidáním `\re` před otevírací závorku údaje (pravidlo případné redukce 
+se uplatní jen na tento jediný údaj) nebo pomocí příkazu `\reduceref`. Když jej
+použijete v poznámce (nebo v \TeX/ové skupině), pravidlo redukce se uplatní 
+pro všechny následující úplné údaje této poznámky (této \TeX/ové skupiny). 
+Když jej použijete v deklaraci sazby,
+pravidlo případné redukce se uplatní na všechny úplné údaje v dokumentu. 
+Příklad:
+
+\begtt \catcode`<=12
+\re<"verš" Da 7:3>
+\endtt
+se vytiskne jako {\Blue verš Da~7:3}, je-li tento odkaz uveden mimo knihu
+Daniel. Když je ale tento odkaz uveden v knize Daniel, vytiskne se
+jen {\Blue verš~7:3}, který interně odkazuje na Da~7:3. 
+
+Pravidlo redukce odkazů nastavené pomocí `\reduceref` lze vypnout 
+příkazem `\noreduceref`. Od něj až do konce poznámky (\TeX/ové skupipny)
+se odkazy chovají, jakoby `\reduceref` nebylo zapnuté.
+
+\mnote{Odkazy na poznámky}
 Kromě odkazů na verše lze zcela analogicky odkazovat na poznámky k danému
 verši. Formát odkazu i pravidla sestavení odkazu jsou stejné, jako u odkazů
 na verše. Ale těsně za zavírací závorkou `>` je navíc písmeno `n`, které se
@@ -539,6 +564,7 @@ Proklik vede na první poznámku k~verši Jr~7:4, nikoli k verši samotnému.
 
 \TODO: Možná analogicky odkazy na glosy a další podobné záležitosti.
 
+\mnote{Odkazy na neexistující místo}
 Je-li uveden odkaz na neexistující verš nebo neexistující poznámku, pak
 nastanou dvě možnosti. Je-li to odkaz na knihu, která se záměrně netiskne
 (protože například pracujeme s testovacím výtiskem jen vybraných knih Bible,
