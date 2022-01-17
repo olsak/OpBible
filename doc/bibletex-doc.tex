@@ -612,6 +612,18 @@ Takové písmeno můžete připojit k úplnému i neúplnému odkazu. Pro potře
 hyperlinku se tato písmena ignorují, ale vytisknou se. Tedy uvedený příklad
 vytiskne ... viz {\Blue Da~9:11b} ale proklik vede na Da~9:11.
 
+\mnote{Chybějící číslo verše}
+Pokud je v údaji přítomná značka knihy a není přítomná dvojtečka, je
+následující číslo interpretováno jako číslo kapitoly, nikoli jako číslo
+verše. Například
+\begtt \catcode`<=12
+... viz <"kapitolu" Da 7>
+... Josefův příběh (<Gn 39-41>)
+\endtt
+\TeX- vytvoří hyperlink na první verš dané kapitoly. Takže uvedený příklad
+vytiskne ... viz {\Blue kapitolu Da 7} ... Josefův příběh {\Blue Gn 39--41}
+a prokliky vedou na Da~7:1 a na Gn~39:1.
+
 \mnote{Redukce údajů}
 Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
 závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}

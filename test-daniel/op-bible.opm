@@ -292,88 +292,101 @@
 %% Makra pro tvorbu linků specifikovaných jako <link>
 
    \_doc
-   `\bref <link-spec>>` creates a link given by <link-spec> and prints
-   <link-spec>. See user manual for variants of the format of <link-spec>.
-   We will set \code{\<} as active character with meaning `\bref`, so
-   user can type \code{\<}<link-spec>\code{\>} for link specification.\nl
-   Internal full link specification is <link-pre>:<book-mark>/<chapter-num>:<verse-num>.
-   The macro `\bref` reads <link-spec> and creates internal full link
-   specification saved in `\linkpre:\linkfspec` macros. Moreover, it creates
-   macro `\linktext` wich expands to the text to be printed as active link.
-   The `\linktext` consists from `\ltextP` (the text before a link),
-   `\ltextB` (the book mark followed by `~`), `\ltextC` (the chapter number followed by `:`),
-   `\ltextV` (the verse number), `\ltextS` (separator comma or `--`),
-   `\ltextN` (the next text after `\ltextS`).
-   Each of these macros (except `\ltextV`) can be empty.
+   \sec Bible references
+   We prepare temporary macros first.\nl
+   `\isspacein <text> \iftrue` is true if `<text>` includes a space.\nl
+   `\iscolonin <text>:\iftrue` is true if `<text>` includes a colon.\nl
+   `\isdivisin <text>-\iftrue` is true if `<text>` includes a divis.
    \_cod
 
-\def\bref {\def\ltextP{}\def\ltextB{}\def\ltextC{}\def\ltextS{}\def\ltextN{}\futurelet\next\brefC}
-\def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextN}
+\def\isspacein #1 #2\iftrue{\isempty{#2}\iffalse}
+\def\iscolonin #1:#2\iftrue{\isempty{#2}\iffalse}
+\def\isdivisin #1-#2\iftrue{\isempty{#2}\iffalse}
 
    \_doc
-   Macro `\brefC` scans `"` as a potential first character and
-   saves <word> (from `"<word>"` specification) to `\ltextP`.
+   The \code{\<} will be set to active as character equivalent to
+   the macro `\bref <text>>`. This macro soes all job with the hyperlinks.
+   Fist of all, it scanns the parts of the `<text>` and saves them to
+   \begitems
+   * `\ltextP` ... the text before a link specification (given in `"..."`)
+   * `\ltextB` ... the book mark followed by `~`
+   * `\ltextC` ... the chapter number followed by `:`
+   * `\ltextV` ... the verse number
+   * `\ltextS` ... subverse identifier (`a` if there is a verse `4a`)
+   * `\ltextF` ... the `--` if the `<from>-<to>` format is given
+   * `\ltextN` ... the `<to>` part from the `<from>-<to>` format.
+   \enditems
+   All these macros above can be empty if the appropriate part of the
+   scanned `<text>` is missing.
+   The `\linkpre` macro includes `v` if it is verse link,
+   includes `n` if it is note link and `g` if it is gloss link.
+   These macros will be converted due to `\renum` data (if needed)
+   and printed by `\linktext`.
    \_cod
 
-\def\brefB {\futurelet\next\brefC}
-\def\brefC {\ifx\next"\def\nextdo"##1"{\def\ltextP{##1}\brefD}%
-            \else \def\nextdo{\brefD}%
-            \fi \nextdo
+\def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
+\def\bref {\isnextchar"{\brefA}{\brefA""}}
+\def\brefA"#1"{\def\ltextP{#1}%
+   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }{\brefB}%
 }
+\def\brefB #1>{% #1 is <link-spec>
+   \def\ltextB{}\def\ltextC{}\def\ltextF{}\def\ltextN{}%
+   \isspacein #1 \iftrue
+         \iscolonin #1:\iftrue \brefBookChapterVerse #1>%
+         \else \brefBookChapter #1>\fi
+   \else \iscolonin #1:\iftrue \brefChapterVerse #1>%
+   \else \brefVerse #1>%
+   \fi\fi
+   \def\linkpre{v}%
+   \isnextchar n{\def\linkpre{n}\brefC}%
+      {\isnextchar g{\def\linkpre{g}\brefC}%
+         {\isnextchar a{\def\linkpre{a}\brefC}{\brefD}}}%
+}
+\def\brefBookChapterVerse #1 #2:#3>{\def\ltextB{#1~}\brefChapterVerse #2:#3>}
+\def\brefBookChapter #1 #2>{\def\ltextB{#1~}\brefChapter #2>}
+\def\brefChapterVerse #1:#2>{\def\ltextC{#1:}\brefVerse #2>}
+\def\brefVerse #1>{%
+   \isdivisin #1-\iftrue \brefFromTo #1>%
+   \else \versedef#1\relax\fi
+}
+\def\brefChapter #1>{%
+   \isdivisin #1-\iftrue \brefFromTo #1>\let\ltextC=\ltextV
+   \else \def\ltextC{#1}\fi
+   \def\ltextV{}\def\ltextS{}%
+}
+\def\brefFromTo #1-#2>{\versedef#1\relax\def\ltextF{--}\def\ltextN{#2}}
+
+\def\brefC{\afterassignment\brefD \let\next= }
 
    \_doc
-   If there si a space between `"<word>"` and the next `<link-spec>`, then
-   it is saved as no-breakable space into `\ltextP`.
+   Because the verse number can be in the format `11b`, we need to separate
+   the numeric part of this and save it to `\ltextV` and the rest is saved
+   to `\ltextS`. This is done by the `\versedef <verse>\relax` macro.
    \_cod
 
-\def\brefD {\futurelet\next\brefE}
-\def\brefE {\ea\ifx\space\next \addto\ltextP{~}\def\nextdo{\afterassignment\brefF \let\next= }%
-            \else \def\nextdo{\brefF}%
-            \fi \nextdo
-}
+\def\versedef {\afterassignment\versedefB \tmpnum=0}
+\def\versedefB #1\relax{\edef\ltextV{\the\tmpnum}\def\ltextS{#1}}
 
    \_doc
-   Next <link-spec> is processed by macros `\brefF` ... `\brefJ`.
+   Now, we create `\linkfspec` from scanned data. It is <full-vref>
+   used for hyperlinks.
    \_cod
 
-\def\brefF #1>{\brefG #1 >} 
-\def\brefG #1 #2>{\ifx^#2^\edef\linkfspec{\currbook/}\afterfi{\brefH #1:>}%
-                  \else \def\ltextB{#1~}\def\linkfspec{#1/}\afterfi{\brefGH#2:>}%
-                  \fi
-}
-\def\brefGH #1 {\brefH #1}
-\def\brefH #1:#2>{\ifx^#2^\ea\addto\ea\linkfspec\ea{\the\chapnum:}\afterfi{\brefI #1->}%
-                  \else \def\ltextC{#1:}\addto\linkfspec{#1:}\afterfi{\brefHI #2->}%
-                  \fi
-}
-\def\brefHI #1:{\brefI #1}
-
-\def\brefI #1-#2>{\def\ltextV{#1}\addto\linkfspec{#1}%
-                  \ifx^#2^\afterfi{\futurelet\next\brefK}%
-                  \else \afterfi{\brefJ#2}\fi
-}
-\def\brefJ#1-{\def\ltextS{--}\def\ltextN{#1}\futurelet\next\brefK}
-
-\def\brefK{\def\linkpre{v}% default
-   \ea\striptocomma\linkfspec,\end\linkfspec
-   \ea\striptocomma\ltextV,\end\ltextV
-   \ifx\tmp\empty\else \def\ltextS{,}\edef\ltextN{\tmp}\fi
-   \ifx n\next \def\linkpre{n}\ea\brefKK\fi
+\def\brefD{%
+   \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ltextV}%
    \brefL
 }
-\def\brefKK #1\brefL#2{\brefL}
+\def\ltextBin #1~#2/{\ifx^#1^\currbook \else #1\fi/}
+\def\ltextCin #1:#2/{\ifx^#1^\the\chapnum \else #1\fi:}
 
    \_doc
-   `\striptocomma <text>,\end \macro` defines `\macro` as the first part of
-   `<text>` separated by first comma. the rest of the `<text>` is saved to
-   the `\tmp` macro.
+   `\oncebref` includes an additional macros which have to be processed in
+   the single link, for example `\reduceref`. The `\everybref` token list
+   includes macros which have to be applied for all links.
    \_cod
 
-\def\striptocomma #1,#2\end#3{\def#3{#1}%
-   \def\tmp{#2}%
-   \unless\ifx\tmp\empty \striptocommaA #2\end \fi
-}
-\def\striptocommaA #1,\end{\def\tmp{#1}}
+\newtoks\everybref
+\def\oncebref{}
 
    \_doc
    Macro `\brefL` recalculates `\linkfspec` and `\linktext` due to `\renum` data and
@@ -388,13 +401,15 @@
       \ea\ea\ea\renumlinktext \ea\linkfspec \ea\relax \linkfspecm \relax
       \let\linkfspec=\linkfspecm
    \fi
+   \ifx\ltextV\empty \addto\linkfspec{1}\fi % only chapter is specified, we link to verse 1
+   %[\linkpre:\linkfspec]% ladici tisk
    \ensuredest \createlink
 }
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
    \ifx\ltextC\empty \else \def\ltextC{#5:}\fi
    \def\ltextV{#6}%
    \ifx\ltextN\empty \else
-      \ifx\ltextS\ltextDD
+      \ifx\ltextF\ltextDD
           \isinlist\ltextN{:}\iftrue
              \ifcsname rn!\tmark!#1/\ltextN\endcsname \edef\ltextN{\cs{rn!\tmark!#1/\ltextN}}\fi
           \else \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}\fi
