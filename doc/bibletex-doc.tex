@@ -602,6 +602,16 @@ Celý takový odkaz umožňuje prokliknout jen na první místo rozsahu, takže
 třeba první odkaz z předchozího příkladu se vytiskne jako {\Blue Jr 8:3--7}
 a nabízí proklik jen na Jr~8:3.
 
+\mnote{Úsek verše}
+Někdy je potřeba odkazovat na úsek verše, nikoli na celý verš. To se dělá
+připojením písmene bezprostředně za číslo verše. Například
+\begtt \catcode`<=12
+... viz <Da 9:11b>
+\endtt
+Takové písmeno můžete připojit k úplnému i neúplnému odkazu. Pro potřebu
+hyperlinku se tato písmena ignorují, ale vytisknou se. Tedy uvedený příklad
+vytiskne ... viz {\Blue Da~9:11b} ale proklik vede na Da~9:11.
+
 \mnote{Redukce údajů}
 Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
 závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}
