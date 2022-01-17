@@ -7,6 +7,7 @@
 \load[vlna]
 \load[mte]
 
+\fontfam[Heros]
 \isfile{f-biblon.opm}\iftrue 
    \fontfam[biblon]
 \else 
@@ -660,10 +661,10 @@
 \def\doNote#1#2{%
    \edef\tmpb{\cs{notepre!#1}}%
    \fnote{%
-      \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
-      \trymakedest{n:\currverse}%
-      {\bf \ea \ifx \csname pword!#1\endcsname \empty
-                \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
+      {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
+       \trymakedest{n:\currverse}%
+       \ea \ifx \csname pword!#1\endcsname \empty
+                 \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
       \cs{notetext!#1}\unskip\vadjust{\penalty0}}{\Red#2}%
 }
 \def\_printfnotemark{}
@@ -693,7 +694,7 @@
   \_ifvoid\_footins \_else % footnote info is present
     \unskip
     \_vskip\_skip\_footins
-    \_footnoterule
+    \_noterule
     \bigskip
     \setbox\_footins=\vbox{\penalty0 \unvbox\_footins}
     \_setbox0=\_vsplit\_footins to0pt \def\_Ncols{2}
@@ -703,11 +704,13 @@
     \_fi
   \_kern-\_dimen5 \_vskip \_pgbottomskip
 }
-\addto\_fnset{\widowpenalty=20 \clubpenalty=20
+\addto\_fnset{\Heros\cond\rm \widowpenalty=20 \clubpenalty=20
+%   \lineskiplimit=-7pt
    \hbadness=3000
    \hsize=.5\hsize \advance\hsize by-1em \relax}
 \_count\_footins=500 % footnote magnification factor (1 to 1)
 \_dimen\_footins=\maxdimen % maximum footnotes per page
+\_def \_noterule {\_kern-3pt \_hrule \_kern 2.6pt }
 
 
 \endinput
