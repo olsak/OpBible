@@ -600,6 +600,28 @@
 }
 
    \_doc
+   The `\switch` macro reads a pair of parameters using `\switchA`
+   and processes the list of variants in `\foreach` loop. If an element from
+   the list is equal with `\smark` or `\tmark` then the `#2` (saved in
+   `\switchD` token list) is run and next parameter pairs are read by
+   `\switchN`, i.e. they are ignored.
+   \_cod
+
+\newtoks\switchD
+\def\switch {\let\switchN=\switchA \switchN}
+\long\def\switchA #1#2{\switchD={#2\let\switchN=\switchI}%
+   \ifx\relax#1\relax \the\switchD
+   \else \foreach #1,\do ##1,{\def\tmp{##1}\switchC}%
+   \fi
+   \futurelet\next\switchB
+}
+\def\switchB{\ifx\next\bgroup \ea\switchN \fi}
+\long\def\switchI #1#2{\futurelet\next\switchB}
+\def\switchC{\ifx\tmp\smark \the\switchD
+             \else\ifx\tmp\tmark \the\switchD \fi\fi
+}
+
+   \_doc
    `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
    does
    \begtt

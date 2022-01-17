@@ -212,11 +212,12 @@ vodorovná čárka.
 
 \sec[fmt] Údaje určující formátování základního textu
 
-Základní text stažený z internetu a generovaný programem `mod2tex` neobsahuje
+Základní text v `.txs` souborech neobsahuje
 žádné formátovací ani doplňkové údaje, jakými jsou například názvy kapitol
 nebo místa, kde se má ukončit odstavec či přejít z formátování v bloku do
 formátování na střed řádků a zpět.
 
+\mnote{\code{\\fmtadd} \code{\\fmtpre} \code{\\fmtins}}
 Potože do základního textu nechceme nijak zasahovat, je třeba tyto doplňkové
 údaje deklarovat k příslušným veršům pomocí speciálních příkazů `\fmtadd`,
 `\fmtpre` a `\fmtins`. Tyto příkazy jsou typicky v souborech `fmt-*.tex`,
@@ -240,10 +241,12 @@ biblické knihy se formátování týká, protože v prvním parametru příkaz�
 jen uvedeno číslo kapitoly a číslo verše. 
 
 <fmt-pokyn> je \uv{vzkaz}, který je předán \TeX/u k formátování.
+\mnote{\code{\\endgraf} \code{\\begcenter} \code{\\endcenter}}
 Například `\endgraf` značí konec odstavce. `\begcenter` otvírá pasáž s
 centrovaným textem a ta musí být uzavřena pomocí `\endcenter`. Nebo 
 `\chaptit{<text>}` vloží <text> jako titul kapitoly.
 
+\mnote{\code{\\fmtadd} \code{\\fmtpre} \code{\\fmtins}}
 Příkaz `\fmtpre` vkládá <fmt-pokyn>
 na začátek uvedeného verše (ještě před případně vytištěné číslo verše horním
 indexem). Příkaz `\fmtadd` vkládá <fmt-pokyn> na konec uvedeného verše.
@@ -263,9 +266,14 @@ chceme k nim připojit společný poznámkový aparát, ve kterém se budou
 označené fráze automaticky měnit podle zvoleného překladu. K tomu slouží příkazy
 popsané v této sekci.
 
+\secc Deklarace variant překladu a použití pomocí příkazu `\x`
+
+\mnote{\code{\\vdef} \code{\\x}}
 Nejsou-li varianty deklarovány příkazem `\vdef` (viz níže), pak
 příkaz `\x/<fráze>/` použitý v textu vypíše <fráze>. Je ovšem možné
-deklarovat varianty překladu pomocí 
+deklarovat varianty překladu
+\mnote{\code{\\variants}}%
+pomocí
 
 \begtt
 \variants <počet-variant> {<varianta-A>} {<varianta-B>} {<varianta-C>} {<varianta-D>}
@@ -280,7 +288,9 @@ Následně je možné definovat varianty frází pro jednotlivé varianty překl
 \endtt
 Zde musí být stejný počet parametrů pro fráze jako je `<počet-variant>` uvedený v
 předchozím příkazu `\variants`.
-Pokud je nyní v hlavním souboru například uvedeno:
+Pokud je nyní v hlavním souboru například
+\mnote{\code{\\tmark}}
+uvedeno:
 \begtt
 \def\tmark {<varianta-C>}
 \endtt
@@ -327,6 +337,9 @@ a tato poznámka při `\def\tmark{CzeCEP}` na svém konci zní
 \uv{\dots a služby králi Nebúkadnesarovi}, zatímco při
 `\def\tmark{CzeBKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
 
+\secc Variantní deklarace frází pro spárování poznámek s textem
+
+\mnote{\code{\\\wdef}}
 Kromě `\vdef`, což deklaruje varianty překladu platné pro celou Bibli je
 možné použít `\wdef`, což deklaruje varianty překladu jen pro konkrétní verš
 konkrétní knihy a jen pro spárování poznámek `\Note` s výchozím textem.
@@ -371,6 +384,71 @@ s odlišnou frází pro tisk.
 Je-li `<fráze-pro-tisk>` deklarována jednak v parametru `\Note` a jednak
 pomocí `\wdef`, má přednost údaj z `\wdef`.
 
+\secc Větvení zpracování textu podle variant překladu
+
+\mnote{\code{\\switch}}
+Pomocí příkazu `\switch` můžete větvit zpracování vstupního textu v
+závislosti na nastavené hodnotě parametru `\tmark`, tedy v závislosti na
+aktuálně zpracovávané variantě jazyka. Příkaz má tuto syntaxi:
+\begtt
+\switch {<seznam variant>} {<co provést>}%
+        {<seznam variant>} {<co provést>}% ... atd
+        {<seznam variant>} {<co provést>}
+\endtt
+Dvojic `{<seznam variant>}{<co provést>}` může být uvedeno libovolně mnoho.
+Za každou dvojicí `{<seznam variant>}{<co provést>}` (s výjimkou poslední
+dvojice) musí bezprostředně a bez mezer následovat další taková dvojice,
+proto je nutné při přechodu na
+další řádek napsat za uzavírací závorku procento, které zakryje mezeru z
+konce řádku. Mezery na začátku dalšího řádku nevadí.
+Proceto za dvojicí můžete číst jako \uv{pokračuje další dvojice}.
+
+`<seznam variant>` je
+jedna překladová varianta nebo seznam překladových variant oddělených
+čárkou a bez mezer. \TeX/ pak pracuje takto: vyskytuje-li
+se v `<seznam variant>` varianta definovaná v parametru `\tmark`, provede se
+následující `<co provést>`. Nevyskytuje-li se tam taková varianta,
+následující `<co provést>` se přeskočí. Příklad:
+\begtt
+\switch {CzeBKR} {Balsazar}%
+        {CzePSP} {Bélšaccar}%
+        {CzeCSP,CzeCEP,CzeB21,CzeSNC} {Belšasar}
+\endtt
+Příklad ukazuje, jak vytisknout slovo Balsazar v závislosti na
+zpracovávané variantě jazyka.
+
+\mnote{\code{\\smark}}
+Pokud je kromě `\tmark` definována ještě
+zkratka pro variantu jazyka `\smark` (například pomocí `\def\smark{CEP}`),
+pak je možné v `<seznam variant>` používat také tyto zkratky, takže předchozí
+příklad  by mohl vypadat následovně:
+\begtt
+\switch {BKR}  {Balsazar}%
+        {PSP}  {Bélšaccar}%
+        {CSP,CEP,B21,SNC} {Belšasar}
+\endtt
+Jakmile \TeX/ najde shodu a provede `<co provést>`, pak případné následující
+údaje v rámci stejného příkazu `\switch` přeskočí. Dále platí pravidlo, že
+pokud je `<seznam vaiant>` prázdný, provede se `<co provést>` vždy, pokud
+tedy není přeskočeno dle předchozího pravidla. Takže prázný `<seznam variant>` na
+konci dvojic parametrů příkazu `\switch` se vyhodnotí jako \uv{ostatní
+případy}. Příklad uvedený výše se tedy dá zapsat také takto:
+\begtt
+\switch {BKR} {Balsazar}%
+        {PSP} {Bélšaccar}%
+        {}    {Belšasar}
+\endtt
+
+Příkaz `\switch` se dá použít nejen na jednotlivé fráze uvnitř poznámek
+`\Note`, ale třeba také na celé úseky vstupního textu obsahující třeba i
+několik poznámek `\Note`, několik definic atd.
+
+Příkaz `\switch` se nedá použít v parametrech jiných maker. Tam funguje jen
+příkaz `\x/<fráze>/`.
+
+\secc Přečíslování veršů podle variant překladu
+
+\mnote{\code{\\renum}}
 Některé varianty překladu mají jiné číslování veršů. V takovém případě je
 možné použít příkaz `\renum` takto:
 
@@ -491,7 +569,7 @@ kapitolu. Například v knize Daniel může být poznámka:
 a vytisknou se odkazy {\Blue 7}, {\Blue 11} a {\Blue 13} interně směřující na 
 Da 3:7, Da 3:11 a Da 3:13.
 
-\mnote{Údaj uvozený \code{\\}}
+\mnote{Odkaz uvozený \code{\\}}
 Lokální neúplný údaj můžete zapsat také pomocí \code{\\<...>}, tedy
 přidáním znaku `\` před otevírací závorku odkazu. Takový údaj je interpretován
 jako lokální, ačkoli před ním předchází třeba úplný údaj odkazující na
