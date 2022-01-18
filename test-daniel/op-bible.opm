@@ -1,59 +1,73 @@
 %% Bible-TeX macros, see bibletex-doc.pdf
 
    \_doc
-   Basic settings:
+   \sec Intro
+   Loading packages.
    \_cod
 
-\load[vlna]
-\load[mte]
-
-\fontfam[Heros]
-\isfile{f-biblon.opm}\iftrue 
-   \fontfam[biblon]
-\else 
-   \fontfam[lmfonts]
-\fi
-
-\chyph
-\enablemte
-
-\typosize[11/13]
-\hyperlinks\Blue\Blue
-
-\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
-\def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
-
-%\raggedbottom
-\parindent=20pt
+\load[vlna]  % single-letter prepositions and splitting hyphen managed specially in Czech
+\load[mte]   % micro typographical extensions
 
    \_doc
-   Fonts:
+   Basic settings.
    \_cod
+
+\typosize[11/13]       % typesetting size of Bible text
+\hyperlinks\Blue\Blue  % hyperlinks activated
+
+\parindent=20pt
+\enablemte             % micro typographical extensions enabled
+
+   \_doc
+   Fonts.
+   \_cod
+
+\fontfam[Heros]        % fonts for notes
+\isfile{f-biblon.opm}\iftrue
+   \fontfam[biblon]    % fonts for Bible text
+\else
+   \fontfam[lmfonts]   % alternative font for Bible text
+\fi
 
 \fontdef\bookfont{\setfontsize{at19.pt}\bf}
 \fontdef\chapfont{\setfontsize{at13.pt}\bf}
 \fontdef\markfont{\setfontsize{at7pt}\rm}
 
    \_doc
-   <full-vref> is full reference to verse in the format
+   Auxiliary macros.
+   `\printwarn {<text>}` prints warning.
+   `\sedef {<name>}{<body>}` is expanded `\sdef`.
+   \_cod
+
+\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
+\def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
+
+   \_doc
+   \sec Actions
+   We create the output in two steps. First step: the data from `\Note`
+   etc.\ are read and saved to the \TeX/ memory. For each such data element the
+   \"action" is registered to a list of actions of the given verse. Each
+   Bible verse has its list of actions.
+   The second step: the Bible verses are read from `.txt`
+   file and all appropriate actions (registered to this verse) are
+   processed before the verse text is printed. These actions can modify the
+   selected parts of the verse text.\nl
+   `\alist!<full-vref>` is the list of actions associated t the verse
+   `<full-vref>`. The <full-vref> is full reference to the verse in the format
                <book-mark>/<chapter-num>:<verse-num>\nl
-   `\alist!<full-vref>` expands to the list of replace action numbers applied 
-   for given verse. The actions are referenced by its number. Each new action has newly
-   allocated action-number.\nl
-   `\action!<number>` expands to the replace action, we suppose that the
-   corresponding verse in saved to `\tmpb`\nl
    `\newaction{<full-vref>}{<action-body>}` allocates new action.
    \_cod
 
-\newcount\actionnum
-\def\newaction#1#2{\incr\actionnum
-   \unless\ifcsname alist!#1\endcsname \sxdef{alist!#1}{}\fi
-   \sxdef{alist!#1}{\cs{alist!#1}\the\actionnum,}%
-   \global\sdef{action!\the\actionnum}{#2}%
+\def\newaction#1#2{%
+   \unless\ifcsname alist!#1\endcsname \sdef{alist!#1}{}\fi
+   \ea\addto\csname alist!#1\endcsname{#2}%
 }
 
    \_doc
-   `\replpre{<prefix>}{<text>}{<fail>}` replaces first occurence of <text>
+   A typical \"action" is `\replpre`. The actions are processed for each
+   Bible verse when the verse text is saved to the `\tmpb` macro. The
+   `\tmpb` macro is processed after all actions of given verse are done.\nl
+   `\replpre{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
    by `<prefix>{<text>}` in `\tmpb` macro. If the <text> is empty then
    `<prefix>{}` is inserted at the beginning of the `\tmpb`.\nl
    If <text> does not exists then <fail> is processed. The <fail>
@@ -73,7 +87,9 @@
 }
 
    \_doc
-   The <gen-vref> is generalized reference to the verse. It can be
+   \sec The `\Note` macro
+   The first parameter of the `\Note` macro is `<gen-vref>`.
+   It is generalized reference to the Bible verse. It can be
    `<chapter-num>:<verse>` (the <book-mark> is appended from
    `\CommentedBook` token list) or `<chapter-num>:<verse-from>-<verse-to>`
    (only <verse-from> is used for generating <gen-vref>.\nl
@@ -91,10 +107,10 @@
 \def\renumvref #1/#2\relax{#1/\trycs{rn!\tmark!#1/#2}{#2}}
 
    \_doc
-   The <word> given as a parameter of the `\Note` macro (see bellow) is used as a word
-   phrase which should be be searched in the given verse. This parameter <word>
-   is transformed first by expansion of `\transformword{<word>}` to the <tword> variant and the
-   <tword> is actually used for searching. The `\transformword{<word>}`
+   The `<word>` given as a parameter of the `\Note` macro (see bellow) is used as a word
+   phrase which should be be searched in the given verse text. This parameter `<word>`
+   is transformed first by expansion of `\transformword{<word>}` to the `<tword>` variant
+   and the `<tword>` is actually used for searching. The `\transformword{<word>}`
    expands to the variant of the <word> declared by `\wdef`. If not declared then
    it expands to the variant of the <word> declared by `\vdef`. If not declared then it
    expands to the <word> itself, i.e <tword> is equal to <word> in this case.
@@ -115,7 +131,7 @@
    There is an alternative syntax 
    `\Note <gen-vref> <space> {<word>}={<pword>} <text> \par`
    If <pword> is given then is is printed in the note instead <tword>.
-   More preciselly: transformed <word> is used for searching
+   More precisely: transformed <word> is used for searching
    (and it is kept in the verse unchanged) but <pword> is
    printed in the note.\nl
    `\Note` does exactly following:
@@ -157,21 +173,22 @@
    \sdef{notetext!\the\notenum}{\ignorespaces#2}%
    \sedef{noteref!\the\notenum}{\fullvrefm}%
    \ifx^#1^\sedef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
-   \ifcsname ww!\fullvref!\tmark!\oword \endcsname \global\slet{pword!\the\notenum}{ww!\fullvref!\tmark!\oword}\fi
+   \ifcsname ww!\fullvref!\tmark!\oword \endcsname
+      \global\slet{pword!\the\notenum}{ww!\fullvref!\tmark!\oword}\fi
    \edef\tmp{%
       \noexpand\newaction{\fullvrefm}%
-       {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
+      {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
    \tmp
 }
 
    \_doc
    `\renumlabel` `<full-vref>\relax` expands to the numeric part of
    <full-vref> and appends the `--<to>` part if the `\tmp` macro is in the
-   format `<chapter>:<from>-<to>`. The <to> part is re-calulated in order to
+   format `<chapter>:<from>-<to>`. The <to> part is re-calculated in order to
    the the number of verses between `<from>` and `<to>` be kept.
    If the `<to>` part is in the format <chapter>:<verse>
    then it is unchanged. The `\renumlabel` macro must be expandable, so we
-   cannot use `\isinlist` and we prepare special exandable macros `\isdivis`
+   cannot use `\isinlist` and we prepare special expandable macros `\isdivis`
    and `\iscolon`.
    \_cod
 
@@ -191,10 +208,10 @@
    \begtt
    \replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}
    \endtt
-   It means that the `<tword>` is searched in the verse text and it is
-   replaced by `\doNote{<note-num>}{<tword>}`
+   It means that the `<tword>` is searched in the verse text and
+   replaced by `\doNote{<note-num>}{<tword>}`.
    If `<tword>` is not found then `\notefail{<note-num>}` prints warning
-   about it and the `\doNote{<note-num>}{}` is prefixed before the verse text. 
+   about it and `\doNote{<note-num>}{}` is prefixed before the verse text.
    \_cod
 
 \def\notefail#1{%
@@ -203,7 +220,8 @@
 }
 
    \_doc
-   And the `\doNote{<note-num>}{<tword>}` prints the real note text.
+   And the `\doNote{<note-num>}{<tword>}` prints the real note text in the second step,
+   when the verse text from `\tmpb` is processed.
    \_cod
 
 \def\prevtmpb{}
@@ -221,20 +239,69 @@
 \def\_textindent#1{\noindent}
 
    \_doc
+   The phrase `{<word>}` used in notes must be exactly the same as the word used in
+   the `.txs` text. But we want to capitalize the first letter of the <word>
+   when printing. You can say `\let\upcasefirts=\relax` if you don't want
+   this feature.
+   \_cod
+
+\def\upcasefirst #1{\uppercase{#1}}
+
+   \_doc
    Because there is asynchronous processing of the `\``Note` text, we have a problem
    when an error occurs here. We cannot reference to appropriate line where
    the `\``Note` is written. So, we print the parameters of processed
    `\``Note` to the log file. The user can look into this file and the last
    printed `\``Note` parameters here refers probably to the `\``Note` where the
    reason of the error is.\nl
-   The logging is done by `\notelog{<text>}`. It is `\wlog` by defualt but
+   The logging is done by `\notelog{<text>}`. It is `\wlog` by default but
    you can set it to `\ignoreit` or `\wterm`.
    \_cod
 
 \let\notelog=\wlog
 
    \_doc
-   When bible-text (from sword) is processed then book mark is saved to
+   \sec Inserting data from format files
+   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\tmpc`, i.e.\ at the
+   beginning of the verse.\nl
+   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\tmpb`, i.e.\ at the end
+   of the verse.\nl
+   `\fmtins {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
+   verse. If <text> is not found then <what> is inserted like `\fmtpre` does it\nl
+   All these commands allocate new action using `\newaction`.
+   \_cod
+
+\let\FormatedBook=\CommentedBook
+\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\tmpc{#2}}}
+\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\tmpb{#2}}}
+\def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
+\def\fmtafter#1#2{#2#1}
+\def\fmtfail#1{\fmtwarn\addto\tmpc{#1}}
+\def\fmtwarn{\printwarn{\string\fmtins: \currverse: The text "\unexpanded\ea{\text}" not found}}
+
+   \_doc
+   `\begcenter` starts the centering mode. It opens a group and does
+   setting. User must use paired `\endcenter` in order to close this group.
+   The `\centeringmode` status is checked by `\encenter` because curious error
+   (about `#` character) should be occur without this checking.
+   \_cod
+
+\newdimen\centermargin \centermargin=4em
+\def\begcenter{\par \medskip
+   \bgroup
+   \def\centeringmode{y}
+   \parindent=0pt
+   \leftskip=\centermargin plus1fill
+   \rightskip=\leftskip
+}
+\def\endcenter{\par
+   \ifx\centeringmode\undefined
+      \printwarn{\noexpand\endcenter ignored: no \noexpand\begcenter precedes}
+   \else \egroup \medskip \fi}
+
+   \_doc
+   \sec Printing verses from `.txt` files
+   When Bible text is processed then book mark is saved to
    `\currbook` and each input line is separated to the
    <chapter-num>:<verse-num> and <verse-text>.\nl
    The `\processverse <full-vref><space><verse-text>\end` is repeatedly processed.
@@ -259,24 +326,20 @@
    \edef\currverse{#1}%
    \preparechapverse #1
    \def\tmpb{#2}\def\tmpc{}%
-   \ifcsname alist!#1\endcsname \ea\ea\ea\processactions \csname alist!#1\endcsname 0,\fi
+   \csname alist!#1\endcsname
    \ifnum\currchapnum=\chapnum \else
        \let\prelinkC=\currchapnum \chapnum=\currchapnum\relax \printchap \fi
    \printverse
-}
-\def\processactions #1,{\ifnum #1=0
-   \else \cs{action!#1}%
-   \ea \processactions \fi
 }
 \def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}\def\currversenum{#3}}
 
    \_doc
    `\printverse` prints verse from `\currversenum` and (possibly changed) `\tmpb`.
    It prints the single raised verse number first.\nl
-   `\printchap` prints beginning od new chapter.
+   `\printchap` prints beginning of the new chapter.
    `\printbeforefirst` is a macro which is executed just before first verse
    of the chapter, after all material from `\fmtpre` is executed. I.e after
-   printing a chatper name (if declered by `\fmtpre`). 
+   printing a chapter name (if declared by `\fmtpre`). 
    \_cod
 
 \def\printverse{%
@@ -287,10 +350,7 @@
    \tmpb \space
 }
 \def\printchap{\bigskip}
-%   \par\removelastskip
-%   \medskip
-%   {\chapfont\Red \the\chapnum}\par\nobreak\medskip
-%}
+
 \def\printbeforefirst{%
    \par\nobreak
    \vbox to0pt{\null\vskip-1ex
@@ -298,47 +358,91 @@
    \noindent \hangindent=\parindent \hangafter=-2 \relax}
 
    \_doc
-   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\tmpc`, i.e.\ at the
-   beginning of the verse.\nl
-   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\tmpb`, i.e.\ at the end
-   of the verse.\nl
-   `\fmtins {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
-   verse. If <text> is not found th <what> is inserted like `\fmtpre` does it\nl
-   All these commands allocate new action using `\newaction`. 
+   \sec Book titles, prefaces etc.
+
+   The macro `\BookTile <b-mark> <a-mark> {<title>}` declares titles
+   of each Bible books. The <b-mark> is a book mark used in file names
+   and <a-mark> is an actual book mark used in printed text.
+
+   The mapping is done here:
+   `\def\btit!<a-mark>{<title>}`, `\def\f!<a-mark>{<b-mark>}`.
+
+   The macro is defined as `\outer` because we don't want to see obscure
+   errors due to missing a space after `<b-mark>` or `<a-mark>`.
    \_cod
 
-\let\FormatedBook=\CommentedBook
-\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\tmpc{#2}}}
-\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\tmpb{#2}}}
-\def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
-\def\fmtafter#1#2{#2#1}
-\def\fmtfail#1{\fmtwarn\addto\tmpc{#1}}
-\def\fmtwarn{\printwarn{\string\fmtins: \currverse: The text "\unexpanded\ea{\text}" not found}}
+\outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
 
    \_doc
-   `\begcenter` starts the centering mode. It opens a group and does
-   setting. User must use paired `\endcenter` in order to close this group.
-   The `\centeringmode` status is checked by `\encenter` because curious error
-   (about `#` character) should be occurr without this checking.
+   The `\BookException <a-mark> {<code>}` macro adds the <code> to the
+   `\bex!<a-mark>` macro. It is used in`\processbooks`
+   loop in the group before files are read. You can redefine some filenames
+   or something more special here.\nl
+   Macros `\BookPre` and `\BokkPost` are defined similarly.
    \_cod
 
-\newdimen\centermargin \centermargin=4em
-\def\begcenter{\par \medskip
-   \bgroup
-   \def\centeringmode{y}
-   \parindent=0pt
-   \leftskip=\centermargin plus1fill
-   \rightskip=\leftskip
+\long\def\myaddto#1#2{\ifcsname#1\endcsname
+   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
+\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
+\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
+\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
+
+   \_doc
+   \sec Processing books of the Bible
+   The `\processbooks` macro does two loops over all `\printedbooks`.
+   The `\printedbooks` list can or cannot be finalized by a space.
+   The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
+   The second loop body does:
+   \begitems
+   * Defines `\bmark` as <b-mark> (a mark of the book used in file names)
+   * Defines `\amark` as <a-mark> (an actual mark of the book used in text)
+   * Defines `\btit` as the book title.
+   * Calls `\bex!<a-mark>` in order to set something extra.
+   * Calls `\BibleBook{<title>}{<a-mark>}`
+   * Prints title of the book to the terminal and to the log.
+   * Inputs format definition file.
+   * Inputs notes file.
+   * Calls `\bpr!<a-mark>` in order to print a preface of the book,
+   * Inputs txs file with original text of the Bible using `\bibleinput`,
+     i.e.\ prints the text.
+   * Calls `\bpo!<a-mark>` in order to print a closing text of the book.
+   \enditems
+   \_cod
+
+\def\processbooks {\par
+   \ea\processbooksA \printedbooks\ignoreit. {}
+   \ea\processbooksB \printedbooks\ignoreit. {}
 }
-\def\endcenter{\par
-   \ifx\centeringmode\undefined
-      \printwarn{\noexpand\endcenter ignored: no \noexpand\begcenter precedes}
-   \else \egroup \medskip \fi}
-
-%% Makra pro tvorbu linků specifikovaných jako <link>
+\def\processbooksA #1 {%
+   \if\relax#1\relax \else \sxdef{pbook!#1}{}\ea\processbooksA \fi
+}
+\def\processbooksB #1 {%
+   \if\relax#1\relax \else
+      \edef\amark{#1}
+      \edef\bmark{\cs{f!#1}}
+      \edef\btit{\cs{btit!#1}}
+      \begingroup
+         \ea\BibleBook\ea{\btit}{#1}
+         \cs{bex!#1}
+         \wterm{** \cs{btit!#1} {#1} **}
+         \input{\fmtfile}
+         \input{\notesfile}
+         \cs{bpr!#1}
+         \bibleinput{\txsfile}
+         \cs{bpo!#1}
+      \endgroup
+      \ea \processbooksB
+   \fi
+}
 
    \_doc
+   Note that each book of the Bible is processed in the group.
+   It means that all data from notes, formats etc. are stored
+   in the memory only temporary for processing single book. After
+   the Book is finalized, the \TeX/ memory is freed.
+
    \sec Bible references
+
    We prepare temporary macros first.\nl
    `\isspacein <text> \iftrue` is true if `<text>` includes a space.\nl
    `\iscolonin <text>:\iftrue` is true if `<text>` includes a colon.\nl
@@ -351,14 +455,14 @@
 
    \_doc
    The \code{\<} will be set to active as character equivalent to
-   the macro `\bref <text>>`. This macro soes all job with the hyperlinks.
-   Fist of all, it scanns the parts of the `<text>` and saves them to
+   the macro `\bref<text>>`. This macro does all job with the hyperlinks.
+   Fist of all, it scans the parts of the `<text>` and saves them to
    \begitems
    * `\ltextP` ... the text before a link specification (given in `"..."`)
    * `\ltextB` ... the book mark followed by `~`
    * `\ltextC` ... the chapter number followed by `:`
    * `\ltextV` ... the verse number
-   * `\ltextS` ... subverse identifier (`a` if there is a verse `4a`)
+   * `\ltextS` ... sub-verse identifier (`a` if there is a verse `4a`)
    * `\ltextF` ... the `--` if the `<from>-<to>` format is given
    * `\ltextN` ... the `<to>` part from the `<from>-<to>` format.
    \enditems
@@ -450,10 +554,10 @@
    `\renumlinktext <full-vref-ori>\relax<full-vref-modified>\relax`
    does re-calculation of the parts of the `\linktext` macro.\nl
    `\linklog {<text>}` macro prints logging info of the link in the format
-   \begtt \adef({\string<} \adef){\string>}
+   \begtt \catcode`<=13 \adef({\string<} \adef){\string>}
    (<link-spec>) = [<full-vref>]{<printed-link>}
    \endtt
-   `\linklog` is `\wlog` by defautl. You can set it to `\ignreit` or
+   `\linklog` is `\wlog` by default. You can set it to `\ignreit` or
    `\wterm` if you want.
    \_cod
 
@@ -488,7 +592,7 @@
 \def\linkpost{\if v\linkpre \else \linkpre\fi \space}
 
    \_doc
-   `\createlink` creates link only if it refeneces the place of printed book
+   `\createlink` creates link only if it refers to the place of printed book
    because we don't want to see many warnings about unreferenced links when
    we try to print only selected books. It creates link 
    `\linkpre:\linkfspec` with the text `\linktext`
@@ -517,81 +621,8 @@
    \global \ea\let\csname dest!#1\endcsname \undefined \fi}
 
    \_doc
-   The macros `\BookTile <b-mark> <a-mark> {<title>}` declare titles 
-   of each Bible books. The <b-mark> is a book mark used in file names
-   and <a-mark> is an actual book mark used in printed text.
+   \sec Language variants
 
-   The mapping is done here:
-   `\def\btit!<a-mark>{<title>}`, `\def\f!<a-mark>{<b-mark>}`.
-
-   The macro is defined as `\outer` because we don't want to see obscure
-   errors due to missing a space after `<b-mark>` or `<a-mark>`.
-   \_cod
-
-\outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
-
-   \_doc
-   The `\BookException <a-mark> {<code>}` macro adds the <code> to the
-   \bex!<a-mark> macro. It is used in`\processbooks`
-   loop in the group before files are read. You can redefine some filenames
-   or something more special here.\nl
-   Macros `\BookPre` and `\BokkPost` are defined similarly.
-   \_cod
-
-\long\def\myaddto#1#2{\ifcsname#1\endcsname
-   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
-\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
-\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
-\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
-
-   \_doc
-   The `\processbooks` macro does two loops over all `\printedbooks`.
-   The `\printedbooks` list can or cannot be finalized by a space.
-   The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
-   The second loop body does:
-   \begitems
-   * Defines `\bmark` as <b-mark> (a mark of the book used in file names)
-   * Defines `\amark` as <a-mark> (an actual mark of the book used in text)
-   * Defines `\btit` as the book title.
-   * Calls `\bex!<a-mark>` in order to set something extra.
-   * Calls `\BibleBook{<title>}{<a-mark>}`
-   * Prints title of the book to the terminal and to the log.
-   * Inputs format definition file.
-   * Inputs notes file.
-   * Calls `\bpr!<a-mark>` in order to print a preface of the book,
-   * Inputs txs file with original text of the Bible using `\bibleinput`,
-     i.e.\ prints the text.
-   * Calls `\bpo!<a-mark>` in order to print a closing text of the book.
-   \enditems
-   \_cod
-
-\def\processbooks {\par
-   \ea\processbooksA \printedbooks\ignoreit. {}
-   \ea\processbooksB \printedbooks\ignoreit. {}
-}
-\def\processbooksA #1 {%
-   \if\relax#1\relax \else \sxdef{pbook!#1}{}\ea\processbooksA \fi
-}
-\def\processbooksB #1 {%
-   \if\relax#1\relax \else
-      \edef\amark{#1}
-      \edef\bmark{\cs{f!#1}}
-      \edef\btit{\cs{btit!#1}}
-      \begingroup
-         \ea\BibleBook\ea{\btit}{#1}
-         \cs{bex!#1}
-         \wterm{** \cs{btit!#1} {#1} **}
-         \input{\fmtfile}
-         \input{\notesfile}
-         \cs{bpr!#1}
-         \bibleinput{\txsfile}
-         \cs{bpo!#1}
-      \endgroup
-      \ea \processbooksB
-   \fi
-}
-
-   \_doc
    `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
    sets `\numvariants=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
    `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
@@ -721,19 +752,9 @@
 }
 
    \_doc
-   The phrase `{<word>}` used in notes must be exactly the same as the word used in
-   the `.txs` text. But we want to capitalize the first letter of the <word>
-   when printing. You can say `\let\upcasefirts=\relax` if you don't want
-   this feature.
-   \_cod
-
-\def\upcasefirst #1{\uppercase{#1}}
-
-   \_doc
+   \sec TODO macros
    The temporary macros are here. I plan to rewrite them.
    \_cod
-
-%% Nasledujici makra jsou zatim provizorni a nedokumentovana.
 
 \def\chaptit#1{\ifhmode \setbox0=\lastbox \par \nobreak\vskip-\baselineskip \fi
    \medskip{\chapfont\Red#1}\endgraf\nobreak\medskip}
