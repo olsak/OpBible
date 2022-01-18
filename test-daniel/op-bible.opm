@@ -20,6 +20,9 @@
 \typosize[11/13]
 \hyperlinks\Blue\Blue
 
+\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
+\def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
+
 %\raggedbottom
 \parindent=20pt
 
@@ -104,19 +107,25 @@
 }
 
    \_doc
-   `\Note <gen-vref> <space> {<word>} <text> <empty-line>`
+   `\Note <gen-vref> <space> {<word>} <text> \par`
    transforms <word> to the <tword> (see above),
    saves <text> and activates replace-action of <tword> to
    `\doNote{<note-num>}{<tword>}` in given verse. 
    \nl
-   `\Note` does following:
+   There is an alternative syntax 
+   `\Note <gen-vref> <space> {<word>}={<pword>} <text> \par`
+   If <pword> is given then is is printed in the note instead <tword>.
+   More preciselly: transformed <word> is used for searching
+   (and it is kept in the verse unchanged) but <pword> is
+   printed in the note.\nl
+   `\Note` does exactly following:
    \begitems
    * Allocates new <note-num>,
    * Transforms <gen-vref> to <full-vref> using `\gentovref`.
    * Modifies <full-vref> if `\renum` was declared using `\renumvref` and
      saves the result to `\fullvrefm`.
    * Transforms <word> to <tword> (to be searched and printed) by `\transformword`.
-   * Reads <pword> (word to be printed in the note) if alternative syntax
+   * Reads <pword> (word to be printed in the note) if the alternative syntax
      with `={<pword>}` is used. Else <pword> is equal to <tword>. 
    * Defines `\notetext!<note-num>` as <text>.
    * Defines `\noteref!<note-num>` as <full-vref>.
@@ -127,14 +136,6 @@
    * Does\nl
    `\newaction{<full-vref>}{\replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}}`.
    \enditems
-   The `\Note` macro has an alternative syntax 
-   \begtt \catcode`<=13
-   \Note <gen-vref> <space> {<word>}={<pword>} <text> <empty-line>
-   \endtt
-   If <pword> is given then is is printed in the note instead <tword>.
-   More preciselly: transformed <word> is used for searching
-   (and it is kept in the verse unchanged) but <pword> is
-   printed in the note.
    \_cod
 
 \newcount\notenum
@@ -142,31 +143,26 @@
    \incr\notenum
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \def\tmp{#1}\sxdef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
+   \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
    {\def\printwarn##1{}\xdef\tword{\transformword{#2}}%
                        \xdef\oword{#2}}%
    \isnextchar={\NoteA}{\NoteA={}}%
 }
 \ifx\_partokenset\undefined
-   \def\defnoteA{\def\NoteA=##1 ##2\par}
+   \def\defnoteA{\def\NoteA=##1##2\par}
 \else
-   \def\defnoteA{\def\NoteA=##1 ##2\_par}
+   \def\defnoteA{\def\NoteA=##1##2\_par}
 \fi
 \defnoteA{%
-   \global\sdef{notetext!\the\notenum}{#2}%
-   \sxdef{noteref!\the\notenum}{\fullvrefm}%
-   \ifx^#1^\sxdef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
+   \sdef{notetext!\the\notenum}{\ignorespaces#2}%
+   \sedef{noteref!\the\notenum}{\fullvrefm}%
+   \ifx^#1^\sedef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
    \ifcsname ww!\fullvref!\tmark!\oword \endcsname \global\slet{pword!\the\notenum}{ww!\fullvref!\tmark!\oword}\fi
    \edef\tmp{%
       \noexpand\newaction{\fullvrefm}%
        {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
    \tmp
 }
-\def\notefail#1{%
-   \printwarn{\csstring\\Note: \currverse: The text "\unexpanded\ea{\text}" not found}%
-   \replpre{\doNote{#1}}{}{}% \Note is registered with the beginning of the verse
-}
-\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
 
    \_doc
    `\renumlabel` `<full-vref>\relax` expands to the numeric part of
@@ -187,6 +183,55 @@
 }
 \def\isdivis#1-#2\iffalse{\ifx^#2^}
 \def\iscolon#1:#2\iffalse{\ifx^#2^}
+
+   \_doc
+   The `\``Note` text is processed and printed in the second step, when the 
+   `.txs` file is read. Actions are assigned to each verse and they are run
+   before the appropriate verse is printed. And `\``Note` action says:
+   \begtt
+   \replpre{\doNote{<note-num>}}{<tword>}{\notefail{<note-num>}}
+   \endtt
+   It means that the `<tword>` is searched in the verse text and it is
+   replaced by `\doNote{<note-num>}{<tword>}`
+   If `<tword>` is not found then `\notefail{<note-num>}` prints warning
+   about it and the `\doNote{<note-num>}{}` is prefixed before the verse text. 
+   \_cod
+
+\def\notefail#1{%
+   \printwarn{\csstring\\Note: \currverse: The text "\unexpanded\ea{\text}" not found}%
+   \replpre{\doNote{#1}}{}{}% \Note is registered with the beginning of the verse
+}
+
+   \_doc
+   And the `\doNote{<note-num>}{<tword>}` prints the real note text.
+   \_cod
+
+\def\prevtmpb{}
+\def\doNote#1#2{%
+   \edef\tmpb{\cs{notepre!#1}}%
+   \notelog{\space\space \csstring\\Note \tmpb\space {#2}={\cs{pword!#1}} (#1)}%
+   \fnote{%
+      {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
+       \trymakedest{n:\currverse}%
+       \ea \ifx \csname pword!#1\endcsname \empty
+                 \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
+      \cs{notetext!#1}\unskip\vadjust{\penalty0}}{\Red#2}%
+}
+\def\_printfnotemark{}
+\def\_textindent#1{\noindent}
+
+   \_doc
+   Because there is asynchronous processing of the `\``Note` text, we have a problem
+   when an error occurs here. We cannot reference to appropriate line where
+   the `\``Note` is written. So, we print the parameters of processed
+   `\``Note` to the log file. The user can look into this file and the last
+   printed `\``Note` parameters here refers probably to the `\``Note` where the
+   reason of the error is.\nl
+   The logging is done by `\notelog{<text>}`. It is `\wlog` by defualt but
+   you can set it to `\ignoreit` or `\wterm`.
+   \_cod
+
+\let\notelog=\wlog
 
    \_doc
    When bible-text (from sword) is processed then book mark is saved to
@@ -325,11 +370,11 @@
    \_cod
 
 \def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
-\def\bref {\isnextchar"{\brefA}{\brefA""}}
+\def\bref #1>{\def\linkspec{#1}\isnextchar"{\brefA}{\brefA""}#1>}
 \def\brefA"#1"{\def\ltextP{#1}%
    \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }{\brefB}%
 }
-\def\brefB #1>{% #1 is <link-spec>
+\def\brefB #1>{% #1 is link-spec
    \def\ltextB{}\def\ltextC{}\def\ltextF{}\def\ltextN{}%
    \isspacein #1 \iftrue
          \iscolonin #1:\iftrue \brefBookChapterVerse #1>%
@@ -392,7 +437,13 @@
    Macro `\brefL` recalculates `\linkfspec` and `\linktext` due to `\renum` data and
    creates the link `\linkpre:\linkfspec` with the text `\linktext`.\nl
    `\renumlinktext <full-vref-ori>\relax<full-vref-modified>\relax`
-   does re-calculation of the parts of the `\linktext` macro.
+   does re-calculation of the parts of the `\linktext` macro.\nl
+   `\linklog {<text>}` macro prints logging info of the link in the format
+   \begtt \adef({\string<} \adef){\string>}
+   (<link-spec>) = [<full-vref>]{<printed-link>}
+   \endtt
+   `\linklog` is `\wlog` by defautl. You can set it to `\ignreit` or
+   `\wterm` if you want.
    \_cod
 
 \def\brefL{%
@@ -402,7 +453,7 @@
       \let\linkfspec=\linkfspecm
    \fi
    \ifx\ltextV\empty \addto\linkfspec{1}\fi % only chapter is specified, we link to verse 1
-   %[\linkpre:\linkfspec]% ladici tisk
+   \linklog{\sspace <\linkspec> = [\linkpre:\linkfspec]{\linktext}}%
    \ensuredest \createlink
 }
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
@@ -420,6 +471,9 @@
    \fi
 }
 \def\ltextDD{--}
+
+\let\linklog=\wlog
+\def\sspace{\space\space\space\space}
 
    \_doc
    `\createlink` creates link only if it refeneces the place of printed book
@@ -672,19 +726,6 @@
 \def\chaptit#1{\ifhmode \setbox0=\lastbox \par \nobreak\vskip-\baselineskip \fi
    \medskip{\chapfont\Red#1}\endgraf\nobreak\medskip}
 
-\def\prevtmpb{}
-\def\doNote#1#2{%
-   \edef\tmpb{\cs{notepre!#1}}%
-   \fnote{%
-      {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
-       \trymakedest{n:\currverse}%
-       \ea \ifx \csname pword!#1\endcsname \empty
-                 \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
-      \cs{notetext!#1}\unskip\vadjust{\penalty0}}{\Red#2}%
-}
-\def\_printfnotemark{}
-\def\_textindent#1{\noindent}
-
 \newcount \chapnum
 \def\source#1{}
 \def\BibleBook#1#2{\def\currbook{#2}%
@@ -715,7 +756,7 @@
     \_setbox0=\_vsplit\_footins to0pt \def\_Ncols{2}
     \_dimen0=.5\_ht\_footins \_setbox6=\_box\_footins
     \_balancecolumns
-    \vfil
+    \vskip 0pt plus 1fil minus6pt
     \_fi
   \_kern-\_dimen5 \_vskip \_pgbottomskip
 }
