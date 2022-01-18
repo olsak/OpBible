@@ -260,7 +260,8 @@
    \preparechapverse #1
    \def\tmpb{#2}\def\tmpc{}%
    \ifcsname alist!#1\endcsname \ea\ea\ea\processactions \csname alist!#1\endcsname 0,\fi
-   \ifnum\currchapnum=\chapnum \else \chapnum=\currchapnum\relax \printchap \fi
+   \ifnum\currchapnum=\chapnum \else
+       \let\prelinkC=\currchapnum \chapnum=\currchapnum\relax \printchap \fi
    \printverse
 }
 \def\processactions #1,{\ifnum #1=0
@@ -421,8 +422,18 @@
    \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ltextV}%
    \brefL
 }
-\def\ltextBin #1~#2/{\ifx^#1^\currbook \else #1\fi/}
-\def\ltextCin #1:#2/{\ifx^#1^\the\chapnum \else #1\fi:}
+\def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
+\def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
+
+   \_doc
+   `\prelinkB` is <book-mark> of last referenced book.
+   `\prelinkC` is <chapter-num> of last referenced chapter.
+   They are used if the reference is not full. They are initialized at the
+   beginning of books and chapters and they are changed locally in the `\``Note` text.
+   If the \code{\<} is used then they are re-initialized.
+   \_cod
+
+\def\<{\let\prelinkB=\currbook \let\prelinkC=\currchapnum \bref}
 
    \_doc
    `\oncebref` includes an additional macros which have to be processed in
@@ -453,7 +464,7 @@
       \let\linkfspec=\linkfspecm
    \fi
    \ifx\ltextV\empty \addto\linkfspec{1}\fi % only chapter is specified, we link to verse 1
-   \linklog{\sspace <\linkspec> = [\linkpre:\linkfspec]{\linktext}}%
+   \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]{\linktext}}%
    \ensuredest \createlink
 }
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
@@ -474,6 +485,7 @@
 
 \let\linklog=\wlog
 \def\sspace{\space\space\space\space}
+\def\linkpost{\if v\linkpre \else \linkpre\fi \space}
 
    \_doc
    `\createlink` creates link only if it refeneces the place of printed book
@@ -728,7 +740,7 @@
 
 \newcount \chapnum
 \def\source#1{}
-\def\BibleBook#1#2{\def\currbook{#2}%
+\def\BibleBook#1#2{\def\currbook{#2}\let\prelinkB=\currbook
    \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
