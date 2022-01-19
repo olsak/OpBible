@@ -624,6 +624,11 @@ verše. Například
 vytiskne ... viz {\Blue kapitolu Da 7} ... Josefův příběh {\Blue Gn 39--41}
 a prokliky vedou na Da~7:1 a na Gn~39:1.
 
+Pokud je značka knihy uvedena v seznamu `\NoChapBooks`, pak se číslo za
+značkou knihy interpretuje jako číslo verše a ne kapitoly. Existují totiž knihy bez
+kapitol. Například chceme, aby \code{<Zm 7>} odkázalo na Zm~1:7 a nikoli na
+Zm~7:1. Proto je třeba uvést `Zm` do seznamu `\NoChapBooks`.
+
 \mnote{Redukce údajů}
 Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
 závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}

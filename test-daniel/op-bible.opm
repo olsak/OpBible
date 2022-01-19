@@ -48,11 +48,11 @@
    etc.\ are read and saved to the \TeX/ memory. For each such data element the
    \"action" is registered to a list of actions of the given verse. Each
    Bible verse has its list of actions.
-   The second step: the Bible verses are read from `.txt`
+   The second step: the Bible verses are read from a `.txs`
    file and all appropriate actions (registered to this verse) are
    processed before the verse text is printed. These actions can modify the
    selected parts of the verse text.\nl
-   `\alist!<full-vref>` is the list of actions associated t the verse
+   `\alist!<full-vref>` is the list of actions associated with the verse
    `<full-vref>`. The <full-vref> is full reference to the verse in the format
                <book-mark>/<chapter-num>:<verse-num>\nl
    `\newaction{<full-vref>}{<action-body>}` allocates new action.
@@ -300,7 +300,7 @@
    \else \egroup \medskip \fi}
 
    \_doc
-   \sec Printing verses from `.txt` files
+   \sec Printing verses from `.txs` files
    When Bible text is processed then book mark is saved to
    `\currbook` and each input line is separated to the
    <chapter-num>:<verse-num> and <verse-text>.\nl
@@ -378,7 +378,7 @@
    `\bex!<a-mark>` macro. It is used in`\processbooks`
    loop in the group before files are read. You can redefine some filenames
    or something more special here.\nl
-   Macros `\BookPre` and `\BokkPost` are defined similarly.
+   Macros `\BookPre` and `\BookPost` are defined similarly.
    \_cod
 
 \long\def\myaddto#1#2{\ifcsname#1\endcsname
@@ -493,7 +493,10 @@
          {\isnextchar a{\def\linkpre{a}\brefC}{\brefD}}}%
 }
 \def\brefBookChapterVerse #1 #2:#3>{\def\ltextB{#1~}\brefChapterVerse #2:#3>}
-\def\brefBookChapter #1 #2>{\def\ltextB{#1~}\brefChapter #2>}
+\def\brefBookChapter #1 #2>{\def\ltextB{#1~}%
+    \isinlist\NoChapBooks{ #1 }\iftrue
+        \def\ltextC{}\let\ltextCin=\ltextnCin \afterfi{\brefVerse #2>}%
+    \else \afterfi{\brefChapter #2>}\fi}
 \def\brefChapterVerse #1:#2>{\def\ltextC{#1:}\brefVerse #2>}
 \def\brefVerse #1>{%
    \isdivisin #1-\iftrue \brefFromTo #1>%
@@ -528,6 +531,18 @@
 }
 \def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
 \def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
+\def\ltextnCin #1:#2/{\prelinkC:\immediateassignemnt\let\ltextCin=\ltextsCin}
+\let\ltextsCin=\ltextCin
+
+   \_doc
+   We want \code{<Zm 4>} to be a link to Zm/1:4 because it is a
+   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
+   There are a list of single-chapter books `\NoChapBooks`. User
+   must define it. The marks of these special books are separated by spaces
+   here. The first and the last space adds the `\processbooks` macro.
+   \_cod
+
+\def\NoChapBooks{}
 
    \_doc
    `\prelinkB` is <book-mark> of last referenced book.
