@@ -624,10 +624,11 @@ verše. Například
 vytiskne ... viz {\Blue kapitolu Da 7} ... Josefův příběh {\Blue Gn 39--41}
 a prokliky vedou na Da~7:1 a na Gn~39:1.
 
-Pokud je značka knihy uvedena v seznamu `\NoChapBooks`, pak se číslo za
+Pokud je značka knihy uvedena v seznamu `\nochapbooks`, pak se číslo za
 značkou knihy interpretuje jako číslo verše a ne kapitoly. Existují totiž knihy bez
-kapitol. Například chceme, aby \code{<Zm 7>} odkázalo na Zm~1:7 a nikoli na
-Zm~7:1. Proto je třeba uvést `Zm` do seznamu `\NoChapBooks`.
+kapitol. Například chceme, aby \code{<Fm 7>} odkázalo na Fm~1:7 a nikoli na
+Fm~7:1. Proto je třeba uvést `Fm` do seznamu `\nochapbooks`. Viz též
+sekci~\ref[hlavni].
 
 \mnote{Redukce údajů}
 Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
@@ -728,6 +729,7 @@ Hlavní soubor pro použití OP-Bible může vypadat takto:
 \def\fmtfile   {formats/fmt-\tmark-\bmark.tex} % Localisation of fmts
 \def\notesfile {notes/notes-\bmark.tex}        % Localisation of notes
 
+\def\nochapbooks {Abd Fm 2Jn 3Jn Ju}  % Books without chapters
 \def\printedbooks {%
    Gn Ex Lv Nu Dt Joz Sd Rt 1S 2S 1Kr 2Kr 1CPa 2Pa Ezd Neh
    Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
@@ -814,6 +816,10 @@ je vyložen v sekci~\ref[fmt].
 
 `\notesfile` deklaruje umístění souborů s texty poznámek. Jejich formát je
 popsán v sekci~\ref[note].
+
+`\nochapbooks` obsahuje `<a-značky>` knih, které nemají kapitoly. Odkazy
+na tyto knihy se tvoří jiným způsobem než odkazy na knihy s kapitolami, viz
+sekci~\ref[odkazy].
 
 `\printedbooks` obsahuje `<a-značky>` těch knih, které chcete \TeX/em zpracovat.
 Pokud děláte třeba jen testovací tisky, můžete zpracovat jen některé

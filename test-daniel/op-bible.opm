@@ -410,6 +410,7 @@
    \_cod
 
 \def\processbooks {\par
+   \checknochapbooks
    \ea\processbooksA \printedbooks\ignoreit. {}
    \ea\processbooksB \printedbooks\ignoreit. {}
 }
@@ -433,6 +434,22 @@
       \endgroup
       \ea \processbooksB
    \fi
+}
+
+   \_doc
+   We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
+   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
+   There is a list of single-chapter books `\nochapbooks`. User
+   must define it. The marks of these single-chapter books are separated by spaces
+   here. The first and the last space are added to the `\nochapbooks`
+   macro because we need them in `\brefBookChapter`.
+   \_cod
+
+\def\checknochapbooks {%
+   \ifx\nochapbooks\undefined
+      \printwarn{\noexpand\nochapbooks (boks without chapters) undefined.}%
+      \def\nochapbooks{}%
+   \else  \edef\nochapbooks{\space\nochapbooks\space}\fi
 }
 
    \_doc
@@ -494,7 +511,7 @@
 }
 \def\brefBookChapterVerse #1 #2:#3>{\def\ltextB{#1~}\brefChapterVerse #2:#3>}
 \def\brefBookChapter #1 #2>{\def\ltextB{#1~}%
-    \isinlist\NoChapBooks{ #1 }\iftrue
+    \isinlist\nochapbooks{ #1 }\iftrue
         \def\ltextC{}\let\ltextCin=\ltextnCin \afterfi{\brefVerse #2>}%
     \else \afterfi{\brefChapter #2>}\fi}
 \def\brefChapterVerse #1:#2>{\def\ltextC{#1:}\brefVerse #2>}
@@ -531,18 +548,8 @@
 }
 \def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
 \def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
-\def\ltextnCin #1:#2/{\prelinkC:\immediateassignemnt\let\ltextCin=\ltextsCin}
+\def\ltextnCin #1:#2/{\prelinkC:\immediateassignment\let\ltextCin=\ltextsCin}
 \let\ltextsCin=\ltextCin
-
-   \_doc
-   We want \code{<Zm 4>} to be a link to Zm/1:4 because it is a
-   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
-   There are a list of single-chapter books `\NoChapBooks`. User
-   must define it. The marks of these special books are separated by spaces
-   here. The first and the last space adds the `\processbooks` macro.
-   \_cod
-
-\def\NoChapBooks{}
 
    \_doc
    `\prelinkB` is <book-mark> of last referenced book.
