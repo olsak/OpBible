@@ -842,7 +842,7 @@
       \vskip\splittopskip
       \_balancecolumns
    \fi
-   \vskip 0pt plus1filll minus6pt
+   \vskip 0pt plus1filll minus8pt
 }
 \_def \noterule {\_kern-3pt \_hrule \_kern 2.6pt }
 
