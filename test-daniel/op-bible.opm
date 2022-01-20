@@ -228,12 +228,13 @@
 \def\doNote#1#2{%
    \edef\tmpb{\cs{notepre!#1}}%
    \notelog{\space\space \csstring\\Note \tmpb\space {#2}={\cs{pword!#1}} (#1)}%
-   \fnote{%
+   \noteinsert{%
       {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
        \trymakedest{n:\currverse}%
        \ea \ifx \csname pword!#1\endcsname \empty
                  \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
-      \cs{notetext!#1}\unskip\vadjust{\penalty0}}{\Red#2}%
+      \cs{notetext!#1}}%
+   {\Red#2}%
 }
 \def\_printfnotemark{}
 \def\_textindent#1{\noindent}
@@ -774,6 +775,78 @@
 }
 
    \_doc
+   \sec Inserting notes to the page
+
+   We declare new insert `\noteins` used in the `\output` routine.
+   \_cod
+
+\newinsert \noteins
+\skip\noteins=\bigskipamount  % noterule height
+\count\noteins=500            % two columns
+\dimen\noteins=\maxdimen      % full page of notes allowed
+
+   \_doc
+   The `\noteinsert {<text>}` inserts its parameter to the `\noteins`.
+   We open the `\insert` and set basic parameters using `\noteset`.
+   Then the empty box with strut height is inserted in vertical mode
+   (in order to consecutive notes have good baselineskip between them).
+   Then the `<text>` is printed and the paragraph is finalized.
+   The empty box with strut depth is appended after the paragraph
+   (in order to the same reason). Final `\penalty0` allows breaking between
+   notes.
+   \_cod
+
+\def\noteinsert #1{\insert\noteins{%
+   \noteset
+   \vbox to\ht\_strutbox{}\nobreak \vskip-\baselineskip
+   #1\unskip\par \nobreak \vskip-\baselineskip
+   \hbox{\lower\dp\_strutbox\vbox{}}
+   \penalty0
+}}
+\def\noteset{\Heros\cond \_scalemain \_typoscale[800/800] % Heros condensed 80%
+   \widowpenalty=20 \clubpenalty=20
+   \leftskip=0pt \rightskip=0pt \parfillskip=0pt plus1fill
+   \parindent=0pt
+   \lineskiplimit=-3pt
+   \hsize=.5\hsize \advance\hsize by-1em \relax % two columns
+   \everypar{}
+}
+
+   \_doc
+   We add macros for inserting two columns of notes from `\noteins` into the
+   page. First, we add `\noterule` with the space given by
+   `\skip\noteins`. The `\noteins` material is prefixed by `\penalty0` (in
+   order to allow the next `\vsplit` operation) and the `\vfil` is added (in order
+   to the case when the second column is smaller than the first one).
+   The `\splittopskip` is set and first `\vsplit to0pt` adds skip given by
+   `\splittopskip` to the `\noteins`. The `\_balancecolumns` from \OpTeX/
+   for splitting to two columns is used. We need to set `\_Ncols`, `\_dimen0`
+   and `\_box6` before running `\_balancecolumns`. We need to insert
+   `\vskip\splittopskip` because `\_balancecolumns` supposes that the typesetting point
+   resides at the first baseline of the columns.\nl
+   The final `\vskip` does \"raggedbottom". We need to add `1filll` in order
+   to suppress the `\vfill` from the `\end` algorithm. We add `minus6pt`
+   because the height of two columns can be by half-line higher than the
+   insertion algorithm excepts (in the case with odd lines before
+   splitting to the two columns).
+   \_cod
+
+\addto\_pagecontents{%
+   \ifvoid\noteins \else
+      \vskip\skip\noteins \noterule
+      \setbox\noteins=\vbox{\penalty0 \unvbox\noteins \vfil}
+      \splittopskip=12pt
+      \setbox0=\vsplit\noteins to0pt  % adding \splittopskip to \noteins
+      \def\_Ncols{2}
+      \_dimen0=.5\_ht\noteins \_setbox6=\_box\noteins
+      \vskip\splittopskip
+      \_balancecolumns
+   \fi
+   \vskip 0pt plus1filll minus6pt
+}
+\_def \noterule {\_kern-3pt \_hrule \_kern 2.6pt }
+
+   \_doc
    \sec TODO macros
    The temporary macros are here. I plan to rewrite them.
    \_cod
@@ -794,35 +867,13 @@
    \input #1
    \egroup
 }
+
+   \_doc
+   Active character \code{<} used for references.
+   \_cod
+
 \def\_afterload{\adef<{\bref}}
 \_afterload
-
-% two columns for notes, experimental macros:
-
-\_def\_pagecontents{\_pagedest % destination of the page
-  \_ifvoid\_topins \_else \_unvbox\_topins\_fi
-  \_dimen5=\_dp255 \_unvbox255 % open up \box255
-  \_ifvoid\_footins \_else % footnote info is present
-    \unskip
-    \_vskip\_skip\_footins
-    \_noterule
-    \bigskip
-    \setbox\_footins=\vbox{\penalty0 \unvbox\_footins}
-    \_setbox0=\_vsplit\_footins to0pt \def\_Ncols{2}
-    \_dimen0=.5\_ht\_footins \_setbox6=\_box\_footins
-    \_balancecolumns
-    \vskip 0pt plus 1fil minus6pt
-    \_fi
-  \_kern-\_dimen5 \_vskip \_pgbottomskip
-}
-\addto\_fnset{\Heros\cond\rm \widowpenalty=20 \clubpenalty=20
-%   \lineskiplimit=-7pt
-   \hbadness=3000
-   \hsize=.5\hsize \advance\hsize by-1em \relax}
-\_count\_footins=500 % footnote magnification factor (1 to 1)
-\_dimen\_footins=\maxdimen % maximum footnotes per page
-\_def \_noterule {\_kern-3pt \_hrule \_kern 2.6pt }
-
 
 \endinput
 \_endcode
