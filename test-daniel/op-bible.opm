@@ -681,7 +681,11 @@
    \endtt 
    \_cod
 
-\def\vdef#1{\def\tmp{#1}\tmpnum=1 \vdefA}
+\def\vdef#1{\def\tmp{#1}%
+   \ifcsname v!\trycs{var!2}{}!\tmp\endcsname
+       \printwarn{\noexpand\vdef used secondly for phrase {\tmp}, ignored}\fi
+   \tmpnum=1 \ea\vdefA
+}
 \def\vdefA{%
    \ifnum\tmpnum<\numvariants
       \advance\tmpnum by1
@@ -693,8 +697,9 @@
    \ifx\wdef#2\def\tmpa{#2}\fi
    \ifx\tmpa\empty
       \ifx^#2^\else
-         \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\prevcs{#1}\tmp \else#2\fi}%
-      \fi
+         \unless \ifcsname v!\cs{var!#1}!\tmp\endcsname
+            \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\prevcs{#1}\tmp \else#2\fi}%
+      \fi\fi
       \ea\vdefA
    \else \errmessage{\string\vdef: too few parameters. To be read again: \string#2}%
       \ea\tmpa
@@ -720,18 +725,20 @@
 }
 
    \_doc
-   `\wdef <chap-num:verse-num> {phrase-A}={phrase-XA} {phrase-B}={phrase-XB}`\nl `{phrase-C}={phrase-XC} ...`
+   `\wdef <chap-num:verse-num> {<phrase-A>}={<phrase-XA>} {<phrase-B>}={<phrase-XB>}`\nl `{<phrase-C>}={<phrase-XC>} ...`
    declares
-   \begtt \catcode`<=13
-   \def\w!fv!tmark-A!phrase-A{phrase-A} \def\ww!fv!tmark-A!phrase-A{phrase-XA}
-   \def\w!fv!tmark-B!phrase-A{phrase-B} \def\ww!fv!tmark-B!phrase-A{phrase-XB}
-   \def\w!fv!tmark-C!phrase-A{phrase-C} \def\ww!fv!tmark-C!phrase-A{phrase-XC}
+   \begtt \catcode`<=13 \parindent=0pt
+   \def\w!<fv>!<tmark-A>!<phrase-A>{<phrase-A>} \def\ww!<fv>!<tmark-A>!<phrase-A>{<phrase-XA>}
+   \def\w!<fv>!<tmark-B>!<phrase-A>{<phrase-B>} \def\ww!<fv>!<tmark-B>!<phrase-A>{<phrase-XB>}
+   \def\w!<fv>!<tmark-C>!<phrase-A>{<phrase-C>} \def\ww!<fv>!<tmark-C>!<phrase-A>{<phrase-XC>}
    ...
    \endtt
-   where `fv` is <full-vref>.
+   where `<fv>` is `<full-vref>`.
    The number of parameters must be equal to `\numvariants` declared by
    `\variants`. The `={...}` part of parameters is optional, if it is missing
-   then the relevant control sequence is undefined.
+   then the relevant control sequence is undefined.\nl
+   `\fv` is `<full-vref>`, `\phraseA` is first parameter.
+   The next parameters are read in the loop using `\wdefA`.
    \_cod
 
 \def\wdef #1 #2{\edef\fv{\the\CommentedBook/#1}\def\phraseA{#2}\tmpnum=0 
@@ -744,15 +751,29 @@
       \ea \wdefB
    \fi
 }
+
+   \_doc
+   The `\wdefB` and `\wdefC` read next parameter and the optional `={...}` part
+   and do the real definitions (only if the parameter isn't empty).
+   If the parameter is `"` then previous parameter is saved to `\tmp` and used later.
+   The two `\sedef` macros save data as mentioned in the previous comment.
+   \_cod
+
 \def\wdefB #1{\def\tmp{#1}\isnextchar={\wdefC}{\wdefC={}}}
 \def\wdefC =#1{%
-   \ea\ifx\ea^\tmp#1^\else
-      \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
-      \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
-         \sxdef{w!\fv!\tmpa!\phraseA}{\tmp}%
-         \ifx^#1^\else\sxdef{ww!\fv!\tmpa!\phraseA}{#1}\fi
-   \fi\fi
-   \wdefA
+   \ea\ifx\ea\wdef\tmp % error: next \wdef is read as a parameter
+      \errmessage{\string\wdef: too few parameters. To be read again: \string\wdef}%
+      \ea\wdef
+   \else
+      \ea\ifx\ea^\tmp#1^\else
+         \if"\tmp\edef\tmp{\cs{w!\fv!\trycs{var!\the\numexpr\tmpnum-1\relax}{\tmarkA}!\phraseA}}\fi
+         \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
+         \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
+            \sedef{w!\fv!\tmpa!\phraseA}{\tmp}%
+            \ifx^#1^\else\sedef{ww!\fv!\tmpa!\phraseA}{#1}\fi
+      \fi\fi
+      \ea \wdefA
+   \fi
 }
 
    \_doc
