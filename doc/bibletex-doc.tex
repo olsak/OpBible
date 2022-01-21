@@ -337,6 +337,20 @@ a tato poznámka při `\def\tmark{CzeCEP}` na svém konci zní
 \uv{\dots a služby králi Nebúkadnesarovi}, zatímco při
 `\def\tmark{CzeBKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
 
+Některé parametry příkazu `\vdef` mohou být prázdné (zapsané jako~`{}`),
+což značí nedefinovanou frázi pro daný jazyk.
+Bude-li potřeba takovou frázi použít pomocí `\x/.../`, vypíše se varování.
+Dále parametr může obsahovat jediný znak `"`, což znamená, že se
+použije stejná fráze, jako v předchozím parametru. Takže naše
+výše uvedená ukázka může také vypadat takto:
+\begtt
+\variants 3 {CzeBKR}         {CzeCEP}       {CzeCSP}
+\vdef       {Baltazar}       {Beltšasar}    {"}
+\vdef       {Nabuchodonozor} {Nebúkadnesar} {"}
+\vdef       {sedm let}       {"}            {sedm časů}
+\endtt
+
+
 \secc Variantní deklarace frází pro spárování poznámek s textem
 
 \mnote{\code{\\\wdef}}

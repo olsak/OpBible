@@ -667,10 +667,18 @@
 }
 
    \_doc
-   `\vdef {phrase-A} {phrase-B} {phrase-C} ...` does\nl
-   `\def\v!tmark-B!phrase-A{phrase-B}`
-   `\def\v!tmark-C!phrase-A{phrase-C}` etc.
-   Empty data are interpreted as undefined data.
+   `\vdef {<phrase-A>} {<phrase-B>} {<phrase-C>} ...` does\nl
+   `\def\v!<tmark-B>!<phrase-A>{<phrase-B>}`
+   `\def\v!<tmark-C>!<phrase-A>{<phrase-C>}` etc.
+   Empty parameter is interpreted as undefined data.
+   The internal macro `\vdefB` implements the error message if there is too few
+   parameters of `\vdef` and we were read next `\vdef` or `\wdef`.
+   The `\sedef` used in the `\vdefB{<number>}{<param>}` does real work and 
+   it defines (rougly sepaking):
+   \begtt \catcode`<=13
+   If <param> is "  \def \v!<tmark>!<phrase-A> {<previous param>}
+   else             \def \v!<tmark>!<phrase-A> {<param>}
+   \endtt 
    \_cod
 
 \def\vdef#1{\def\tmp{#1}\tmpnum=1 \vdefA}
@@ -680,7 +688,18 @@
       \afterfi{\vdefB{\the\tmpnum}}%
    \fi
 }
-\def\vdefB#1#2{\ifx^#2^\else\sxdef{v!\cs{var!#1}!\tmp}{#2}\fi\vdefA}
+\def\vdefB#1#2{\def\tmpa{}%
+   \ifx\vdef#2\def\tmpa{#2}\fi
+   \ifx\wdef#2\def\tmpa{#2}\fi
+   \ifx\tmpa\empty
+      \ifx^#2^\else
+         \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\cs{v!\cs{var!\the\numexpr#1-1\relax}!\tmp}\else#2\fi}%
+      \fi
+      \ea\vdefA
+   \else \errmessage{\string\vdef: too few parameters. To be read again: \string#2}%
+      \ea\tmpa
+   \fi
+}
 
    \_doc
    `\x/<phrase>/` expands to `\v!<tmark>!<phrase>` if such control sequence
