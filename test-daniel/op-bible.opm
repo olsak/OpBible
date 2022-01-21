@@ -693,13 +693,14 @@
    \ifx\wdef#2\def\tmpa{#2}\fi
    \ifx\tmpa\empty
       \ifx^#2^\else
-         \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\cs{v!\cs{var!\the\numexpr#1-1\relax}!\tmp}\else#2\fi}%
+         \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\prevcs{#1}\tmp \else#2\fi}%
       \fi
       \ea\vdefA
    \else \errmessage{\string\vdef: too few parameters. To be read again: \string#2}%
       \ea\tmpa
    \fi
 }
+\def\prevcs #1#2{\ifnum#1=2 #2\else \cs{v!\cs{var!\the\numexpr#1-1\relax}!#2}\fi}
 
    \_doc
    `\x/<phrase>/` expands to `\v!<tmark>!<phrase>` if such control sequence
