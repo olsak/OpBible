@@ -901,6 +901,7 @@
    \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
+\def\pg{??}
 
 \def\setvariant#1{}
 \def\bibleinput#1 {\bgroup
