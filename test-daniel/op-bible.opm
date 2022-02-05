@@ -845,6 +845,7 @@
    \penalty0
 }}
 \def\noteset{\Heros\cond \_scalemain \_typoscale[800/800] % Heros condensed 80%
+   \Black
    \widowpenalty=20 \clubpenalty=20
    \leftskip=0pt \rightskip=0pt \parfillskip=0pt plus1fill
    \parindent=0pt
@@ -885,7 +886,7 @@
    \fi
    \vskip 0pt plus1filll minus8pt
 }
-\_def \noterule {\_kern-3pt \_hrule \_kern 2.6pt }
+\_def \noterule {\_kern-3pt {\Black \_hrule}\_kern 2.6pt }
 
    \_doc
    \sec TODO macros
