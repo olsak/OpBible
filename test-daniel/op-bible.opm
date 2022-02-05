@@ -493,9 +493,10 @@
    \_cod
 
 \def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
-\def\bref #1>{\def\linkspec{#1}\isnextchar"{\brefA}{\brefA""}#1>}
+\def\bref #1>{\let\brefH=\relax \def\linkspec{#1}\isnextchar"{\brefA}{\brefA""}#1>}
 \def\brefA"#1"{\def\ltextP{#1}%
-   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }{\brefB}%
+   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }
+      {\isnextchar{_}{\def\brefH{}\afterassignment\brefB\let\next= }{\brefB}}%
 }
 \def\brefB #1>{% #1 is link-spec
    \def\ltextB{}\def\ltextC{}\def\ltextF{}\def\ltextN{}%
@@ -508,8 +509,11 @@
    \def\linkpre{v}%
    \isnextchar n{\def\linkpre{n}\brefC}%
       {\isnextchar g{\def\linkpre{g}\brefC}%
-         {\isnextchar a{\def\linkpre{a}\brefC}{\brefD}}}%
+         {\isnextchar a{\def\linkpre{a}\brefC}%
+             {\isnextchar i{\def\linkpre{i}\brefC}{\brefD}}}}%
 }
+\def\brefC{\afterassignment\brefD \let\next= }
+
 \def\brefBookChapterVerse #1 #2:#3>{\def\ltextB{#1~}\brefChapterVerse #2:#3>}
 \def\brefBookChapter #1 #2>{\def\ltextB{#1~}%
     \isinlist\nochapbooks{ #1 }\iftrue
@@ -526,8 +530,6 @@
    \def\ltextV{}\def\ltextS{}%
 }
 \def\brefFromTo #1-#2>{\versedef#1\relax\def\ltextF{--}\def\ltextN{#2}}
-
-\def\brefC{\afterassignment\brefD \let\next= }
 
    \_doc
    Because the verse number can be in the format `11b`, we need to separate
@@ -591,7 +593,8 @@
       \let\linkfspec=\linkfspecm
    \fi
    \ifx\ltextV\empty \addto\linkfspec{1}\fi % only chapter is specified, we link to verse 1
-   \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]{\linktext}}%
+   \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]%
+                                           {\ifx\brefH\empty\ltextP\else\linktext\fi}}%
    \ensuredest \createlink
 }
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
@@ -621,9 +624,11 @@
    `\linkpre:\linkfspec` with the text `\linktext`
    \_cod
 
-\def\createlink{\ea\isprintedbook\linkfspec \iftrue
+\def\createlink{{%
+   \ifx\brefH\empty \let\linktext=\ltextP\fi
+   \ea\isprintedbook\linkfspec \iftrue
    \link[\linkpre:\linkfspec]{\Blue}{\linktext}%
-   \else {\Blue\linktext}\fi
+   \else {\Blue\linktext}\fi}%
 }
 \def\isprintedbook #1/#2\iftrue{\ifcsname pbook!#1\endcsname}
 
