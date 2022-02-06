@@ -1,4 +1,5 @@
 \cslang
+\csquotes
 \margins/1 a4 (20,,,)mm
 \fixmnotes\right
 \fontfam[schola]
@@ -7,6 +8,7 @@
 \everytt{\typosize[9/]\catcode`<=13 }
 \everyintt{\catcode`<=13 \Magenta}
 \catcode`<=13 \def<#1>{{$\langle$\it#1$\rangle$}}
+\hyperlinks\Blue\Blue
 
 \tit OP-Bible -- zpracování komentovaných biblí \TeX/em
 
@@ -146,7 +148,7 @@ společné stránce.
 Povšimněme si, že fráze se váže na překlad Bible Kralické, zatímco v
 překladu ekumenickém je použit ve stejném verši termín \uv{nádob}. Jak
 zařídit, aby se stejná poznámka automaticky mírně modifikovala podle
-použitého překladu, je popsáno v sekci~\ref[ruzne-preklady].
+použitého překladu, je popsáno v sekci~\ref[ww].
 
 Pokud <fráze> není ve stanoveném verši základního textu doslovně obsažena,
 \TeX/ během zpracování oznámí do logu a a na terminál o tom varování a
@@ -351,56 +353,60 @@ výše uvedená ukázka může také vypadat takto:
 \endtt
 
 
-\secc Variantní deklarace frází pro spárování poznámek s textem
+\secc[ww] Variantní deklarace frází pro spárování poznámek s textem
 
-\mnote{\code{\\\wdef}}
-Kromě `\vdef`, což deklaruje varianty překladu platné pro celou Bibli je
-možné použít `\wdef`, což deklaruje varianty překladu jen pro konkrétní verš
-konkrétní knihy a jen pro spárování poznámek `\Note` s výchozím textem.
-Syntaxe je následující:
+\mnote{\code{\\ww}}
+Před příkazem `\Note` může bezprostředně předcházet deklarace vyhledávaného
+slova podle variant překladu pomocí `\ww` (to je zkratka za watchword).
+Příkaz `\ww` má tolik parametrů, kolik je variant překladu deklarovaných
+příkazem `\variants` a tyto parametry mohou být jednoduché (ve formátu
+`{<hledaná-fráze>}`) nebo složené (ve formátu
+`{<hledaná-fráze>}={<co-vytisknout>}`). Bezprostředně následující `\Note`
+pak bude ignorovat svůj parametr pro hledanou frázi a použije parametr z `\ww`
+odpovídající zpracovávané variantě jazyka. Například:
+
 \begtt
-\CommentedBook {<zkratka-knihy>}
-\wdef <číslo-kapitoly>:<číslo-verše> {<fráze-A>} {<fráze-B>} {<fráze-C>}
+\ww {liternímu umění a jazyku}  %BKR
+    {písmu a jazyku Kasdím} %PSP
+    {chaldejskému písemnictví a jazyku}  %CSP
+    {kaldejskému písemnictví a jazyku} %CEP
+    {babylonskému písemnictví a jazyku}  %B21
+    {kaldejský jazyk}={kaldejský jazyk ... s národním písemnictvím}  %SNC
+\Note 1:4 {} Babylónská literatura byla ...
 \endtt
-kde počet parametrů pro fráze se musí shodovat s hodnotou `<počet-variant>` v
-příkazu `\variants`.
 
-Pro každý příkaz `\Note`:
+Zde uvedená poznámka `Note 1:4` vyhledá ve verši 1:4 text \"liternímu umění a jazyku",
+když je zpracovávaná varianta překladu BKR a vyhledá text
+\"kaldejskému písmenictví a jazyku" při zpracování varianty překladu CEP.
+Ukázka předpokládá, že bylo pomocí příkazu `\variants` deklarováno šest
+variant překladu ve stanoveném pořadí. Můžete též stanovit rozdílnou frázi
+pro vyhledání a pro vytištění v poznámce, jak ukazuje následující příklad:
+
 \begtt
-\Note <číslo-kapitoly>:<číslo-verše> {<fráze>} <text-poznámky>
+\ww {Baltazar}  %BKR
+    {Béltešaccar}={Béltešaccar ... Šadrach ... Méšach ...i Avéd-negó} %PSP
+    {Beltšasar}={Beltšasar ... Šadrak ... Méšak ...i Abed-nego}  %CSP
+    {Beltšasar}={Beltšasar, Chananjášovi Šadrak, Míšaelovi Méšak a Azarjášovi Abed-nego}
+    {Baltazar}={Baltazar, Chananiášovi Šadrach, Mišaelovi Mešach a Azariášovi Abednego}
+    {Beltšasarem}={Beltšasarem, Chananjáše Šadrakem, Míšaele Méšakem a Azarjáše Abed-negem}
+\Note 1:7  {} Přesný význam těchto jmen je předmětem diskusí...
 \endtt
-se před vyhledáním `<fráze>` ve stanoveném verši tato `<fráze>`
-automaticky promění podle aktuální varianty `\tmark` překladu následujícím způsobem:
-\begitems
-* Je-li `<fráze>` deklarována jako `<fráze-A>` pomocí `\wdef` pro konkrétní
-  verš, použije se místo ní odpovídající variantní fráze, jinak
-* je-li `<fráze>` deklarována jako `<fráze-A>` pomocí `\vdef`,
-  použije se místo ní odpovídající variantní fráze bez ohledu na knihu a číslo verše,
-* jinak se použije pro vyhledání v textu přímo `<fráze>`.
-\enditems
 
-Variantní fráze deklarované pomocí `\wdef` mají také rozšířenou syntaxi: může
-těsně následovat rovnítko a `{<fráze-pro-tisk>}`. Takže například na poznámku
-`\Note` uvedenou sekci~\ref[note] může navazovat deklarace `\wdef` takto:
+Fráze pro hledání a nahrazení se použijí přesně tak, jak jsou napsány v
+parametrech příkazu `\ww`. To neplatí pro poznámky `\Note`, které nemají
+před sebou `\ww`. Pak při použití
+
 \begtt
-\CommentedBook {Da}
-\wdef 1:2 {vydal Pán} {Hospodin mu vydal}={Hospodin vydal} {Hospodin vydal}
+\Note <verš> {<hledaná-fráze>} <text> <prázdný řádek>
 \endtt
-Tento příklad funguje následovně: Při zpracování první varianty základního textu
-(překlad CzeBKR v~našem příkladě) se vyhledává \uv{vydal Pán} a tiskne se \uv{Pán vydal}
-(odlišná fráze pro tisk je přímo v parametru `\Note`). Při
-zpracování druhé varianty základního textu se vyhledá \uv{Hospodin mu vydal}
-a vytiskne se v poznámce \uv{Hospodin vydal} a konečně při zpracování třetí
-varianty se vyhledá \uv{Hospodin vydal} a vytiskne se též 
-\uv{Hospodin vydal}, protože třetí varianta nemá těsně následované rovnítko
-s odlišnou frází pro tisk.  
+nebo
+\begtt
+\Note <verš> {<hledaná-fráze>}={<co-vytisknout>} <text> <prázdný řádek>
+\endtt
+se <hladaná-fráze> nejprve transformuje podle dat z `\vdef`. Teprve pokud
+tato data pro hledanou frázi neexistují, použije se <hledaná-fráze> tak,
+jak je.
 
-Je-li `<fráze-pro-tisk>` deklarována jednak v parametru `\Note` a jednak
-pomocí `\wdef`, má přednost údaj z `\wdef`.
-
-Místo `<parametr-B>`, `<parametr-C>` atd. příkazu `\wdef` může být znak `"`,
-který značí, že daný parametr je stejný jako předchozí
-parametr. Tato vlastnost je analogická jako u příkazu `\vdef`.
 
 \secc Větvení zpracování textu podle variant překladu
 

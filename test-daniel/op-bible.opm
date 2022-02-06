@@ -111,15 +111,13 @@
    phrase which should be be searched in the given verse text. This parameter `<word>`
    is transformed first by expansion of `\transformword{<word>}` to the `<tword>` variant
    and the `<tword>` is actually used for searching. The `\transformword{<word>}`
-   expands to the variant of the <word> declared by `\wdef`. If not declared then
-   it expands to the variant of the <word> declared by `\vdef`. If not declared then it
+   expands to the variant of the <word> declared by `\vdef`. If not declared then it
    expands to the <word> itself, i.e <tword> is equal to <word> in this case.
    \_cod
 
 \def\transformword#1{%
-   \ifcsname w!\fullvref!\tmark!#1\endcsname \lastnamedcs
-   \else \ifcsname v!\tmark!#1\endcsname \lastnamedcs
-   \else #1\fi\fi
+   \ifcsname v!\tmark!#1\endcsname \lastnamedcs
+   \else #1\fi
 }
 
    \_doc
@@ -134,13 +132,17 @@
    More precisely: transformed <word> is used for searching
    (and it is kept in the verse unchanged) but <pword> is
    printed in the note.\nl
+   The `\ww` can precede `\Note`. If it is true then the <word> is prepared in
+   `\nextww` and `<pword>` is in `\nextwwA`. Otherwise, the macros `\nextww`
+   and `\nextwwA` are undefined.\nl
    `\Note` does exactly following:
    \begitems
    * Allocates new <note-num>,
    * Transforms <gen-vref> to <full-vref> using `\gentovref`.
    * Modifies <full-vref> if `\renum` was declared using `\renumvref` and
      saves the result to `\fullvrefm`.
-   * Transforms <word> to <tword> (to be searched and printed) by `\transformword`.
+   * Use `\nextww` and `\nextwwA` as <tword> and <pword> if they are defined.
+   * Otherwise transforms <word> to <tword> by `\transformword`.
    * Reads <pword> (word to be printed in the note) if the alternative syntax
      with `={<pword>}` is used. Else <pword> is equal to <tword>. 
    * Defines `\notetext!<note-num>` as <text>.
@@ -160,8 +162,9 @@
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
    \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
-   {\def\printwarn##1{}\xdef\tword{\transformword{#2}}%
-                       \xdef\oword{#2}}%
+   \ifx\nextww\unefined
+      {\def\printwarn##1{}\xdef\tword{\transformword{#2}}}%
+   \else \xdef\tword{\nextww}\fi
    \isnextchar={\NoteA}{\NoteA={}}%
 }
 \ifx\_partokenset\undefined
@@ -172,9 +175,12 @@
 \defnoteA{%
    \sdef{notetext!\the\notenum}{\ignorespaces#2}%
    \sedef{noteref!\the\notenum}{\fullvrefm}%
-   \ifx^#1^\sedef{pword!\the\notenum}{\tword}\else \global\sdef{pword!\the\notenum}{#1}\fi
-   \ifcsname ww!\fullvref!\tmark!\oword \endcsname
-      \global\slet{pword!\the\notenum}{ww!\fullvref!\tmark!\oword}\fi
+   \ifx\nextww\undefined
+      \ifx^#1^\sdef{pword!\the\notenum\ea}\ea{\tword}\else \sdef{pword!\the\notenum}{#1}\fi
+   \else
+      \sdef{pword!\the\notenum\ea}\ea{\nextwwA}%
+      \let\nextww=\undefined \let\nextwwA=\undefined
+   \fi
    \edef\tmp{%
       \noexpand\newaction{\fullvrefm}%
       {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
@@ -653,7 +659,7 @@
 
    `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
    sets `\numvariants=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
-   `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
+   `\def\var!1{<tmarkA>}` `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
    \_cod
 
 \newcount\numvariants
@@ -665,7 +671,7 @@
    \fi
 }
 \def\variantsB#1#2{%
-   \ifnum#1=1 \gdef\tmarkA{#2}%
+   \ifnum#1=1 \gdef\tmarkA{#2}\sxdef{var!1}{#2}%
    \else \sxdef{var!#1}{#2}%
    \fi
    \variantsA
@@ -677,7 +683,7 @@
    `\def\v!<tmark-C>!<phrase-A>{<phrase-C>}` etc.
    Empty parameter is interpreted as undefined data.
    The internal macro `\vdefB` implements the error message if there is too few
-   parameters of `\vdef` and we were read next `\vdef` or `\wdef`.
+   parameters of `\vdef` and we were read next `\vdef`.
    The `\sedef` used in the `\vdefB{<number>}{<param>}` does real work and 
    it defines (rougly sepaking):
    \begtt \catcode`<=13
@@ -699,7 +705,6 @@
 }
 \def\vdefB#1#2{\def\tmpa{}%
    \ifx\vdef#2\def\tmpa{#2}\fi
-   \ifx\wdef#2\def\tmpa{#2}\fi
    \ifx\tmpa\empty
       \ifx^#2^\else
          \unless \ifcsname v!\cs{var!#1}!\tmp\endcsname
@@ -730,58 +735,6 @@
 }
 
    \_doc
-   `\wdef <chap-num:verse-num> {<phrase-A>}={<phrase-XA>} {<phrase-B>}={<phrase-XB>}`\nl `{<phrase-C>}={<phrase-XC>} ...`
-   declares
-   \begtt \catcode`<=13 \parindent=0pt
-   \def\w!<fv>!<tmark-A>!<phrase-A>{<phrase-A>} \def\ww!<fv>!<tmark-A>!<phrase-A>{<phrase-XA>}
-   \def\w!<fv>!<tmark-B>!<phrase-A>{<phrase-B>} \def\ww!<fv>!<tmark-B>!<phrase-A>{<phrase-XB>}
-   \def\w!<fv>!<tmark-C>!<phrase-A>{<phrase-C>} \def\ww!<fv>!<tmark-C>!<phrase-A>{<phrase-XC>}
-   ...
-   \endtt
-   where `<fv>` is `<full-vref>`.
-   The number of parameters must be equal to `\numvariants` declared by
-   `\variants`. The `={...}` part of parameters is optional, if it is missing
-   then the relevant control sequence is undefined.\nl
-   `\fv` is `<full-vref>`, `\phraseA` is first parameter.
-   The next parameters are read in the loop using `\wdefA`.
-   \_cod
-
-\def\wdef #1 #2{\edef\fv{\the\CommentedBook/#1}\def\phraseA{#2}\tmpnum=0 
-   \ifcsname w!\fv!\tmarkA!#2\endcsname
-       \printwarn{\noexpand\wdef used secondly for verse \fv, ignored}\fi
-   \wdefA{#2}}
-\def\wdefA{%
-   \ifnum\tmpnum<\numvariants
-      \advance\tmpnum by1
-      \ea \wdefB
-   \fi
-}
-
-   \_doc
-   The `\wdefB` and `\wdefC` read next parameter and the optional `={...}` part
-   and do the real definitions (only if the parameter isn't empty).
-   If the parameter is `"` then previous parameter is saved to `\tmp` and used later.
-   The two `\sedef` macros save data as mentioned in the previous comment.
-   \_cod
-
-\def\wdefB #1{\def\tmp{#1}\isnextchar={\wdefC}{\wdefC={}}}
-\def\wdefC =#1{%
-   \ea\ifx\ea\wdef\tmp % error: next \wdef is read as a parameter
-      \errmessage{\string\wdef: too few parameters. To be read again: \string\wdef}%
-      \ea\wdef
-   \else
-      \ea\ifx\ea^\tmp#1^\else
-         \if"\tmp\edef\tmp{\cs{w!\fv!\trycs{var!\the\numexpr\tmpnum-1\relax}{\tmarkA}!\phraseA}}\fi
-         \edef\tmpa{\trycs{var!\the\tmpnum}{\tmarkA}}%
-         \unless\ifcsname w!\fv!\tmpa!\phraseA\endcsname
-            \sedef{w!\fv!\tmpa!\phraseA}{\tmp}%
-            \ifx^#1^\else\sedef{ww!\fv!\tmpa!\phraseA}{#1}\fi
-      \fi\fi
-      \ea \wdefA
-   \fi
-}
-
-   \_doc
    The `\switch` macro reads a pair of parameters using `\switchA`
    and processes the list of variants in `\foreach` loop. If an element from
    the list is equal with `\smark` or `\tmark` then the `#2` (saved in
@@ -802,6 +755,53 @@
 \def\switchC{\ifx\tmp\smark \the\switchD
              \else\ifx\tmp\tmark \the\switchD \fi\fi
 }
+
+   \_doc
+   `\setvarnum` sets the `\varnum` as the position number of the current
+   language variant due to the value of `\tmark`. The `\variants`
+   declaration must precede.
+   \_cod
+
+\def\setvarnum{\gdef\varnum{0}%
+   \ifnum\numvariants=0 \gdef\varnum{1}\wlog{There is only single language variant (1)}%
+   \else
+      \tmpnum=0
+      \loop
+         \advance\tmpnum by1
+         \ea\ifx \csname var!\the\tmpnum\endcsname \tmark \xdef\varnum{\the\tmpnum}\fi
+         \ifnum\tmpnum<\numvariants \repeat
+      \ifnum \varnum=0 \errmessage{\noexpand\tmark isn't set, \noexpand\setvarnum failded}%
+      \else \wlog{Language variant set by \string\tmark{\tmark} (\varnum)}\fi
+   \fi
+}
+
+   \_doc
+   `\ww` `{<phrase-A>} {<phrase-B>} ...` has the same number of parameters as `\vdef`.
+   They are separated by spaces. Each parameter can be in the \"single form",
+   i.e.\ `{<phrase-A>}` or in the \"extended form", i.e.\ `{<phrase-A>}={<printed-A>}`.
+   The macro searchs the correct phrase (given by the `\varnum`) and saves
+   it to the `\nextww`. The `\nextwwA` is set to `\nextww` if there is
+   single form of the parameter else `\nextwwA` is <printed-A> part of
+   the parameter in the extended form. These macros are used in the next
+   `\``Note` where they are re-set to `\undefined` meaning.
+   \_cod
+
+\outer\def\ww{%
+   \ifx\varnum\undefined \setvarnum \fi
+   \tmpnum=0
+   \ifx\nextww\undefined \ea\wwA
+   \else \printwarn{Only single \csstring\\ww must be before \csstring\\Note}%
+       \ea\wwB \fi
+}
+\def\wwA#1#2 {\advance\tmpnum by1
+   \def\nextww{#1}\def\nextwwA{#2}%
+   \ifx\nextwwA\empty \let\nextwwA=\nextww \else \ea \redefwwA #2\end \fi
+   \ifnum\varnum=\tmpnum \ea \wwB \else \ea \wwA \fi
+}
+\def\wwB#1 {\advance\tmpnum by1
+   \ifnum\tmpnum<\numvariants \ea\wwB \fi
+}
+\def\redefwwA =#1\end{\def\nextwwA{#1}}
 
    \_doc
    `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
