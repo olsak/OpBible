@@ -573,36 +573,25 @@ Vytiskne se:
 Údaje `9:7`, `11:3`, `15`, `17` a `22` v těchto příkladech jsou neúplné. Čtenář ví, že se týkají
 knihy Jeremjáš a že v případě, kdy není uvedena ani kapitola, se týkají kapitoly 8 knihy
 Jeremjáš. Ví to i \TeX/ a přidělí těm neúplným odkazům správné interní
-odkazy (podle kterých se provede proklik), protože pracuje podle
-následujícího pravidla:
-\begitems
-* Chybí-li v údaji `<kniha>`, použije se `<kniha>` předchozího naposledy uvedeného úplného
-  údaje.
-* Chybí-li též `<kapitola>`, použije se kapitola z předchozího naposledy uvedeného údaje, kde je
-  číslo kapitoly uvedeno.
-\enditems
-Předchozí údaje uvedené v těchto pravidlech musejí být v textu
-společné poznámky, glosy, atd. Nejsou-li tam, jsou neúplné odkazy 
-interpretovány jako \mnote{Lokální údaj}{\em lokální}, tj. proklik vede na
-aktuální knihu nebo též (při vynechaném čísle kapitoly) na aktuální
-kapitolu. Například v knize Daniel může být poznámka:
-
-\begtt \catcode`<=12
-\Note 3:2  {} Analogii vidíme též ve verších <7>, <11> a <13>.
-\endtt
-a vytisknou se odkazy {\Blue 7}, {\Blue 11} a {\Blue 13} interně směřující na 
-Da 3:7, Da 3:11 a Da 3:13.
+odkazy (podle kterých se provede proklik), protože neúplný údaj přebírá
+nespecifikované informace z předchozího údaje. Toto pravidlo se vztahuje
+lokálně na jeden objekt textu: poznámku, článek, úvod atd. Je-li hned první údaj v
+některém objektu textu neúplný, přebírá nespecifikované informace z aktuálně
+zpracovávané knihy, kapitoly, verše.
 
 \mnote{Odkaz uvozený \code{\\}}
-Lokální neúplný údaj můžete zapsat také pomocí \code{\\<...>}, tedy
-přidáním znaku `\` před otevírací závorku odkazu. Takový údaj je interpretován
-jako lokální, ačkoli před ním předchází třeba úplný údaj odkazující na
-vzdálené místo v Bibli. Například:
+Je-li neúplný údaj uvozen znakem `\`, přebírá nespecifikované informace z
+aktuálně zpracovávané knihy, kapitoly a verše bez ohledu, jaký údaj
+předchází. Například:
 \begtt \catcode`<=12
 \Note 4.5 {} Myšlenka se opakuje v <Jr 4:5>. Ale také v \<8:3> najdete o tom zmínku.
 \endtt
 Zde odkaz {\Blue 8.3} vede na verš 3 kapitoly 8 aktuální knihy. Kdyby tam
 znak `\` nebyl, pak by tento odkaz vedl na 8:3 knihy Jeremjáš.
+
+Neúplný údaj se vytiskne tak jak je jako neúplný. Shora uvedená pravidla na jeho
+doplnění se provedou jen interně, aby aktivní odkaz správně fungoval po
+kliknutí myší.
 
 \mnote{Přečíslování odkazu}
 Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
@@ -680,11 +669,20 @@ Pravidlo redukce odkazů nastavené pomocí `\reduceref` lze vypnout
 příkazem `\noreduceref`. Od něj až do konce poznámky (\TeX/ové skupipny)
 se odkazy chovají, jakoby `\reduceref` nebylo zapnuté.
 
-\mnote{Odkazy na poznámky}
-Kromě odkazů na verše lze zcela analogicky odkazovat na poznámky k danému
-verši. Formát odkazu i pravidla sestavení odkazu jsou stejné, jako u odkazů
-na verše. Ale těsně za zavírací závorkou `>` je navíc písmeno `n`, které se
-netiskne. Takže třeba
+\mnote{Specifikátor odkazu}
+Za koncovým znakem údaje `>` může těsně následovat specifikátor odkazu, což
+je jedno s písmen:
+\begitems
+* `n` ... odkazuje se na poznámku
+* `a` ... odkazuje se na článek
+* `g` ... odkazuje se na glosu
+* `i` ... odkazuje se na úvod
+\enditems
+Specifikátor odkazu se nevytiskne, je to jen interní informace, kam má
+směřovat aktivní odkaz (tj.~proklik myší). Nenásleduje-li za ukončujícím
+znakem údaje `>` žádný z uvedených specifikátorů, jedná se o odkaz na verš
+(to je asi nejčastější případ).
+Příklad odkazu na poznámku:
 
 \begtt \catcode`\<=12
 ... viz <"poznámku" Jr 7:4>n, kde je uvedeno více informací.
@@ -692,12 +690,10 @@ netiskne. Takže třeba
 vytiskne ... viz {\Blue poznámku Jr 7:4}, kde je uvedeno více informací.
 Proklik vede na první poznámku k~verši Jr~7:4, nikoli k verši samotnému.
 
-\TODO: Možná analogicky odkazy na glosy a další podobné záležitosti.
-
 \mnote{Zatajení údaje}
 Odkaz vytiskne jen část mezi `"..."`, tj. nevytiskne se <údaj>
 specifikující cíl odkazu, pokud mezi `"..."` a <údajem> je znak podtržítko.
-Například `<"První kniha Samuelova"_1S 1:1>` vytiskne pouze text
+Například \code{<}`"První kniha Samuelova"_1S 1:1>` vytiskne pouze text
 {\Blue První kniha Samuelova}, který odkazuje na první verš této knihy.
 
 \mnote{Odkazy na neexistující místo}
