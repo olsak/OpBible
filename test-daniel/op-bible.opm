@@ -321,7 +321,7 @@
    `\processverse <full-vref><space><verse-text>\end` does
    \begitems
    * defines `\currverse` as <full-vref>,
-   * prepares `\currversenum`, `\currchapnum` from <full-vref>,
+   * prepares `\currversenum`, `\curversetext`, `\currchapnum` from <full-vref>,
    * defines `\tmpb` as <verse-text>,
    * processes all actions from `\alist!<full-vref>`,
    * if `\currchapnum` changed, prints new chapter by `\printchap` 
@@ -340,7 +340,12 @@
        \let\prelinkC=\currchapnum \chapnum=\currchapnum\relax \printchap \fi
    \printverse
 }
-\def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}\def\currversenum{#3}}
+\def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}%
+   \isdivisin #3-\iftrue \defversefromto #3\end
+   \else \def\currversenum{#3}\let\currversetext=\currversenum
+   \fi
+}
+\def\defversefromto #1-#2\end{\def\currversenum{#1}\def\currversetext{#1--#2}}
 
    \_doc
    `\printverse` prints verse from `\currversenum` and (possibly changed) `\tmpb`.
@@ -355,7 +360,7 @@
    \tmpc % material accumulated by \fmtpre
    \ifnum\currversenum=1 \printbeforefirst \fi
    \quitvmode \trymakedest{v:\currverse}%
-   \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversenum\fi}%
+   \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
    \tmpb \space
 }
 \def\printchap{\bigskip}
@@ -815,7 +820,8 @@
 \def\wwA#1#2 {\advance\tmpnum by1
    \def\nextww{#1}\def\nextwwA{#2}%
    \ifx\nextwwA\empty \let\nextwwA=\nextww \else \ea \redefwwA #2\end \fi
-   \ifnum\varnum=\tmpnum \ea \wwB \else \ea \wwA \fi
+   \ifnum\varnum=\tmpnum  \ifnum\tmpnum<\numvariants  \ea\ea\ea \wwB \fi
+   \else \ea \wwA \fi
 }
 \def\wwB#1 {\advance\tmpnum by1
    \ifnum\tmpnum<\numvariants \ea\wwB \fi
