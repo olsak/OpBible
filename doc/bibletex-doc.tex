@@ -507,7 +507,7 @@ Má-li se přečíslování týkat jediného verše, je třeba uvést shodné
 \sec[odkazy] Metody vytváření hyperlinkových odkazů
 
 Odkaz je úsek textu, podle kterého čtenář i po vytištění pozná, na jaké jiné místo
-v textu (nebo v~internetu) se může podívat. Obsahuje tedy číselný údaj o
+v textu (nebo v~internetu) se může podívat. Obsahuje tedy typicky číselný údaj o
 stránce nebo o čísle kapitoly, sekce atd. Navíc, pokud čtenář pracuje s PDF
 prohlížečem, pak tento úsek textu je {\em aktivní}, tj. po najetí myším
 kurzorem nad tento text je možné klikout a PDF prohlížeč přejde na stanovené
@@ -521,31 +521,22 @@ dokumentu (které \TeX/ při zpracování přiřadí k vygenerovaným číslům)
 těchto lejblíků, jak je popsáno v sekci 1.4.3 v dokumentaci \OpTeX/u. Je
 daleko účelnější odkazovat přímo do konkrétního místa v Bibli, které má už
 po mnohá staletí pevné označení knihy, čísla kapitoly a čísla verše.
+A mniši a jiní lidé tyto odkazy už dávno označovali ustáleným
+způsobem zkratkami knih a čísly.
 
-\secc Odkazy na verše a poznámky k verši
+Odkazy píšeme na konkrétní místo v Bibli mezi \code{<} a \code{>}. Text mezi
+těmito znaky se vytiskne tak, jak je napsán (až na odstranění znaků
+\code{"}). \TeX/ ale musí umět odkaz správně interpretvat, aby jej mohl
+udělat aktivní s možným proklikem na správné místo v Bibli. K tomu slouží
+poměrně značné množství pravidel popsaných níže.
 
-\mnote{Základní pravidlo}
-Tyto odkazy píšeme mezi znaky \code{<} a \code{>}. Text mezi těmito znaky se tiskne jako
-aktivní odkaz na konkrétní verš nebo poznámku k verši, ale musí mít předepsaný formát, aby
-\TeX/ poznal, na jaký verš má propojit hypertextový odkaz.
-Specifikace odkazu má tyto možnosti:
+\secc[uudaj] Základní pravidlo s úplnými údaji
 
-\begitems
-* "<text>" <údaj> ... vytiskne se aktivní <text> <údaj>
-* <údaj> ... vytiskne se aktivní <údaj>
-\enditems
-%
-`<údaj>` může být zapsán jako
+Odkaz mezi znaky \code{<} a \code{>} má tvar `"<text>" <údaj>` nebo jen
+`<údaj>`. Přitom úplný `<údaj>` má tvar
 `<kniha> <kapitola>:<verš>`. Zde `<kniha>` je zkratka knihy (za ní musí být
 mezera), `<kapitola>` je číslo kapitoly a `<verš>` je číslo verše.
-\mnote{Úplný údaj}%
-Takovému údaji říkáme {\em úplný údaj}. 
-Odkaz s úplným údajem je {\em úplný odkaz}.
-Kromě toho mohou existovat neúplné údaje/odkazy, což popíšeme za chvíli.
-
-\mnote{Předsunutý text}
-Je-li v odkaze přítomný předsunutý `<text>`, stává se součástí aktivního odkazu,
-srovnejte:
+Příklad:
 
 \begtt \catcode`<=12
 ... viz také verš <Jr 8:13>
@@ -553,35 +544,82 @@ srovnejte:
 \endtt
 V prvním případě se vytiskne ... viz také verš {\Blue Jr 8:13} a ve druhém
 ... viz také {\Blue verš Jr 8:13}. Aktivní (umožňující proklik) bude v obou případech
-oblast zde vyznačena modře.
+oblast zde vyznačena modře a proklik vede na Jr 8:13.
 
-\mnote{Neúplný údaj}
+\secc Specifikátor odkazu
+
+Za koncovým znakem odkazu `>` může těsně následovat specifikátor odkazu, což
+je jedno z písmen:
+\begitems
+* `n` ... odkazuje se na poznámku (note),
+* `g` ... odkazuje se na glosu,
+* `a` ... odkazuje se na článek (article),
+* `i` ... odkazuje se na úvod (introduction).
+\enditems
+Specifikátor odkazu se nevytiskne, je to jen interní informace, kam má
+směřovat aktivní odkaz (tj.~proklik myší). Nenásleduje-li za ukončujícím
+znakem údaje `>` žádný z uvedených specifikátorů, jedná se o odkaz na verš
+(to je asi nejčastější případ).
+Příklad odkazu na poznámku:
+
+\begtt \catcode`\<=12
+... viz <"poznámku k" Jr 7:4>n, kde je uvedeno více informací.
+\endtt
+vytiskne ... viz {\Blue poznámku Jr 7:4}, kde je uvedeno více informací.
+Proklik vede na první poznámku k~verši Jr~7:4, nikoli k verši samotnému.
+
+V případě odkazu na článek (specifikátor `a`) má úplný údaj formát
+`<kniha> <kapitola>`, tj. chybí informace o verši, protože články jsou
+úvody ke kapitolám. V případě odkazu na úvod (specifikátor `i`) má úplný
+údaj formát `<kniha>` (chybí informace o kapitole i verši), protože to
+jsou úvody ke knihám. V~ostatních případech má úplný údaj formát, jak bylo
+řečeno v sekci~\ref[uudaj] s výjimkou popsanou v~sekci~\ref[vudaj]
+
+\secc[vudaj] Výjimka pro formát úplného údaje u některých knih
+
+Knihy Abd Fm 2Jn 3Jn Ju nejsou členěny na kapitoly. V odkazu na verš, poznámku
+k verši nebo glosu do některé z těchto knih tedy chybí informace o kapitole
+a formát úplného odkazu vypadá takto: `<kniha> <verš>`. Aby \TeX/ věděl, že
+má uplatnit tuto výjimku, je třeba seznam zkratek těchto knih definovat v
+makru `\nochapbooks`. Například v souboru `Cze-books.tex` je řečeno
+\begtt
+\def\nochapbooks{Abd Fm 2Jn 3Jn Ju}
+\endtt
+Protože pro různé jazyky existují různé zkrakty knih, je třeba toto makro
+definovat v závislosti na použitém jazyku.
+
+\secc[nudaj] Neúplný údaj
+
 Někdy dokáže umístění verše čtenář stanovit z kontextu, takže `<údaj>`
 nemusí být úplný. V~{\em neúplném údaji} může chybět `<kniha>` nebo
-`<kniha> <kapitola>:`. Například:
+`<kniha> <kapitola>:` nebo všechno. Například:
 
 \begtt \catcode`<=12
 ... analogii vidíme též ve <"verších" Jr 8:13>, <9:7> a <11:3>
 ... viz verše <Jr 8:13>, <15>, <17>
-... viz všechny <"verše" Jr 8:13>--<22>.
+... viz všechny <"verše" Jr 8:13>--<22>,
+... (srv. <Jr 8:13> a <"jeho poznámku">n).
 \endtt
 Vytiskne se:
 ... analogii vidíme též ve {\Blue verších Jr 8:13}, {\Blue 9:7} a {\Blue 11:3}
 ... viz verše {\Blue Jr 8:13}, {\Blue 15}, {\Blue 17}
 ... viz všechny {\Blue verše Jr 8:13}--{\Blue 22}.
+... (srv. {\Blue Jr 8:13} a {\Blue jeho poznámku})
 
-Údaje `9:7`, `11:3`, `15`, `17` a `22` v těchto příkladech jsou neúplné. Čtenář ví, že se týkají
+Údaje `9:7`, `11:3`, `15`, `17`, `22` a poslední prázdný údaj
+v těchto příkladech jsou neúplné. Čtenář ví, že se týkají
 knihy Jeremjáš a že v případě, kdy není uvedena ani kapitola, se týkají kapitoly 8 knihy
-Jeremjáš. Ví to i \TeX/ a přidělí těm neúplným odkazům správné interní
+Jeremjáš. V posledním příkladě s prázdným údajem čtenář ví, že se jedná o poznámku
+k~Jr~10:4. Ví to i \TeX/ a přidělí ke všem těmto neúplným odkazům správné interní
 odkazy (podle kterých se provede proklik), protože neúplný údaj přebírá
 nespecifikované informace z předchozího údaje. Toto pravidlo se vztahuje
 lokálně na jeden objekt textu: poznámku, článek, úvod atd. Je-li hned první údaj v
-některém objektu textu neúplný, přebírá nespecifikované informace z aktuálně
-zpracovávané knihy, kapitoly, verše.
+některém objektu textu neúplný, nespecifikované informace se nahradí
+zkratkou aktuálně zpracovávané knihy, případně číslem aktuální kapitoly,
+případně verše.
 
-\mnote{Odkaz uvozený \code{\\}}
 Je-li neúplný údaj uvozen znakem `\`, přebírá nespecifikované informace z
-aktuálně zpracovávané knihy, kapitoly a verše bez ohledu, jaký údaj
+aktuálně zpracovávané knihy, případně kapitoly a případně verše bez ohledu, jaký údaj
 předchází. Například:
 \begtt \catcode`<=12
 \Note 4.5 {} Myšlenka se opakuje v <Jr 4:5>. Ale také v \<8:3> najdete o tom zmínku.
@@ -593,16 +631,24 @@ Neúplný údaj se vytiskne tak jak je jako neúplný. Shora uvedená pravidla n
 doplnění se provedou jen interně, aby aktivní odkaz správně fungoval po
 kliknutí myší.
 
-\mnote{Přečíslování odkazu}
-Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
-číslování specifikované makrem `\renum`, pak do odkazu zapište údaj podle
-výchozího číslování a \TeX/ si jej sám přepočítá podle dat uvedených v
-`\renum`.
+Existuje ještě jeden odlišný formát neúplného údaje: chybí číslo verše. To
+se pozná tak, že je přítomná zkratka knihy a v údaji chybí dvojtečka a
+nejedná se o knihu ze seznamu výjimek `\nochapbooks`. Tedy údaj má tvar
+`<kniha> <kapitola>` (oddělené mezerou). \TeX/ v takovém případě vytvoří
+interní odkaz na první verš dané kapitoly. Příklady:
+\begtt \catcode`<=12
+... viz <"kapitolu" Da 7>
+... Josefův příběh (<Gn 39-41>)
+\endtt
+Ve druhém příkladě je uveden rozsah kapitol a \TeX/ vytvoří interní odkaz na
+první verš kapitoly 39. Srovnejte též se sekcí~\ref[rozsahversu].
 
-\mnote{Údaj ve formě rozsahu}
-Údaj (úplný i neúplný) může mít také formát {\em rozsahu}. Toho dosáhnete
-tak, že za údaj podle předchozích pravidel připojíte spojovník (znak `-`,
-ASCII 45) a pak následuje další `<verš>` nebo `<kapitola>:<verš>`. Příklady:
+\secc[rozsahversu] Formát pro rozsah veršů a pro úsek ve verši
+
+V každém údaji je možné místo `<verš>` nebo místo `<kapitola>:<verš>`
+psát rozsah veršů ve vormátu
+`<od>-<do>`. \TeX/ vytvoří interní link jen na první verš rozsahu a
+spojovník (znak `-`, ASCII 45) uvedený v rozsahu promění v pomlčku. Příklady:
 
 \begtt \catcode`<=12
 <Jr 8:3-7>,
@@ -610,12 +656,9 @@ ASCII 45) a pak následuje další `<verš>` nebo `<kapitola>:<verš>`. Příkla
 <3-7>,
 <8:3-7>.
 \endtt
-Vytiskne se místo spojovníku automaticky pomlčka. 
-Celý takový odkaz umožňuje prokliknout jen na první místo rozsahu, takže
-třeba první odkaz z předchozího příkladu se vytiskne jako {\Blue Jr 8:3--7}
+Třeba první odkaz z tohoto příkladu se vytiskne jako {\Blue Jr 8:3--7}
 a nabízí proklik jen na Jr~8:3.
 
-\mnote{Úsek verše}
 Někdy je potřeba odkazovat na úsek verše, nikoli na celý verš. To se dělá
 připojením písmene bezprostředně za číslo verše. Například
 \begtt \catcode`<=12
@@ -625,28 +668,32 @@ Takové písmeno můžete připojit k úplnému i neúplnému odkazu. Pro potře
 hyperlinku se tato písmena ignorují, ale vytisknou se. Tedy uvedený příklad
 vytiskne ... viz {\Blue Da~9:11b} ale proklik vede na Da~9:11.
 
-\mnote{Chybějící číslo verše}
-Pokud je v údaji přítomná značka knihy a není přítomná dvojtečka, je
-následující číslo interpretováno jako číslo kapitoly, nikoli jako číslo
-verše. Například
+\secc Zatajení údaje
+
+Když nepostačuje žádné z pravidel pro vytvoření interního linku z odkazu
+uvedené výše, můžete vše, co se má v odkazu
+vytisknout, uzavřít do `"..."` a následný údaj, podle kterého se má vytvořit interní
+odkaz, zatajit. K tomu stačí těsně za zavírací uvozovku `"` připojit znak
+podtržítko `_` následovaný údajem. Tento údaj se netiskne. Například
 \begtt \catcode`<=12
-... viz <"kapitolu" Da 7>
-... Josefův příběh (<Gn 39-41>)
+<"První kniha Samuelova"_1S 1:1>
 \endtt
-\TeX- vytvoří hyperlink na první verš dané kapitoly. Takže uvedený příklad
-vytiskne ... viz {\Blue kapitolu Da 7} ... Josefův příběh {\Blue Gn 39--41}
-a prokliky vedou na Da~7:1 a na Gn~39:1.
+vytiskne pouze text {\Blue První kniha Samuelova}, který interně odkazuje na první
+verš této knihy.
 
-Pokud je značka knihy uvedena v seznamu `\nochapbooks`, pak se číslo za
-značkou knihy interpretuje jako číslo verše a ne kapitoly. Existují totiž knihy bez
-kapitol. Například chceme, aby \code{<Fm 7>} odkázalo na Fm~1:7 a nikoli na
-Fm~7:1. Proto je třeba uvést `Fm` do seznamu `\nochapbooks`. Viz též
-sekci~\ref[hlavni].
+\secc Přečíslování odkazu
 
-\mnote{Redukce údajů}
+Pokud odkaz směřuje na verš, který má v konkrétním jazykovém překladu odlišné
+číslování specifikované makrem `\renum`, pak do odkazu zapište údaj podle
+výchozího číslování a \TeX/ si jej sám přepočítá podle dat uvedených v
+`\renum`. Vytiskne přepočítaný údaj a použije jej pro interní odkaz.
+
+\secc Redukce údajů
+
+\TODO\
 Pravidlo pro tisk odkazů zní: vytiskne se přesně to, co je mezi
-závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}
-uvozujících předsunutý `<text>`). To je ale možné změnit. 
+závorkami \code{\<} a \code{\>} napsáno (s výjimkou případných znaků \code{"}).
+To je ale možné změnit.
 Možná budete chtít do závorek pro odkaz psát úplné údaje a požadovat jejich automatickou 
 redukci na neúplné, odkazují-li na aktuální knihu.
 Neodkazují-li na aktuální knihu, údaj zůstane úplný. Toho můžete docílit
@@ -669,34 +716,8 @@ Pravidlo redukce odkazů nastavené pomocí `\reduceref` lze vypnout
 příkazem `\noreduceref`. Od něj až do konce poznámky (\TeX/ové skupipny)
 se odkazy chovají, jakoby `\reduceref` nebylo zapnuté.
 
-\mnote{Specifikátor odkazu}
-Za koncovým znakem údaje `>` může těsně následovat specifikátor odkazu, což
-je jedno s písmen:
-\begitems
-* `n` ... odkazuje se na poznámku
-* `a` ... odkazuje se na článek
-* `g` ... odkazuje se na glosu
-* `i` ... odkazuje se na úvod
-\enditems
-Specifikátor odkazu se nevytiskne, je to jen interní informace, kam má
-směřovat aktivní odkaz (tj.~proklik myší). Nenásleduje-li za ukončujícím
-znakem údaje `>` žádný z uvedených specifikátorů, jedná se o odkaz na verš
-(to je asi nejčastější případ).
-Příklad odkazu na poznámku:
+\secc[fudaj] Nepodařené odkazy, tj. odkazy na neexistující místo
 
-\begtt \catcode`\<=12
-... viz <"poznámku" Jr 7:4>n, kde je uvedeno více informací.
-\endtt
-vytiskne ... viz {\Blue poznámku Jr 7:4}, kde je uvedeno více informací.
-Proklik vede na první poznámku k~verši Jr~7:4, nikoli k verši samotnému.
-
-\mnote{Zatajení údaje}
-Odkaz vytiskne jen část mezi `"..."`, tj. nevytiskne se <údaj>
-specifikující cíl odkazu, pokud mezi `"..."` a <údajem> je znak podtržítko.
-Například \code{<}`"První kniha Samuelova"_1S 1:1>` vytiskne pouze text
-{\Blue První kniha Samuelova}, který odkazuje na první verš této knihy.
-
-\mnote{Odkazy na neexistující místo}
 Je-li uveden odkaz na neexistující verš nebo neexistující poznámku, pak
 nastanou dvě možnosti. Je-li to odkaz na knihu, která se záměrně netiskne
 (protože například pracujeme s testovacím výtiskem jen vybraných knih Bible,
@@ -706,17 +727,21 @@ neobjeví žádné varování. Pokud ale odkaz směřuje na neexistující verš
 poznámku tištěné části Bible, pak odkaz je aktivní, proklik směřuje na
 poslední stránku PDF souboru a v logu se objeví o tom varování, že odkaz
 není správný. Při prvním zpracování \TeX/em jsou ale neošetřeny všechny
-odkazy a v logu je velké množství varování a nesprávných odkazech.
+odkazy a v logu je velké množství varování o nesprávných odkazech.
 Teprve při následujícím zpracování \TeX/em jsou odkazy směřující do
 existujícího místa správně prolinkovány.
 
-Shrnutí. Odkaz zapisujeme ve formátu
-{\def\o{\everyintt{\catcode`\<=13 \Blue}}\Magenta \tt
-{\o`\`}\char60{\o`"<text>" <kniha> <kapitola>:`}`<verš>`{\o`-<verš-do>`}\char62{\o`n`}}
-kde části vyznačené modře je možné vynechat.
+\secc Trasování odkazů
+
+Implicitně je zapnuto vypisování podrobného trasování odkazů v log souboru.
+Vypnete to pomocí `\notracinglinks` a zpětně zapnete pomocí `\tracinglinks`.
+Navíc pomocí `\tracingouterlinks` vypnete potlačení varování o odkazech na
+neexistující knihy, což umožní v logu najít případné neexistující odkazy z
+důvodu překlepu ve značce knihy.
 
 \secc Odkazy na kapitoly a na knihy
 
+\TODO\
 Chcete-li odkázat na knihu s proklikem na začátek této knihy, pište
 `\cref[<kniha>]`, například `\cref[Gn]` vytiskne {\Blue Gn} s proklikem na
 začátek knihy Genesis. Podobně `\cref[Gn 2]` vytiskne {\Blue Gn~2} s~proklikem
@@ -728,6 +753,7 @@ odpovídající kapitolu.
 
 \secc Odkazy na stránky
 
+\TODO\
 Ve svém textu můžete umístit netištěný cíl odkazu na stránku pomocí `\pglabel[<lejblík>]` a
 pak můžete odkazovat na stránku pomocí `\pgref[<lejblík>]`. V místě
 `\pgref[<lejblík>]` se vytiskne číslo strany, které je možné prokliknout.

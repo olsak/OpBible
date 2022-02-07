@@ -332,6 +332,7 @@
 \def\processverse #1 #2\end{%
    \edef\currverse{#1}%
    \preparechapverse #1
+   \let\prelinkV=\currversenum
    \def\tmpb{#2}\def\tmpc{}%
    \csname alist!#1\endcsname
    \ifnum\currchapnum=\chapnum \else
@@ -552,11 +553,12 @@
    \_cod
 
 \def\brefD{%
-   \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ltextV}%
+   \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ea\ltextVin\ltextV:/}%
    \brefL
 }
 \def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
 \def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
+\def\ltextVin #1:#2/{\ifnum0#1=0 \prelinkV \else #1\immediateassignment\def\prelinkV{#1}\fi}
 \def\ltextnCin #1:#2/{\prelinkC:\immediateassignment\let\ltextCin=\ltextsCin}
 \let\ltextsCin=\ltextCin
 
@@ -568,7 +570,7 @@
    If the \code{\<} is used then they are re-initialized.
    \_cod
 
-\def\<{\let\prelinkB=\currbook \let\prelinkC=\currchapnum \bref}
+\def\<{\let\prelinkB=\currbook \let\prelinkC=\currchapnum \let\prelinkV=\currversenum \bref}
 
    \_doc
    `\oncebref` includes an additional macros which have to be processed in
@@ -619,15 +621,25 @@
 }
 \def\ltextDD{--}
 
-\let\linklog=\wlog
 \def\sspace{\space\space\space\space}
 \def\linkpost{\if v\linkpre \else \linkpre\fi \space}
+
+   \_doc
+   `\tracinglinks` and `\notracinglinks` are defined here.
+   \_cod
+
+\def\tracinglinks{\let\linklog=\wlog}
+\def\notracinglinks{\let\linklog=\ignoreit}
+\tracinglinks
 
    \_doc
    `\createlink` creates link only if it refers to the place of printed book
    because we don't want to see many warnings about unreferenced links when
    we try to print only selected books. It creates link 
-   `\linkpre:\linkfspec` with the text `\linktext`
+   `\linkpre:\linkfspec` with the text `\linktext`\nl
+   The link is created only if the book is to be printed, i.e. the
+   `\pbook!<book>` is defined. The link is created always if a user declared
+   `\tracingallrefs`.
    \_cod
 
 \def\createlink{{%
@@ -637,6 +649,7 @@
    \else {\Blue\linktext}\fi}%
 }
 \def\isprintedbook #1/#2\iftrue{\ifcsname pbook!#1\endcsname}
+\def\tracingouterlinks{\def\isprintedbook ##1\iftrue{\iftrue}}
 
    \_doc
    We don't create destinations for all verses, notes etc. but only for
