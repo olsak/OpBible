@@ -17,6 +17,7 @@
 
 \parindent=20pt
 \enablemte             % micro typographical extensions enabled
+\showboxbreadth=0
 
    \_doc
    Fonts.
@@ -549,16 +550,17 @@
 
    \_doc
    Now, we create `\linkfspec` from scanned data. It is <full-vref>
-   used for hyperlinks.
+   used for hyperlinks. We must manage all situations of incomplete links.
    \_cod
 
 \def\brefD{%
+   \ifnum 0\ltextV=0 \def\ltextV{}\fi
    \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ea\ltextVin\ltextV:/}%
    \brefL
 }
 \def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
 \def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
-\def\ltextVin #1:#2/{\ifnum0#1=0 \prelinkV \else #1\immediateassignment\def\prelinkV{#1}\fi}
+\def\ltextVin #1:#2/{\ifx^#1^\prelinkV \else #1\immediateassignment\def\prelinkV{#1}\fi}
 \def\ltextnCin #1:#2/{\prelinkC:\immediateassignment\let\ltextCin=\ltextsCin}
 \let\ltextsCin=\ltextCin
 
@@ -586,6 +588,8 @@
    creates the link `\linkpre:\linkfspec` with the text `\linktext`.\nl
    `\renumlinktext <full-vref-ori>\relax<full-vref-modified>\relax`
    does re-calculation of the parts of the `\linktext` macro.\nl
+   The `\linkfspecone` solves situation when chapter is given but no verse
+   number: we must set the verse number to 1.\nl
    `\linklog {<text>}` macro prints logging info of the link in the format
    \begtt \catcode`<=13 \adef({\string<} \adef){\string>}
    (<link-spec>) = [<full-vref>]{<printed-link>}
@@ -600,11 +604,13 @@
       \ea\ea\ea\renumlinktext \ea\linkfspec \ea\relax \linkfspecm \relax
       \let\linkfspec=\linkfspecm
    \fi
-   \ifx\ltextV\empty \addto\linkfspec{1}\fi % only chapter is specified, we link to verse 1
+   \ifx\ltextV\empty \ifx\ltextC\empty \else \ea\linkfspecone \linkfspec\end\fi\fi
    \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]%
                                            {\ifx\brefH\empty\ltextP\else\linktext\fi}}%
    \ensuredest \createlink
 }
+\def\linkfspecone #1:#2\end{\def\linkfspec{#1:1}\def\prelinkV{1}}
+
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
    \ifx\ltextC\empty \else \def\ltextC{#5:}\fi
    \def\ltextV{#6}%
