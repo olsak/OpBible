@@ -595,12 +595,16 @@
    does re-calculation of the parts of the `\linktext` macro.\nl
    The `\linkfspecone` solves situation when chapter is given but no verse
    number: we must set the verse number to 1.\nl
+   If the link destination is article, then the `<full-vref>` has reduced
+   format `<book>/<chapter>`. If the link destiantion is itroduction then
+   the `<full-vref>` has more reduced format: `<book>/`.\nl
    `\linklog {<text>}` macro prints logging info of the link in the format
    \begtt \catcode`<=13 \adef({\string<} \adef){\string>}
    (<link-spec>) = [<full-vref>]{<printed-link>}
    \endtt
-   `\linklog` is `\wlog` by default. You can set it to `\ignreit` or
-   `\wterm` if you want.
+   `\linklog` is `\wlog` by default and when `\tracinglinks` is set.
+   It is `\ignreit` when `\notracinglinks` is set.
+   You can set it to `\wterm` if you want.
    \_cod
 
 \def\brefL{%
@@ -609,12 +613,16 @@
       \ea\ea\ea\renumlinktext \ea\linkfspec \ea\relax \linkfspecm \relax
       \let\linkfspec=\linkfspecm
    \fi
-   \ifx\ltextV\empty \ifx\ltextC\empty \else \ea\linkfspecone \linkfspec\end\fi\fi
+   \ifx\ltextV\empty \ifx\ltextC\empty \else \ea\linkfspecone \linkfspec\end \fi\fi
+   \if a\linkpre\relax \ea\linkfspecarticle \linkfspec\end \fi
+   \if i\linkpre\relax \ea\linkfspecintro \linkfspec\end \fi
    \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]%
                                            {\ifx\brefH\empty\ltextP\else\linktext\fi}}%
    \ensuredest \createlink
 }
 \def\linkfspecone #1:#2\end{\def\linkfspec{#1:1}\def\prelinkV{1}}
+\def\linkfspecarticle #1:#2\end{\def\linkfspec{#1}}
+\def\linkfspecintro #1/#2\end{\def\linkfspec{#1/}}
 
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
    \ifx\ltextC\empty \else \def\ltextC{#5:}\fi
@@ -767,18 +775,21 @@
    \_cod
 
 \newtoks\switchD
-\def\switch {\let\switchN=\switchA \switchN}
-\long\def\switchA #1#2{\switchD={#2\let\switchN=\switchI}%
+\def\switch {\let\switchN=\switchA \setNote \switchN}
+\long\def\switchA #1#2{\switchD={\resetNote #2\let\switchN=\switchI}%
    \ifx\relax#1\relax \the\switchD
    \else \foreach #1,\do ##1,{\def\tmp{##1}\switchC}%
    \fi
    \futurelet\next\switchB
 }
-\def\switchB{\ifx\next\bgroup \ea\switchN \fi}
+\def\switchB{\ifx\next\bgroup \setNote \ea\switchN \else \resetNote \fi}
 \long\def\switchI #1#2{\futurelet\next\switchB}
 \def\switchC{\ifx\tmp\smark \the\switchD
              \else\ifx\tmp\tmark \the\switchD \fi\fi
 }
+\def\setNote{\slet{ww}{relax}\slet{Note}{relax}}
+\def\resetNote{\slet{ww}{iww}\slet{Note}{iNote}}
+\let\iNote=\Note % backup of outer Note
 
    \_doc
    `\setvarnum` sets the `\varnum` as the position number of the current
@@ -827,6 +838,7 @@
    \ifnum\tmpnum<\numvariants \ea\wwB \fi
 }
 \def\redefwwA =#1\end{\def\nextwwA{#1}}
+\let\iww=\ww % backup of outer ww
 
    \_doc
    `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
