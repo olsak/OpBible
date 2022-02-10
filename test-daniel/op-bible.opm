@@ -673,18 +673,47 @@
    \_doc
    We don't create destinations for all verses, notes etc. but only for
    those which are referenced.
-   Macro `\ensuredest` creates the item `\Xcreatedest` to .ref file
-   and it is read in the second \TeX/ run.
-   The `\trymakedest` macro is used ad the begining of each verse, note etc.
-   Only referenced destinations are created.
+   The macro `\ensuredest` is called from `\createlink` and it saves immediatelly
+   `\sdef{<link>:<full-vref>}{}`
+   to the special file `\jobname.xrf`. And the macro `\pg` saves immediatelly
+   `\sdef{pg:<link>:<full-vref>}{??}` to this file.
+   This `.xrf` file is read before standard
+   `.ref` file. All link destinations save `\Xdest{<full-vref>}` to the
+   `.ref` file. The macro `\Xdest` does nothing if `\pg:<link>:<full-vref>` is not
+   defined (from `.rfx` file). Otherwise, it is defined as a correct pageno.
+   This result is used in the `\pg` macro.
+   If `\<link>:<full-vref>` is not defined, no link destination is crated.
+   First \TeX/ run creates `.ref` and `.xrf` files and does not create any
+   hyperlink destinations. Second \TeX/ run uses data from these files
+   and create correct hyperlinks and page numbers.
    \_cod
 
-\def\ensuredest{\openref \immediate\_wref\Xcreatedest{{\linkpre:\linkfspec}}}
+\newwrite\xrf
+\immediate\openout\xrf=\jobname.xrf
+\openref
+
+\def\ensuredest{\immediate\write\xrf{\string\sdef{\linkpre:\linkfspec}{}}}
 \refdecl{
-   \def\Xcreatedest#1{\sxdef{dest!#1}{}}
+   \isfile{\jobname.xrf}\iftrue \input{\jobname.xrf}\fi^^J
+   \def\Xdest#1{\ifcsname pg:#1\endcsname \sxdef{pg:#1}{\_ea\_usesecond\_currpage}\fi}
 }
-\def\trymakedest#1{\ifcsname dest!#1\endcsname \dest[#1]%
-   \global \ea\let\csname dest!#1\endcsname \undefined \fi}
+\def\trymakedest#1{%
+   \ifcsname #1\endcsname \dest[#1]\ea\glet\csname #1\endcsname \undefined \fi
+   \_ewref\Xdest{{#1}}%
+}
+
+   \_doc
+   The `\pg` macro should be used after \code{<...>}, i.e. the `\linkpre`
+   and `\linkfspec` are defined. We use them. And the page number is saved to
+   the `\pg:<link>:<full-vref>` macro in the second \TeX/ run.
+   \_cod
+
+\def\pg{%
+   \ifcsname pg:\linkpre:\linkfspec\endcsname
+       {\edef\linktext{\cs{pg:\linkpre:\linkfspec}}\let\brefH=\relax \createlink}%
+   \else {\Red ??}\fi
+   \immediate\write\xrf{\string\sdef{pg:\linkpre:\linkfspec}{??}}%
+}
 
    \_doc
    \sec Language variants
@@ -949,7 +978,6 @@
    \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
-\def\pg{??}
 
 \def\setvariant#1{}
 \def\bibleinput#1 {\bgroup
