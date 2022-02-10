@@ -49,7 +49,7 @@ with open(filename,'r', encoding = 'utf-8') as f:
                 inside_fence = False
                 line = line[:-1]+"\n"
             else: line = line+' '
-            buff.append(line)
+            buff.append(line.replace("\xa0"," "))
     assert inside_fence == False
     writeBuff()
 
