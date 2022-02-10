@@ -767,50 +767,6 @@
 }
 
    \_doc
-   The `\switch` macro reads a pair of parameters using `\switchA`
-   and processes the list of variants in `\foreach` loop. If an element from
-   the list is equal with `\smark` or `\tmark` then the `#2` (saved in
-   `\switchD` token list) is run and next parameter pairs are read by
-   `\switchN`, i.e. they are ignored.
-   \_cod
-
-\newtoks\switchD
-\def\switch {\let\switchN=\switchA \setNote \switchN}
-\long\def\switchA #1#2{\switchD={\resetNote #2\let\switchN=\switchI}%
-   \ifx\relax#1\relax \the\switchD
-   \else \foreach #1,\do ##1,{\def\tmp{##1}\switchC}%
-   \fi
-   \futurelet\next\switchB
-}
-\def\switchB{\ifx\next\bgroup \setNote \ea\switchN \else \resetNote \fi}
-\long\def\switchI #1#2{\futurelet\next\switchB}
-\def\switchC{\ifx\tmp\smark \the\switchD
-             \else\ifx\tmp\tmark \the\switchD \fi\fi
-}
-\def\setNote{\slet{ww}{relax}\slet{Note}{relax}}
-\def\resetNote{\slet{ww}{iww}\slet{Note}{iNote}}
-\let\iNote=\Note % backup of outer Note
-
-   \_doc
-   `\setvarnum` sets the `\varnum` as the position number of the current
-   language variant due to the value of `\tmark`. The `\variants`
-   declaration must precede.
-   \_cod
-
-\def\setvarnum{\gdef\varnum{0}%
-   \ifnum\numvariants=0 \gdef\varnum{1}\wlog{There is only single language variant (1)}%
-   \else
-      \tmpnum=0
-      \loop
-         \advance\tmpnum by1
-         \ea\ifx \csname var!\the\tmpnum\endcsname \tmark \xdef\varnum{\the\tmpnum}\fi
-         \ifnum\tmpnum<\numvariants \repeat
-      \ifnum \varnum=0 \errmessage{\noexpand\tmark isn't set, \noexpand\setvarnum failded}%
-      \else \wlog{Language variant set by \string\tmark{\tmark} (\varnum)}\fi
-   \fi
-}
-
-   \_doc
    `\ww` `{<phrase-A>} {<phrase-B>} ...` has the same number of parameters as `\vdef`.
    They are separated by spaces. Each parameter can be in the \"single form",
    i.e.\ `{<phrase-A>}` or in the \"extended form", i.e.\ `{<phrase-A>}={<printed-A>}`.
@@ -838,7 +794,56 @@
    \ifnum\tmpnum<\numvariants \ea\wwB \fi
 }
 \def\redefwwA =#1\end{\def\nextwwA{#1}}
-\let\iww=\ww % backup of outer ww
+
+   \_doc
+   The `\switch` macro reads a pair of parameters using `\switchA`
+   and processes the list of variants in `\foreach` loop. If an element from
+   the list is equal with `\smark` or `\tmark` then the `#2` (saved in
+   `\switchD` token list) is run and next parameter pairs are read by
+   `\switchN`, i.e. they are ignored.\nl
+   The `\``Note` and `\``ww` are defined as `\outer` in order to better diagnose
+   mistakes with number of parameters of `\``ww` or missig empty line after `\``Note`
+   text. But we want to skip such objects in `\switch` parameters. This is
+   the reason why we run `\unsetouter` before the `\switch` parameter is
+   read and we run `\setouter` in order to return to the normal setting.
+   \_cod
+
+\newtoks\switchD
+\def\switch {\let\switchN=\switchA \unsetouter \switchN}
+\long\def\switchA #1#2{\switchD={\setouter #2\let\switchN=\switchI}%
+   \ifx\relax#1\relax \the\switchD
+   \else \foreach #1,\do ##1,{\def\tmp{##1}\switchC}%
+   \fi
+   \futurelet\next\switchB
+}
+\def\switchB{\ifx\next\bgroup \unsetouter \ea\switchN \else \setouter \fi}
+\long\def\switchI #1#2{\futurelet\next\switchB}
+\def\switchC{\ifx\tmp\smark \the\switchD
+             \else\ifx\tmp\tmark \the\switchD \fi\fi
+}
+\def\unsetouter{\slet{ww}{relax}\slet{Note}{relax}}
+\def\setouter{\slet{ww}{iww}\slet{Note}{iNote}}
+\let\iww=\ww     % backup of outer ww
+\let\iNote=\Note % backup of outer Note
+
+   \_doc
+   `\setvarnum` sets the `\varnum` as the position number of the current
+   language variant due to the value of `\tmark`. The `\variants`
+   declaration must precede.
+   \_cod
+
+\def\setvarnum{\gdef\varnum{0}%
+   \ifnum\numvariants=0 \gdef\varnum{1}\wlog{There is only single language variant (1)}%
+   \else
+      \tmpnum=0
+      \loop
+         \advance\tmpnum by1
+         \ea\ifx \csname var!\the\tmpnum\endcsname \tmark \xdef\varnum{\the\tmpnum}\fi
+         \ifnum\tmpnum<\numvariants \repeat
+      \ifnum \varnum=0 \errmessage{\noexpand\tmark isn't set, \noexpand\setvarnum failded}%
+      \else \wlog{Language variant set by \string\tmark{\tmark} (\varnum)}\fi
+   \fi
+}
 
    \_doc
    `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
