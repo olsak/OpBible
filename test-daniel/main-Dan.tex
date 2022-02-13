@@ -8,6 +8,13 @@
 \def\fmtfile   {./fmt-\tmark-\amark.tex}    % Localisation of fmts
 \def\notesfile {./notes-\amark.tex}         % Localisation of notes
 
+\switch {BKR}{\def\bibname{Bible kralická}}%
+        {B21}{\def\bibname{Bible pro 21. století}}%
+        {CEP}{\def\bibname{Ekumenický překlad Bible}}%
+        {CSP}{\def\bibname{Studijní překlad Bible}}%
+        {PSP}{\def\bibname{??PSP}}%
+        {SNC}{\def\bibname{Slovo na cestu}}
+
 %\loggingall
 
 \input {vars.tex}         % Language variants
@@ -22,8 +29,6 @@
    Tt Fm Žd Jk 1Pt 2Pt 1J 2J 3J Ju Zj
 }
 \def\printedbooks {Da}
-
-\hfill Varianta: \tmark
 
 \processbooks % Generates books declared in \printedbooks
 

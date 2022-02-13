@@ -16,8 +16,10 @@
 \hyperlinks\Blue\Blue  % hyperlinks activated
 
 \parindent=20pt
+\nopagenumbers
 \enablemte             % micro typographical extensions enabled
 \showboxbreadth=0
+\let\notecolor=\Red
 
    \_doc
    Fonts.
@@ -33,6 +35,8 @@
 \fontdef\bookfont{\setfontsize{at19.pt}\bf}
 \fontdef\chapfont{\setfontsize{at13.pt}\bf}
 \fontdef\markfont{\setfontsize{at7pt}\rm}
+\fontdef\captionfont{\Heros\cond\setfontsize{at8pt}\bf}
+\def\headfont{\Biblon\setfontsize{at10pt}\rm}
 
    \_doc
    Auxiliary macros.
@@ -163,7 +167,7 @@
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
    \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
-   \ifx\nextww\unefined
+   \ifx\nextww\undefined
       {\def\printwarn##1{}\xdef\tword{\transformword{#2}}}%
    \else \xdef\tword{\nextww}\fi
    \isnextchar={\NoteA}{\NoteA={}}%
@@ -241,7 +245,7 @@
        \ea \ifx \csname pword!#1\endcsname \empty
                  \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
       \cs{notetext!#1}}%
-   {\Red#2}%
+   {\notecolor#2}%
 }
 \def\_printfnotemark{}
 \def\_textindent#1{\noindent}
@@ -359,7 +363,7 @@
 \def\printverse{%
    \tmpc % material accumulated by \fmtpre
    \ifnum\currversenum=1 \printbeforefirst \fi
-   \quitvmode \trymakedest{v:\currverse}%
+   \quitvmode \mark{\currchapnum:\currversetext}\trymakedest{v:\currverse}%
    \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
    \tmpb \space
 }
@@ -368,7 +372,7 @@
 \def\printbeforefirst{%
    \par\nobreak
    \vbox to0pt{\null\vskip-1ex
-      \hbox to\parindent{\hss \chapfont\Red \the\chapnum\ \hss}\vss}\nobreak \vskip-2ex
+      \hbox to\parindent{\hss \chapfont \Red\the\chapnum\ \hss}\vss}\nobreak \vskip-2ex
    \noindent \hangindent=\parindent \hangafter=-2 \relax}
 
    \_doc
@@ -438,6 +442,7 @@
       \edef\btit{\cs{btit!#1}}
       \begingroup
          \ea\BibleBook\ea{\btit}{#1}
+         \setheadline
          \cs{bex!#1}
          \wterm{** \cs{btit!#1} {#1} **}
          \input{\fmtfile}
@@ -449,6 +454,15 @@
       \ea \processbooksB
    \fi
 }
+\def\setheadline{\headline={\headfont
+   \ifodd\pageno
+       \rlap{\it\bibname}\hfil\the\pageno\hfil\llap{\bf\btit\ \firstmark}%
+   \else
+       \rlap{\bf\btit\ \firstmark}\hfil\the\pageno\hfil\llap{\it\bibname}%
+   \fi
+   }
+}
+
 
    \_doc
    We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
@@ -960,9 +974,59 @@
       \vskip\splittopskip
       \_balancecolumns
    \fi
+   \ifvoid\botins \else \unvbox \botins \fi
    \vskip 0pt plus1filll minus8pt
 }
 \_def \noterule {\_kern-3pt {\Black \_hrule}\_kern 2.6pt }
+
+   \_doc
+   `\botins` is analogue insert as `\_topins` but the material is inserted
+   to the bottom of the page. The material is created by
+   `\botinsert...\endbot` pair of control sequences.
+   \_cod
+
+\newinsert\botins
+\def\botinsert{\setbox0=\vbox\bgroup}
+\def\endbot{\par\egroup
+   \insert\botins{
+      \nobreak\bigskip \box0
+   }%
+}
+\skip\botins=\_zoskip % no space added when a topinsert is present
+\count\botins=1000 % magnification factor (1 to 1)
+\dimen\botins=\_maxdimen % no limit per page
+
+   \_doc
+   `\bNote``<gen-vref> <space> {<caption>} <text> \par` inserts <text> to
+   the bottom of the page with a short caption <caption>.
+   \_cod
+
+\newcount\botinsnum
+\outer\def\bNote #1 #2{%
+   \incr\botinsnum
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \def\tmp{#1}\sedef{botref!\the\botinsnum}{\ea\renumlabel\fullvrefm\relax}%
+   \sdef{botcap!\the\botinsnum}{#2}
+   \bNoteA
+}
+\ifx\_partokenset\undefined
+   \def\defnotebA{\def\bNoteA##1\par}
+\else
+   \def\defnotebA{\def\bNoteA##1\_par}
+\fi
+\defnotebA{%
+   \sdef{bottext!\the\botinsnum}{#1}%
+   \edef\tmp{%
+      \noexpand\newaction{\fullvrefm}{\noexpand\dobNote{\the\botinsnum}}}%
+   \tmp
+}
+\def\dobNote #1{\botinsert
+   {\Grey\hrule height1.1em \kern-1.1em \hbox{\strut\White\ \captionfont \cs{botcap!#1}}}
+   \smallskip
+   \cs{bottext!#1}\endbot
+}
+
 
    \_doc
    \sec TODO macros
@@ -970,7 +1034,7 @@
    \_cod
 
 \def\chaptit#1{\ifhmode \setbox0=\lastbox \par \nobreak\vskip-\baselineskip \fi
-   \medskip{\chapfont\Red#1}\endgraf\nobreak\medskip}
+   \medskip{\indent\chapfont\Red#1}\endgraf\nobreak\medskip}
 
 \newcount \chapnum
 \def\source#1{}
