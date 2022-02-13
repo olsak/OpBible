@@ -456,7 +456,7 @@
 }
 \def\setheadline{\headline={\headfont
    \ifodd\pageno
-       \rlap{\it\bibname}\hfil\the\pageno\hfil\llap{\bf\btit\ \firstmark}%
+       \rlap{\it\bibname}\hfil\the\pageno\hfil\llap{\bf\btit\ \botmark}%
    \else
        \rlap{\bf\btit\ \firstmark}\hfil\the\pageno\hfil\llap{\it\bibname}%
    \fi
@@ -988,8 +988,8 @@
 \newinsert\botins
 \def\botinsert{\setbox0=\vbox\bgroup}
 \def\endbot{\par\egroup
-   \insert\botins{
-      \nobreak\bigskip \box0
+   \insert\botins{\splittopskip=0pt \penalty100
+      \hrule height0pt \nobreak\medskip \box0
    }%
 }
 \skip\botins=\_zoskip % no space added when a topinsert is present
