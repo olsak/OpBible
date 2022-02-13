@@ -241,7 +241,7 @@
    \notelog{\space\space \csstring\\Note \tmpb\space {#2}={\cs{pword!#1}} (#1)}%
    \noteinsert{%
       {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
-       \trymakedest{n:\currverse}%
+       \trymakedest{n:\cs{noteref!#1}}%
        \ea \ifx \csname pword!#1\endcsname \empty
                  \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
       \cs{notetext!#1}}%
@@ -339,17 +339,22 @@
    \preparechapverse #1
    \let\prelinkV=\currversenum
    \def\tmpb{#2}\def\tmpc{}%
-   \csname alist!#1\endcsname
+   \ifx\verseto\empty \csname alist!#1\endcsname \else
+      \fornum \versefrom..\verseto \do{\csname alist!\currbook/\currchapnum:##1\endcsname}%
+   \fi
    \ifnum\currchapnum=\chapnum \else
        \let\prelinkC=\currchapnum \chapnum=\currchapnum\relax \printchap \fi
    \printverse
 }
 \def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}%
+   \def\verseto{}%
    \isdivisin #3-\iftrue \defversefromto #3\end
    \else \def\currversenum{#3}\let\currversetext=\currversenum
    \fi
 }
-\def\defversefromto #1-#2\end{\def\currversenum{#1}\def\currversetext{#1--#2}}
+\def\defversefromto #1-#2\end{%
+   \def\versefrom{#1}\def\verseto{#2}%
+   \def\currversenum{#1}\def\currversetext{#1--#2}}
 
    \_doc
    `\printverse` prints verse from `\currversenum` and (possibly changed) `\tmpb`.
@@ -363,7 +368,11 @@
 \def\printverse{%
    \tmpc % material accumulated by \fmtpre
    \ifnum\currversenum=1 \printbeforefirst \fi
-   \quitvmode \mark{\currchapnum:\currversetext}\trymakedest{v:\currverse}%
+   \quitvmode \mark{\currchapnum:\currversetext}%
+   \ifx\verseto\empty \trymakedest{v:\currverse}%
+   \else \fornum \versefrom..\verseto \do{%
+       \wlog{xxxxx v:\currbook/\currchapnum:##1}\trymakedest{v:\currbook/\currchapnum:##1}}%
+   \fi
    \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
    \tmpb \space
 }
