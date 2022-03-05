@@ -465,7 +465,7 @@
       \ea \processbooksB
    \fi
 }
-\def\setheadline{\headline={\headfont
+\def\setheadline{\global\headline={\headfont
    \ifodd\pageno
        \rlap{\it\bibname}\hfil\the\pageno\hfil\llap{\bf\btit\ \botmark}%
    \else
