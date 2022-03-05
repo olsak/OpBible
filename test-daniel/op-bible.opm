@@ -18,6 +18,8 @@
 \parindent=20pt
 \nopagenumbers
 \enablemte             % micro typographical extensions enabled
+\singlechars{Czech}{AaIiVvOoUuSsZzKk}  % lowercase "a" added to this family
+
 \showboxbreadth=0
 \let\notecolor=\Red
 
@@ -1058,6 +1060,8 @@
    \input #1
    \egroup
 }
+
+\def\bibname{}
 
    \_doc
    Active character \code{<} used for references.
