@@ -188,10 +188,14 @@
       \sdef{pword!\the\notenum\ea}\ea{\nextwwA}%
       \let\nextww=\undefined \let\nextwwA=\undefined
    \fi
-   \edef\tmp{%
-      \noexpand\newaction{\fullvrefm}%
-      {\noexpand\replpre{\noexpand\doNote{\the\notenum}}{\tword}{\noexpand\notefail{\the\notenum}}}}%
-   \tmp
+   \ea\addNote\expanded{{\fullvrefm}{\the\notenum}{\tword}}%
+}
+\def\addNote#1#2#3{%
+   \ifx^#3^% \tword is empty
+      \newaction{#1}{\addto\versebegin{\doNote{#2}{}}}%
+   \else
+      \newaction{#1}{\replpre{\doNote{#2}}{#3}{\notefail{#2}}}%
+   \fi
 }
 
    \_doc
@@ -340,7 +344,7 @@
    \edef\currverse{#1}%
    \preparechapverse #1
    \let\prelinkV=\currversenum
-   \def\tmpb{#2}\def\tmpc{}%
+   \def\tmpb{#2}\def\tmpc{}\def\versebegin{}%
    \ifx\verseto\empty \csname alist!#1\endcsname \else
       \fornum \versefrom..\verseto \do{\csname alist!\currbook/\currchapnum:##1\endcsname}%
    \fi
@@ -376,7 +380,7 @@
        \wlog{xxxxx v:\currbook/\currchapnum:##1}\trymakedest{v:\currbook/\currchapnum:##1}}%
    \fi
    \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
-   \tmpb \space
+   \versebegin\tmpb \space
 }
 \def\printchap{\bigskip}
 
