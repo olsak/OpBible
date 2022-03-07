@@ -989,8 +989,8 @@
       \vskip\splittopskip
       \_balancecolumns
    \fi
-   \ifvoid\botins \else \unvbox \botins \fi
-   \vskip 0pt plus1filll minus8pt
+   \unless\ifvoid\botins \unvbox\botins
+   \else \vskip 0pt plus1filll minus8pt \fi
 }
 \_def \noterule {\_kern-3pt {\Black \_hrule}\_kern 2.6pt }
 
@@ -1004,7 +1004,7 @@
 \def\botinsert{\setbox0=\vbox\bgroup}
 \def\endbot{\par\egroup
    \insert\botins{\splittopskip=0pt \penalty100
-      \hrule height0pt \nobreak\medskip \box0
+      \hrule height0pt \nobreak\medskip \unvbox0
    }%
 }
 \skip\botins=\_zoskip % no space added when a topinsert is present
@@ -1012,36 +1012,47 @@
 \dimen\botins=\_maxdimen % no limit per page
 
    \_doc
-   `\bNote``<gen-vref> <space> {<caption>} <text> \par` inserts <text> to
-   the bottom of the page with a short caption <caption>.
+   `\putImage`...
    \_cod
 
-\newcount\botinsnum
-\outer\def\bNote #1 #2{%
-   \incr\botinsnum
+\def\putImage #1 #2#3[#4]#5{% chap:verse {Title} [label] {image-file.pdf}
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \def\tmp{#1}\sedef{botref!\the\botinsnum}{\ea\renumlabel\fullvrefm\relax}%
-   \sdef{botcap!\the\botinsnum}{#2}
-   \bNoteA
+   \ea\newaction\ea{\fullvrefm}{\doImage{#2}[#4]{#5}}%
 }
-\ifx\_partokenset\undefined
-   \def\defnotebA{\def\bNoteA##1\par}
-\else
-   \def\defnotebA{\def\bNoteA##1\_par}
-\fi
-\defnotebA{%
-   \sdef{bottext!\the\botinsnum}{#1}%
-   \edef\tmp{%
-      \noexpand\newaction{\fullvrefm}{\noexpand\dobNote{\the\botinsnum}}}%
-   \tmp
+\def\doImage #1[#2]#3{% {Title}[label]{image-file.pdf}
+   \botinsert
+      \botTitle{#1}%
+      \kern3pt \nobreak
+      \hbox{\label[#2]\wlabel{}\picw=\hsize \inspic{images/#3}}%
+   \endbot
 }
-\def\dobNote #1{\botinsert
-   {\Grey\hrule height1.1em \kern-1.1em \hbox{\strut\White\ \captionfont \cs{botcap!#1}}}
-   \smallskip
-   \cs{bottext!#1}\endbot
+\def\botTitle#1{\hbox{\captionfont
+   \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\ #1}%
 }
 
+   \_doc
+   `\putArticle`
+   \_cod
+
+\def\putArticle #1 #2#3[#4]#5{% chap:verse {Title} [number] \method 
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \ea\newaction\ea{\fullvrefm}{\doArticle{#2}[#4]{#5}}%
+}
+\def\doArticle#1[#2]#3{% {Title}[number]{\method}
+   \botinsert
+      \vfill
+      \botTitle{#1}%
+      \kern3pt \nobreak
+      \LightGrey \hrule height15cm width\hsize 
+      \break
+      \hrule height0pt \nobreak\medskip \vfill
+      \botTitle{}
+      \kern3pt \nobreak
+      \LightGrey \hrule height15cm width.7\hsize      
+   \endbot
+}
 
    \_doc
    \sec TODO macros
