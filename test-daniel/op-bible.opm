@@ -23,6 +23,8 @@
 \showboxbreadth=0
 \let\notecolor=\Red
 
+\def\LightGrey {\_setcmykcolor{0 0 0 .1}}
+
    \_doc
    Fonts.
    \_cod
@@ -1028,11 +1030,11 @@
    \endbot
 }
 \def\botTitle#1{\hbox{\captionfont
-   \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\ #1}%
+   \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
 }
 
    \_doc
-   `\putArticle`
+   `\putArticle` ...
    \_cod
 
 \def\putArticle #1 #2#3[#4]#5{% chap:verse {Title} [number] \method 
@@ -1042,17 +1044,39 @@
 }
 \def\doArticle#1[#2]#3{% {Title}[number]{\method}
    \botinsert
-      \vfill
-      \botTitle{#1}%
-      \kern3pt \nobreak
-      \LightGrey \hrule height15cm width\hsize 
-      \break
-      \hrule height0pt \nobreak\medskip \vfill
-      \botTitle{}
-      \kern3pt \nobreak
-      \LightGrey \hrule height15cm width.7\hsize      
+      \parindent=12pt \iindent=\parindent
+      \setbox0=\vbox{\hsize=.458\hsize
+         \hbadness=6000
+         \def\Article[##1]{}
+         \penalty0
+         \input articles-Da.tex \vfil}
+      \splittopskip=12pt
+      \setbox1=\vsplit0 to0pt % adding \splittopskip
+      \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
+      \multiply\tmpnum by2 % number of columns
+      \edef\_Ncols{\the\tmpnum}
+      \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0
+      \setbox0=\vbox{\_balancecolumns}
+      \tmpdim=\ht0 \advance\tmpdim by1.3\baselineskip
+      \setbox0=\vbox{\unvbox0 \global\setbox2=\lastbox}
+      \setbox0=\hbox{\unhbox2
+          \fornum 1..\_Ncols \do {\unskip \global\setbox1##1=\lastbox}}
+          \fornumstep -2: \_Ncols..1 \do {
+              \hrule height0pt\kern5pt\nobreak\vfill
+              \botTitle{\ifnum \_Ncols=##1 #1\fi}
+              \kern3pt \nobreak
+              {\LightGrey \nobreak \hrule height\tmpdim width\hsize}
+              \nobreak \vskip-\tmpdim
+              \hbox to\hsize{\kern\parindent\box1##1\hss\box1\the\numexpr##1-1\kern\parindent}
+              \break
+          }
    \endbot
 }
+
+\def\roundexpr#1{\ea\ea\ea\roundexprA\expr{#1}\relax}
+\def\roundexprA#1.#2\relax{\ifnum#1=0 0\else #1\fi}
+
+
 
    \_doc
    \sec TODO macros
