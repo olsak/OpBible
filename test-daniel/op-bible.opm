@@ -72,24 +72,24 @@
 
    \_doc
    A typical \"action" is `\replpre`. The actions are processed for each
-   Bible verse when the verse text is saved to the `\tmpb` macro. The
-   `\tmpb` macro is processed after all actions of given verse are done.\nl
+   Bible verse when the verse text is saved to the `\buff` macro. The
+   `\buff` macro is processed after all actions of given verse are done.\nl
    `\replpre{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
-   by `<prefix>{<text>}` in `\tmpb` macro. If the <text> is empty then
-   `<prefix>{}` is inserted at the beginning of the `\tmpb`.\nl
+   by `<prefix>{<text>}` in `\buff` macro. If the <text> is empty then
+   `<prefix>{}` is inserted at the beginning of the `\buff`.\nl
    If <text> does not exists then <fail> is processed. The <fail>
    macro can use `\text` where <text> is saved.
    \_cod
 
 \def\replpre#1#2#3{%
-   \ifx^#2^\def\tmp{#1{}}\ea\ea\ea\def\ea\ea\ea\tmpb\ea\ea\ea{\ea\tmp\tmpb}%
+   \ifx^#2^\def\tmp{#1{}}\ea\ea\ea\def\ea\ea\ea\buff\ea\ea\ea{\ea\tmp\buff}%
    \else
       \def\replpredo##1#2##2\end{%
          \ifx^##2^\def\text{#2}#3% <fail>
          \else \replsave ##1#1{#2}##2\end \fi
       }%
-      \def\replsave##1#2\end{\def\tmpb{##1}}%
-      \ea\replpredo\tmpb#2\end
+      \def\replsave##1#2\end{\def\buff{##1}}%
+      \ea\replpredo\buff#2\end
    \fi
 }
 
@@ -192,7 +192,7 @@
 }
 \def\addNote#1#2#3{%
    \ifx^#3^% \tword is empty
-      \newaction{#1}{\addto\versebegin{\doNote{#2}{}}}%
+      \newaction{#1}{\addto\prebuff{\doNote{#2}{}}}%
    \else
       \newaction{#1}{\replpre{\doNote{#2}}{#3}{\notefail{#2}}}%
    \fi
@@ -238,7 +238,7 @@
 
    \_doc
    And the `\doNote{<note-num>}{<tword>}` prints the real note text in the second step,
-   when the verse text from `\tmpb` is processed.
+   when the verse text from `\buff` is processed.
    \_cod
 
 \def\prevtmpb{}
@@ -280,9 +280,9 @@
 
    \_doc
    \sec Inserting data from format files
-   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\tmpc`, i.e.\ at the
+   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\fmtprebuff`, i.e.\ at the
    beginning of the verse.\nl
-   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\tmpb`, i.e.\ at the end
+   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\buff`, i.e.\ at the end
    of the verse.\nl
    `\fmtins {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
    verse. If <text> is not found then <what> is inserted like `\fmtpre` does it\nl
@@ -290,11 +290,11 @@
    \_cod
 
 \let\FormatedBook=\CommentedBook
-\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\tmpc{#2}}}
-\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\tmpb{#2}}}
+\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\fmtprebuff{#2}}}
+\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\buff{#2}}}
 \def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
 \def\fmtafter#1#2{#2#1}
-\def\fmtfail#1{\fmtwarn\addto\tmpc{#1}}
+\def\fmtfail#1{\fmtwarn\addto\fmtprebuff{#1}}
 \def\fmtwarn{\printwarn{\string\fmtins: \currverse: The text "\unexpanded\ea{\text}" not found}}
 
    \_doc
@@ -332,10 +332,10 @@
    \begitems
    * defines `\currverse` as <full-vref>,
    * prepares `\currversenum`, `\curversetext`, `\currchapnum` from <full-vref>,
-   * defines `\tmpb` as <verse-text>,
+   * defines `\buff` as <verse-text>,
    * processes all actions from `\alist!<full-vref>`,
    * if `\currchapnum` changed, prints new chapter by `\printchap` 
-   * prints verse from `\tmpb` using `\printverse`
+   * prints verse from `\buff` using `\printverse`
    \enditems
    \_cod
 
@@ -344,7 +344,7 @@
    \edef\currverse{#1}%
    \preparechapverse #1
    \let\prelinkV=\currversenum
-   \def\tmpb{#2}\def\tmpc{}\def\versebegin{}%
+   \def\buff{#2}\def\fmtprebuff{}\def\prebuff{}%
    \ifx\verseto\empty \csname alist!#1\endcsname \else
       \fornum \versefrom..\verseto \do{\csname alist!\currbook/\currchapnum:##1\endcsname}%
    \fi
@@ -363,7 +363,7 @@
    \def\currversenum{#1}\def\currversetext{#1--#2}}
 
    \_doc
-   `\printverse` prints verse from `\currversenum` and (possibly changed) `\tmpb`.
+   `\printverse` prints verse from `\currversenum` and (possibly changed) `\buff`.
    It prints the single raised verse number first.\nl
    `\printchap` prints beginning of the new chapter.
    `\printbeforefirst` is a macro which is executed just before first verse
@@ -372,7 +372,7 @@
    \_cod
 
 \def\printverse{%
-   \tmpc % material accumulated by \fmtpre
+   \fmtprebuff % material accumulated by \fmtpre
    \ifnum\currversenum=1 \printbeforefirst \fi
    \quitvmode \mark{\currchapnum:\currversetext}%
    \ifx\verseto\empty \trymakedest{v:\currverse}%
@@ -380,7 +380,7 @@
        \wlog{xxxxx v:\currbook/\currchapnum:##1}\trymakedest{v:\currbook/\currchapnum:##1}}%
    \fi
    \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
-   \versebegin\tmpb \space
+   \prebuff\buff \space
 }
 \def\printchap{\bigskip}
 
