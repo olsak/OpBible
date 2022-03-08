@@ -1024,12 +1024,13 @@
 }
 \def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \botinsert
-      \botTitle{#1}%
+      \botTitle{#1}{#2}%
       \kern3pt \nobreak
-      \hbox{\ifx&#2&\else \label[#2]\wlabel{#1}\fi\picw=\hsize #3\inspic{#4}}%
+      \hbox{\picw=\hsize #3\inspic{#4}}%
    \endbot
 }
-\def\botTitle#1{\hbox{\captionfont
+\def\botTitle#1#2{\hbox{\captionfont
+   \ifx^#2^\else \label[#2]\wlabel{#1}\fi
    \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
 }
 \picdir={images/}
@@ -1064,7 +1065,7 @@
           \fornum 1..\_Ncols \do {\unskip \global\setbox1##1=\lastbox}}
           \fornumstep -2: \_Ncols..1 \do {
               \hrule height0pt\kern5pt\nobreak\vfill
-              \botTitle{\ifnum \_Ncols=##1 #1\fi}
+              \ifnum\_Ncols=##1 \botTitle{#1}{#2}\else \botTitle{}{}\fi
               \kern3pt \nobreak
               \hbox to\hsize{%
                  \rlap{\LightGrey \vrule height\tmpdim depth6pt width\hsize}%
