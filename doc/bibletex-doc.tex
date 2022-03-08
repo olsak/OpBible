@@ -5,6 +5,7 @@
 \fontfam[schola]
 \def\TODO{{\Red TODO}}
 \verbchar`
+\mnotesize=25mm
 \everytt{\typosize[9/]\catcode`<=13 }
 \everyintt{\catcode`<=13 \Magenta}
 \catcode`<=13 \def<#1>{{$\langle$\it#1$\rangle$}}
@@ -31,7 +32,7 @@ vyjadřovacích zvyklostí toho kterého překladu.
 
 Pro zpracování \TeX/em je tedy třeba mít odpovídající verzi základního textu
 (předzpracovanou způsobem, popsaným v sekci~\ref[zakladni]) a dále soubory s
-poznámkami (jejich syntaxe je uvedena v sekcích \ref[note] a \ref[glosy]).
+poznámkami (jejich syntaxe je uvedena v sekci \ref[note]).
 \TeX/ přečte hlavní soubor se základními pokyny, pak načte data všech
 potřebných souborů a vytvoří PDF knihy -- komentované Bible. V ní je jednak
 (typicky větším písmem) základní text a (typicky menším písmem, například
@@ -125,12 +126,13 @@ Bible pro všechny použité překlady najednou.
 
 Hlavním smyslem nástroje OP-Bible je vytvořit PDF ze základního textu nejen
 se samotným textem Bible, ale s propojenými poznámkami. K tomu slouží
-mimo jiné soubory `notes-*.tex` (například `notes-Ge.tex` pro knihu Genesis), ve
+mimo jiné soubory `notes-*.tex` (například `notes-Gn.tex` pro knihu Genesis), ve
 kterých jsou zapsány poznámky k jednotlivým frázím základního textu dle
 následujícího smluveného formátu. Jednotlivá poznámka má tvar:
 
+\mnote{\code{\\Note}}
 \begtt
-\Note <číslo-kapitoly>:<číslo-knihy> {<fráze>} <text-poznámky> 
+\Note <číslo-kapitoly>:<číslo-verše> {<fráze>} <text-poznámky>
 <prázdný řádek>
 \endtt
 Například:
@@ -164,7 +166,7 @@ jiném pádě nebo je to mírně jinak formulovaná fráze). Pak je možné těs
 `{<fráze>}` napsat rovnítko následované `{<fráze-k-tisku>}`, tedy
 
 \begtt
-\Note <číslo-kapitoly>:<číslo-knihy> {<fráze>}={<fráze k tisku>} <text-poznámky> 
+\Note <číslo-kapitoly>:<číslo-verše> {<fráze>}={<fráze k tisku>} <text-poznámky>
 <prázdný řádek>
 \endtt
 V takovém případě se v základním textu hledá <fráze>, ale ve vlastní
@@ -207,10 +209,114 @@ klávesnici. Nesmí to být žádný speciální znak vypadající třeba podobn
 vodorovná čárka.
 
 
+\sec[clanky] Formát příkazů pro vloženní dalších objektů
 
-\sec[glosy] Formát dalších vložených poznámek (glosy, články)
+Do souboru `notes-*.tex` je možné kromě příkazů `\Note` zapisovat pokyny pro
+vožení dalších objektů s vazbou na konkrétní verš v základním textu. Takový
+objekt se umístí\fnote
+{Podle implictní definice vzhledu jednotlivých stran, to je možné
+předeinovat.}
+na spodní část strany pod dva sloupce poznámek. Vazbu na místo textu
+vymezíme pomocí údaje `<číslo-kapitoly>:<číslo-verše>` podobně,
+jako v případě poznámek
+`\Note`. Objekt se umístí na stejnou stranu, kde začíná příslušný verš.
+Pokud se na stránku pod verš objekt nevejde, umístí se na spodní část
+následující stránky.
 
-\TODO...
+\secc Vložení obrázků
+
+Obrázky s vazbou na konrétní verš umístíme příkazem
+
+\mnote{\code{\\putImage}}
+\begtt
+\putImage <číslo-kapitoly>:<číslo-verše> {<titulek>} [<lejblík>] (<parametry>) {<soubor>}
+\endtt
+Například:
+
+\begtt
+\putImage 2:1 {Danielovy vize} [danielovyvize] () {Nabuco.pdf}
+\endtt
+
+\begitems
+* `<číslo-kapitoly>:<číslo-verše>` označuje místo, ke kterému se obrázek umístí.
+* `<titulek>` je titulek (popisek) k obrázku. V implicitním typografickém
+  nastavení se vytiskne do proužku, který odděluje horní část strany od
+  samotného obrázku.
+* `<lejblík>` udává lejblík k obrázku pro případné reference. Můžete pak na
+  něj odkazovat pomocí `...viz obrázek \ref[<lejblík>]` na straně `\pg`, což
+  vytiskne v případě naší ukázky ...viz obrázek {\Blue Danielovy vize} na straně~123.
+  Přitom text v tomto odkazu bude propojen hyperlinkem s místem, kde se
+  vyskytuje obrázek. Když nechcete `<lejblík>` použít, pište `[]`
+  (tj.~jakoby prázdný lejblík).
+* `<parametry>` určují případný další pokyn pro formátování obrázku. Mohou
+  chybět, jak naznačuje ukázka.
+  Implicitně se obrázek roztáhne na celou šířku stránky. Pokud ho chete mít
+  třeba menší, pište do místa pro `<parametry>` třeba `\picw=9cm` což
+  způsobí, že obrázek bude mít šířku 9\,cm a bude umístě na střed.
+* `<soubor>` je úplné jméno souboru s obrázkem. Může mít příponu `pdf` (pro
+  vektorové obrázky) nebo `png` či `jpg` pro bitmapové obrázky.
+  Soubory s obrázky musejí být uloženy v adresáři `images/`. Jsou-li
+  umístěny jinde, je třeba nastavit pro toto umístění parametr `\picdir`,
+  například `\picdir={bibleImages/}`. Toto je rozumné nastavit v hlavním
+  souboru, viz sekci~\ref[hlavni].
+\enditems
+
+\secc Vložení článků
+
+Článek s textem (typicky delším než poznámka) lze umístit podobně jako
+obrázky, tj. při implicitním typografickém nastavení na spodní stranu
+stránky, na níž začíná verš specifikovaný pomocí
+`<číslo-kapitoly>:<číslo-verše>`. Nevejde-li se tam, vloží se na spodní část
+následující strany. Nevejde-li se na jedinou stranu, vloží se jeho další
+úsek na spodní část následující strany (atd. až do chvíle, kdy je celý
+článek do textu vložen).
+
+Text článků k jedné knize zapisujte do souboru `articles-*.tex`, například
+v souboru `articles-Gn.tex` jsou všechny články pro knihu Genesis. Jak obsah
+tohoto souboru vypadá popíšeme za chvíli.
+
+V souboru `notes-*.tex` je třeba uvést požadavek na umístění článku ve tvaru
+
+\mnote{\code{\\putArticle}}
+\begtt
+\putArticle <číslo-kapitoly>:<číslo-verše> {<titulek>} [<číslo-článku>] (<parametry>)
+\endtt
+Například:
+\begtt
+\putArticle 6:1 {Kdo byl Darius Médský?} [6] ()
+\endtt
+
+\begitems
+* `<číslo-kapitoly>:<číslo-verše>` označuje místo, ke kterému se obrázek umístí.
+* `<titulek>` je titulek ke článku. Vytiskne se podobně jako v případě
+  obrázku.
+* `<číslo-článku>` je nějaké číselné označení článku, které musí být v rámci
+  jedné knihy jednoznačné. Typicky se články váží na kapitoly, pak by
+  `<číslo-článku>` mělo znamenat číslo odpovídající kapitoly. Podle tohoto
+  čísla se článek do sazby neumisťuje (od toho slouží údaj
+  `<číslo-kapitoly>:<číslo-verše>`), nicméně je toto číslo použité v
+  odkazech. Můžete psát \code{...viz <"článek" Da 6>a} a vytiskne se
+  ...viz {\Blue článek~Da~6}. Formát a vlastnosti takových odkazů
+  popisuje sekce~\ref[odkazy]. Navíc se podle `<čísla-článku>` vyhledá
+  vlastní text článku v příslušném souboru `atricles-*.tex`.
+* `<parametry>` jsou parametry přesněji určující formátování článku.
+  \TODO...
+\enditems
+
+Text článků ke vložení musí být uveden v souboru `articles-<kniha>.tex`.
+Tento subor musí obsahovat řádek:
+
+\begtt
+\Article [<číslo-článku>]
+\endtt
+následovaný textem článku. Pak může pokračovat další
+`\Article [<číslo-článku>]` následovaný další textem atd. V jednom souboru
+jsou tak shomážděny všechny články k dané knize.
+
+Pokud zadáte požadavek `\putArticle` a příslušný soubor `article-<kniha>.tex`
+nebo příslušný řádek v něm `\Article [<číslo-článku>]` neexistuje, překlad
+skončí s chybou.
+
 
 \sec[fmt] Údaje určující formátování základního textu
 

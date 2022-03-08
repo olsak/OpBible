@@ -1,0 +1,5 @@
+- pridat hledani prislusneho \Article v souboru article-*.tex
+- pridat moznot ovlivnit zpusob vlozeni article pomoci parametru
+- pridat koncept soubor; article
+- pridat cil odkazu do article
+- dopsat dokundamentaci o \putImage a \putArticle

@@ -1017,32 +1017,33 @@
    `\putImage`...
    \_cod
 
-\def\putImage #1 #2#3[#4]#5{% chap:verse {Title} [label] {image-file.pdf}
+\def\putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\doImage{#2}[#4]{#5}}%
+   \ea\newaction\ea{\fullvrefm}{\doImage{#2}[#4](#6){#7}}%
 }
-\def\doImage #1[#2]#3{% {Title}[label]{image-file.pdf}
+\def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \botinsert
       \botTitle{#1}%
       \kern3pt \nobreak
-      \hbox{\label[#2]\wlabel{}\picw=\hsize \inspic{images/#3}}%
+      \hbox{\ifx&#2&\else \label[#2]\wlabel{#1}\fi\picw=\hsize #3\inspic{#4}}%
    \endbot
 }
 \def\botTitle#1{\hbox{\captionfont
    \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
 }
+\picdir={images/}
 
    \_doc
    `\putArticle` ...
    \_cod
 
-\def\putArticle #1 #2#3[#4]#5{% chap:verse {Title} [number] \method 
+\def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\doArticle{#2}[#4]{#5}}%
+   \ea\newaction\ea{\fullvrefm}{\doArticle{#2}[#4](#6)}%
 }
-\def\doArticle#1[#2]#3{% {Title}[number]{\method}
+\def\doArticle#1[#2](#3){% {Title}[number](params)
    \botinsert
       \parindent=12pt \iindent=\parindent
       \setbox0=\vbox{\hsize=.458\hsize
@@ -1057,7 +1058,7 @@
       \edef\_Ncols{\the\tmpnum}
       \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0
       \setbox0=\vbox{\_balancecolumns}
-      \tmpdim=\ht0 \advance\tmpdim by1.3\baselineskip
+      \tmpdim=\ht0 \advance\tmpdim by1.2\baselineskip
       \setbox0=\vbox{\unvbox0 \global\setbox2=\lastbox}
       \setbox0=\hbox{\unhbox2
           \fornum 1..\_Ncols \do {\unskip \global\setbox1##1=\lastbox}}
@@ -1065,9 +1066,12 @@
               \hrule height0pt\kern5pt\nobreak\vfill
               \botTitle{\ifnum \_Ncols=##1 #1\fi}
               \kern3pt \nobreak
-              {\LightGrey \nobreak \hrule height\tmpdim width\hsize}
-              \nobreak \vskip-\tmpdim
-              \hbox to\hsize{\kern\parindent\box1##1\hss\box1\the\numexpr##1-1\kern\parindent}
+              \hbox to\hsize{%
+                 \rlap{\LightGrey \vrule height\tmpdim depth6pt width\hsize}%
+                 \kern\parindent
+                 \box1##1\hss\box1\the\numexpr##1-1
+                 \kern\parindent
+              }
               \break
           }
    \endbot
