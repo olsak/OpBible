@@ -1,6 +1,8 @@
 - pridat hledani prislusneho \Article v souboru article-*.tex
-- pridat moznot ovlivnit zpusob vlozeni article pomoci parametru
-- pridat koncept soubor; article
+- pridat moznost ovlivnit zpusob vlozeni article pomoci parametru
+- pridat koncept souboru article
 - pridat cil odkazu do article
 - dopsat dokundamentaci o \putImage a \putArticle
 - \ref[]...\pg dodelat
+- dopsat zminku o poradi \Note do doku
+ 

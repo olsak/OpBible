@@ -1049,9 +1049,10 @@
       \parindent=12pt \iindent=\parindent
       \setbox0=\vbox{\hsize=.458\hsize
          \hbadness=6000
-         \def\Article[##1]{}
+         \def\Article[##1]{\endinput}
          \penalty0
-         \input articles-Da.tex \vfil}
+         \long\def\searcharticle##1\Article[#2]{}
+         \ea\searcharticle \input articles-Da.tex \vfil}
       \splittopskip=12pt
       \setbox1=\vsplit0 to0pt % adding \splittopskip
       \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
