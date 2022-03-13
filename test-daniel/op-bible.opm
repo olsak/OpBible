@@ -1203,6 +1203,7 @@
 \def\chaptit#1{\line{\hss\chapfont\Red#1\hss}
    \nobreak
 }
+\def\schaptit#1{\bigskip\chaptit{#1}\medskip}
 
 \newcount \chapnum
 \def\source#1{}
