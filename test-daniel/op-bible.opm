@@ -29,6 +29,7 @@
 \let\notecolor=\Red
 
 \def\LightGrey {\_setcmykcolor{0 0 0 .1}}
+\def\LiRed {\_setcmykcolor{0 .2 .2 0}}
 
    \_doc
    Fonts.
@@ -401,11 +402,12 @@
 
 \def\printbeforefirst{%
    \par\nobreak
-   \setbox0=\vtop{\kern0pt \_ewref\Xchap{{ch!\currbook/\the\chapnum}}
-                  \smallskip \hbox{\bookfont\Red\the\chapnum}}
+   \setbox0=\vtop{\kern0pt \_ewref\sxdef{{ch!\currbook/\the\chapnum}{\string\mypage}}
+                  \hbox{\setfontsize{at50pt}\bf\LiRed\the\chapnum}}
    \dp0=0pt
    \tmpdim=\lrmargin
-   \ifnum\the\chapnum<10 \advance\tmpdim by-9pt \fi
+   \advance\tmpdim by4pt
+   \ifnum\the\chapnum>9 \advance\tmpdim by18pt \fi
    \ifodd\trycs{ch!\currbook/\the\chapnum}{0}
       \moveright\tmpdim \line{\hss\box0}
    \else \moveleft\tmpdim \box0 \fi
@@ -757,8 +759,7 @@
 \refdecl{
    \isfile{\jobname.xrf}\iftrue \input{\jobname.xrf}\fi^^J
    \def\Xdest#1{\ifcsname pg:#1\endcsname \sxdef{pg:#1}{\_ea\_usesecond\_currpage}\fi}^^J
-   \def\Xchap#1{\sxdef{#1}{\_ea\_usesecond\_currpage}}^^J
-   \def\Xcit#1{\sxdef{#1}{\_ea\_usesecond\_currpage}}
+   \def\mypage{\_ea\_usesecond\_currpage}
 }
 \def\trymakedest#1{%
    \ifcsname #1\endcsname \dest[#1]\ea\glet\csname #1\endcsname \undefined \fi
@@ -1155,7 +1156,7 @@
    \fi\fi
 }
 \def\putCiteleft {%
-   \ifnum\citepg=1 \opwarning{\noexpand\putCite\citelabel: \noexpand\revertCites activated}\fi
+   \ifnum\citepg=1 \opwarning{\noexpand\putCite\citelabel: \noexpand\swapCites activated}\fi
    \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
    \else
       \unskip\vadjust{%
@@ -1163,9 +1164,9 @@
             \medskip
             \advance\hsize by\lrmargin
             \setbox0\vbox{%
-               \_ewref\Xcit{{cp!\the\articlenum!\citelabel}}%
+               \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
                \rightskip=\parindent plus1fil
-               {\typosize[12/16]\Green
+               {\typosize[12/16]\Grey
                \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
             \hbox{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
             \medskip
@@ -1179,17 +1180,17 @@
             \medskip
             \advance\hsize by\lrmargin
             \setbox0\vbox{%
-               \_ewref\Xcit{{cp!\the\articlenum!\citelabel}}%
+               \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
                \leftskip=\parindent plus1fil
                \parfillskip=0pt
-               {\typosize[12/16]\Green
+               {\typosize[12/16]\Grey
                \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
             \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
             \medskip
       }}
    \fi
 }
-\def\revertCites{\def\citepg{1}}
+\def\swapCites{\def\citepg{1}}
 \def\citepg{0}
 
    \_doc
