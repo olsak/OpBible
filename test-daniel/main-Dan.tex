@@ -2,11 +2,13 @@
 
 \cslang
 
-\def\smark     {BKR}                        % Variant of translation, short
+\def\smark     {PSP}                        % Variant of translation, short
 \edef\tmark    {Cze\smark}                  % Variant of translation, full name
 \def\txsfile   {./\tmark-\bmark.txs}        % Localization of .txs files
 \def\fmtfile   {./fmt-\tmark-\amark.tex}    % Localisation of fmts
 \def\notesfile {./notes-\amark.tex}         % Localisation of notes
+
+\let\notecolor=\relax
 
 \switch {BKR}{\def\bibname{Bible kralická}}%
         {B21}{\def\bibname{Bible pro 21. století}}%

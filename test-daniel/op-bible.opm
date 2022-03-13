@@ -1,7 +1,12 @@
 %% Bible-TeX macros, see bibletex-doc.pdf
 
+\newdimen\lrmargin  \lrmargin=10mm
+\margins/2 a4 (23,27,20,20)mm
+
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Intro
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    Loading packages.
    \_cod
 
@@ -52,7 +57,9 @@
 \def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Actions
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We create the output in two steps. First step: the data from `\Note`
    etc.\ are read and saved to the \TeX/ memory. For each such data element the
    \"action" is registered to a list of actions of the given verse. Each
@@ -96,7 +103,9 @@
 }
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec The `\Note` macro
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    The first parameter of the `\Note` macro is `<gen-vref>`.
    It is generalized reference to the Bible verse. It can be
    `<chapter-num>:<verse>` (the <book-mark> is appended from
@@ -281,7 +290,9 @@
 \let\notelog=\wlog
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting data from format files
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\fmtprebuff`, i.e.\ at the
    beginning of the verse.\nl
    `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\buff`, i.e.\ at the end
@@ -320,7 +331,9 @@
    \else \egroup \medskip \fi}
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Printing verses from `.txs` files
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    When Bible text is processed then book mark is saved to
    `\currbook` and each input line is separated to the
    <chapter-num>:<verse-num> and <verse-text>.\nl
@@ -388,13 +401,21 @@
 
 \def\printbeforefirst{%
    \par\nobreak
-   \vbox to0pt{\null\vskip-1ex
-      \hbox to\parindent{\hss \chapfont \Red\the\chapnum\ \hss}\vss}\nobreak \vskip-2ex
-   \noindent \hangindent=\parindent \hangafter=-2 \relax}
+   \setbox0=\vtop{\kern0pt \_ewref\Xchap{{ch!\currbook/\the\chapnum}}
+                  \smallskip \hbox{\bookfont\Red\the\chapnum}}
+   \dp0=0pt
+   \tmpdim=\lrmargin
+   \ifnum\the\chapnum<10 \advance\tmpdim by-9pt \fi
+   \ifodd\trycs{ch!\currbook/\the\chapnum}{0}
+      \moveright\tmpdim \line{\hss\box0}
+   \else \moveleft\tmpdim \box0 \fi
+   \nobreak \nointerlineskip \noindent
+}
 
    \_doc
-   \sec Book titles, prefaces etc.
-
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Book titles
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    The macro `\BookTile <b-mark> <a-mark> {<title>}` declares titles
    of each Bible books. The <b-mark> is a book mark used in file names
    and <a-mark> is an actual book mark used in printed text.
@@ -423,7 +444,9 @@
 \outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Processing books of the Bible
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    The `\processbooks` macro does two loops over all `\printedbooks`.
    The `\printedbooks` list can or cannot be finalized by a space.
    The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
@@ -473,9 +496,15 @@
 }
 \def\setheadline{\global\headline={\headfont
    \ifodd\pageno
-       \rlap{\it\bibname}\hfil\the\pageno\hfil\llap{\bf\btit\ \botmark}%
+       \rlap{\it\bibname\hss}%
+       \hfil \the\pageno\hfil
+       \hbox to\lrmargin{\hss\bf\btit\ \botmark}%
+       \kern-\lrmargin 
    \else
-       \rlap{\bf\btit\ \firstmark}\hfil\the\pageno\hfil\llap{\it\bibname}%
+       \kern-\lrmargin
+       \hbox to\lrmargin{\bf\btit\ \firstmark\hss}%
+       \hfil\the\pageno\hfil
+       \llap{\hss\it\bibname}%
    \fi
    }
 }
@@ -503,8 +532,9 @@
    in the memory only temporary for processing single book. After
    the Book is finalized, the \TeX/ memory is freed.
 
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Bible references
-
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We prepare temporary macros first.\nl
    `\isspacein <text> \iftrue` is true if `<text>` includes a space.\nl
    `\iscolonin <text>:\iftrue` is true if `<text>` includes a colon.\nl
@@ -726,7 +756,9 @@
 \def\ensuredest{\immediate\write\xrf{\string\sdef{\linkpre:\linkfspec}{}}}
 \refdecl{
    \isfile{\jobname.xrf}\iftrue \input{\jobname.xrf}\fi^^J
-   \def\Xdest#1{\ifcsname pg:#1\endcsname \sxdef{pg:#1}{\_ea\_usesecond\_currpage}\fi}
+   \def\Xdest#1{\ifcsname pg:#1\endcsname \sxdef{pg:#1}{\_ea\_usesecond\_currpage}\fi}^^J
+   \def\Xchap#1{\sxdef{#1}{\_ea\_usesecond\_currpage}}^^J
+   \def\Xcit#1{\sxdef{#1}{\_ea\_usesecond\_currpage}}
 }
 \def\trymakedest#1{%
    \ifcsname #1\endcsname \dest[#1]\ea\glet\csname #1\endcsname \undefined \fi
@@ -747,8 +779,9 @@
 }
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Language variants
-
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
    sets `\numvariants=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
    `\def\var!1{<tmarkA>}` `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
@@ -923,8 +956,9 @@
 }
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting notes to the page
-
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We declare new insert `\noteins` used in the `\output` routine.
    \_cod
 
@@ -994,12 +1028,16 @@
    \unless\ifvoid\botins \unvbox\botins
    \else \vskip 0pt plus1filll minus8pt \fi
 }
-\_def \noterule {\_kern-3pt {\Black \_hrule}\_kern 2.6pt }
+\_def \noterule {\_kern-3pt {\Black \_hrule width\hsize}\_kern 2.6pt }
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Inserting images and articles to the page
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    `\botins` is analogue insert as `\_topins` but the material is inserted
    to the bottom of the page. The material is created by
    `\botinsert...\endbot` pair of control sequences.
+   We use it for inserting images and articles to the page.
    \_cod
 
 \newinsert\botins
@@ -1014,7 +1052,14 @@
 \dimen\botins=\_maxdimen % no limit per page
 
    \_doc
-   `\putImage`...
+   `\putImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
+   inserts the given image to the age where the begining of <chapter>:<verse>
+   exists. We register a new action by
+   `\newaction{<full-vref>}{\doImage{<title>}[<label>](<params>){<image-file>}}`.
+   The `\doImage` puts the image by `\botinsert`...`\endisert` pair.
+   The `\botTitle{<title>}[<label>]` prints the title of the image (or
+   article or watever is put to the bottom of the page) and inserts the
+   destination of hyperlink based on the <label>, if the <label> isn't empty.
    \_cod
 
 \def\putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
@@ -1024,21 +1069,35 @@
 }
 \def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \botinsert
-      \botTitle{#1}{#2}%
+      \botTitle{#1}[#2]%
       \kern3pt \nobreak
       \hbox{\picw=\hsize #3\inspic{#4}}%
    \endbot
 }
-\def\botTitle#1#2{\hbox{\captionfont
+\def\botTitle#1[#2]{\hbox{\captionfont
    \ifx^#2^\else \label[#2]\wlabel{#1}\fi
    \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
 }
 \picdir={images/}
 
    \_doc
-   `\putArticle` ...
+   `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
+   inserts an article given in the file `articles-*.tex` signed by
+   `\Article [<label>]`. The article starts at the page where
+   <chapter>:<verse> is. We register a new action by
+   `\newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
+   The `\doArticle` inserts the article to one or more pages by
+   `\botinsert`...`\endinsert`. The Article is printed to two columns per
+   page, all collumns of the article is completely balanced. First we
+   calculate the number of pages, then the number of columns `\_Ncols` is 2 times
+   number of pages. Then the `\_balancecolumns` macro creates the columns.
+   Finally we do re-boxing the output of `\_balancecolumns` in order to
+   reach individual columns and create pairs of them by `\fornum` loop.
+   These pairs are completed to blocks with LightGrey background.
+   These blocks divided by `\break` are inserted into `\botinsert`.
    \_cod
 
+\newcount\articlenum
 \def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
    \edef\fullvref{\gentovref{#1}}%
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
@@ -1046,13 +1105,14 @@
 }
 \def\doArticle#1[#2](#3){% {Title}[number](params)
    \botinsert
+      \incr\articlenum
       \parindent=12pt \iindent=\parindent
       \setbox0=\vbox{\hsize=.458\hsize
-         \hbadness=6000
+         \hbadness=6000 \baselineskip=\dimexpr\baselineskip plus1pt
          \def\Article[##1]{\endinput}
          \penalty0
          \long\def\searcharticle##1\Article[#2]{}
-         \ea\searcharticle \input articles-Da.tex \vfil}
+         \ea\searcharticle \input articles-Da.tex \relax}
       \splittopskip=12pt
       \setbox1=\vsplit0 to0pt % adding \splittopskip
       \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
@@ -1066,7 +1126,7 @@
           \fornum 1..\_Ncols \do {\unskip \global\setbox1##1=\lastbox}}
           \fornumstep -2: \_Ncols..1 \do {
               \hrule height0pt\kern5pt\nobreak\vfill
-              \ifnum\_Ncols=##1 \botTitle{#1}{#2}\else \botTitle{}{}\fi
+              \ifnum\_Ncols=##1 \botTitle{#1}[#2]\else \botTitle{}[]\fi
               \kern3pt \nobreak
               \hbox to\hsize{%
                  \rlap{\LightGrey \vrule height\tmpdim depth6pt width\hsize}%
@@ -1078,24 +1138,75 @@
           }
    \endbot
 }
-
 \def\roundexpr#1{\ea\ea\ea\roundexprA\expr{#1}\relax}
 \def\roundexprA#1.#2\relax{\ifnum#1=0 0\else #1\fi}
 
+   \_doc
+   `\citation` `\left {<text>}` creates a citation <text> inserted to the
+   article text by `\vadjust`. The citation reach the left margin and it has
+   white background.
+   \_cod
 
+\def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
+\def\putCite #1#2{\def\citelabel{#1}%
+   \ifx\left#2\putCiteleft
+   \else \ifx#2\right\putCiteright\else
+   \errmessage{\noexpand\putCite#1: \left or \right expected}%
+   \fi\fi
+}
+\def\putCiteleft {%
+   \ifnum\citepg=1 \opwarning{\noexpand\putCite\citelabel: \noexpand\revertCites activated}\fi
+   \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
+   \else
+      \unskip\vadjust{%
+         \moveleft\dimexpr\lrmargin+\parindent \vbox{%
+            \medskip
+            \advance\hsize by\lrmargin
+            \setbox0\vbox{%
+               \_ewref\Xcit{{cp!\the\articlenum!\citelabel}}%
+               \rightskip=\parindent plus1fil
+               {\typosize[12/16]\Green
+               \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
+            \hbox{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
+            \medskip
+      }}
+   \fi
+}
+\def\putCiteright{%
+   \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
+      \unskip\vadjust{%
+         \moveright\dimexpr\parindent \vbox{%
+            \medskip
+            \advance\hsize by\lrmargin
+            \setbox0\vbox{%
+               \_ewref\Xcit{{cp!\the\articlenum!\citelabel}}%
+               \leftskip=\parindent plus1fil
+               \parfillskip=0pt
+               {\typosize[12/16]\Green
+               \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
+            \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
+            \medskip
+      }}
+   \fi
+}
+\def\revertCites{\def\citepg{1}}
+\def\citepg{0}
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec TODO macros
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    The temporary macros are here. I plan to rewrite them.
    \_cod
 
-\def\chaptit#1{\ifhmode \setbox0=\lastbox \par \nobreak\vskip-\baselineskip \fi
-   \medskip{\indent\chapfont\Red#1}\endgraf\nobreak\medskip}
+\def\chaptit#1{\line{\hss\chapfont\Red#1\hss}
+   \nobreak
+}
 
 \newcount \chapnum
 \def\source#1{}
 \def\BibleBook#1#2{\def\currbook{#2}\let\prelinkB=\currbook
-   \bigskip {\bookfont #1}\par\nobreak\medskip \chapnum=0 }
+   \bigskip \line{\hss\bookfont #1\hss}\par\nobreak\medskip \chapnum=0 }
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
 

@@ -318,6 +318,49 @@ nebo příslušný řádek v něm `\Article [<číslo-článku>]` neexistuje, p�
 skončí s chybou.
 
 
+\secc[cite] Vložení citací do okraje v textu článku
+
+Text článků je v implicitním nastavení sazby formátován do dvou sloupců.
+Vnější sloupec je možné přerušit a do vzniklého místa vsunout např. citát či
+jinou myšlenku. Tento text bude vyčuhovat do vnějšího okraje.
+
+Uvnitř článku (tedy těsně po příkazu `\Article [<číslo-článku>]` je
+třeba vložit deklaraci citovaného textu pomocí:
+
+\begtt
+\Cite <písmeno> {<text>}
+\endtt
+%
+Zde <písmeno> je typicky `A`. Pokud ale chcete do jednoho článku vložit více
+citátů, je třeba je odlišit dalšími písmeny, tedy `B`, `C`, atd. a všechny
+citáty napište na začátek článku.
+
+Příkazem `\Cite` je citát pouze deklarován. Jeho skutečné vložení do textu
+článku provedete pomocí `\putCite <písmeno>\left` a současně na jiném místě
+použijte `\putCite <písmeno>\right`.
+Je-li článek na levé stránce otevřené dvoustrany, citát se umístí
+jen podle `\putCite <písmeno>\left`, jinými slovy `\putCite <písmeno>\right` je
+ignorováno. Je-li článek na pravé stránce otevřené dvoustrany, umístění se
+řídí jen podle `\putCite <písmeno>\right`. Hned pod řádkem, ve kterém je
+příslušné `\putCite` uvedeno, se citát skutečně objeví. Řádek samotný se
+kvůli tomu nerozdělí (jinak řečeno, odstavec se kvůli vložení citátu neukončí).
+
+Důvod, proč je nutné uvést dvě lokace `\putCite` je následující. Dopředu
+nevíme, na které stránce (liché nebo sudé) se článek s vloženým citátem
+objeví. Protože citát má zasahovat do vnějšího okraje, je třeba jej na levé
+stránce umístit do prvního sloupce, na pravé stránce do druhého sloupce,
+tedy někam poněkud jinam. Lokace `\putCite <písmeno>\left` by tedy měla
+odpovídat nějakému řádku v prvním sloupci a `\putCite <písmeno>\right`
+jinému řádku v druhém sloupci.
+
+Je rozumné si odladit (tj. dopředu vyzkoušet), jak vypadá umístění citátu
+pro obě varianty, které mohou nastat (vlevo/vpravo). Pokud se chcete
+podívat, jak to dopadne při variantě, která neodpovídá správné poloze
+stránky, můžete použít na začátku textu článku příkaz `\revertCites`. Toto
+by ale nemělo zůstat zapnuté pro definitivní tisk, proto aktivované
+`\revertCites` způsobí varování na terminál a do log souboru.
+
+
 \sec[fmt] Údaje určující formátování základního textu
 
 Základní text v `.txs` souborech neobsahuje
