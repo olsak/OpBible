@@ -209,14 +209,14 @@ klávesnici. Nesmí to být žádný speciální znak vypadající třeba podobn
 vodorovná čárka.
 
 
-\sec[clanky] Formát příkazů pro vloženní dalších objektů
+\sec[clanky] Formát příkazů pro vložení dalších objektů
 
 Do souboru `notes-*.tex` je možné kromě příkazů `\Note` zapisovat pokyny pro
 vožení dalších objektů s vazbou na konkrétní verš v základním textu. Takový
 objekt se umístí\fnote
-{Podle implictní definice vzhledu jednotlivých stran, to je možné
-předeinovat.}
-na spodní část strany pod dva sloupce poznámek. Vazbu na místo textu
+{Podle implictní definice vzhledu jednotlivých stran, to je možné předefinovat.}
+na spodní část strany pod dva sloupce poznámek nebo citáty se umístí na
+horní část strany. Vazbu na místo textu
 vymezíme pomocí údaje `<číslo-kapitoly>:<číslo-verše>` podobně,
 jako v případě poznámek
 `\Note`. Objekt se umístí na stejnou stranu, kde začíná příslušný verš.
@@ -271,7 +271,7 @@ následující strany. Nevejde-li se na jedinou stranu, vloží se jeho další
 úsek na spodní část následující strany (atd. až do chvíle, kdy je celý
 článek do textu vložen).
 
-Text článků k jedné knize zapisujte do souboru `articles-*.tex`, například
+Text článků ke každé knize Bible zapisujte do souboru `articles-*.tex`, například
 v souboru `articles-Gn.tex` jsou všechny články pro knihu Genesis. Jak obsah
 tohoto souboru vypadá popíšeme za chvíli.
 
@@ -293,9 +293,9 @@ Například:
 * `<číslo-článku>` je nějaké číselné označení článku, které musí být v rámci
   jedné knihy jednoznačné. Typicky se články váží na kapitoly, pak by
   `<číslo-článku>` mělo znamenat číslo odpovídající kapitoly. Podle tohoto
-  čísla se článek do sazby neumisťuje (od toho slouží údaj
+  čísla se článek do sazby neumisťuje (k tomu slouží údaj
   `<číslo-kapitoly>:<číslo-verše>`), nicméně je toto číslo použité v
-  odkazech. Můžete psát \code{...viz <"článek" Da 6>a} a vytiskne se
+  odkazech. Můžete například psát \code{...viz <"článek" Da 6>a} a vytiskne se
   ...viz {\Blue článek~Da~6}. Formát a vlastnosti takových odkazů
   popisuje sekce~\ref[odkazy]. Navíc se podle `<čísla-článku>` vyhledá
   vlastní text článku v příslušném souboru `atricles-*.tex`.
@@ -305,7 +305,7 @@ Například:
 
 Text článků ke vložení musí být uveden v souboru `articles-<kniha>.tex`.
 Tento subor musí obsahovat řádek:
-
+\mnote{\code{\\Article}}
 \begtt
 \Article [<číslo-článku>]
 \endtt
@@ -318,6 +318,21 @@ nebo příslušný řádek v něm `\Article [<číslo-článku>]` neexistuje, p�
 skončí s chybou.
 
 
+\secc[topcite] Vložení citací do horní části stránky
+
+\mnote{\code{\\putCite}}
+Příkaz `\putCite` `<číslo-kapitoly>:<číslo-verše>  {<text>}` vloží při
+implicitním typografickém nastavení <text> ve formě citátu na začátek
+stránky, na které se nachází `<číslo-kapitoly>:<číslo-verše>`.
+
+Samotný <text> může obsahovat na konci `\quotedby {<autor>}`. V takovém
+pípadě je vytištěn <autor> na novém řádku (při citátu umístěném na levé
+stránce) nebo za předpokladu, že je dost místa, je na posledním řádku posunutý více
+vpravo (při citátu umístěném na levé stránce).
+
+Pro řízený přechod na nový řádek můžete v <textu> požít příkaz `\nl`.
+
+
 \secc[cite] Vložení citací do okraje v textu článku
 
 Text článků je v implicitním nastavení sazby formátován do dvou sloupců.
@@ -326,38 +341,36 @@ jinou myšlenku. Tento text bude vyčuhovat do vnějšího okraje.
 
 Uvnitř článku (tedy těsně po příkazu `\Article [<číslo-článku>]` je
 třeba vložit deklaraci citovaného textu pomocí:
-
-\begtt
-\Cite <písmeno> {<text>}
-\endtt
-%
+`\Cite <písmeno> {<text>}`.\mnote{\code{\\Cite}}
 Zde <písmeno> je typicky `A`. Pokud ale chcete do jednoho článku vložit více
 citátů, je třeba je odlišit dalšími písmeny, tedy `B`, `C`, atd. a všechny
 citáty napište na začátek článku.
 
+\mnote{\code{\\insertCite}}
 Příkazem `\Cite` je citát pouze deklarován. Jeho skutečné vložení do textu
-článku provedete pomocí `\putCite <písmeno>\left` a současně na jiném místě
-použijte `\putCite <písmeno>\right`.
-Je-li článek na levé stránce otevřené dvoustrany, citát se umístí
-jen podle `\putCite <písmeno>\left`, jinými slovy `\putCite <písmeno>\right` je
+článku provedete pomocí `\insertCite <písmeno>\left` a současně na jinde
+použijte `\insertCite <písmeno>\right`.
+Je-li článek na levé stránce dvoustrany, citát se umístí
+jen podle `\insertCite <písmeno>\left`, jinými slovy `\insertCite <písmeno>\right` je
 ignorováno. Je-li článek na pravé stránce otevřené dvoustrany, umístění se
-řídí jen podle `\putCite <písmeno>\right`. Hned pod řádkem, ve kterém je
-příslušné `\putCite` uvedeno, se citát skutečně objeví. Řádek samotný se
+řídí jen podle `\insertCite <písmeno>\right`. Hned pod řádkem, ve kterém je
+příslušné `\insertCite` uvedeno, se citát skutečně objeví. Řádek samotný se
 kvůli tomu nerozdělí (jinak řečeno, odstavec se kvůli vložení citátu neukončí).
 
-Důvod, proč je nutné uvést dvě lokace `\putCite` je následující. Dopředu
+Důvod, proč je nutné uvést dvě lokace `\insertCite` je následující. Dopředu
 nevíme, na které stránce (liché nebo sudé) se článek s vloženým citátem
 objeví. Protože citát má zasahovat do vnějšího okraje, je třeba jej na levé
 stránce umístit do prvního sloupce, na pravé stránce do druhého sloupce,
-tedy někam poněkud jinam. Lokace `\putCite <písmeno>\left` by tedy měla
-odpovídat nějakému řádku v prvním sloupci a `\putCite <písmeno>\right`
-jinému řádku v druhém sloupci.
+tedy někam poněkud jinam. Lokace `\insertCite <písmeno>\left` by tedy měla
+odpovídat nějakému řádku v prvním sloupci a `\insertCite <písmeno>\right`
+jinému řádku v druhém sloupci článku.
 
 Je rozumné si odladit (tj. dopředu vyzkoušet), jak vypadá umístění citátu
 pro obě varianty, které mohou nastat (vlevo/vpravo). Pokud se chcete
 podívat, jak to dopadne při variantě, která neodpovídá správné poloze
-stránky, můžete použít na začátku textu článku příkaz `\swapCites`. Toto
-by ale nemělo zůstat zapnuté pro definitivní tisk, proto aktivované
+stránky, můžete použít na začátku textu článku příkaz
+`\swapCites`.\mnote{\code{\\swapCites}}
+Toto by ale nemělo zůstat zapnuté pro definitivní tisk, proto aktivované
 `\swapCites` způsobí varování na terminál a do log souboru.
 
 

@@ -319,7 +319,7 @@
    \_cod
 
 \newdimen\centermargin \centermargin=4em
-\def\begcenter{\par \medskip
+\def\begcenter{\par \ifnum\lastpenalty<10000 \medskip \fi
    \bgroup
    \def\centeringmode{y}
    \parindent=0pt
@@ -407,7 +407,7 @@
    \dp0=0pt
    \tmpdim=\lrmargin
    \advance\tmpdim by4pt
-   \ifnum\the\chapnum>9 \advance\tmpdim by18pt \fi
+   \ifnum\the\chapnum>9 \advance\tmpdim by19pt \fi
    \ifodd\trycs{ch!\currbook/\the\chapnum}{0}
       \moveright\tmpdim \line{\hss\box0}
    \else \moveleft\tmpdim \box0 \fi
@@ -987,7 +987,7 @@
    \penalty0
 }}
 \def\noteset{\Heros\cond \_scalemain \_typoscale[800/800] % Heros condensed 80%
-   \Black
+   \Black \nobreak
    \widowpenalty=20 \clubpenalty=20
    \leftskip=0pt \rightskip=0pt \parfillskip=0pt plus1fill
    \parindent=0pt
@@ -1149,42 +1149,47 @@
    \_cod
 
 \def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
-\def\putCite #1#2{\def\citelabel{#1}%
-   \ifx\left#2\putCiteleft
-   \else \ifx#2\right\putCiteright\else
-   \errmessage{\noexpand\putCite#1: \left or \right expected}%
+\def\insertCite #1#2{\def\citelabel{#1}%
+   \ifx\left#2\insertCiteleft
+   \else \ifx#2\right\insertCiteright\else
+   \errmessage{\noexpand\insertCite#1: \left or \right expected}%
    \fi\fi
 }
-\def\putCiteleft {%
-   \ifnum\citepg=1 \opwarning{\noexpand\putCite\citelabel: \noexpand\swapCites activated}\fi
+\def\insertCiteleft {%
+   \ifnum\citepg=1 \opwarning{\noexpand\insertCite\citelabel: \noexpand\swapCites activated}\fi
    \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
    \else
       \unskip\vadjust{%
-         \moveleft\dimexpr\lrmargin+\parindent \vbox{%
+         \def\quotedby{\par\hfill}
+         \vbox{%
             \medskip
-            \advance\hsize by\lrmargin
+            \advance\hsize by\parindent
             \setbox0\vbox{%
                \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
-               \rightskip=\parindent plus1fil
-               {\typosize[12/16]\Grey
-               \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
-            \hbox{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
+               \rightskip=\parindent plus1fil \leftskip=0pt
+               {\typosize[12/16]\bi\Grey
+               \medskip \noindent\llap{\copy\lqqbox}\ignorespaces
+                  \cs{c!\the\articlenum!\citelabel}\medskip}}
+            \hbox{\kern-\parindent\rlap{\White
+                        \vrule height\ht0 width\dimexpr\hsize}\box0}%
             \medskip
       }}
    \fi
 }
-\def\putCiteright{%
+\def\insertCiteright{%
    \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
       \unskip\vadjust{%
-         \moveright\dimexpr\parindent \vbox{%
+         \vbox{%
             \medskip
-            \advance\hsize by\lrmargin
+            \advance\hsize by\parindent
             \setbox0\vbox{%
                \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
                \leftskip=\parindent plus1fil
                \parfillskip=0pt
-               {\typosize[12/16]\Grey
-               \medskip \noindent \cs{c!\the\articlenum!\citelabel}\medskip}}
+               {\typosize[12/16]\bi\Grey
+               \medskip \noindent
+               \rlap{\hskip\hsize\kern-\parindent\copy\rqqbox}\hfill
+               \ignorespaces \cs{c!\the\articlenum!\citelabel}\medskip}}
             \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
             \medskip
       }}
@@ -1192,6 +1197,43 @@
 }
 \def\swapCites{\def\citepg{1}}
 \def\citepg{0}
+
+\newcount\citenum
+\def\putCite #1 #2{% chap:verse {text}
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \ea\newaction\ea{\fullvrefm}{\dotopCite{#2}}%
+}
+\def\dotopCite #1{%
+   \topinsert
+   \incr\citenum
+   \ifodd \trycs{ct!\the\citenum}{0}\relax
+      {\typosize[12/16]\noindent
+       \leftskip=.3\hsize plus1fil \parfillskip=0pt
+       \rlap{\hskip\hsize \kern-\leftskip \copy\rqqbox}
+       \hfill \bi\Grey#1\par}
+   \else
+      \let\quotedby=\quotedbyright
+      {\typosize[12/16]\noindent
+       \rightskip=.3\hsize plus 1fil
+       \llap{\copy\lqqbox}%
+       \bi\Grey#1\par}
+   \fi
+   \_ewref\sxdef{{ct!\the\citenum}{\string\mypage}}%
+%   \vskip-.3\baselineskip
+   \endinsert
+}
+\def\quotedby{\par}
+\def\quotedbyright#1{%
+   \unskip\nobreak\hfill\penalty0\hskip2em
+   \null\nobreak\hskip\iindent\hbox{#1}}
+
+\newbox\lqqbox
+\setbox\lqqbox=\hbox{\lower3pt\hbox{\setfontsize{at70pt}\bf\LiRed„}}
+\ht\lqqbox=0pt \dp\lqqbox=0pt
+\newbox\rqqbox
+\setbox\rqqbox=\hbox{\kern2pt\lower38pt\hbox{\setfontsize{at70pt}\bf\LiRed“}}
+\ht\rqqbox=0pt \dp\rqqbox=0pt
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
