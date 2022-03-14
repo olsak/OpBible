@@ -40,6 +40,7 @@
    \fontfam[biblon]    % fonts for Bible text
 \else
    \fontfam[lmfonts]   % alternative font for Bible text
+   \let\Biblon=\relax
 \fi
 
 \fontdef\bookfont{\setfontsize{at19.pt}\bf}
@@ -1054,8 +1055,8 @@
 
    \_doc
    `\putImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
-   inserts the given image to the age where the begining of <chapter>:<verse>
-   exists. We register a new action by
+   inserts the given image to the page where the begining of the verse given
+   by <chapter>:<verse> exists. We register a new action by
    `\newaction{<full-vref>}{\doImage{<title>}[<label>](<params>){<image-file>}}`.
    The `\doImage` puts the image by `\botinsert`...`\endisert` pair.
    The `\botTitle{<title>}[<label>]` prints the title of the image (or
@@ -1143,97 +1144,127 @@
 \def\roundexprA#1.#2\relax{\ifnum#1=0 0\else #1\fi}
 
    \_doc
-   `\citation` `\left {<text>}` creates a citation <text> inserted to the
-   article text by `\vadjust`. The citation reach the left margin and it has
-   white background.
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Inserting citations to the page
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   `\putCite` `<gen-vref> {<text>}` creates a citation <text> inserted to the
+   top of the page where the verse <gen-vref> is. We regiter a new action by
+   `\newaction{<full-vref>}{\dotopCite{<text>}}`.
+   \_cod
+
+\def\putCite #1 #2{% chap:verse {text}
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \ea\newaction\ea{\fullvrefm}{\dotopCite{#2}}%
+}
+
+   \_doc
+   `\dotopCite` `{<text>}` creates the citation text by
+   `\topinsert`...`\endinsert` form plain
+   TeX. We distinguish two cases: the citation on a left page and the citation
+   on a right page. We sawe the page position using `\_ewref` to the .ref
+   file as `\sxdef{ct!<citenum>}{\mypage}` and we know the page position in
+   the second TeX run and use it in the `\ifodd` condition.
+   The typesetting parameters differ in \"left" and \"right" case.
+   \_cod
+
+\newcount\citenum
+\def\dotopCite #1{%
+   \topinsert
+   \typosize[12/16]\bf
+   \incr\citenum
+   \ifodd \trycs{ct!\the\citenum}{0}\relax
+       \leftskip=.3\hsize plus1fil \parfillskip=0pt
+       \noindent
+       \rlap{\hskip\hsize \kern-\leftskip \copy\rqqbox}\hfill
+   \else
+       \let\quotedby=\quotedbyright
+       \rightskip=.3\hsize plus 1fil
+       \noindent \llap{\copy\lqqbox}%
+   \fi
+   {\Grey#1\unskip}\par
+   \_ewref\sxdef{{ct!\the\citenum}{\string\mypage}}%
+%   \vskip-.3\baselineskip
+   \endinsert
+}
+
+   \_doc
+   The `\lqbox` and `\rqbox` include the graphical marks for quotations. First
+   one is used at the left pages, second one at the right pages.\nl
+   The macro `\quotedby{<author>}` puts the author of the quatation to the
+   next line. The macro `\qutedbyright` (which is used at left pages) prints
+   the <author> at the last line if there is sufficient space.
+   \_cod
+
+\newbox\lqqbox
+\newbox\rqqbox
+\setbox\lqqbox=\hbox{\lower3pt\hbox{\setfontsize{at70pt}\bf\LiRed„}}
+\setbox\rqqbox=\hbox{\kern2pt\lower38pt\hbox{\setfontsize{at70pt}\bf\LiRed“}}
+\ht\lqqbox=0pt \dp\lqqbox=0pt
+\ht\rqqbox=0pt \dp\rqqbox=0pt
+
+\def\quotedby{\par}
+\def\quotedbyright#1{%
+   \unskip\nobreak\hfill\penalty0\hskip2em
+   \null\nobreak\hskip\iindent\hbox{#1}}
+
+   \_doc
+   The following macros `\Cite`, `\insertCite` and `\swapCites` are used for
+   insertion of citations to the two-cloumn printed articles.
+   The `\Cite``<label>{<text>}` simply saves the <text> to the macro
+   `\c!<article-num>!<label>`.
+   The `\insertCite``<label><feft-or-right>` inserts the citation declared
+   by `\Cite <label>` to the text using `\vadjust`. The variant `\left` and
+   `\right` is processed or ignored. This depends on the parity of the
+   current page, which is restored from `.ref` file and saved to the macro
+   `\cp!<article-num>!<label>`.
    \_cod
 
 \def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
 \def\insertCite #1#2{\def\citelabel{#1}%
    \ifx\left#2\insertCiteleft
    \else \ifx#2\right\insertCiteright\else
-   \errmessage{\noexpand\insertCite#1: \left or \right expected}%
+   \errmessage{\noexpand\putCite#1: \left or \right expected}%
    \fi\fi
 }
 \def\insertCiteleft {%
    \ifnum\citepg=1 \opwarning{\noexpand\insertCite\citelabel: \noexpand\swapCites activated}\fi
    \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
-   \else
-      \unskip\vadjust{%
-         \def\quotedby{\par\hfill}
-         \vbox{%
-            \medskip
-            \advance\hsize by\parindent
-            \setbox0\vbox{%
-               \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
-               \rightskip=\parindent plus1fil \leftskip=0pt
-               {\typosize[12/16]\bi\Grey
-               \medskip \noindent\llap{\copy\lqqbox}\ignorespaces
-                  \cs{c!\the\articlenum!\citelabel}\medskip}}
-            \hbox{\kern-\parindent\rlap{\White
-                        \vrule height\ht0 width\dimexpr\hsize}\box0}%
-            \medskip
-      }}
-   \fi
+   \else \insertCitelr \left \fi
 }
 \def\insertCiteright{%
    \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
-      \unskip\vadjust{%
-         \vbox{%
-            \medskip
-            \advance\hsize by\parindent
-            \setbox0\vbox{%
-               \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
-               \leftskip=\parindent plus1fil
-               \parfillskip=0pt
-               {\typosize[12/16]\bi\Grey
-               \medskip \noindent
-               \rlap{\hskip\hsize\kern-\parindent\copy\rqqbox}\hfill
-               \ignorespaces \cs{c!\the\articlenum!\citelabel}\medskip}}
-            \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
-            \medskip
-      }}
-   \fi
+   \insertCitelr \right \fi
 }
+\def\insertCitelr#1{\unskip\vadjust{\vbox{%
+   \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
+   \vskip6pt
+   \advance\hsize by\parindent
+   \typosize[12/16]\bi\Grey
+       \ifx#1\left
+           \def\quotedby{\par\hfill}
+           \rightskip=\parindent plus1fil \leftskip=0pt
+           \setbox0\vbox{%
+              \medskip \noindent
+              \llap{\copy\lqqbox}\ignorespaces
+              \cs{c!\the\articlenum!\citelabel}\medskip}%
+           \hbox{\kern-\parindent\rlap{\White
+              \vrule height\ht0 width\dimexpr\hsize}\box0}%
+        \else
+           \leftskip=\parindent plus1fil
+           \parfillskip=0pt
+           \setbox0\vbox{%
+              \medskip \noindent
+              \rlap{\hskip\hsize\kern-\parindent\copy\rqqbox}\hfill
+              \ignorespaces \cs{c!\the\articlenum!\citelabel}\medskip}%
+           \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
+        \fi
+   \vskip6pt
+}}}
+
 \def\swapCites{\def\citepg{1}}
 \def\citepg{0}
 
-\newcount\citenum
-\def\putCite #1 #2{% chap:verse {text}
-   \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\dotopCite{#2}}%
-}
-\def\dotopCite #1{%
-   \topinsert
-   \incr\citenum
-   \ifodd \trycs{ct!\the\citenum}{0}\relax
-      {\typosize[12/16]\noindent
-       \leftskip=.3\hsize plus1fil \parfillskip=0pt
-       \rlap{\hskip\hsize \kern-\leftskip \copy\rqqbox}
-       \hfill \bi\Grey#1\par}
-   \else
-      \let\quotedby=\quotedbyright
-      {\typosize[12/16]\noindent
-       \rightskip=.3\hsize plus 1fil
-       \llap{\copy\lqqbox}%
-       \bi\Grey#1\par}
-   \fi
-   \_ewref\sxdef{{ct!\the\citenum}{\string\mypage}}%
-%   \vskip-.3\baselineskip
-   \endinsert
-}
-\def\quotedby{\par}
-\def\quotedbyright#1{%
-   \unskip\nobreak\hfill\penalty0\hskip2em
-   \null\nobreak\hskip\iindent\hbox{#1}}
-
-\newbox\lqqbox
-\setbox\lqqbox=\hbox{\lower3pt\hbox{\setfontsize{at70pt}\bf\LiRed„}}
-\ht\lqqbox=0pt \dp\lqqbox=0pt
-\newbox\rqqbox
-\setbox\rqqbox=\hbox{\kern2pt\lower38pt\hbox{\setfontsize{at70pt}\bf\LiRed“}}
-\ht\rqqbox=0pt \dp\rqqbox=0pt
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
