@@ -444,7 +444,7 @@ pomocí
 \endtt
 (zde `<varianta-D>` nemusí být poslední, počet parametrů je určen hodnotou
 `<počet-variant>`). Tyto parametry jsou značkami pro konkrétní překlad, např.
-`CzeBKR` pro překlad podle Bible Kralické nebo `CzeCEP` pro ekumenický překlad.
+`BKR` pro překlad podle Bible Kralické nebo `CEP` pro ekumenický překlad.
 
 Následně je možné definovat varianty frází pro jednotlivé varianty překladu:
 \begtt
@@ -468,13 +468,13 @@ Ilustrujme si toto na příkladu. Předpokládejme, že máme soubor `vars.tex`,
 který je čten z hlavního souboru pomocí `\input` a soubor obsahuje:
 
 \begtt
-\variants 3 {CzeBKR}         {CzeCEP}       {CzeCSP}
+\variants 3 {BKR}            {CEP}          {CSP}
 \vdef       {Baltazar}       {Beltšasar}    {Beltšasar}
 \vdef       {Nabuchodonozor} {Nebúkadnesar} {Nebúkadnesar}
 \vdef       {sedm let}       {sedm let}     {sedm časů}
 \endtt
 
-Je-li v hlavním souboru `\def\tmark{CzeBKR}`, pak
+Je-li v hlavním souboru `\def\tmark{BKR}`, pak
 \begtt
 \x/Baltazar/        vypíše Baltazar
 \x/Nabuchodonozor/  vypíše Nabuchodonozor
@@ -482,7 +482,7 @@ Je-li v hlavním souboru `\def\tmark{CzeBKR}`, pak
 \x/cokoli/          vypíše cokoli
 \endtt
 
-Je-li ale v hlavním souboru `\def\tmark{CzeCEP}`, pak
+Je-li ale v hlavním souboru `\def\tmark{CEP}`, pak
 \begtt
 \x/Baltazar/        vypíše Beltšasar
 \x/Nabuchodonozor/  vypíše Nebúkadnesar
@@ -497,9 +497,9 @@ v~sekci~\ref[note] by mohla znít:
    osobní historie (své i svých přátel) zajetí, vzdělání, věrnosti Bohu a služby 
    králi \x/Nabuchodonozor/ovi.
 \endtt
-a tato poznámka při `\def\tmark{CzeCEP}` na svém konci zní
+a tato poznámka při `\def\tmark{CEP}` na svém konci zní
 \uv{\dots a služby králi Nebúkadnesarovi}, zatímco při
-`\def\tmark{CzeBKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
+`\def\tmark{BKR}` zní \uv{\dots a služby králi Nabuchodonozorovi}.
 
 Některé parametry příkazu `\vdef` mohou být prázdné (zapsané jako~`{}`),
 což značí nedefinovanou frázi pro daný jazyk.
@@ -508,7 +508,7 @@ Dále parametr může obsahovat jediný znak `"`, což znamená, že se
 použije stejná fráze, jako v předchozím parametru. Takže naše
 výše uvedená ukázka může také vypadat takto:
 \begtt
-\variants 3 {CzeBKR}         {CzeCEP}       {CzeCSP}
+\variants 3 {BKR}            {CEP}          {CSP}
 \vdef       {Baltazar}       {Beltšasar}    {"}
 \vdef       {Nabuchodonozor} {Nebúkadnesar} {"}
 \vdef       {sedm let}       {"}            {sedm časů}
@@ -596,23 +596,13 @@ se v `<seznam variant>` varianta definovaná v parametru `\tmark`, provede se
 následující `<co provést>`. Nevyskytuje-li se tam taková varianta,
 následující `<co provést>` se přeskočí. Příklad:
 \begtt
-\switch {CzeBKR} {Balsazar}%
-        {CzePSP} {Bélšaccar}%
-        {CzeCSP,CzeCEP,CzeB21,CzeSNC} {Belšasar}
+\switch {BKR} {Balsazar}%
+        {PSP} {Bélšaccar}%
+        {CSP,CEP,B21,SNC} {Belšasar}
 \endtt
 Příklad ukazuje, jak vytisknout slovo Balsazar v závislosti na
 zpracovávané variantě jazyka.
 
-\mnote{\code{\\smark}}
-Pokud je kromě `\tmark` definována ještě
-zkratka pro variantu jazyka `\smark` (například pomocí `\def\smark{CEP}`),
-pak je možné v `<seznam variant>` používat také tyto zkratky, takže předchozí
-příklad  by mohl vypadat následovně:
-\begtt
-\switch {BKR}  {Balsazar}%
-        {PSP}  {Bélšaccar}%
-        {CSP,CEP,B21,SNC} {Belšasar}
-\endtt
 Jakmile \TeX/ najde shodu a provede `<co provést>`, pak případné následující
 údaje v rámci stejného příkazu `\switch` přeskočí. Dále platí pravidlo, že
 pokud je `<seznam vaiant>` prázdný, provede se `<co provést>` vždy, pokud
@@ -649,12 +639,12 @@ tohoto verše, ale celého úseku veršů vymezeného rozsahem `<č-od>-<č-do>`
 
 Například:
 \begtt
-\renum Da 4:16 = CzeCEP 4:13-34
+\renum Da 4:16 = CEP 4:13-34
 \endtt
 znamená, že `\Note 4:16 {sedm let} Sedm období neurčené ...` je poznámka,
-která ve výchozím překladu <varianta-A> (CzeBKR v našem předchozím příkladě)
+která ve výchozím překladu <varianta-A> (BKR v našem předchozím příkladě)
 se váže na text `sedm let`, který je umístěn skutečně ve verši Da~4:16.
-Když ale je `\def\tmark{CzeCEP}`, pak uvedená poznámka `\Note 4:16`
+Když ale je `\def\tmark{CEP}`, pak uvedená poznámka `\Note 4:16`
 se váže na verš Da~4:13 tohoto překladu, ve kterém je vyhledána fráze
 `sedm let`. A k přečíslování dojde i pro následující verše, takže
 4:16 dle BKR je 4:13 dle CEP, 4:17 dle BKR je 4:14 dle CEP, atd., až
@@ -663,7 +653,7 @@ se váže na verš Da~4:13 tohoto překladu, ve kterém je vyhledána fráze
 Má-li se přečíslování týkat jediného verše, je třeba uvést shodné
 `<č-od>` i `<č-do>`, tedy například
 \begtt
-\renum Da 4:16 = CzeCEP 4:13-13
+\renum Da 4:16 = CEP 4:13-13
 \endtt
 
 \sec[odkazy] Metody vytváření hyperlinkových odkazů
@@ -936,12 +926,12 @@ Hlavní soubor pro použití OP-Bible může vypadat takto:
 \begtt
 \load[op-bible]  % macros OP-Bible
 
-\def\tmark     {CzeBKR}            % Variant of translation
-\input {sources/\tmark-books.tex}  % Book titles and marks
+\def\tmark     {BKR}                  % Variant of translation
+\input {sources/Cze\tmark-books.tex}  % Book titles and marks
 
-\def\txsfile   {sources/\tmark-\bmark.txs}     % Localization of .txs files
-\def\fmtfile   {formats/fmt-\tmark-\bmark.tex} % Localisation of fmts
-\def\notesfile {notes/notes-\bmark.tex}        % Localisation of notes
+\def\txsfile   {sources/Cze\tmark-\bmark.txs}     % Localization of .txs files
+\def\fmtfile   {formats/fmt-Cze\tmark-\bmark.tex} % Localisation of fmts
+\def\notesfile {notes/notes-\bmark.tex}           % Localisation of notes
 
 \def\nochapbooks {Abd Fm 2Jn 3Jn Ju}  % Books without chapters
 \def\printedbooks {%
@@ -961,7 +951,7 @@ Pomocí `\load[op-bible]` načte \TeX/ makra OP-Bible.
 souborů. Je nutno je definovat pomocí `\def`. V ukázce je označení pro
 český překlad podle Bible Kralické.
 
-`\input {sources/\tmark-books.tex}` přečte soubor, kde jsou pomocí
+`\input {sources/Cze\tmark-books.tex}` přečte soubor, kde jsou pomocí
 `\BookTitle` deklarovány potřebné vazby mezi `<b-značkou>`, `<a-značkou>` a
 titulem knihy. Formát příkazu `\BookTilte` je následující:
 
@@ -1014,8 +1004,8 @@ Je také možné mít některé typy souborů pojmenované podle <b-značky> a j
 podle <a-značky>, například:
 
 \begtt
-\def\txsfile   {sources/\tmark-\bmark.txs}        % Localization of .txs files
-\def\fmtfile   {formats/fmt-\tmark-\amark.tex}    % Localisation of fmts
+\def\txsfile   {sources/Cze\tmark-\bmark.txs}     % Localization of .txs files
+\def\fmtfile   {formats/fmt-Cze\tmark-\amark.tex} % Localisation of fmts
 \def\notesfile {notes/notes-\amark.tex}           % Localisation of notes
 \endtt
 

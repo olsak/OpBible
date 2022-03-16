@@ -893,7 +893,7 @@
    \_doc
    The `\switch` macro reads a pair of parameters using `\switchA`
    and processes the list of variants in `\foreach` loop. If an element from
-   the list is equal with `\smark` or `\tmark` then the `#2` (saved in
+   the list is equal with `\tmark` then the `#2` (saved in
    `\switchD` token list) is run and next parameter pairs are read by
    `\switchN`, i.e. they are ignored.\nl
    The `\``Note` and `\``ww` are defined as `\outer` in order to better diagnose
@@ -913,9 +913,7 @@
 }
 \def\switchB{\ifx\next\bgroup \unsetouter \ea\switchN \else \setouter \fi}
 \long\def\switchI #1#2{\futurelet\next\switchB}
-\def\switchC{\ifx\tmp\smark \the\switchD
-             \else\ifx\tmp\tmark \the\switchD \fi\fi
-}
+\def\switchC{\ifx\tmp\tmark \the\switchD \fi}
 \def\unsetouter{\slet{ww}{relax}\slet{Note}{relax}}
 \def\setouter{\slet{ww}{iww}\slet{Note}{iNote}}
 \let\iww=\ww     % backup of outer ww
