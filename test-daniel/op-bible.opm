@@ -60,6 +60,183 @@
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec The main loop over Bible books
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   The `\processbooks` macro does two loops over all `\printedbooks`.
+   The `\printedbooks` list can or cannot be finalized by a space.
+   The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
+   The second loop body does:
+   \begitems
+   * Defines `\bmark` as <b-mark> (a mark of the book used in file names).
+   * Defines `\amark` as <a-mark> (an actual mark of the book used in the text
+     and maybe in the filenames).
+   * Defines `\btit` as the book title.
+   * Prints title of the book to the terminal and to the log.
+   * Calls `\NewBook{<title>}{<a-mark>}`
+   * Calls `\bex!<a-mark>` in order to set something extra.
+   * Inputs introduction file.
+   * Inputs format definition file.
+   * Inputs notes file.
+   * Calls `\bpr!<a-mark>` in order to print a preface of the book,
+   * Inputs txs file with original text of the Bible using `\bibleinput`,
+     i.e.\ prints the text.
+   * Calls `\bpo!<a-mark>` in order to print a closing text of the book.
+   \enditems
+   \_cod
+
+\def\processbooks {\par
+   \checknochapbooks
+   \ea\processbooksA \printedbooks\ignoreit. {}
+   \ea\processbooksB \printedbooks\ignoreit. {}
+}
+\def\processbooksA #1 {%
+   \if\relax#1\relax \else \sxdef{pbook!#1}{}\ea\processbooksA \fi
+}
+\def\processbooksB #1 {%
+   \if\relax#1\relax \else
+      \edef\amark{#1}
+      \edef\bmark{\cs{f!#1}}
+      \edef\btit{\cs{btit!#1}}
+      \begingroup
+         \wterm{** \cs{btit!#1} {#1} **}
+         \NewBook{#1}
+         \cs{bex!#1}
+         \begblock
+         \input{\introfile}
+         \endblock
+         \input{\fmtfile}
+         \input{\notesfile}
+         \cs{bpr!#1}
+         \bibleinput{\txsfile}
+         \cs{bpo!#1}
+      \endgroup
+      \ea \processbooksB
+   \fi
+}
+\def\setheadline{\global\headline={\headfont
+   \ifodd\pageno
+       \rlap{\it\bibname\hss}%
+       \hfil \the\pageno\hfil
+       \hbox to\lrmargin{\hss\bf\btit\ifx^\botmark^\else\space \botmark\fi}%
+       \kern-\lrmargin
+   \else
+       \kern-\lrmargin
+       \hbox to\lrmargin{\bf\btit\ \firstmark\hss}%
+       \hfil\the\pageno\hfil
+       \llap{\hss\it\bibname}%
+   \fi
+   }
+}
+
+   \_doc
+   `\NewBook``{<a-mark>}` ejects previous page, prepeares header and prints the book title.
+   \_cod
+
+\def\NewBook#1{\vfil\supereject
+   \def\currbook{#1}\let\prelinkB=\currbook \chapnum=0
+   \def\prelinkC{0}
+   \global\headline={\hfil\setheadline}
+   \line{\hss\bookfont\btit\hss}
+   \par\nobreak\medskip
+}
+
+   \_doc
+   Text block with grey background splittable to more pages ised for
+   introduction text, see OpTeX trick 0031.
+   \_cod
+
+\newcount\blocklevel  % nesting level of blocks
+\def\begblock{\par\bgroup
+   \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
+   \medskip
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
+   \nobreak \medskip
+}
+\def\endblock{\par\nobreak\medskip
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
+   \medskip \egroup
+}
+\refdecl{%
+   \def\Xblock#1#2#3{\ifnum#1=1 \edef\tmp{frm:\ea\ignoresecond\_currpage}^^J
+      \unless\ifcsname \tmp \endcsname \sxdef{\tmp}{}\fi^^J
+      \sxdef{\tmp}{\cs{\tmp}#2{#3}}\fi}
+}
+\newdimen\frtop \newdimen\frbottom % positions of top and bottom text on the pages
+\def\frcolor{.9 g } % light grey -- color of blocks.
+\pgbackground={%
+   \slet{tmp}{frm:\the\pageno}
+   \ifx\tmp\undefined \def\tmp{}\fi
+   \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
+   \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
+   \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
+   \ea\printframes \tmp B{0}E{\number\frbottom}
+   \ifx\frameslist\empty \else
+   \pdfliteral{q \frcolor 1 0 0 1 0 \bp{-\pdfpageheight} cm \frameslist Q}\fi
+}
+\def\printframes B#1#2E#3{\ifnum#1=0 \else
+   \printframe {\hoffset}{#3sp}{\_xhsize}{\ifnum#1=-1 \number\frtop\else#1\fi sp-#3sp}
+   \ifx^#2^\else \global\let\frnext=y \let\printframes=\relax \fi
+   \expandafter\printframes\fi
+}
+\def\frameslist{}
+\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
+    \bp{#1} \bp{#2} \bp{#3} \bp{#4} re f }%
+}
+
+   \_doc
+   We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
+   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
+   There is a list of single-chapter books `\nochapbooks`. User
+   must define it. The marks of these single-chapter books are separated by spaces
+   here. The first and the last space are added to the `\nochapbooks`
+   macro because we need them in `\brefBookChapter`.
+   \_cod
+
+\def\checknochapbooks {%
+   \ifx\nochapbooks\undefined
+      \printwarn{\noexpand\nochapbooks (boks without chapters) undefined.}%
+      \def\nochapbooks{}%
+   \else  \edef\nochapbooks{\space\nochapbooks\space}\fi
+}
+
+   \_doc
+   Note that each book of the Bible is processed in the group.
+   It means that all data from notes, formats etc. are stored
+   in the memory only temporary for processing single book. After
+   the Book is finalized, the \TeX/ memory is freed.
+
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Book titles
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   The macro `\BookTile <b-mark> <a-mark> {<title>}` declares titles
+   of each Bible books. The <b-mark> is a book mark used in file names
+   and <a-mark> is an actual book mark used in printed text.
+
+   The mapping is done here:
+   `\def\btit!<a-mark>{<title>}`, `\def\f!<a-mark>{<b-mark>}`.
+
+   The macro is defined as `\outer` because we don't want to see obscure
+   errors due to missing a space after `<b-mark>` or `<a-mark>`.
+   \_cod
+
+\outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
+
+   \_doc
+   The `\BookException <a-mark> {<code>}` macro adds the <code> to the
+   `\bex!<a-mark>` macro. It is used in`\processbooks`
+   loop in the group before files are read. You can redefine some filenames
+   or something more special here.\nl
+   Macros `\BookPre` and `\BookPost` are defined similarly.
+   \_cod
+
+\long\def\myaddto#1#2{\ifcsname#1\endcsname
+   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
+\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
+\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
+\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Actions
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We create the output in two steps. First step: the data from `\Note`
@@ -416,125 +593,6 @@
 }
 
    \_doc
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   \sec Book titles
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The macro `\BookTile <b-mark> <a-mark> {<title>}` declares titles
-   of each Bible books. The <b-mark> is a book mark used in file names
-   and <a-mark> is an actual book mark used in printed text.
-
-   The mapping is done here:
-   `\def\btit!<a-mark>{<title>}`, `\def\f!<a-mark>{<b-mark>}`.
-
-   The macro is defined as `\outer` because we don't want to see obscure
-   errors due to missing a space after `<b-mark>` or `<a-mark>`.
-   \_cod
-
-\outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
-
-   \_doc
-   The `\BookException <a-mark> {<code>}` macro adds the <code> to the
-   `\bex!<a-mark>` macro. It is used in`\processbooks`
-   loop in the group before files are read. You can redefine some filenames
-   or something more special here.\nl
-   Macros `\BookPre` and `\BookPost` are defined similarly.
-   \_cod
-
-\long\def\myaddto#1#2{\ifcsname#1\endcsname
-   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
-\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
-\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
-\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
-
-   \_doc
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   \sec Processing books of the Bible
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The `\processbooks` macro does two loops over all `\printedbooks`.
-   The `\printedbooks` list can or cannot be finalized by a space.
-   The first loop body sets `\pbook!<a-mark>` used for hyperlinks.
-   The second loop body does:
-   \begitems
-   * Defines `\bmark` as <b-mark> (a mark of the book used in file names)
-   * Defines `\amark` as <a-mark> (an actual mark of the book used in text)
-   * Defines `\btit` as the book title.
-   * Calls `\bex!<a-mark>` in order to set something extra.
-   * Calls `\BibleBook{<title>}{<a-mark>}`
-   * Prints title of the book to the terminal and to the log.
-   * Inputs format definition file.
-   * Inputs notes file.
-   * Calls `\bpr!<a-mark>` in order to print a preface of the book,
-   * Inputs txs file with original text of the Bible using `\bibleinput`,
-     i.e.\ prints the text.
-   * Calls `\bpo!<a-mark>` in order to print a closing text of the book.
-   \enditems
-   \_cod
-
-\def\processbooks {\par
-   \checknochapbooks
-   \ea\processbooksA \printedbooks\ignoreit. {}
-   \ea\processbooksB \printedbooks\ignoreit. {}
-}
-\def\processbooksA #1 {%
-   \if\relax#1\relax \else \sxdef{pbook!#1}{}\ea\processbooksA \fi
-}
-\def\processbooksB #1 {%
-   \if\relax#1\relax \else
-      \edef\amark{#1}
-      \edef\bmark{\cs{f!#1}}
-      \edef\btit{\cs{btit!#1}}
-      \begingroup
-         \ea\BibleBook\ea{\btit}{#1}
-         \setheadline
-         \cs{bex!#1}
-         \wterm{** \cs{btit!#1} {#1} **}
-         \input{\fmtfile}
-         \input{\notesfile}
-         \cs{bpr!#1}
-         \bibleinput{\txsfile}
-         \cs{bpo!#1}
-      \endgroup
-      \ea \processbooksB
-   \fi
-}
-\def\setheadline{\global\headline={\headfont
-   \ifodd\pageno
-       \rlap{\it\bibname\hss}%
-       \hfil \the\pageno\hfil
-       \hbox to\lrmargin{\hss\bf\btit\ \botmark}%
-       \kern-\lrmargin 
-   \else
-       \kern-\lrmargin
-       \hbox to\lrmargin{\bf\btit\ \firstmark\hss}%
-       \hfil\the\pageno\hfil
-       \llap{\hss\it\bibname}%
-   \fi
-   }
-}
-
-
-   \_doc
-   We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
-   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
-   There is a list of single-chapter books `\nochapbooks`. User
-   must define it. The marks of these single-chapter books are separated by spaces
-   here. The first and the last space are added to the `\nochapbooks`
-   macro because we need them in `\brefBookChapter`.
-   \_cod
-
-\def\checknochapbooks {%
-   \ifx\nochapbooks\undefined
-      \printwarn{\noexpand\nochapbooks (boks without chapters) undefined.}%
-      \def\nochapbooks{}%
-   \else  \edef\nochapbooks{\space\nochapbooks\space}\fi
-}
-
-   \_doc
-   Note that each book of the Bible is processed in the group.
-   It means that all data from notes, formats etc. are stored
-   in the memory only temporary for processing single book. After
-   the Book is finalized, the \TeX/ memory is freed.
-
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Bible references
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1112,7 +1170,7 @@
          \def\Article[##1]{\endinput}
          \penalty0
          \long\def\searcharticle##1\Article[#2]{}
-         \ea\searcharticle \input articles-Da.tex \relax}
+         \ea\searcharticle \input \articlefile \relax}
       \splittopskip=12pt
       \setbox1=\vsplit0 to0pt % adding \splittopskip
       \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
@@ -1278,8 +1336,6 @@
 
 \newcount \chapnum
 \def\source#1{}
-\def\BibleBook#1#2{\def\currbook{#2}\let\prelinkB=\currbook
-   \bigskip \line{\hss\bookfont #1\hss}\par\nobreak\medskip \chapnum=0 }
 
 \def\dopsat{{\Red !!! DOPSAT !!! }}
 
