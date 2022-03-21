@@ -630,7 +630,7 @@
 \def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
 \def\bref #1>{\let\brefH=\relax \def\linkspec{#1}\isnextchar"{\brefA}{\brefA""}#1>}
 \def\brefA"#1"{\def\ltextP{#1}%
-   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }
+   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }%
       {\isnextchar{_}{\def\brefH{}\afterassignment\brefB\let\next= }{\brefB}}%
 }
 \def\brefB #1>{% #1 is link-spec
@@ -743,7 +743,7 @@
    \ensuredest \createlink
 }
 \def\linkfspecone #1:#2\end{\def\linkfspec{#1:1}\def\prelinkV{1}}
-\def\linkfspecarticle #1:#2\end{\def\linkfspec{#1}}
+\def\linkfspecarticle #1/#2:#3\end{\def\linkfspec{#1/#3}}
 \def\linkfspecintro #1/#2\end{\def\linkfspec{#1/}}
 
 \def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
@@ -1133,10 +1133,11 @@
    \endbot
 }
 \def\botTitle#1[#2]{\hbox{\captionfont
-   \ifx^#2^\else \label[#2]\wlabel{#1}\fi
+   \ifx^#2^\else \label[#2]\wlabel{#1}\trymakedest{\btit:\currbook/#2}\fi
    \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
 }
 \picdir={images/}
+\def\btit{im}
 
    \_doc
    `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
@@ -1164,8 +1165,9 @@
 \def\doArticle#1[#2](#3){% {Title}[number](params)
    \botinsert
       \incr\articlenum
+      \def\btit{a}
       \parindent=12pt \iindent=\parindent
-      \setbox0=\vbox{\hsize=.458\hsize
+      \setbox0=\vbox{\hsize=.458\hsize \emergencystretch=1em
          \hbadness=6000 \baselineskip=\dimexpr\baselineskip plus1pt
          \def\Article[##1]{\endinput}
          \penalty0
