@@ -35,12 +35,12 @@
    Fonts.
    \_cod
 
+\fontfam[lm]
 \fontfam[Heros]        % fonts for notes
 \isfile{f-biblon.opm}\iftrue
    \fontfam[biblon]    % fonts for Bible text
 \else
-   \fontfam[lmfonts]   % alternative font for Bible text
-   \let\Biblon=\relax
+   \let\Biblon=\LMfonts
 \fi
 
 \fontdef\bookfont{\setfontsize{at19.pt}\bf}
@@ -742,8 +742,8 @@
    \ifx\ltextV\empty \ifx\ltextC\empty \else \ea\linkfspecone \linkfspec\end \fi\fi
    \if a\linkpre\relax \ea\linkfspecarticle \linkfspec\end \fi
    \if i\linkpre\relax \ea\linkfspecintro \linkfspec\end \fi
-   \linklog{\sspace <\linkspec>\linkpost = [\linkpre:\linkfspec]%
-                                           {\ifx\brefH\empty\ltextP\else\linktext\fi}}%
+   \linklog{\sspace <\unexpanded\ea{\linkspec}>\linkpost = [\linkpre:\linkfspec]%
+           {\ifx\brefH\empty\unexpanded\ea{\ltextP}\else\unexpanded\ea{\linktext}\fi}}%
    \ensuredest \createlink
 }
 \def\linkfspecone #1:#2\end{\def\linkfspec{#1:1}\def\prelinkV{1}}
@@ -1233,7 +1233,7 @@
 \newcount\citenum
 \def\dotopCite #1{%
    \topinsert
-   \typosize[12/16]\bf
+   \typosize[12/16]\bi
    \incr\citenum
    \ifodd \trycs{ct!\the\citenum}{0}\relax
        \leftskip=.3\hsize plus1fil \parfillskip=0pt
@@ -1244,11 +1244,12 @@
        \rightskip=.3\hsize plus 1fil
        \noindent \llap{\copy\lqqbox}%
    \fi
-   {\Grey#1\unskip}\par
+   {\printCite{#1}\unskip}\par
    \_ewref\sxdef{{ct!\the\citenum}{\string\mypage}}%
 %   \vskip-.3\baselineskip
    \endinsert
 }
+\def\printCite#1{\pdfliteral{2 Tr .15 w .9 g}#1\pdfliteral{0 Tr 0 w 0 g}}
 
    \_doc
    The `\lqbox` and `\rqbox` include the graphical marks for quotations. First
@@ -1309,7 +1310,7 @@
            \setbox0\vbox{%
               \medskip \noindent
               \llap{\copy\lqqbox}\ignorespaces
-              \cs{c!\the\articlenum!\citelabel}\medskip}%
+              \printCite{\cs{c!\the\articlenum!\citelabel}}\medskip}%
            \hbox{\kern-\parindent\rlap{\White
               \vrule height\ht0 width\dimexpr\hsize}\box0}%
         \else
@@ -1318,7 +1319,7 @@
            \setbox0\vbox{%
               \medskip \noindent
               \rlap{\hskip\hsize\kern-\parindent\copy\rqqbox}\hfill
-              \ignorespaces \cs{c!\the\articlenum!\citelabel}\medskip}%
+              \ignorespaces \printCite{\cs{c!\the\articlenum!\citelabel}}\medskip}%
            \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
         \fi
    \vskip6pt
@@ -1326,6 +1327,97 @@
 
 \def\swapCites{\def\citepg{1}}
 \def\citepg{0}
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   Insertions into the intro text
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \_cod
+
+%% TBN page 236
+
+\newcount\shapenum
+\newdimen\ii \newdimen\w
+\def\oblom #1 od #2 odsadit #3 {\par \ii=#1 \w=\hsize
+   \ifdim\ii>\_zo \advance\w by-\ii
+   \else \advance\w by\ii \ii=\_zo \fi
+   \shapenum=1 \tmpnum=0 \def\shapelist{}
+   \loop \ifnum\shapenum<#2 \edef\shapelist{\shapelist\_zo\hsize}
+      \advance\shapenum by1 \repeat
+   \loop \edef\shapelist{\shapelist\ii\w}
+      \advance\tmpnum by1 \ifnum\tmpnum<#3 \repeat
+   \advance\shapenum by#3 \edef\shapelist{\shapelist\_zo\hsize}
+   \doshape}
+\def\doshape{\parshape \shapenum \shapelist
+   \message{..... \parshape \shapenum \shapelist}
+} 
+\newcount\globpar
+\ifx\_partokenset \_undefined 
+   \def\doshape{\global\globpar=0 \def\par{\ifhmode\shapepar\fi}}
+   \def\shapepar{\prevgraf=\globpar \parshape\shapenum\shapelist
+      \endgraf \global\globpar=\prevgraf
+      \ifnum \prevgraf>\shapenum \let\par=\endgraf \fi}
+\else
+   \def\doshape{\global\globpar=0 \def\_par{\ifhmode\shapepar\fi}}
+   \def\shapepar{\prevgraf=\globpar \parshape\shapenum\shapelist
+      \endgraf \global\globpar=\prevgraf
+      \ifnum \prevgraf>\shapenum \let\_par=\endgraf \fi}
+\fi
+
+\def\Citehereleft #1 (#2) #3{{
+   \par
+           \def\quotedby{\par\hfill}
+           \rightskip=\parindent plus1fil \leftskip=0pt
+           \setbox0\vbox{{%
+             \typosize[12/16]\bi\Grey
+              \hsize=.5\hsize
+              \medskip \noindent
+              \llap{\copy\lqqbox}\ignorespaces
+              \printCite{#3}\medskip}}%
+   \tmpdim=\ht0 \advance\tmpdim by\baselineskip
+   \xdef\lines{\the\numexpr \number\tmpdim / \number\baselineskip \relax}
+   \nointerlineskip\vbox to0pt{\kern#1\baselineskip #2
+           \hbox{\rlap{\White
+              \kern-3mm\vrule height\ht0 width.5\hsize}\box0}%
+   \vss}}
+   \tmpdim=\hsize \advance\tmpdim by-2\leftskip
+   \oblom {.5\tmpdim} od #1 odsadit {\lines}
+}
+\def\Citehereright #1 (#2) #3{{
+   \par
+           \def\quotedby{\par\parfillskip=0pt \hfill}
+           \leftskip=\parindent plus1fil \rightskip=0pt
+           \setbox0\vbox{{%
+             \typosize[12/16]\bi\Grey
+              \hsize=.5\hsize
+              \medskip \noindent \rlap{\kern-\leftskip\kern-2mm\kern\hsize\copy\rqqbox}
+              \ignorespaces
+              \printCite{#3}\medskip}}%
+   \tmpdim=\ht0 \advance\tmpdim by\baselineskip
+   \xdef\lines{\the\numexpr \number\tmpdim / \number\baselineskip \relax}
+   \nointerlineskip\vbox to0pt{\kern#1\baselineskip #2
+        \hbox to\hsize{\hss
+           \llap{\White \vrule height\ht0 width.5\hsize \kern-3mm}%
+           \llap{\box0}}
+   \vss}}
+   \tmpdim=\hsize \advance\tmpdim by-2\leftskip
+   \oblom {-.5\tmpdim} od #1 odsadit {\lines}
+}
+
+\def\Citehere{\par \ifodd\pageno \ea\Citehereright \else \ea\Citehereleft \fi}
+
+\def\insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
+   \botinsert
+      \botTitle{#1}[#3]%
+      \kern3pt \nobreak
+      \vbox{\picw=\hsize #5 #6}%
+   \endbot
+}
+
+\def\c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
+   \pdfsave\pdfrotate{#1}\rlap{\edef\tmpb{#3}\replstring\tmpb{ }{{ }}\def\tmpa{#2}%
+                 \ea\foreach\tmpb\do{##1\tmpa}}\pdfrestore \kern10mm
+}
 
 
    \_doc

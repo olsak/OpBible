@@ -1,0 +1,114 @@
+\initunifonts
+\font\HebrewFont=[Shlomo]
+\font\OldPersianFont=[OldPersianCuneiformRegular]
+
+\def\Hebrew {\setfontsize{mag.85}\HebrewFont\resizethefont}
+\def\OldPersian {\OldPersianFont\resizethefont}
+
+\chardef \Aleph       1488
+\chardef \Bet         1489
+\chardef \Gimel       1490
+\chardef \Dalet       1491
+\chardef \He          1492
+\chardef \Waw         1493
+\chardef \Zayin       1494
+\chardef \Chet        1495
+\chardef \Tet         1496
+\chardef \Yod         1497
+\chardef \FinalKaf    1498
+\chardef \Kaf         1499
+\chardef \Lamed       1500
+\chardef \FinalMem    1501
+\chardef \Mem         1502
+\chardef \FinalNun    1503
+\chardef \Nun         1504
+\chardef \Samech      1505
+\chardef \Ayin        1506
+\chardef \FinalPe     1507
+\chardef \Pe          1508
+\chardef \FinalTsadik 1509
+\chardef \Tsadik      1510
+\chardef \Qof         1511
+\chardef \Resh        1512
+\chardef \Tav         1514
+
+%Accents:
+\chardef \Geresh      1523
+\chardef \Gershayi    1524
+\chardef \Dagesh      1468
+
+\def\DageshBet        {\kern.25em \Dagesh \kern-.25em \Bet}
+\def\DageshGimel      {\kern.1em  \Dagesh \kern-.1em  \Gimel}
+\def\DageshDalet      {\kern.25em \Dagesh \kern-.25em \Dalet}
+\def\DageshKaf        {\kern.25em \Dagesh \kern-.25em \Kaf}
+\def\DageshFinalKaf   {\kern.25em \Dagesh \kern-.25em \FinalKaf}
+\def\DageshTav        {\kern.3em  \Dagesh \kern-.3em  \Tav}
+\def\DageshPe         {\kern.35em \Dagesh \kern-.35em \Pe}
+\def\DageshYod        {\quitvmode\raise.05em\hbox{\\1\Dagesh}\Yod}
+
+\chardef \Hiriq       1460
+\chardef \Tsere       1461
+\chardef \Segol       1462
+\chardef \Patach      1463
+\chardef \Kamatz      1464
+\chardef \HolamHaser  1465
+\chardef \HolamMale   1466
+\chardef \Kubutz      1467
+\chardef \Shuruk      1468
+\chardef \Shva        1456
+\chardef \ShvaSegol   1457
+\chardef \ShvaPatach  1458
+\chardef \ShvaKamatz  1459
+\chardef \SofPasuq    1475
+\chardef \Munach      1443
+\chardef \Metheg      1469
+\chardef \Zaqefqaton  1428
+\chardef \Segolta     1426
+\chardef \Cholem      1474
+\chardef \Atnach      1425
+\chardef \Maqef       1470
+
+\def\Sin        {\char1465 \char1513 } % "Sin is never right!"
+\def\Shin       {\char1473 \char1513 }
+
+\def\MappiqHe      {\Dagesh \kern-.25em \He}
+\def\Rebia         {\kern0.2em  \char1476 \kern-0.2em }
+\def\Zaqefgadol    {\kern0.25em \char1429 \kern-0.25em }
+
+
+% Words:
+
+\def\\#1#2{\kern0.#1em  #2\kern-0.#1em }
+\def\!#1#2{\kern-0.#1em #2\kern0.#1em }
+
+\def \Karan        {{\Hebrew \FinalNun\\4{\Patach}\Resh\\3\Kamatz\Qof}} %karan záøila Ex 34:30
+\def \Keren        {{\Hebrew \FinalNun\\4\Segol\Resh\\3\Segol\Qof}} %keren roh 1 Sam 16:13
+\def \Tsaba        {{\Hebrew \Aleph\\{25}\Kamatz\Bet\\{15}\Kamatz\Dagesh\!1\Tsadik}}
+\def \Chartumim    {{\Hebrew \FinalMem\Yod\\3\Dagesh\\3\Hiriq\Mem\\2\Kubutz\Tet\\5\Shva\Resh\\2\Patach\Chet}}
+\def \Ashapim      {{\Hebrew \FinalMem\Yod\\{25}\Hiriq\Pe\\{35}\Dagesh\\2\Kamatz\Shin\\2\Patach\Aleph}}
+\def \Idan         {{\Hebrew \FinalNun\\4\Kamatz\DageshDalet\\2\Hiriq\Ayin}}
+\def \Shmajabar    {{\Hebrew \Resh\\{25}\Patach\Bet~\Aleph\\1\Kamatz\\{075}\Dagesh\Yod\\3\Patach\Mem\\{275}\Shva\Shin}}
+\def \BenAdam      {{\Hebrew \FinalMem\\{35}\Kamatz\Dalet\\2\Kamatz\Aleph\Maqef\FinalNun\\2\Segol\DageshBet}}
+\def \Emek         {{\Hebrew \Qof\\3\Kamatz\Mem\\1\Tsere\Ayin}}
+\def \Gai          {{\Hebrew \Aleph\\2\Shva\Yod\\{05}\Patach\DageshGimel}}
+\def \Naar         {{\Hebrew \Resh\\1\Patach\Ayin\\1\Patach\Nun}}
+\def \Nurav        {{\Hebrew \Waw\Yod\\4\Kamatz\Resh\\2\Kubutz\Ayin\\1\Shva\\1\Dagesh\Nun}}
+\def \Homlak       {{\Hebrew \quitvmode\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Shva\Mem\\2\Kamatz\He}}
+\def \Malak        {{\Hebrew \quitvmode\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Kamatz\Mem}}
+\def \Qabbel       {{\Hebrew \Lamed\\2\Tsere\DageshBet\\2\Patach\Qof}}
+\def \Dariawush    {{\Hebrew \Shin\\1\Segol\Waw\\2\Kamatz\Yod\\4\Shva\Resh\\3\Kamatz\Dalet}}
+\def \Dariahuuish  {{\OldPersian\char100 \char97 \char114 \char121 \char118 \char117 \char83}}
+\def \PRS          {{\Hebrew \Samech\\3\Tsere\Resh\\2\Shva\DageshPe}}
+\def \Persat       {{\Hebrew \Tav\\2\Patach\Samech\Yod\\4\Hiriq\Resh\\2\Shva\DageshPe}}
+\def \Paras        {{\Hebrew \Samech\\4\Kamatz\Resh\\2\Kamatz\Pe}}
+\def \LaMedeUParas {{\Hebrew \Samech\\4\Kamatz\Resh\\2\Kamatz\Pe\\1\Dagesh\Waw \space \Yod\\4\Patach\Dalet\\2\Kamatz\Mem\\2\Shva\Lamed}}
+\def \ErevBoker    {{\Hebrew \Resh\\3\Segol\Qof\Cholem\DageshBet\space\Bet\\4\Segol\Resh\\2\Segol\Ayin}}
+\def \Ahasueros    {{\Hebrew \Shin\Cholem\Waw\Resh\\1\Tsere\Waw\\3\Shva\Shin\\2\Patach\Chet\\2\ShvaPatach\Aleph}}
+\def \Xerxes       {{\OldPersian \char72 \char83 \char121 \char97 \char114 \char83 \char97}}
+\def \Raza         {{\Hebrew \He\\1\Kamatz\Zayin\\4\Kamatz\Resh}}
+\def \Raz          {{\Hebrew \Zayin\\4\Kamatz\Resh}}
+\def \Kasdain      {{\Hebrew \FinalNun\Yod\\3\Hiriq\Aleph\\4\Kamatz\DageshDalet\\3\Shva\Sin\\2\Patach\DageshKaf}}%3:8
+\def \BarElohin    {{\Hebrew \FinalNun\Yod\\3\Hiriq\He\\2\Patach\Lamed\\1\ShvaSegol\Aleph\Maqef\Resh\\2\Patach\Bet}}
+\def \Shamai       {{\Hebrew \Aleph\\1\Kamatz\DageshYod\\3\Patach\Mem\\3\Shva\Shin}}
+
+
