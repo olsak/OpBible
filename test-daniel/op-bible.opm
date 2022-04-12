@@ -1386,13 +1386,12 @@
 \def\Citehereright #1 (#2) #3{{
    \par
            \def\quotedby{\par\parfillskip=0pt \hfill}
-           \leftskip=\parindent plus1fil \rightskip=0pt
+           \leftskip=\parindent plus1fill \rightskip=0pt
            \setbox0\vbox{{%
              \typosize[12/16]\bi\Grey
               \hsize=.5\hsize
-              \medskip \noindent \rlap{\kern-\leftskip\kern-2mm\kern\hsize\copy\rqqbox}
-              \ignorespaces
-              \printCite{#3}\medskip}}%
+              \vskip\medskipamount \rlap{\kern\hsize\copy\rqqbox}\vskip-\medskipamount
+              \printCite{\noindent\ignorespaces #3}\medskip}}%
    \tmpdim=\ht0 \advance\tmpdim by\baselineskip
    \xdef\lines{\the\numexpr \number\tmpdim / \number\baselineskip \relax}
    \nointerlineskip\vbox to0pt{\kern#1\baselineskip #2
@@ -1413,12 +1412,41 @@
       \vbox{\picw=\hsize #5 #6}%
    \endbot
 }
+\def\putBot #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+   \edef\fullvref{\gentovref{#1}}%
+   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+   \ea\newaction\ea{\fullvrefm}{\insertBot{#2}[#4](#6){#7}}%
+}
 
 \def\c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
    \pdfsave\pdfrotate{#1}\rlap{\edef\tmpb{#3}\replstring\tmpb{ }{{ }}\def\tmpa{#2}%
                  \ea\foreach\tmpb\do{##1\tmpa}}\pdfrestore \kern10mm
 }
 
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Outline
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \_cod
+
+\newdimen\colsep
+\colsep=10pt
+
+\def\Outline{
+   \medskip
+   \everylist={\ifcase\ilevel \or \style I \or \style A \or \style n \fi}
+   \sdef{_item:A}{\strut\uppercase\_ea{\_athe\itemnum}. }
+   \sdef{_item:I}{\strut\uppercase\_ea{\_romannumeral\itemnum}. }
+   \hsize=.5\hsize \advance\hsize by-\colsep
+   \emergencystretch=40pt
+   \filbreak
+   \leftskip=0pt \rightskip=0pt
+}
+\def\rightnote#1{\par
+   \setbox0=\hbox{\kern\hsize \kern\colsep
+                  \vtop{\leftskip=0pt \kern0pt\noindent\strut\it#1}}
+   \ht0=0pt \dp0=0pt \box0 \nointerlineskip
+}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
