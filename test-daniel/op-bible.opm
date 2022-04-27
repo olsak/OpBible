@@ -104,6 +104,7 @@
          \isfile{\introfile}\iftrue
             \begblock
             \dest[i:\currbook]
+            \introtit
             \input{\introfile}
             \endblock
          \fi
@@ -1434,12 +1435,13 @@
 
 \def\Outline{
    \medskip
+   \filbreak
+   \outlinetit
    \everylist={\ifcase\ilevel \or \style I \or \style A \or \style n \fi}
    \sdef{_item:A}{\strut\uppercase\_ea{\_athe\itemnum}. }
    \sdef{_item:I}{\strut\uppercase\_ea{\_romannumeral\itemnum}. }
    \hsize=.5\hsize \advance\hsize by-\colsep
    \emergencystretch=40pt
-   \filbreak
    \leftskip=0pt \rightskip=0pt
 }
 \def\rightnote#1{\par
@@ -1459,6 +1461,9 @@
    \nobreak
 }
 \def\schaptit#1{\bigskip\chaptit{#1}\medskip}
+
+\def\introtit{\chaptit{Úvod}}
+\def\outlinetit{\chaptit{Osnova}}
 
 \newcount \chapnum
 \def\source#1{}
