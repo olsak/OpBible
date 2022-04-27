@@ -1,0 +1,60 @@
+\font\GreekFont=[SBL-grk.ttf]
+\def\Greek{\GreekFont\resizethefont}
+
+\chardef \alpha          945
+\chardef \alphaacc       940
+\chardef \beta           946
+\chardef \gamma          947
+\chardef \delta          948
+\chardef \epsilon        949
+\chardef \zeta           950
+\chardef \eta            951
+\chardef \theta          952
+\chardef \iota           953
+\chardef \iotasubscript  836
+\chardef \kappa          954
+\chardef \lambda         955
+\chardef \mi             956
+\chardef \ni             957
+\chardef \xi             958
+\chardef \omicron        959
+\chardef \pi             960
+\chardef \rho            961
+\chardef \finalsigma     962
+\chardef \sigma          963
+\chardef \tau            964
+\chardef \ypsilon        965
+\chardef \phi            966
+\chardef \chi            967
+\chardef \psi            968
+\chardef \omega          969
+\chardef \tilda          834
+\chardef \perispomene    732
+
+\chardef \grrough         788
+\chardef \grsmooth        787
+\chardef \gracute         697
+\chardef \grdoubleacute   698
+\chardef \grapex          728
+\chardef \grcedilla       184
+\chardef \grbreve         728
+\chardef \grgrave          96
+
+\chardef \grcaron         780
+\chardef \grcircumflex    710
+\chardef \grdiaeresis     776 \let\grumlaut=\grdiaeresis
+\chardef \grdotabove      775
+\chardef \grdotbelow      803
+\chardef \grmacron        772 %175
+\chardef \grlongmacron    773
+
+\def \iotaperispomene    {\iota\kern-0.25em\perispomene}
+\def \omicronacc         {\omicron\char768 }
+\def \ho                 {\omicron\grrough}
+
+\def\Panta    {{\Greek \pi\alphaacc\ni\tau\alpha}}
+\def\Synergei {{\Greek \sigma\ypsilon\ni\epsilon\rho\gamma\epsilon\iotaperispomene}}
+\def\Theos    {{\Greek \theta\epsilon\omicronacc\finalsigma}}
+\def\Eis      {{\Greek \epsilon\iota\ \grsmooth\finalsigma}}
+\def\Agathon  {{\Greek \alpha\grsmooth\gamma\alpha\theta\omicronacc\ni}}
+
