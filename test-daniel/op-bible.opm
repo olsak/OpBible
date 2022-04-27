@@ -1107,7 +1107,7 @@
 \def\botinsert{\setbox0=\vbox\bgroup}
 \def\endbot{\par\egroup
    \insert\botins{\splittopskip=0pt \penalty100
-      \hrule height0pt \nobreak\medskip \unvbox0
+      \hrule height0pt \nobreak\medskip\bigskip \unvbox0
    }%
 }
 \skip\botins=\_zoskip % no space added when a topinsert is present
@@ -1435,7 +1435,7 @@
 
 \def\Outline{
    \medskip
-   \filbreak
+%   \filbreak
    \outlinetit
    \everylist={\ifcase\ilevel \or \style I \or \style A \or \style n \fi}
    \sdef{_item:A}{\strut\uppercase\_ea{\_athe\itemnum}. }
