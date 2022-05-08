@@ -1465,7 +1465,7 @@
    reduced because there is no material in them. 
    \_cod
 
-\def\nomalchapnumbers{
+\def\normalchapnumbers{
    \margins/2 a2 (25,25,20,20)mm
    \lrmargin=0pt
    \setbox0=\box\lqqbox \setbox0=\box\rqqbox
