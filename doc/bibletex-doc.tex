@@ -1046,6 +1046,23 @@ poznámkami podle stanovených formátovacích pokynů.
 Před provedením `\processbook` je možné pomocí `\input` načít další makra,
 která nějakým způsobem ovlivní sazbu výsledné Bible. 
 
+
+\sec Varianty formátování stránek
+
+V implicitní podobě je nastavena jednosloupcová sazba pro hlavní text Bible
+a pro úvody ke knihám a pro anotace. Dvousloupcová sazba je nastavena pro
+poznámky k veršům.
+
+Implicitně jsou čísla kapitol velká a ve vnějším okraji. Ve vnějším okraji jsou též
+zvětšené značky uvozovek připojené k citacím. Příkazem `\normalchapnumbers`
+dojde ke změně tohoto nastavení: čísla kapitol pak jsou vsazena do levého
+horního rohu prvního odstavce a zvětšené značky uvozovek jsou zrušeny.
+Vnější okraj je pak zmenšen, protože v něm už není žádný tiskový materiál.  
+
+Další varianty formátování stránek jsou zatím jen v plánu a nejsou
+implementovány.
+
+
 \sec Způsob zpracování \TeX/em
 
 ...

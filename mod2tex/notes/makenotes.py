@@ -12,7 +12,7 @@ buffname = None
 mainname = filename.split(".")[0]
 
 def writeBuff():
-    with open(mainname+"-"+buffname+".txs",'w', encoding = 'utf-8') as f_buff:
+    with open(mainname+"-"+buffname+".tex",'w', encoding = 'utf-8') as f_buff:
         for buff_line in buff:
             f_buff.write(buff_line)
         
@@ -22,7 +22,7 @@ inside_fence = False
 
 with open(filename,'r', encoding = 'utf-8') as f:
     for iline,line in enumerate(f):
-        print(iline, line)
+#        print(iline, line)
         if(line[:6] == "\kniha"):
             assert inside_fence == False, iline+1
             if(buffname):
@@ -41,7 +41,13 @@ with open(filename,'r', encoding = 'utf-8') as f:
             if line.startswith("<"):
                 assert inside_fence == False, iline+1
                 inside_fence = True
-                line = "#"+line[1:]
+                tmp = line.split(" ")
+                tmp[1] = "{}"
+                if "Ver."==tmp[2]:
+                    line = " ".join(tmp[:2]+tmp[4:])
+                else:
+                    line = " ".join(tmp)
+                line = "\n\\Note "+line[1:]
             assert inside_fence == True, iline+1
             if line.endswith(">"):
                 inside_fence = False

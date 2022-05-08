@@ -72,7 +72,7 @@
      and maybe in the filenames).
    * Defines `\btit` as the book title.
    * Prints title of the book to the terminal and to the log.
-   * Calls `\NewBook{<title>}{<a-mark>}`
+   * Calls `\NewBook{<a-mark>}`
    * Calls `\bex!<a-mark>` in order to set something extra.
    * Inputs introduction file.
    * Inputs format definition file.
@@ -98,8 +98,8 @@
       \edef\bmark{\cs{f!#1}}
       \edef\btit{\cs{btit!#1}}
       \begingroup
-         \wterm{** \cs{btit!#1} {#1} **}
          \NewBook{#1}
+         \wterm{** \cs{btit!#1} {#1} **}
          \cs{bex!#1}
          \isfile{\introfile}\iftrue
             \begblock
@@ -108,8 +108,11 @@
             \input{\introfile}
             \endblock
          \fi
-         \input{\fmtfile}
-         \input{\notesfile}
+         \CommentedBook{#1}
+         \isfile{\fmtfile}\iftrue \input{\fmtfile}
+         \else \printwarn{File with format info \fmtfile\space not found}\fi
+         \isfile{\notesfile}\iftrue \input{\notesfile}
+         \else \printwarn{File with notes \notesfile\space not found}\fi
          \cs{bpr!#1}
          \bibleinput{\txsfile}
          \cs{bpo!#1}
@@ -117,15 +120,15 @@
       \ea \processbooksB
    \fi
 }
-\def\setheadline{\global\headline={\headfont
+\def\setheadline#1{\global\headline={\headfont
    \ifodd\pageno
        \rlap{\it\bibname\hss}%
        \hfil \the\pageno\hfil
-       \hbox to\lrmargin{\hss\bf\btit\ifx^\botmark^\else\space \botmark\fi}%
+       \hbox to\lrmargin{\hss\bf#1\ifx^\botmark^\else\space \botmark\fi}%
        \kern-\lrmargin
    \else
        \kern-\lrmargin
-       \hbox to\lrmargin{\bf\btit\ \firstmark\hss}%
+       \hbox to\lrmargin{\bf#1 \firstmark\hss}%
        \hfil\the\pageno\hfil
        \llap{\hss\it\bibname}%
    \fi
@@ -139,7 +142,7 @@
 \def\NewBook#1{\vfil\supereject
    \edef\currbook{#1}\let\prelinkB=\currbook \chapnum=0
    \def\prelinkC{0}\def\prelinkV{0}
-   \global\headline={\hfil\setheadline}
+   \global\headline={\hfil \ea\setheadline\ea{\btit}}
    \line{\hss\bookfont\btit\hss}
    \par\nobreak\medskip
 }
@@ -1449,6 +1452,30 @@
                   \vtop{\leftskip=0pt \kern0pt\noindent\strut\it#1}}
    \ht0=0pt \dp0=0pt \box0 \nointerlineskip
 }
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Typesetting variants
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   By default, chapter numbers are in the outer margin and quotes characters
+   too. 
+   The `\normalchapnums` macro moves chater numbers to the left side in the
+   first paragraph, cquotes characters are removed and outer margins are
+   reduced because there is no material in them. 
+   \_cod
+
+\def\nomalchapnumbers{
+   \margins/2 a2 (25,25,20,20)mm
+   \lrmargin=0pt
+   \setbox0=\box\lqqbox \setbox0=\box\rqqbox
+   \def\printbeforefirst{%
+      \nobreak\medskip
+      \hangindent=\parindent \hangafter=-2 \noindent 
+      \llap{\vbox to0pt{\kern-8pt\hbox{\setfontsize{at23pt}\bf\Red\the\chapnum\kern5pt}\vss}}%
+   }
+}
+
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
