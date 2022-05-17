@@ -362,19 +362,25 @@
 
 \newcount\notenum
 \outer\def\Note #1 #2{%
-   \incr\notenum
    \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
-   \ifx\nextww\undefined
-      {\def\printwarn##1{}\xdef\tword{\transformword{#2}}}%
-   \else \xdef\tword{\nextww}\fi
-   \isnextchar={\NoteA}{\NoteA={}}%
+   \ea\isversezero\fullvref\iftrue
+      \ea\NoteB
+   \else
+      \incr\notenum
+      \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
+      \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
+      \ifx\nextww\undefined
+         {\def\printwarn##1{}\xdef\tword{\transformword{#2}}}%
+      \else \xdef\tword{\nextww}\fi
+      \afterfi{\isnextchar={\NoteA}{\NoteA={}}}%
+   \fi
 }
 \ifx\_partokenset\undefined
    \def\defnoteA{\def\NoteA=##1##2\par}
+   \def\defnoteB{\def\NoteB##1\par}
 \else
    \def\defnoteA{\def\NoteA=##1##2\_par}
+   \def\defnoteB{\def\NoteB##1\_par}
 \fi
 \defnoteA{%
    \sdef{notetext!\the\notenum}{\ignorespaces#2}%
@@ -394,6 +400,10 @@
       \newaction{#1}{\replpre{\doNote{#2}}{#3}{\notefail{#2}}}%
    \fi
 }
+\defnoteB{%
+   \sdef{!chapnote:\fullvref}{\ignorespaces#1}%
+}
+\def\isversezero#1/#2:#3\iftrue{\ifnum #3=0 }
 
    \_doc
    `\renumlabel` `<full-vref>\relax` expands to the numeric part of
@@ -586,8 +596,9 @@
 \def\printchap{\bigskip}
 
 \def\printbeforefirst{%
-   \par\nobreak
-   \setbox0=\vtop{\kern0pt \_ewref\sxdef{{ch!\currbook/\the\chapnum}{\string\mypage}}
+   \par\nobreak \medskip
+   \printchapnote
+   \setbox0=\vtop{\kern-1.5ex \_ewref\sxdef{{ch!\currbook/\the\chapnum}{\string\mypage}}
                   \hbox{\setfontsize{at50pt}\bf\LiRed\the\chapnum}}
    \dp0=0pt
    \tmpdim=\lrmargin
@@ -596,7 +607,15 @@
    \ifodd\trycs{ch!\currbook/\the\chapnum}{0}
       \moveright\tmpdim \line{\hss\box0}
    \else \moveleft\tmpdim \box0 \fi
+   \nobreak \vskip-\medskipamount
    \nobreak \nointerlineskip \noindent
+}
+\def\printchapnote{%
+   \ifcsname !chapnote:\currbook/\the\chapnum:0\endcsname
+      {\leftskip=\parindent plus1fill \rightskip=\leftskip
+       \noindent\it \cs{!chapnote:\currbook/\the\chapnum:0}\par}
+      \medskip
+   \fi
 }
 
    \_doc
@@ -1471,10 +1490,64 @@
    \setbox0=\box\lqqbox \setbox0=\box\rqqbox
    \def\printbeforefirst{%
       \nobreak\medskip
+      \printchapnote
       \hangindent=\parindent \hangafter=-2 \noindent 
       \llap{\vbox to0pt{\kern-8pt\hbox{\setfontsize{at23pt}\bf\Red\the\chapnum\kern5pt}\vss}}%
    }
 }
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Checking syntax
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \_cod
+
+\def\checksyntax#1{\begingroup 
+   \the\syntaxmacros
+%   \foreach #1,\do##1,{\message{##1}\input{##1}}
+   \input{#1}
+   \endgroup
+}
+\def\fileend{}
+
+\newtoks\syntaxmacros
+{\catcode`<=13
+\global\syntaxmacros{
+\def<#1>{\bgroup
+   \message{checking \unexpanded{<#1>}}%
+   \ifx\relax#1\relax \errmessage{empty link}\nobref\else \checkbref#1>\bref#1>\fi
+   \egroup
+}   
+\def\checkbref#1#2>{%
+   \isinlist{.#1#2}{<}\iftrue \errmessage{duplicated \string<}\nobref\fi
+   \ifx"#1\checkbrefQ #1#2>\else \checkbrefD #1#2>\fi
+}
+\def\checkbrefQ "#1"#2#3>{\checkbrefD #2#3>}
+\def\checkbrefD #1>{%
+      \isinlist{.#1}{ }\iftrue\checkbrefS#1>\else\checkbrefN#1>\fi
+}
+\def\checkbrefS #1 #2>{\checkbrefN#2>}
+\def\checkbrefN #1>{%
+   \def\tmpb{#1}
+   \ifx\tmpb\empty \errmessage{missing link data}\nobref\else
+      \replstring\tmpb{:}{}\replstring\tmpb{-}{}%
+      \setbox0=\hbox{\tmpnum=0\tmpb\relax}%
+      \ifdim\wd0>0pt \errmessage{nonnumeric link data}\nobref\fi
+   \fi
+}
+\def\nobref{\def\bref##1>{{\Red\string<##1>}}}
+\def\currbook{BK}
+\def\prelinkB{BK}
+\def\nochapbooks{BK}
+\let\orix=\x
+\def\x/#1/{\def\tmpb{#1}%
+   \isinlist\tmpb\x\iftrue \badx
+   \else \isinlist\tmp<\iftrue \badx 
+   \else \isinlist\tmp\enditems\iftrue \badx \else \orix/#1/\fi\fi\fi
+}
+\def\badx{\errmessage{unclosed \string\x/.../}}
+%\loggingall
+}}
 
 
    \_doc
@@ -1489,8 +1562,12 @@
 }
 \def\schaptit#1{\bigskip\chaptit{#1}\medskip}
 
-\def\introtit{\chaptit{Úvod}}
-\def\outlinetit{\chaptit{Osnova}}
+\def\introtit{\chaptit{\_mtext{intro}}}
+\def\outlinetit{\chaptit{\_mtext{outline}}}
+
+\sdef{_mt:intro:en}{Introduction}    \sdef{_mt:outline:en}{Outline}  
+\sdef{_mt:intro:cs}{Úvod}            \sdef{_mt:outline:cs}{Osnova}  
+
 
 \newcount \chapnum
 \def\source#1{}
