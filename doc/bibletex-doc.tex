@@ -1063,6 +1063,33 @@ Další varianty formátování stránek jsou zatím jen v plánu a nejsou
 implementovány.
 
 
+\sec Možnosti hledání chyb
+
+Může se stát, že uděláte nějaký překlep v souborech `notes-*`, `intro-*`,
+`articles-*`. Kdybyste soubor rovnou zařadili do celého zpracování Bible,
+TeX ohlásí chybu ve zcela jiném okamžiku, než když četl příslušný soubor a
+zpětné dohledávání takové chyby je velmi obtížné, navíc se typicky chyba
+projeví v jiné fázi zpracování a tedy je oznámena často velmi
+nesrozumitelným a zavádějícím způsobem.
+
+Je ovšem možné nově napsané soubory nejprve zpracovat přímo, ale bez
+propojení s hlavním textem a v takovém módu jsou chyby hlášeny přímočařeji.
+Přímé hledání chyb provedete příkazem `\checksyntax` <seznam souborů> `{}`
+Zde sezmam souborů jsou názvy kontrolovaných souborů bez přípony `.tex`,
+takže například můžete mít na konci hlavního souboru:
+
+\begtt
+\checksyntax intro-Dan articles-Dan notes-Dan {}
+\endtt
+
+provede přímou kontrolu vyjmenovaných souborů. Na výstupu je text těchto
+souborů bez důrazu na jakékoli formátování. Syntaktické chyby v souborech se
+ale projeví přímočaře.
+
+Poznámka: použití `\checksyntax` deaktivuje príkaz `\processbooks`, který v
+takovém případě neprovede nic, takže hlavní text Bible se vůbec nenačte.
+
+
 \sec Způsob zpracování \TeX/em
 
 ...

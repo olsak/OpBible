@@ -1503,6 +1503,7 @@
    \_cod
 
 \def\checksyntax#1 {%
+   \let\processbooks=\relax
    \ifx\relax#1\relax \else
       \begingroup 
       \the\syntaxmacros
