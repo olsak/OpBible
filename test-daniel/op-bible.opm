@@ -1502,11 +1502,14 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \_cod
 
-\def\checksyntax#1{\begingroup 
-   \the\syntaxmacros
-%   \foreach #1,\do##1,{\message{##1}\input{##1}}
-   \input{#1}
-   \endgroup
+\def\checksyntax#1 {%
+   \ifx\relax#1\relax \else
+      \begingroup 
+      \the\syntaxmacros
+      \input{#1}
+      \vfil\break
+      \endgroup
+   \ea\checksyntax \fi 
 }
 \def\fileend{}
 
@@ -1519,8 +1522,8 @@
    \egroup
 }   
 \def\checkbref#1#2>{%
-   \isinlist{.#1#2}{<}\iftrue \errmessage{duplicated \string<}\nobref\fi
-   \ifx"#1\checkbrefQ #1#2>\else \checkbrefD #1#2>\fi
+   \isinlist{.#1#2}{<}\iftrue \errmessage{duplicated \string<}\nobref\else
+   \ifx"#1\checkbrefQ #1#2>\else \checkbrefD #1#2>\fi\fi
 }
 \def\checkbrefQ "#1"#2#3>{\checkbrefD #2#3>}
 \def\checkbrefD #1>{%
@@ -1530,7 +1533,8 @@
 \def\checkbrefN #1>{%
    \def\tmpb{#1}
    \ifx\tmpb\empty \errmessage{missing link data}\nobref\else
-      \replstring\tmpb{:}{}\replstring\tmpb{-}{}%
+      \replstring\tmpb{:}{}\replstring\tmpb{-}{}\replstring\tmpb{_}{}%
+      \replstring\tmpb{a}{}\replstring\tmpb{b}{}\replstring\tmpb{c}{}%
       \setbox0=\hbox{\tmpnum=0\tmpb\relax}%
       \ifdim\wd0>0pt \errmessage{nonnumeric link data}\nobref\fi
    \fi
@@ -1538,7 +1542,11 @@
 \def\nobref{\def\bref##1>{{\Red\string<##1>}}}
 \def\currbook{BK}
 \def\prelinkB{BK}
+\def\prelinkC{BK}
+\def\prelinkV{0}
 \def\nochapbooks{BK}
+\let\<=<
+
 \let\orix=\x
 \def\x/#1/{\def\tmpb{#1}%
    \isinlist\tmpb\x\iftrue \badx
@@ -1546,6 +1554,23 @@
    \else \isinlist\tmp\enditems\iftrue \badx \else \orix/#1/\fi\fi\fi
 }
 \def\badx{\errmessage{unclosed \string\x/.../}}
+
+\def\Article[#1]{}
+\def\Cite #1 {\par\noindent{\bf Cite: }}
+\def\insertCite #1#2{}
+
+\def\putArticle #1 #2[#3]#4(#5){}
+\def\putCite #1:#2 {\par\noindent{\bf Cite: }}
+\def\putBot #1 #2[#3]#4(#5){\vbox}
+
+\ifx\_partokenset\undefined
+   \def\tmp{\long\ea\def\csname Note\endcsname ##1 ##2##3\par}
+\else
+   \def\tmp{\long\ea\def\csname Note\endcsname ##1 ##2##3\_par}
+\fi
+
+\tmp {\par\noindent{\bf Note #1:} #3\par}
+
 %\loggingall
 }}
 
