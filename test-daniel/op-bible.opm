@@ -1203,6 +1203,7 @@
       \splittopskip=12pt
       \setbox1=\vsplit0 to0pt % adding \splittopskip
       \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
+      \ifdim \dimexpr 2\pagegoal-2\pagetotal > \ht0 \tmpnum=1 \fi
       \multiply\tmpnum by2 % number of columns
       \edef\_Ncols{\the\tmpnum}
       \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0
@@ -1507,6 +1508,7 @@
    \ifx\relax#1\relax \else
       \begingroup 
       \the\syntaxmacros
+      \wterm{^^J** checking file: #1 **^^J}
       \input{#1}
       \vfil\break
       \endgroup
