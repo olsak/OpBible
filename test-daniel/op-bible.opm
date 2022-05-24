@@ -1112,11 +1112,8 @@
    \fi
    \unless\ifvoid\botins \unvbox\botins
    \else \vskip 0pt plus1filll minus8pt \fi
-   \bottomref
 }
 \_def \noterule {\_kern-3pt {\Black \_hrule width\hsize}\_kern 2.6pt }
-
-\def\bottomref{\pdfsavepos \_wref\Xbottompos{{\the\pdflastypos}}\glet\bottomref=\relax}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1173,24 +1170,23 @@
    `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
    inserts an article given in the file `articles-*.tex` signed by
    `\Article [<label>]`. The article starts at the page where
-   <chapter>:<verse> is. We register a new action by
-   `\newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
-   The `\doArticle` inserts the article to one or more pages by
-   `\botinsert`...`\endinsert`. The Article is printed to two columns per
-   page, all collumns of the article is completely balanced. First we
-   calculate the number of pages, then the number of columns `\_Ncols` is 2 times
-   number of pages. Then the `\_balancecolumns` macro creates the columns.
-   Finally we do re-boxing the output of `\_balancecolumns` in order to
-   reach individual columns and create pairs of them by `\fornum` loop.
-   These pairs are completed to blocks with LightGrey background.
-   These blocks divided by `\break` are inserted into `\botinsert`.
-   \_cod
+   <chapter>:<verse> is or at the next page. The article is in two-columns
+   style and it is divided to $k$ two-columns parts each of them is inserted
+   at the bottom of the next page.
 
-\refdecl{
-   \def\Xbottompos#1{\def\bottompos{#1}}^^J
-   \def\Xarticlehead#1{\sxdef{arthead!#1}{\ea\usesecond\_currpage}}^^J
-   \def\Xarticlepos#1#2{\sxdef{artpos!#1}{#2}\sxdef{artpage!#1}{\ea\usesecond\_currpage}}
-}
+   We calculate the number of pages used for article text by following rules.
+   All the two-columns parts have the same height. If there are more than one such
+   a part, the height does not exceeds 2/3 of the page. But single two-column part
+   can be higher.
+
+   `\putArticle` registers `\doArticle` using `\newaction`.
+   `\doArticle` is run at the beginning of given verse and creates an
+   `\botisert`. The insert material is breakable at its beginig and between
+   each two-column boxes created by the `\balancecolumn` macro.
+
+   We register a new action by
+   `\newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
+   \_cod
 
 \newcount\articlenum
 \def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
@@ -1198,11 +1194,24 @@
    \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
    \ea\newaction\ea{\fullvrefm}{\doArticle{#2}[#4](#6)}%
 }
+
+   \_doc
+   The `\doArticle` `{<Title>}[<label>](<params>)` inserts the article to one
+   or more pages by `\botinsert`...`\endinsert`. The Article is printed to two columns per
+   page, all collumns of the article is completely balanced.
+   First, the whole text is saved to the `\box0`
+   with given column size and the number of pages is calculated in `\tmpnum`.
+   Then the number of columns `\_Ncols` is 2 times the number of calculated pages.
+   The height of each two-columns part of the article is `\dimen0`.
+   Finally we do re-boxing the output of `\_balancecolumns` in order to
+   reach individual columns and create pairs of them by `\fornum` loop.
+   These pairs are completed to blocks with LightGrey background.
+   These blocks divided by `\break` are inserted into `\botinsert`.
+   \_cod
+
 \def\doArticle#1[#2](#3){% {Title}[number](params)
    \incr\articlenum
-   \pdfsavepos \ea\_wref\ea\Xarticlepos\ea{\ea{\the\articlenum}{\the\pdflastypos}}%
    \botinsert
-      \_ewref\Xarticlehead{{\the\articlenum}}%
       \def\botDest##1[##2]{\trymakedest{a:\currbook/##2}}
       \parindent=12pt \iindent=\parindent
       \setbox0=\vbox{\hsize=.458\hsize \emergencystretch=1em
@@ -1213,16 +1222,14 @@
          \ea\searcharticle \input \articlefile \relax}
       \splittopskip=12pt
       \setbox1=\vsplit0 to0pt % adding \splittopskip
-      \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of pages
-      \ifcsname artpos!\the\articlenum \endcsname
-         \tmpdim=\dimexpr \cs{artpos!\the\articlenum}sp-\bottompos sp\relax
-         \ifnum \cs{arthead!\the\articlenum}>\cs{artpage!\the\articlenum} \tmpdim=\vsize \fi
-         \advance\tmpdim by-24pt % \botTitle height plus above/below skips
-         \ifdim 2\tmpdim > \ht0 \tmpnum=1 \fi  % article at single page
+      \tmpdim=\vsize \advance\tmpdim by-24pt % \botTitle height plus above/below skips
+      \ifdim 2\tmpdim > \ht0 \tmpnum=1
+      \else
+         \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of 2/3 pages
       \fi
       \multiply\tmpnum by2 % number of columns
       \edef\_Ncols{\the\tmpnum}
-      \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0
+      \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0 % height of each two-columns part
       \setbox0=\vbox{\_balancecolumns}
       \tmpdim=\ht0 \advance\tmpdim by1.2\baselineskip
       \setbox0=\vbox{\unvbox0 \global\setbox2=\lastbox}
