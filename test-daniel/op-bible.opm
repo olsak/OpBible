@@ -1501,7 +1501,7 @@
 
 \_def\normalchapnumbers{
    \_margins/2 a2 (25,25,20,20)mm
-   \_lrmargin=0pt
+   \lrmargin=0pt
    \_setbox0=\_box\lqqbox \_setbox0=\_box\rqqbox
    \_def\printbeforefirst{%
       \_nobreak\_medskip
