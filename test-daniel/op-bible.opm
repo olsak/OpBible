@@ -1,7 +1,7 @@
 %% Bible-TeX macros, see bibletex-doc.pdf
 
-\newdimen\lrmargin  \lrmargin=10mm
-\margins/2 a4 (23,27,20,20)mm
+\_newdimen\lrmargin  \lrmargin=10mm
+\_margins/2 a4 (23,27,20,20)mm
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -10,44 +10,44 @@
    Loading packages.
    \_cod
 
-\load[vlna]  % single-letter prepositions and splitting hyphen managed specially in Czech
-\load[mte]   % micro typographical extensions
+\_load[vlna]  % single-letter prepositions and splitting hyphen managed specially in Czech
+\_load[mte]   % micro typographical extensions
 
    \_doc
    Basic settings.
    \_cod
 
-\typosize[11/13]       % typesetting size of Bible text
-\hyperlinks\Blue\Blue  % hyperlinks activated
+\_typosize[11/13]       % typesetting size of Bible text
+\_hyperlinks\Blue\Blue  % hyperlinks activated
 
-\parindent=20pt
-\nopagenumbers
-\enablemte             % micro typographical extensions enabled
-\singlechars{Czech}{AaIiVvOoUuSsZzKk}  % lowercase "a" added to this family
+\_parindent=20pt
+\_nopagenumbers
+\_mte_enablemte             % micro typographical extensions enabled
+\_vlna_singlechars {Czech}{AaIiVvOoUuSsZzKk}  % lowercase "a" added to this family
 
-\showboxbreadth=0
-\let\notecolor=\Red
+\_showboxbreadth=0
+\_let\notecolor=\Red
 
-\def\LightGrey {\_setcmykcolor{0 0 0 .1}}
-\def\LiRed {\_setcmykcolor{0 .2 .2 0}}
+\_def\LightGrey {\_setcmykcolor{0 0 0 .1}}
+\_def\LiRed {\_setcmykcolor{0 .2 .2 0}}
 
    \_doc
    Fonts.
    \_cod
 
-\fontfam[lm]
-\fontfam[Heros]        % fonts for notes
-\isfile{f-biblon.opm}\iftrue
-   \fontfam[biblon]    % fonts for Bible text
-\else
-   \let\Biblon=\LMfonts
-\fi
+\_fontfam[lm]
+\_fontfam[Heros]        % fonts for notes
+\_isfile{f-biblon.opm}\_iftrue
+   \_fontfam[biblon]    % fonts for Bible text
+\_else
+   \_let\Biblon=\LMfonts
+\_fi
 
-\fontdef\bookfont{\setfontsize{at19.pt}\bf}
-\fontdef\chapfont{\setfontsize{at13.pt}\bf}
-\fontdef\markfont{\setfontsize{at7pt}\rm}
-\fontdef\captionfont{\Heros\cond\setfontsize{at8pt}\bf}
-\def\headfont{\Biblon\setfontsize{at10pt}\rm}
+\_fontdef\bookfont{\_setfontsize{at19.pt}\_bf}
+\_fontdef\chapfont{\_setfontsize{at13.pt}\_bf}
+\_fontdef\markfont{\_setfontsize{at7pt}\_rm}
+\_fontdef\captionfont{\Heros\cond\setfontsize{at8pt}\_bf}
+\_def\headfont{\Biblon\setfontsize{at10pt}\_rm}
 
    \_doc
    Auxiliary macros.
@@ -55,8 +55,8 @@
    `\sedef {<name>}{<body>}` is expanded `\sdef`.
    \_cod
 
-\def\printwarn#1{\wterm{WARNING (l.\the\inputlineno) #1}}
-\def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
+\_let\printwarn=\_opwarning
+\_def \sedef #1{\_ea\_edef \_csname#1\_endcsname}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,54 +84,54 @@
    \enditems
    \_cod
 
-\def\processbooks {\par
+\_def\processbooks {\_par
    \checknochapbooks
-   \ea\processbooksA \printedbooks\ignoreit. {}
-   \ea\processbooksB \printedbooks\ignoreit. {}
+   \_ea\processbooksA \printedbooks\_ignoreit. {}
+   \_ea\processbooksB \printedbooks\_ignoreit. {}
 }
 \def\processbooksA #1 {%
-   \if\relax#1\relax \else \sxdef{pbook!#1}{}\ea\processbooksA \fi
+   \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\processbooksA \_fi
 }
 \def\processbooksB #1 {%
-   \if\relax#1\relax \else
-      \edef\amark{#1}
-      \edef\bmark{\cs{f!#1}}
-      \edef\btit{\cs{btit!#1}}
-      \begingroup
+   \_if\_relax#1\_relax \_else
+      \_edef\amark{#1}
+      \_edef\bmark{\_cs{f!#1}}
+      \_edef\btit{\_cs{btit!#1}}
+      \_begingroup
          \NewBook{#1}
-         \wterm{** \cs{btit!#1} {#1} **}
-         \cs{bex!#1}
-         \isfile{\introfile}\iftrue
+         \_wterm{** \_cs{btit!#1} {#1} **}
+         \_cs{bex!#1}
+         \_isfile{\introfile}\_iftrue
             \begblock
-            \dest[i:\currbook]
-            \introtit
-            \input{\introfile}
+            \_dest[i:\currbook/]
+            \chaptit{\_mtext{intro}}%
+            \_input{\introfile}
             \endblock
-         \fi
+         \_fi
          \CommentedBook{#1}
-         \isfile{\fmtfile}\iftrue \input{\fmtfile}
-         \else \printwarn{File with format info \fmtfile\space not found}\fi
-         \isfile{\notesfile}\iftrue \input{\notesfile}
-         \else \printwarn{File with notes \notesfile\space not found}\fi
-         \cs{bpr!#1}
+         \_isfile{\fmtfile}\_iftrue \_input{\fmtfile}
+         \_else \printwarn{File with format info \fmtfile\_space not found}\_fi
+         \_isfile{\notesfile}\_iftrue \_input{\notesfile}
+         \_else \printwarn{File with notes \notesfile\_space not found}\_fi
+         \_cs{bpr!#1}
          \bibleinput{\txsfile}
-         \cs{bpo!#1}
-      \endgroup
-      \ea \processbooksB
-   \fi
+         \_cs{bpo!#1}
+      \_endgroup
+      \_ea \processbooksB
+   \_fi
 }
-\def\setheadline#1{\global\headline={\headfont
-   \ifodd\pageno
-       \rlap{\it\bibname\hss}%
-       \hfil \the\pageno\hfil
-       \hbox to\lrmargin{\hss\bf#1\ifx^\botmark^\else\space \botmark\fi}%
-       \kern-\lrmargin
-   \else
-       \kern-\lrmargin
-       \hbox to\lrmargin{\bf#1 \firstmark\hss}%
-       \hfil\the\pageno\hfil
-       \llap{\hss\it\bibname}%
-   \fi
+\_def\setheadline#1{\_global\_headline={\headfont
+   \_ifodd\_pageno
+       \_rlap{\_it\bibname\_hss}%
+       \_hfil \_the\_pageno\_hfil
+       \_hbox to\lrmargin{\_hss\_bf#1\_ifx^\_botmark^\_else\_space \_botmark\_fi}%
+       \_kern-\lrmargin
+   \_else
+       \_kern-\lrmargin
+       \_hbox to\lrmargin{\_bf#1 \_firstmark\_hss}%
+       \_hfil \_the\_pageno\_hfil
+       \_llap{\_hss\_it\bibname}%
+   \_fi
    }
 }
 
@@ -139,12 +139,12 @@
    `\NewBook``{<a-mark>}` ejects previous page, prepeares header and prints the book title.
    \_cod
 
-\def\NewBook#1{\vfil\supereject
-   \edef\currbook{#1}\let\prelinkB=\currbook \chapnum=0
-   \def\prelinkC{0}\def\prelinkV{0}
-   \global\headline={\hfil \ea\setheadline\ea{\btit}}
-   \line{\hss\bookfont\btit\hss}
-   \par\nobreak\medskip
+\_def\NewBook#1{\_vfil\_supereject
+   \_edef\currbook{#1}\_let\prelinkB=\currbook \chapnum=0
+   \_def\prelinkC{0}\_def\prelinkV{0}
+   \_global\_headline={\_hfil \_ea\setheadline\_ea{\btit}}
+   \_line{\_hss\bookfont\btit\_hss}
+   \_par\_nobreak\_medskip
 }
 
    \_doc
@@ -152,42 +152,42 @@
    introduction text, see OpTeX trick 0031.
    \_cod
 
-\newcount\blocklevel  % nesting level of blocks
-\def\begblock{\par\bgroup
-   \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
-   \medskip
-   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
-   \nobreak \medskip
+\_newcount\blocklevel  % nesting level of blocks
+\_def\begblock{\_par\_bgroup
+   \_advance\blocklevel by1 \_advance\_leftskip by\_iindent \_rightskip=\_leftskip
+   \_medskip
+   \_pdfsavepos \_ea\_wref\_ea\Xblock\_ea{\_ea{\_the\blocklevel}B{\_the\_pdflastypos}}
+   \_nobreak \_medskip
 }
-\def\endblock{\par\nobreak\medskip
-   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
-   \medskip \egroup
+\_def\endblock{\_par\_nobreak\_medskip
+   \_pdfsavepos \_ea\_wref\_ea\Xblock\_ea{\_ea{\_the\blocklevel}E{\_the\_pdflastypos}}
+   \_medskip \_egroup
 }
-\refdecl{%
-   \def\Xblock#1#2#3{\ifnum#1=1 \edef\tmp{frm:\ea\ignoresecond\_currpage}^^J
-      \unless\ifcsname \tmp \endcsname \sxdef{\tmp}{}\fi^^J
-      \sxdef{\tmp}{\cs{\tmp}#2{#3}}\fi}
+\_refdecl{%
+   \_def\Xblock#1#2#3{\_ifnum#1=1 \_edef\tmp{frm:\_ea\_ignoresecond\_currpage}^^J
+      \_unless\_ifcsname \tmp \_endcsname \_sxdef{\tmp}{}\_fi^^J
+      \_sxdef{\tmp}{\_cs{\tmp}#2{#3}}\_fi}
 }
-\newdimen\frtop \newdimen\frbottom % positions of top and bottom text on the pages
-\def\frcolor{.9 g } % light grey -- color of blocks.
-\pgbackground={%
-   \slet{tmp}{frm:\the\pageno}
-   \ifx\tmp\undefined \def\tmp{}\fi
-   \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
-   \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
-   \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
-   \ea\printframes \tmp B{0}E{\number\frbottom}
-   \ifx\frameslist\empty \else
-   \pdfliteral{q \frcolor 1 0 0 1 0 \bp{-\pdfpageheight} cm \frameslist Q}\fi
+\_newdimen\frtop \_newdimen\frbottom % positions of top and bottom text on the pages
+\_def\frcolor{.9 g } % light grey -- color of blocks.
+\_pgbackground={%
+   \_slet{tmp}{frm:\_the\_pageno}
+   \_ifx\tmp\_undefined \_def\tmp{}\_fi
+   \frtop=\_dimexpr \_pdfpageheight-\_voffset+\_smallskipamount\_relax
+   \frbottom=\_dimexpr\_pdfpageheight-\_voffset-\_vsize-\_medskipamount\_relax
+   \_ifx\frnext y \_edef\tmp{B{\_number\frtop}\tmp}\_global\_let\frnext n\_fi
+   \_ea\printframes \tmp B{0}E{\_number\frbottom}
+   \_ifx\frameslist\_empty \_else
+   \_pdfliteral{q \frcolor 1 0 0 1 0 \_bp{-\_pdfpageheight} cm \frameslist Q}\_fi
 }
-\def\printframes B#1#2E#3{\ifnum#1=0 \else
-   \printframe {\hoffset}{#3sp}{\_xhsize}{\ifnum#1=-1 \number\frtop\else#1\fi sp-#3sp}
-   \ifx^#2^\else \global\let\frnext=y \let\printframes=\relax \fi
-   \expandafter\printframes\fi
+\_def\printframes B#1#2E#3{\_ifnum#1=0 \_else
+   \printframe {\_hoffset}{#3sp}{\_xhsize}{\_ifnum#1=-1 \_number\frtop\_else#1\_fi sp-#3sp}
+   \_ifx^#2^\_else \_global\_let\frnext=y \_let\printframes=\_relax \_fi
+   \_ea\printframes\_fi
 }
-\def\frameslist{}
-\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
-    \bp{#1} \bp{#2} \bp{#3} \bp{#4} re f }%
+\_def\frameslist{}
+\_def\printframe #1#2#3#4{\_edef\frameslist{\frameslist
+    \_bp{#1} \_bp{#2} \_bp{#3} \_bp{#4} re f }%
 }
 
    \_doc
@@ -199,11 +199,11 @@
    macro because we need them in `\brefBookChapter`.
    \_cod
 
-\def\checknochapbooks {%
-   \ifx\nochapbooks\undefined
-      \printwarn{\noexpand\nochapbooks (boks without chapters) undefined.}%
-      \def\nochapbooks{}%
-   \else  \edef\nochapbooks{\space\nochapbooks\space}\fi
+\_def\checknochapbooks {%
+   \_ifx\nochapbooks\_undefined
+      \printwarn{\_noexpand\nochapbooks (boks without chapters) undefined.}%
+      \_def\nochapbooks{}%
+   \_else  \_edef\nochapbooks{\_space\nochapbooks\_space}\_fi
 }
 
    \_doc
@@ -226,7 +226,7 @@
    errors due to missing a space after `<b-mark>` or `<a-mark>`.
    \_cod
 
-\outer\def\BookTitle #1 #2 #3{\sxdef{btit!#2}{#3}\sxdef{f!#2}{#1}}
+\_outer\_def\BookTitle #1 #2 #3{\_sxdef{btit!#2}{#3}\_sxdef{f!#2}{#1}}
 
    \_doc
    The `\BookException <a-mark> {<code>}` macro adds the <code> to the
@@ -236,11 +236,11 @@
    Macros `\BookPre` and `\BookPost` are defined similarly.
    \_cod
 
-\long\def\myaddto#1#2{\ifcsname#1\endcsname
-   \gobal\ea\addto\csname#1\endcsname{#2}\else \global\sdef{#1}{#2}\fi}
-\outer\long\def\BookException #1 #2{\myaddto{bex!#1}{#2}}
-\outer\long\def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
-\outer\long\def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
+\_long\_def\myaddto#1#2{\_ifcsname#1\_endcsname
+   \_gobal\_ea\_addto\_csname#1\_endcsname{#2}\_else \_global\_sdef{#1}{#2}\_fi}
+\_outer\_long\_def\BookException #1 #2{\myaddto{bex!#1}{#2}}
+\_outer\_long\_def\BookPre       #1 #2{\myaddto{bpr!#1}{#2}}
+\_outer\_long\_def\BookPost      #1 #2{\myaddto{bpo!#1}{#2}}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -260,9 +260,9 @@
    `\newaction{<full-vref>}{<action-body>}` allocates new action.
    \_cod
 
-\def\newaction#1#2{%
-   \unless\ifcsname alist!#1\endcsname \sdef{alist!#1}{}\fi
-   \ea\addto\csname alist!#1\endcsname{#2}%
+\_def\newaction#1#2{%
+   \_unless\_ifcsname alist!#1\_endcsname \_sdef{alist!#1}{}\_fi
+   \_ea\_addto\_csname alist!#1\_endcsname{#2}%
 }
 
    \_doc
@@ -276,16 +276,16 @@
    macro can use `\text` where <text> is saved.
    \_cod
 
-\def\replpre#1#2#3{%
-   \ifx^#2^\def\tmp{#1{}}\ea\ea\ea\def\ea\ea\ea\buff\ea\ea\ea{\ea\tmp\buff}%
-   \else
-      \def\replpredo##1#2##2\end{%
-         \ifx^##2^\def\text{#2}#3% <fail>
-         \else \replsave ##1#1{#2}##2\end \fi
+\_def\replpre#1#2#3{%
+   \_ifx^#2^\_def\tmp{#1{}}\_ea\_ea\_ea\_def\_ea\_ea\_ea\buff\_ea\_ea\_ea{\_ea\tmp\buff}%
+   \_else
+      \_def\replpredo##1#2##2\_end{%
+         \_ifx^##2^\_def\text{#2}#3% <fail>
+         \_else \replsave ##1#1{#2}##2\_end \_fi
       }%
-      \def\replsave##1#2\end{\def\buff{##1}}%
-      \ea\replpredo\buff#2\end
-   \fi
+      \_def\replsave##1#2\_end{\_def\buff{##1}}%
+      \_ea\replpredo\buff#2\_end
+   \_fi
 }
 
    \_doc
@@ -305,10 +305,10 @@
 \def\gentovrefA#1-#2\end{#1}
 
    \_doc
-   `\renumref <full-vref>\relax` does re-caclulating of <full-vref> using `\renum` data.
+   `\renumref <full-vref>\_relax` does re-caclulating of <full-vref> using `\renum` data.
    \_cod
 
-\def\renumvref #1/#2\relax{#1/\trycs{rn!\tmark!#1/#2}{#2}}
+\_def\renumvref #1/#2\_relax{#1/\_trycs{rn!\tmark!#1/#2}{#2}}
 
    \_doc
    The `<word>` given as a parameter of the `\Note` macro (see bellow) is used as a word
@@ -319,9 +319,9 @@
    expands to the <word> itself, i.e <tword> is equal to <word> in this case.
    \_cod
 
-\def\transformword#1{%
-   \ifcsname v!\tmark!#1\endcsname \lastnamedcs
-   \else #1\fi
+\_def\transformword#1{%
+   \_ifcsname v!\tmark!#1\_endcsname \_lastnamedcs
+   \_else #1\_fi
 }
 
    \_doc
@@ -360,53 +360,50 @@
    \enditems
    \_cod
 
-\newcount\notenum
-\outer\def\Note #1 #2{%
-   \edef\fullvref{\gentovref{#1}}%
-   \ea\isversezero\fullvref\iftrue
-      \ea\NoteB
-   \else
-      \incr\notenum
-      \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-      \def\tmp{#1}\sedef{notepre!\the\notenum}{\ea\renumlabel\fullvrefm\relax}%
-      \ifx\nextww\undefined
-         {\def\printwarn##1{}\xdef\tword{\transformword{#2}}}%
-      \else \xdef\tword{\nextww}\fi
-      \afterfi{\isnextchar={\NoteA}{\NoteA={}}}%
-   \fi
+\_newcount\notenum
+\_outer\_def\Note #1 #2{%
+   \_edef\fullvref{\gentovref{#1}}%
+   \_ea\isversezero\fullvref\_iftrue
+      \_ea\NoteB
+   \_else
+      \_incr\notenum
+      \_edef\fullvrefm{\_ea\renumvref\fullvref\_relax}%
+      \_def\tmp{#1}\sedef{notepre!\_the\notenum}{\_ea\renumlabel\fullvrefm\_relax}%
+      \_ifx\nextww\_undefined
+         {\_def\printwarn##1{}\_xdef\tword{\transformword{#2}}}%
+      \_else \_xdef\tword{\nextww}\_fi
+      \_afterfi{\_isnextchar={\NoteA}{\NoteA={}}}%
+   \_fi
 }
-\ifx\_partokenset\undefined
-   \def\defnoteA{\def\NoteA=##1##2\par}
-   \def\defnoteB{\def\NoteB##1\par}
-\else
-   \def\defnoteA{\def\NoteA=##1##2\_par}
-   \def\defnoteB{\def\NoteB##1\_par}
-\fi
-\defnoteA{%
-   \sdef{notetext!\the\notenum}{\ignorespaces#2}%
-   \sedef{noteref!\the\notenum}{\fullvrefm}%
-   \ifx\nextww\undefined
-      \ifx^#1^\sdef{pword!\the\notenum\ea}\ea{\tword}\else \sdef{pword!\the\notenum}{#1}\fi
-   \else
-      \sdef{pword!\the\notenum\ea}\ea{\nextwwA}%
-      \let\nextww=\undefined \let\nextwwA=\undefined
-   \fi
-   \ea\addNote\expanded{{\fullvrefm}{\the\notenum}{\tword}}%
+\_def\NoteA=#1#2% #2 separated by \par or \_par:
+
+{%
+   \_sdef{notetext!\_the\notenum}{\_ignorespaces#2}%
+   \sedef{noteref!\_the\notenum}{\fullvrefm}%
+   \_ifx\nextww\_undefined
+      \_ifx^#1^\_sdef{pword!\_the\notenum\_ea}\_ea{\tword}\_else \_sdef{pword!\_the\notenum}{#1}\_fi
+   \_else
+      \_sdef{pword!\_the\notenum\_ea}\_ea{\nextwwA}%
+      \_let\nextww=\_undefined \_let\nextwwA=\_undefined
+   \_fi
+   \_ea\addNote\_expanded{{\fullvrefm}{\_the\notenum}{\tword}}%
 }
-\def\addNote#1#2#3{%
-   \ifx^#3^% \tword is empty
-      \newaction{#1}{\addto\prebuff{\doNote{#2}{}}}%
-   \else
+\_def\addNote#1#2#3{%
+   \_ifx^#3^% \tword is empty
+      \newaction{#1}{\_addto\prebuff{\doNote{#2}{}}}%
+   \_else
       \newaction{#1}{\replpre{\doNote{#2}}{#3}{\notefail{#2}}}%
-   \fi
+   \_fi
 }
-\defnoteB{%
-   \sdef{!chapnote:\fullvref}{\ignorespaces#1}%
+\_def\NoteB #1% #1 separated by \par or \_par
+
+{%
+   \_sdef{!chapnote:\fullvref}{\_ignorespaces#1}%
 }
-\def\isversezero#1/#2:#3\iftrue{\ifnum #3=0 }
+\_def\isversezero#1/#2:#3\_iftrue{\_ifnum #3=0 }
 
    \_doc
-   `\renumlabel` `<full-vref>\relax` expands to the numeric part of
+   `\renumlabel` `<full-vref>\_relax` expands to the numeric part of
    <full-vref> and appends the `--<to>` part if the `\tmp` macro is in the
    format `<chapter>:<from>-<to>`. The <to> part is re-calculated in order to
    the the number of verses between `<from>` and `<to>` be kept.
@@ -416,14 +413,14 @@
    and `\iscolon`.
    \_cod
 
-\def\renumlabel#1/#2\relax{#2%
-   \ea\isdivis\tmp-\iffalse\else --\ea\renumlabelA\tmp\relax#2\relax \fi
+\_def\renumlabel#1/#2\_relax{#2%
+   \_ea\isdivis\tmp-\_iffalse\_else --\_ea\renumlabelA\tmp\_relax#2\_relax \_fi
 }
-\def\renumlabelA#1:#2-#3\relax#4:#5\relax{%
-   \iscolon#3:\iffalse \the\numexpr#5+#3-#2\relax \else #3\fi
+\_def\renumlabelA#1:#2-#3\_relax#4:#5\_relax{%
+   \iscolon#3:\_iffalse \_the\_numexpr#5+#3-#2\_relax \_else #3\_fi
 }
-\def\isdivis#1-#2\iffalse{\ifx^#2^}
-\def\iscolon#1:#2\iffalse{\ifx^#2^}
+\_def\isdivis#1-#2\_iffalse{\_ifx^#2^}
+\_def\iscolon#1:#2\_iffalse{\_ifx^#2^}
 
    \_doc
    The `\``Note` text is processed and printed in the second step, when the 
@@ -438,8 +435,8 @@
    about it and `\doNote{<note-num>}{}` is prefixed before the verse text.
    \_cod
 
-\def\notefail#1{%
-   \printwarn{\csstring\\Note: \currverse: The text "\unexpanded\ea{\text}" not found}%
+\_def\notefail#1{%
+   \printwarn{\_csstring\\Note: \currverse: The text "\_unexpanded\_ea{\text}" not found}%
    \replpre{\doNote{#1}}{}{}% \Note is registered with the beginning of the verse
 }
 
@@ -448,20 +445,20 @@
    when the verse text from `\buff` is processed.
    \_cod
 
-\def\prevtmpb{}
-\def\doNote#1#2{%
-   \edef\tmpb{\cs{notepre!#1}}%
-   \notelog{\space\space \csstring\\Note \tmpb\space {#2}={\cs{pword!#1}} (#1)}%
+\_def\prevtmpb{}
+\_def\doNote#1#2{%
+   \_edef\tmpb{\_cs{notepre!#1}}%
+   \notelog{\_space\_space \_csstring\\Note \tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \noteinsert{%
-      {\bf \ifx\prevtmpb\tmpb \else \tmpb \enskip \global\let\prevtmpb=\tmpb \fi
-       \trymakedest{n:\cs{noteref!#1}}%
-       \ea \ifx \csname pword!#1\endcsname \empty
-                 \else \ea\ea\ea\upcasefirst \csname pword!#1\endcsname. \fi}%
-      \cs{notetext!#1}}%
+      {\_bf \_ifx\prevtmpb\tmpb \_else \tmpb \_enskip \_glet\prevtmpb=\tmpb \_fi
+       \trymakedest{n:\_cs{noteref!#1}}%
+       \_ea\_ifx \_csname pword!#1\_endcsname \_empty
+                 \_else \_ea\_ea\_ea\upcasefirst \_csname pword!#1\_endcsname. \_fi}%
+      \_cs{notetext!#1}}%
    {\notecolor#2}%
 }
-\def\_printfnotemark{}
-\def\_textindent#1{\noindent}
+\_def\_printfnotemark{}
+\_def\_textindent#1{\_noindent}
 
    \_doc
    The phrase `{<word>}` used in notes must be exactly the same as the word used in
@@ -470,7 +467,7 @@
    this feature.
    \_cod
 
-\def\upcasefirst #1{\uppercase{#1}}
+\_def\upcasefirst #1{\_uppercase{#1}}
 
    \_doc
    Because there is asynchronous processing of the `\``Note` text, we have a problem
@@ -483,7 +480,7 @@
    you can set it to `\ignoreit` or `\wterm`.
    \_cod
 
-\let\notelog=\wlog
+\_let\notelog=\_wlog
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -498,13 +495,13 @@
    All these commands allocate new action using `\newaction`.
    \_cod
 
-\let\FormatedBook=\CommentedBook
-\def\fmtpre#1#2{\newaction{\gentovref{#1}}{\addto\fmtprebuff{#2}}}
-\def\fmtadd#1#2{\newaction{\gentovref{#1}}{\addto\buff{#2}}}
-\def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
-\def\fmtafter#1#2{#2#1}
-\def\fmtfail#1{\fmtwarn\addto\fmtprebuff{#1}}
-\def\fmtwarn{\printwarn{\string\fmtins: \currverse: The text "\unexpanded\ea{\text}" not found}}
+\_let\FormatedBook=\CommentedBook
+\_def\fmtpre#1#2{\newaction{\gentovref{#1}}{\_addto\fmtprebuff{#2}}}
+\_def\fmtadd#1#2{\newaction{\gentovref{#1}}{\_addto\buff{#2}}}
+\_def\fmtins#1#2#3{\newaction{\gentovref{#1}}{\replpre{\fmtafter{#3}}{#2}{\fmtfail{#3}}}}
+\_def\fmtafter#1#2{#2#1}
+\_def\fmtfail#1{\fmtwarn\_addto\fmtprebuff{#1}}
+\_def\fmtwarn{\printwarn{\_string\fmtins: \currverse: The text "\_unexpanded\_ea{\text}" not found}}
 
    \_doc
    `\begcenter` starts the centering mode. It opens a group and does
@@ -513,18 +510,19 @@
    (about `#` character) should be occur without this checking.
    \_cod
 
-\newdimen\centermargin \centermargin=4em
-\def\begcenter{\par \ifnum\lastpenalty<10000 \medskip \fi
-   \bgroup
-   \def\centeringmode{y}
-   \parindent=0pt
-   \leftskip=\centermargin plus1fill
-   \rightskip=\leftskip
+\_newdimen\centermargin \centermargin=4em
+\_def\begcenter{\_par \_ifnum\_lastpenalty<10000 \_medskip \_fi
+   \_bgroup
+   \_def\centeringmode{y}
+   \_parindent=0pt
+   \_leftskip=\centermargin plus1fill
+   \_rightskip=\_leftskip
 }
-\def\endcenter{\par
-   \ifx\centeringmode\undefined
-      \printwarn{\noexpand\endcenter ignored: no \noexpand\begcenter precedes}
-   \else \egroup \medskip \fi}
+\_def\endcenter{\_par
+   \_ifx\centeringmode\_undefined
+      \printwarn{\_noexpand\endcenter ignored: no \_noexpand\begcenter precedes}
+   \_else \_egroup \_medskip \_fi
+}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -533,13 +531,13 @@
    When Bible text is processed then book mark is saved to
    `\currbook` and each input line is separated to the
    <chapter-num>:<verse-num> and <verse-text>.\nl
-   The `\processverse <full-vref><space><verse-text>\end` is repeatedly processed.
+   The `\processverse <full-vref><space><verse-text>\_end` is repeatedly processed.
    \_cod
 
-\eoldef\processline#1{\processverse \currbook/#1\end}
+\_eoldef\processline#1{\processverse \currbook/#1\_end}
 
    \_doc
-   `\processverse <full-vref><space><verse-text>\end` does
+   `\processverse <full-vref><space><verse-text>\_end` does
    \begitems
    * defines `\currverse` as <full-vref>,
    * prepares `\currversenum`, `\curversetext`, `\currchapnum` from <full-vref>,
@@ -550,28 +548,28 @@
    \enditems
    \_cod
 
-\newcount\chapnum
-\def\processverse #1 #2\end{%
-   \edef\currverse{#1}%
+\_newcount\chapnum
+\_def\processverse #1 #2\_end{%
+   \_edef\currverse{#1}%
    \preparechapverse #1
-   \let\prelinkV=\currversenum
-   \def\buff{#2}\def\fmtprebuff{}\def\prebuff{}%
-   \ifx\verseto\empty \csname alist!#1\endcsname \else
-      \fornum \versefrom..\verseto \do{\csname alist!\currbook/\currchapnum:##1\endcsname}%
-   \fi
-   \ifnum\currchapnum=\chapnum \else
-       \let\prelinkC=\currchapnum \chapnum=\currchapnum\relax \printchap \fi
+   \_let\prelinkV=\currversenum
+   \_def\buff{#2}\_def\fmtprebuff{}\_def\prebuff{}%
+   \_ifx\verseto\_empty \_csname alist!#1\_endcsname \_else
+      \_fornum \versefrom..\verseto \_do{\_csname alist!\currbook/\currchapnum:##1\_endcsname}%
+   \_fi
+   \_ifnum\currchapnum=\chapnum \_else
+       \_let\prelinkC=\currchapnum \chapnum=\currchapnum\_relax \printchap \_fi
    \printverse
 }
-\def\preparechapverse #1/#2:#3 {\def\currchapnum{#2}%
-   \def\verseto{}%
-   \isdivisin #3-\iftrue \defversefromto #3\end
-   \else \def\currversenum{#3}\let\currversetext=\currversenum
-   \fi
+\_def\preparechapverse #1/#2:#3 {\_def\currchapnum{#2}%
+   \_def\verseto{}%
+   \isdivisin #3-\_iftrue \defversefromto #3\_end
+   \_else \_def\currversenum{#3}\_let\currversetext=\currversenum
+   \_fi
 }
-\def\defversefromto #1-#2\end{%
-   \def\versefrom{#1}\def\verseto{#2}%
-   \def\currversenum{#1}\def\currversetext{#1--#2}}
+\_def\defversefromto #1-#2\_end{%
+   \_def\versefrom{#1}\_def\verseto{#2}%
+   \_def\currversenum{#1}\_def\currversetext{#1--#2}}
 
    \_doc
    `\printverse` prints verse from `\currversenum` and (possibly changed) `\buff`.
@@ -582,40 +580,40 @@
    printing a chapter name (if declared by `\fmtpre`). 
    \_cod
 
-\def\printverse{%
+\_def\printverse{%
    \fmtprebuff % material accumulated by \fmtpre
-   \ifnum\currversenum=1 \printbeforefirst \fi
-   \quitvmode \mark{\currchapnum:\currversetext}%
-   \ifx\verseto\empty \trymakedest{v:\currverse}%
-   \else \fornum \versefrom..\verseto \do{%
-       \wlog{xxxxx v:\currbook/\currchapnum:##1}\trymakedest{v:\currbook/\currchapnum:##1}}%
-   \fi
-   \raise5pt\hbox{\unless\ifnum\currversenum=1 \markfont\currversetext\fi}%
-   \prebuff\buff \space
+   \_ifnum\currversenum=1 \printbeforefirst \_fi
+   \_quitvmode \_mark{\currchapnum:\currversetext}%
+   \_ifx\verseto\_empty \trymakedest{v:\currverse}%
+   \_else \_fornum \versefrom..\verseto \_do{%
+       \_wlog{xxxxx v:\currbook/\currchapnum:##1}\trymakedest{v:\currbook/\currchapnum:##1}}%
+   \_fi
+   \_raise5pt\_hbox{\_unless\_ifnum\currversenum=1 \markfont\currversetext\_fi}%
+   \prebuff\buff \_space
 }
-\def\printchap{\bigskip}
+\_def\printchap{\bigskip}
 
-\def\printbeforefirst{%
-   \par\nobreak \medskip
+\_def\printbeforefirst{%
+   \_par\_nobreak \_medskip
    \printchapnote
-   \setbox0=\vtop{\kern-1.5ex \_ewref\sxdef{{ch!\currbook/\the\chapnum}{\string\mypage}}
-                  \hbox{\setfontsize{at50pt}\bf\LiRed\the\chapnum}}
-   \dp0=0pt
+   \_setbox0=\_vtop{\_kern-1.5ex \_ewref\_sxdef{{ch!\currbook/\_the\chapnum}{\_string\mypage}}
+                    \_hbox{\_setfontsize{at50pt}\_bf\LiRed\_the\chapnum}}
+   \_dp0=0pt
    \tmpdim=\lrmargin
-   \advance\tmpdim by4pt
-   \ifnum\the\chapnum>9 \advance\tmpdim by19pt \fi
-   \ifodd\trycs{ch!\currbook/\the\chapnum}{0}
-      \moveright\tmpdim \line{\hss\box0}
-   \else \moveleft\tmpdim \box0 \fi
-   \nobreak \vskip-\medskipamount
-   \nobreak \nointerlineskip \noindent
+   \_advance\tmpdim by4pt
+   \_ifnum\_the\chapnum>9 \_advance\tmpdim by19pt \_fi
+   \_ifodd\trycs{ch!\currbook/\_the\chapnum}{0}
+      \_moveright\tmpdim \_line{\_hss\_box0}
+   \_else \_moveleft\tmpdim \_box0 \_fi
+   \_nobreak \_vskip-\_medskipamount
+   \_nobreak \_nointerlineskip \_noindent
 }
-\def\printchapnote{%
-   \ifcsname !chapnote:\currbook/\the\chapnum:0\endcsname
-      {\leftskip=\parindent plus1fill \rightskip=\leftskip
-       \noindent\it \cs{!chapnote:\currbook/\the\chapnum:0}\par}
-      \medskip
-   \fi
+\_def\printchapnote{%
+   \_ifcsname !chapnote:\currbook/\_the\chapnum:0\_endcsname
+      {\_leftskip=\_parindent plus1fill \_rightskip=\_leftskip
+       \_noindent\_it \_cs{!chapnote:\currbook/\_the\chapnum:0}\_par}
+      \_medskip
+   \_fi
 }
 
    \_doc
@@ -623,14 +621,14 @@
    \sec Bible references
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We prepare temporary macros first.\nl
-   `\isspacein <text> \iftrue` is true if `<text>` includes a space.\nl
-   `\iscolonin <text>:\iftrue` is true if `<text>` includes a colon.\nl
-   `\isdivisin <text>-\iftrue` is true if `<text>` includes a divis.
+   `\isspacein <text> \_iftrue` is true if `<text>` includes a space.\nl
+   `\iscolonin <text>:\_iftrue` is true if `<text>` includes a colon.\nl
+   `\isdivisin <text>-\_iftrue` is true if `<text>` includes a divis.
    \_cod
 
-\def\isspacein #1 #2\iftrue{\isempty{#2}\iffalse}
-\def\iscolonin #1:#2\iftrue{\isempty{#2}\iffalse}
-\def\isdivisin #1-#2\iftrue{\isempty{#2}\iffalse}
+\_def\isspacein #1 #2\_iftrue{\_isempty{#2}\_iffalse}
+\_def\iscolonin #1:#2\_iftrue{\_isempty{#2}\_iffalse}
+\_def\isdivisin #1-#2\_iftrue{\_isempty{#2}\_iffalse}
 
    \_doc
    The \code{\<} will be set to active as character equivalent to
@@ -653,44 +651,44 @@
    and printed by `\linktext`.
    \_cod
 
-\def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
-\def\bref #1>{\let\brefH=\relax \def\linkspec{#1}\isnextchar"{\brefA}{\brefA""}#1>}
-\def\brefA"#1"{\def\ltextP{#1}%
-   \isnextchar{ }{\addto\ltextP{~}\afterassignment\brefB\let\next= }%
-      {\isnextchar{_}{\def\brefH{}\afterassignment\brefB\let\next= }{\brefB}}%
+\_def\linktext{\ltextP\ltextB\ltextC\ltextV\ltextS\ltextF\ltextN}
+\_def\bref #1>{\_let\brefH=\relax \_def\linkspec{#1}\_isnextchar"{\brefA}{\brefA""}#1>}
+\_def\brefA"#1"{\_def\ltextP{#1}%
+   \_isnextchar{ }{\_addto\ltextP{~}\_afterassignment\brefB\_let\next= }%
+      {\_isnextchar{_}{\_def\brefH{}\_afterassignment\brefB\_let\next= }{\brefB}}%
 }
-\def\brefB #1>{% #1 is link-spec
-   \def\ltextB{}\def\ltextC{}\def\ltextF{}\def\ltextN{}%
-   \isspacein #1 \iftrue
-         \iscolonin #1:\iftrue \brefBookChapterVerse #1>%
-         \else \brefBookChapter #1>\fi
-   \else \iscolonin #1:\iftrue \brefChapterVerse #1>%
-   \else \brefVerse #1>%
-   \fi\fi
-   \def\linkpre{v}%
-   \isnextchar n{\def\linkpre{n}\brefC}%
-      {\isnextchar g{\def\linkpre{g}\brefC}%
-         {\isnextchar a{\def\linkpre{a}\brefC}%
-             {\isnextchar i{\def\linkpre{i}\brefC}{\brefD}}}}%
+\_def\brefB #1>{% #1 is link-spec
+   \_def\ltextB{}\_def\ltextC{}\_def\ltextF{}\_def\ltextN{}%
+   \isspacein #1 \_iftrue
+         \iscolonin #1:\_iftrue \brefBookChapterVerse #1>%
+         \_else \brefBookChapter #1>\_fi
+   \_else \iscolonin #1:\_iftrue \brefChapterVerse #1>%
+   \_else \brefVerse #1>%
+   \_fi\_fi
+   \_def\linkpre{v}%
+   \_isnextchar n{\_def\linkpre{n}\brefC}%
+      {\_isnextchar g{\_def\linkpre{g}\brefC}%
+         {\_isnextchar a{\_def\linkpre{a}\brefC}%
+             {\_isnextchar i{\_def\linkpre{i}\brefC}{\brefD}}}}%
 }
-\def\brefC{\afterassignment\brefD \let\next= }
+\_def\brefC{\_afterassignment\brefD \_let\next= }
 
-\def\brefBookChapterVerse #1 #2:#3>{\def\ltextB{#1~}\brefChapterVerse #2:#3>}
-\def\brefBookChapter #1 #2>{\def\ltextB{#1~}%
-    \isinlist\nochapbooks{ #1 }\iftrue
-        \def\ltextC{}\let\ltextCin=\ltextnCin \afterfi{\brefVerse #2>}%
-    \else \afterfi{\brefChapter #2>}\fi}
-\def\brefChapterVerse #1:#2>{\def\ltextC{#1:}\brefVerse #2>}
-\def\brefVerse #1>{%
-   \isdivisin #1-\iftrue \brefFromTo #1>%
-   \else \versedef#1\relax\fi
+\_def\brefBookChapterVerse #1 #2:#3>{\_def\ltextB{#1~}\brefChapterVerse #2:#3>}
+\_def\brefBookChapter #1 #2>{\_def\ltextB{#1~}%
+    \_isinlist\nochapbooks{ #1 }\_iftrue
+        \_def\ltextC{}\_let\ltextCin=\ltextnCin \_afterfi{\brefVerse #2>}%
+    \_else \_afterfi{\brefChapter #2>}\_fi}
+\_def\brefChapterVerse #1:#2>{\_def\ltextC{#1:}\brefVerse #2>}
+\_def\brefVerse #1>{%
+   \isdivisin #1-\_iftrue \brefFromTo #1>%
+   \_else \versedef#1\_relax\_fi
 }
-\def\brefChapter #1>{%
-   \isdivisin #1-\iftrue \brefFromTo #1>\let\ltextC=\ltextV
-   \else \def\ltextC{#1}\fi
-   \def\ltextV{}\def\ltextS{}%
+\_def\brefChapter #1>{%
+   \isdivisin #1-\_iftrue \brefFromTo #1>\_let\ltextC=\ltextV
+   \_else \_def\ltextC{#1}\_fi
+   \_def\ltextV{}\_def\ltextS{}%
 }
-\def\brefFromTo #1-#2>{\versedef#1\relax\def\ltextF{--}\def\ltextN{#2}}
+\_def\brefFromTo #1-#2>{\versedef#1\_relax\_def\ltextF{--}\_def\ltextN{#2}}
 
    \_doc
    Because the verse number can be in the format `11b`, we need to separate
@@ -698,25 +696,25 @@
    to `\ltextS`. This is done by the `\versedef <verse>\relax` macro.
    \_cod
 
-\def\versedef {\afterassignment\versedefB \tmpnum=0}
-\def\versedefB #1\relax{\edef\ltextV{\the\tmpnum}\def\ltextS{#1}}
+\_def\versedef {\_afterassignment\versedefB \tmpnum=0}
+\_def\versedefB #1\_relax{\_edef\ltextV{\_the\tmpnum}\_def\ltextS{#1}}
 
    \_doc
    Now, we create `\linkfspec` from scanned data. It is <full-vref>
    used for hyperlinks. We must manage all situations of incomplete links.
    \_cod
 
-\def\brefD{%
-   \ifnum 0\ltextV=0 \def\ltextV{}\fi
-   \if a\linkpre \ifx\ltextV\empty \else \edef\ltextC{\ltextV:}\def\ltextV{}\fi\fi
-   \edef\linkfspec{\ea\ltextBin\ltextB~/\ea\ltextCin\ltextC:/\ea\ltextVin\ltextV:/}%
+\_def\brefD{%
+   \_ifnum 0\ltextV=0 \_def\ltextV{}\_fi
+   \_if a\linkpre \_ifx\ltextV\_empty \_else \_edef\ltextC{\ltextV:}\_def\ltextV{}\_fi\_fi
+   \_edef\linkfspec{\_ea\ltextBin\ltextB~/\_ea\ltextCin\ltextC:/\_ea\ltextVin\ltextV:/}%
    \brefL
 }
-\def\ltextBin #1~#2/{\ifx^#1^\prelinkB \else #1\immediateassignment\def\prelinkB{#1}\fi/}
-\def\ltextCin #1:#2/{\ifx^#1^\prelinkC \else #1\immediateassignment\def\prelinkC{#1}\fi:}
-\def\ltextVin #1:#2/{\ifx^#1^\prelinkV \else #1\immediateassignment\def\prelinkV{#1}\fi}
-\def\ltextnCin #1:#2/{\prelinkC:\immediateassignment\let\ltextCin=\ltextsCin}
-\let\ltextsCin=\ltextCin
+\_def\ltextBin #1~#2/{\_ifx^#1^\prelinkB \_else #1\_immediateassignment\_def\prelinkB{#1}\_fi/}
+\_def\ltextCin #1:#2/{\_ifx^#1^\prelinkC \_else #1\_immediateassignment\_def\prelinkC{#1}\_fi:}
+\_def\ltextVin #1:#2/{\_ifx^#1^\prelinkV \_else #1\_immediateassignment\_def\prelinkV{#1}\_fi}
+\_def\ltextnCin #1:#2/{\prelinkC:\_immediateassignment\_let\ltextCin=\ltextsCin}
+\_let\ltextsCin=\ltextCin
 
    \_doc
    `\prelinkB` is <book-mark> of last referenced book.
@@ -726,7 +724,7 @@
    If the \code{\<} is used then they are re-initialized.
    \_cod
 
-\def\<{\let\prelinkB=\currbook \let\prelinkC=\currchapnum \let\prelinkV=\currversenum \bref}
+\_def\<{\_let\prelinkB=\currbook \_let\prelinkC=\currchapnum \_let\prelinkV=\currversenum \bref}
 
    \_doc
    `\oncebref` includes an additional macros which have to be processed in
@@ -734,13 +732,13 @@
    includes macros which have to be applied for all links.
    \_cod
 
-\newtoks\everybref
-\def\oncebref{}
+\_newtoks\everybref
+\_def\oncebref{}
 
    \_doc
    Macro `\brefL` recalculates `\linkfspec` and `\linktext` due to `\renum` data and
    creates the link `\linkpre:\linkfspec` with the text `\linktext`.\nl
-   `\renumlinktext <full-vref-ori>\relax<full-vref-modified>\relax`
+   `\renumlinktext <full-vref-ori>\_relax<full-vref-modified>\_relax`
    does re-calculation of the parts of the `\linktext` macro.\nl
    The `\linkfspecone` solves situation when chapter is given but no verse
    number: we must set the verse number to 1.\nl
@@ -756,48 +754,48 @@
    You can set it to `\wterm` if you want.
    \_cod
 
-\def\brefL{%
-   \edef\linkfspecm{\ea\renumvref\linkfspec\relax}%
-   \ifx\linkfspec\linkfspecm \else
-      \ea\ea\ea\renumlinktext \ea\linkfspec \ea\relax \linkfspecm \relax
-      \let\linkfspec=\linkfspecm
-   \fi
-   \ifx\ltextV\empty \ifx\ltextC\empty \else \ea\linkfspecone \linkfspec\end \fi\fi
-   \if a\linkpre\relax \ea\linkfspecarticle \linkfspec\end \fi
-   \if i\linkpre\relax \ea\linkfspecintro \linkfspec\end \fi
-   \linklog{\sspace <\unexpanded\ea{\linkspec}>\linkpost = [\linkpre:\linkfspec]%
-           {\ifx\brefH\empty\unexpanded\ea{\ltextP}\else\unexpanded\ea{\linktext}\fi}}%
+\_def\brefL{%
+   \_edef\linkfspecm{\_ea\renumvref\linkfspec\_relax}%
+   \_ifx\linkfspec\linkfspecm \_else
+      \_ea\_ea\_ea\renumlinktext \_ea\linkfspec \_ea\_relax \linkfspecm \_relax
+      \_let\linkfspec=\linkfspecm
+   \_fi
+   \_ifx\ltextV\_empty \_ifx\ltextC\_empty \_else \_ea\linkfspecone \linkfspec\_end \_fi\_fi
+   \_if a\linkpre\_relax \_ea\linkfspecarticle \linkfspec\_end \_fi
+   \_if i\linkpre\_relax \_ea\linkfspecintro \linkfspec\_end \_fi
+   \linklog{\sspace <\unexpanded\_ea{\linkspec}>\linkpost = [\linkpre:\linkfspec]%
+           {\_ifx\brefH\_empty\_unexpanded\_ea{\ltextP}\_else\unexpanded\_ea{\linktext}\_fi}}%
    \ensuredest \createlink
 }
-\def\linkfspecone #1:#2\end{\def\linkfspec{#1:1}\def\prelinkV{1}}
-\def\linkfspecarticle #1/#2:#3\end{\def\linkfspec{#1/#2}}
-\def\linkfspecintro #1/#2\end{\def\linkfspec{#1/}}
+\_def\linkfspecone #1:#2\_end {\_def\linkfspec{#1:1}\_def\prelinkV{1}}
+\_def\linkfspecarticle #1/#2:#3\_end {\_def\linkfspec{#1/#2}}
+\_def\linkfspecintro #1/#2\_end {\_def\linkfspec{#1/}}
 
-\def\renumlinktext #1/#2:#3\relax #4/#5:#6\relax{%
-   \ifx\ltextC\empty \else \def\ltextC{#5:}\fi
-   \def\ltextV{#6}%
-   \ifx\ltextN\empty \else
-      \ifx\ltextF\ltextDD
-          \isinlist\ltextN{:}\iftrue
-             \ifcsname rn!\tmark!#1/\ltextN\endcsname \edef\ltextN{\cs{rn!\tmark!#1/\ltextN}}\fi
-          \else \edef\ltextN{\the\numexpr#6+\ltextN-#3\relax}\fi
-      \else \let\tmp=\ignoreit % \ltextN is a list of verses, for example 7,9,13
-          \ea\foreach\ltextN,\do ##1,{\edef\tmp{\tmp,\the\numexpr#6+##1-#3}}%
-          \let\ltextN=\tmp
-      \fi
-   \fi
+\_def\renumlinktext #1/#2:#3\_relax #4/#5:#6\_relax{%
+   \_ifx\ltextC\_empty \_else \_def\ltextC{#5:}\_fi
+   \_def\ltextV{#6}%
+   \_ifx\ltextN\_empty \_else
+      \_ifx\ltextF\ltextDD
+          \_isinlist\ltextN{:}\_iftrue
+             \_ifcsname rn!\tmark!#1/\ltextN\_endcsname \_edef\ltextN{\_cs{rn!\tmark!#1/\ltextN}}\_fi
+          \_else \_edef\ltextN{\_the\_numexpr#6+\ltextN-#3\_relax}\_fi
+      \_else \_let\tmp=\_ignoreit % \ltextN is a list of verses, for example 7,9,13
+          \_ea\_foreach\ltextN,\_do ##1,{\_edef\tmp{\tmp,\_the\_numexpr#6+##1-#3}}%
+          \_let\ltextN=\tmp
+      \_fi
+   \_fi
 }
-\def\ltextDD{--}
+\_def\ltextDD{--}
 
-\def\sspace{\space\space\space\space}
-\def\linkpost{\if v\linkpre \else \linkpre\fi \space}
+\_def\sspace{\_space\_space\_space\_space}
+\_def\linkpost{\_if v\linkpre \_else \linkpre\_fi \_space}
 
    \_doc
    `\tracinglinks` and `\notracinglinks` are defined here.
    \_cod
 
-\def\tracinglinks{\let\linklog=\wlog}
-\def\notracinglinks{\let\linklog=\ignoreit}
+\_def\tracinglinks{\_let\linklog=\wlog}
+\_def\notracinglinks{\_let\linklog=\ignoreit}
 \tracinglinks
 
    \_doc
@@ -810,14 +808,14 @@
    `\tracingallrefs`.
    \_cod
 
-\def\createlink{{%
-   \ifx\brefH\empty \let\linktext=\ltextP\fi
-   \ea\isprintedbook\linkfspec \iftrue
-   \link[\linkpre:\linkfspec]{\Blue}{\linktext}%
-   \else {\Blue\linktext}\fi}%
+\_def\createlink{{%
+   \_ifx\brefH\_empty \_let\linktext=\ltextP\_fi
+   \_ea\isprintedbook\linkfspec \_iftrue
+   \_link[\linkpre:\linkfspec]{\Blue}{\linktext}%
+   \_else {\Blue\linktext}\_fi}%
 }
-\def\isprintedbook #1/#2\iftrue{\ifcsname pbook!#1\endcsname}
-\def\tracingouterlinks{\def\isprintedbook ##1\iftrue{\iftrue}}
+\_def\isprintedbook #1/#2\_iftrue{\_ifcsname pbook!#1\_endcsname}
+\_def\tracingouterlinks{\_def\isprintedbook ##1\_iftrue{\_iftrue}}
 
    \_doc
    We don't create destinations for all verses, notes etc. but only for
@@ -837,18 +835,18 @@
    and create correct hyperlinks and page numbers.
    \_cod
 
-\newwrite\xrf
-\immediate\openout\xrf=\jobname.xrf
-\openref
+\_newwrite\xrf
+\_immediate\_openout\xrf=\_jobname.xrf
+\_openref
 
-\def\ensuredest{\immediate\write\xrf{\string\sdef{\linkpre:\linkfspec}{}}}
-\refdecl{
-   \isfile{\jobname.xrf}\iftrue \input{\jobname.xrf}\fi^^J
-   \def\Xdest#1{\ifcsname pg:#1\endcsname \sxdef{pg:#1}{\_ea\_usesecond\_currpage}\fi}^^J
-   \def\mypage{\_ea\_usesecond\_currpage}
+\_def\ensuredest{\_immediate\_write\xrf{\_string\_sdef{\linkpre:\linkfspec}{}}}
+\_refdecl{
+   \_isfile{\_jobname.xrf}\_iftrue \_input{\_jobname.xrf}\_fi^^J
+   \_def\Xdest#1{\_ifcsname pg:#1\_endcsname \_sxdef{pg:#1}{\_ea\_usesecond\_currpage}\_fi}^^J
+   \_def\mypage{\_ea\_usesecond\_currpage}
 }
-\def\trymakedest#1{%
-   \ifcsname #1\endcsname \dest[#1]\ea\glet\csname #1\endcsname \undefined \fi
+\_def\trymakedest#1{%
+   \_ifcsname #1\_endcsname \_dest[#1]\_ea\_glet\_csname #1\_endcsname \_undefined \_fi
    \_ewref\Xdest{{#1}}%
 }
 
@@ -858,11 +856,11 @@
    the `\pg:<link>:<full-vref>` macro in the second \TeX/ run.
    \_cod
 
-\def\pg{%
-   \ifcsname pg:\linkpre:\linkfspec\endcsname
-       {\edef\linktext{\cs{pg:\linkpre:\linkfspec}}\let\brefH=\relax \createlink}%
-   \else {\Red ??}\fi
-   \immediate\write\xrf{\string\sdef{pg:\linkpre:\linkfspec}{??}}%
+\_def\pg{%
+   \_ifcsname pg:\linkpre:\linkfspec\_endcsname
+       {\_edef\linktext{\_cs{pg:\linkpre:\linkfspec}}\_let\brefH=\_relax \createlink}%
+   \_else {\Red ??}\_fi
+   \_immediate\_write\xrf{\_string\_sdef{pg:\linkpre:\linkfspec}{??}}%
 }
 
    \_doc
@@ -874,18 +872,18 @@
    `\def\var!1{<tmarkA>}` `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
    \_cod
 
-\newcount\numvariants
-\def\variants{\tmpnum=0 \afterassignment\variantsA \numvariants}
-\def\variantsA{%
-   \ifnum\tmpnum<\numvariants
-      \advance\tmpnum by1
-      \afterfi{\variantsB{\the\tmpnum}}%
-   \fi
+\_newcount\numvariants
+\_def\variants{\tmpnum=0 \_afterassignment\variantsA \numvariants}
+\_def\variantsA{%
+   \_ifnum\tmpnum<\numvariants
+      \_advance\tmpnum by1
+      \_afterfi{\variantsB{\_the\tmpnum}}%
+   \_fi
 }
-\def\variantsB#1#2{%
-   \ifnum#1=1 \gdef\tmarkA{#2}\sxdef{var!1}{#2}%
-   \else \sxdef{var!#1}{#2}%
-   \fi
+\_def\variantsB#1#2{%
+   \_ifnum#1=1 \_gdef\tmarkA{#2}\_sxdef{var!1}{#2}%
+   \_else \_sxdef{var!#1}{#2}%
+   \_fi
    \variantsA
 }
 
@@ -904,30 +902,30 @@
    \endtt 
    \_cod
 
-\def\vdef#1{\def\tmp{#1}%
-   \ifcsname v!\trycs{var!2}{}!\tmp\endcsname
-       \printwarn{\noexpand\vdef used secondly for phrase {\tmp}, ignored}\fi
-   \tmpnum=1 \ea\vdefA
+\_def\vdef#1{\_def\tmp{#1}%
+   \_ifcsname v!\_trycs{var!2}{}!\tmp\_endcsname
+       \printwarn{\_noexpand\vdef used secondly for phrase {\tmp}, ignored}\_fi
+   \tmpnum=1 \_ea\vdefA
 }
-\def\vdefA{%
-   \ifnum\tmpnum<\numvariants
-      \advance\tmpnum by1
-      \afterfi{\vdefB{\the\tmpnum}}%
-   \fi
+\_def\vdefA{%
+   \_ifnum\tmpnum<\numvariants
+      \_advance\tmpnum by1
+      \_afterfi{\vdefB{\_the\tmpnum}}%
+   \_fi
 }
-\def\vdefB#1#2{\def\tmpa{}%
-   \ifx\vdef#2\def\tmpa{#2}\fi
-   \ifx\tmpa\empty
-      \ifx^#2^\else
-         \unless \ifcsname v!\cs{var!#1}!\tmp\endcsname
-            \sedef{v!\cs{var!#1}!\tmp}{\ifx"#2\prevcs{#1}\tmp \else#2\fi}%
-      \fi\fi
-      \ea\vdefA
-   \else \errmessage{\string\vdef: too few parameters. To be read again: \string#2}%
-      \ea\tmpa
-   \fi
+\_def\vdefB#1#2{\_def\tmpa{}%
+   \_ifx\vdef#2\_def\tmpa{#2}\_fi
+   \_ifx\tmpa\_empty
+      \_ifx^#2^\_else
+         \_unless \_ifcsname v!\_cs{var!#1}!\tmp\_endcsname
+            \sedef{v!\_cs{var!#1}!\tmp}{\_ifx"#2\prevcs{#1}\tmp \_else#2\_fi}%
+      \_fi\_fi
+      \_ea\vdefA
+   \_else \_errmessage{\_string\vdef: too few parameters. To be read again: \_string#2}%
+      \_ea\tmpa
+   \_fi
 }
-\def\prevcs #1#2{\ifnum#1=2 #2\else \cs{v!\cs{var!\the\numexpr#1-1\relax}!#2}\fi}
+\_def\prevcs #1#2{\_ifnum#1=2 #2\_else \_cs{v!\_cs{var!\_the\_numexpr#1-1\_relax}!#2}\_fi}
 
    \_doc
    `\x/<phrase>/` expands to `\v!<tmark>!<phrase>` if such control sequence
@@ -940,10 +938,10 @@
    is not the first `<t-markA>`.
    \_cod
 
-\def\x/#1/{\trycs{v!\tmark!#1}{\xA#1/}}
-\def\xA#1/{#1\ifx\tmarkA\undefined \else \ifx\tmark\tmarkA \else
-   \printwarn{\string\x/#1/ -- this phrase is undefined by \csstring\\vdef}%
-   \fi\fi
+\_def\x/#1/{\_trycs{v!\tmark!#1}{\xA#1/}}
+\_def\xA#1/{#1\_ifx\tmarkA\_undefined \_else \_ifx\tmark\tmarkA \_else
+   \printwarn{\_string\x/#1/ -- this phrase is undefined by \_csstring\\vdef}%
+   \_fi\_fi
 }
 
    \_doc
@@ -957,23 +955,23 @@
    `\``Note` where they are re-set to `\undefined` meaning.
    \_cod
 
-\outer\def\ww{%
-   \ifx\varnum\undefined \setvarnum \fi
+\_outer\_def\ww{%
+   \_ifx\varnum\_undefined \setvarnum \_fi
    \tmpnum=0
-   \ifx\nextww\undefined \ea\wwA
-   \else \printwarn{Only single \csstring\\ww must be before \csstring\\Note}%
-       \ea\wwB \fi
+   \_ifx\nextww\_undefined \_ea\wwA
+   \_else \printwarn{Only single \_csstring\\ww must be before \_csstring\\Note}%
+       \_ea\wwB \_fi
 }
-\def\wwA#1#2 {\advance\tmpnum by1
-   \def\nextww{#1}\def\nextwwA{#2}%
-   \ifx\nextwwA\empty \let\nextwwA=\nextww \else \ea \redefwwA #2\end \fi
-   \ifnum\varnum=\tmpnum  \ifnum\tmpnum<\numvariants  \ea\ea\ea \wwB \fi
-   \else \ea \wwA \fi
+\_def\wwA#1#2 {\_advance\tmpnum by1
+   \_def\nextww{#1}\_def\nextwwA{#2}%
+   \_ifx\nextwwA\_empty \_let\nextwwA=\nextww \_else \_ea \redefwwA #2\_end \_fi
+   \_ifnum\varnum=\tmpnum  \_ifnum\tmpnum<\numvariants  \_ea\_ea\_ea \wwB \_fi
+   \_else \_ea \wwA \_fi
 }
-\def\wwB#1 {\advance\tmpnum by1
-   \ifnum\tmpnum<\numvariants \ea\wwB \fi
+\_def\wwB#1 {\_advance\tmpnum by1
+   \_ifnum\tmpnum<\numvariants \_ea\wwB \_fi
 }
-\def\redefwwA =#1\end{\def\nextwwA{#1}}
+\_def\redefwwA =#1\_end{\_def\nextwwA{#1}}
 
    \_doc
    The `\switch` macro reads a pair of parameters using `\switchA`
@@ -988,21 +986,21 @@
    read and we run `\setouter` in order to return to the normal setting.
    \_cod
 
-\newtoks\switchD
-\def\switch {\let\switchN=\switchA \unsetouter \switchN}
-\long\def\switchA #1#2{\switchD={\setouter #2\let\switchN=\switchI}%
-   \ifx\relax#1\relax \the\switchD
-   \else \foreach #1,\do ##1,{\def\tmp{##1}\switchC}%
-   \fi
-   \futurelet\next\switchB
+\_newtoks\switchD
+\_def\switch {\_let\switchN=\switchA \unsetouter \switchN}
+\_long\_def\switchA #1#2{\switchD={\setouter #2\_let\switchN=\switchI}%
+   \_ifx\_relax#1\_relax \_the\switchD
+   \_else \_foreach #1,\_do ##1,{\_def\tmp{##1}\switchC}%
+   \_fi
+   \_futurelet\next\switchB
 }
-\def\switchB{\ifx\next\bgroup \unsetouter \ea\switchN \else \setouter \fi}
-\long\def\switchI #1#2{\futurelet\next\switchB}
-\def\switchC{\ifx\tmp\tmark \the\switchD \fi}
-\def\unsetouter{\slet{ww}{relax}\slet{Note}{relax}}
-\def\setouter{\slet{ww}{iww}\slet{Note}{iNote}}
-\let\iww=\ww     % backup of outer ww
-\let\iNote=\Note % backup of outer Note
+\_def\switchB{\_ifx\next\_bgroup \unsetouter \_ea\switchN \_else \setouter \_fi}
+\_long\_def\switchI #1#2{\_futurelet\next\switchB}
+\_def\switchC{\_ifx\tmp\tmark \_the\switchD \_fi}
+\_def\unsetouter{\_slet{ww}{relax}\_slet{Note}{relax}}
+\_def\setouter{\_slet{ww}{iww}\_slet{Note}{iNote}}
+\_let\iww=\ww     % backup of outer ww
+\_let\iNote=\Note % backup of outer Note
 
    \_doc
    `\setvarnum` sets the `\varnum` as the position number of the current
@@ -1010,17 +1008,17 @@
    declaration must precede.
    \_cod
 
-\def\setvarnum{\gdef\varnum{0}%
-   \ifnum\numvariants=0 \gdef\varnum{1}\wlog{There is only single language variant (1)}%
-   \else
+\_def\setvarnum{\_gdef\varnum{0}%
+   \_ifnum\numvariants=0 \_gdef\varnum{1}\_wlog{There is only single language variant (1)}%
+   \_else
       \tmpnum=0
-      \loop
-         \advance\tmpnum by1
-         \ea\ifx \csname var!\the\tmpnum\endcsname \tmark \xdef\varnum{\the\tmpnum}\fi
-         \ifnum\tmpnum<\numvariants \repeat
-      \ifnum \varnum=0 \errmessage{\noexpand\tmark isn't set, \noexpand\setvarnum failded}%
-      \else \wlog{Language variant set by \string\tmark{\tmark} (\varnum)}\fi
-   \fi
+      \_loop
+         \_advance\tmpnum by1
+         \_ea\_ifx \_csname var!\_the\tmpnum\_endcsname \tmark \_xdef\varnum{\_the\tmpnum}\_fi
+         \_ifnum\tmpnum<\numvariants \_repeat
+      \_ifnum \varnum=0 \_errmessage{\_noexpand\tmark isn't set, \_noexpand\setvarnum failded}%
+      \_else \_wlog{Language variant set by \_string\tmark{\tmark} (\varnum)}\_fi
+   \_fi
 }
 
    \_doc
@@ -1035,9 +1033,9 @@
    \endtt
    \_cod
 
-\def\renum #1 #2:#3 = #4 #5:#6-#7 {%
-   \tmpnum=#3\relax
-   \fornum #6..#7 \do {\sxdef{rn!#4!#1/#2:\the\tmpnum}{#5:##1}\incr\tmpnum}%
+\_def\renum #1 #2:#3 = #4 #5:#6-#7 {%
+   \tmpnum=#3\_relax
+   \_fornum #6..#7 \_do {\_sxdef{rn!#4!#1/#2:\_the\tmpnum}{#5:##1}\_incr\tmpnum}%
 }
 
    \_doc
@@ -1047,10 +1045,10 @@
    We declare new insert `\noteins` used in the `\output` routine.
    \_cod
 
-\newinsert \noteins
-\skip\noteins=\bigskipamount  % noterule height
-\count\noteins=500            % two columns
-\dimen\noteins=\maxdimen      % full page of notes allowed
+\_newinsert \noteins
+\_skip\noteins=\_bigskipamount  % noterule height
+\_count\noteins=500             % two columns
+\_dimen\noteins=\_maxdimen      % full page of notes allowed
 
    \_doc
    The `\noteinsert {<text>}` inserts its parameter to the `\noteins`.
@@ -1063,21 +1061,21 @@
    notes.
    \_cod
 
-\def\noteinsert #1{\insert\noteins{%
+\_def\noteinsert #1{\_insert\noteins{%
    \noteset
-   \vbox to\ht\_strutbox{}\nobreak \vskip-\baselineskip
-   #1\unskip\par \nobreak \vskip-\baselineskip
-   \hbox{\lower\dp\_strutbox\vbox{}}
-   \penalty0
+   \_vbox to\_ht\_strutbox{}\_nobreak \_vskip-\_baselineskip
+   #1\_unskip\_par \_nobreak \_vskip-\_baselineskip
+   \_hbox{\_lower\_dp\_strutbox\_vbox{}}
+   \_penalty0
 }}
-\def\noteset{\Heros\cond \_scalemain \_typoscale[800/800] % Heros condensed 80%
-   \Black \nobreak
-   \widowpenalty=20 \clubpenalty=20
-   \leftskip=0pt \rightskip=0pt \parfillskip=0pt plus1fill
-   \parindent=0pt
-   \lineskiplimit=-3pt
-   \hsize=.5\hsize \advance\hsize by-1em \relax % two columns
-   \everypar{}
+\_def\noteset{\Heros\cond \_scalemain \_typoscale[800/800] % Heros condensed 80%
+   \Black \_nobreak
+   \_widowpenalty=20 \_clubpenalty=20
+   \_leftskip=0pt \_rightskip=0pt \_parfillskip=0pt plus1fill
+   \_parindent=0pt
+   \_lineskiplimit=-3pt
+   \_hsize=.5\_hsize \_advance\_hsize by-1em\_relax % two columns
+   \_everypar{}
 }
 
    \_doc
@@ -1099,21 +1097,21 @@
    splitting to the two columns).
    \_cod
 
-\addto\_pagecontents{%
-   \ifvoid\noteins \else
-      \vskip\skip\noteins \noterule
-      \setbox\noteins=\vbox{\penalty0 \unvbox\noteins \vfil}
-      \splittopskip=12pt
-      \setbox0=\vsplit\noteins to0pt  % adding \splittopskip to \noteins
-      \def\_Ncols{2}
+\_addto\_pagecontents{%
+   \_ifvoid\noteins \_else
+      \_vskip\_skip\noteins \noterule
+      \_setbox\noteins=\_vbox{\_penalty0 \_unvbox\noteins \_vfil}
+      \_splittopskip=12pt
+      \_setbox0=\_vsplit\noteins to0pt  % adding \splittopskip to \noteins
+      \_def\_Ncols{2}
       \_dimen0=.5\_ht\noteins \_setbox6=\_box\noteins
-      \vskip\splittopskip
+      \_vskip\_splittopskip
       \_balancecolumns
-   \fi
-   \unless\ifvoid\botins \unvbox\botins
-   \else \vskip 0pt plus1filll minus8pt \fi
+   \_fi
+   \_unless\_ifvoid\botins \_unvbox\botins
+   \_else \_vskip 0pt plus1filll minus8pt \_fi
 }
-\_def \noterule {\_kern-3pt {\Black \_hrule width\hsize}\_kern 2.6pt }
+\_def \noterule {\_kern-3pt {\Black \_hrule width\_hsize}\_kern 2.6pt }
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1125,16 +1123,16 @@
    We use it for inserting images and articles to the page.
    \_cod
 
-\newinsert\botins
-\def\botinsert{\setbox0=\vbox\bgroup}
-\def\endbot{\par\egroup
-   \insert\botins{\splittopskip=0pt \penalty100
-      \hrule height0pt \nobreak\medskip\bigskip \unvbox0
+\_newinsert\botins
+\_def\botinsert{\_setbox0=\_vbox\_bgroup}
+\_def\endbot{\_par\_egroup
+   \_insert\botins{\_splittopskip=0pt \_penalty100
+      \_hrule height0pt \_nobreak\_medskip\_bigskip \_unvbox0
    }%
 }
-\skip\botins=\_zoskip % no space added when a topinsert is present
-\count\botins=1000 % magnification factor (1 to 1)
-\dimen\botins=\_maxdimen % no limit per page
+\_skip\botins=\_zoskip    % no space added when a topinsert is present
+\_count\botins=1000       % magnification factor (1 to 1)
+\_dimen\botins=\_maxdimen % no limit per page
 
    \_doc
    `\putImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
@@ -1147,24 +1145,24 @@
    destination of hyperlink based on the <label>, if the <label> isn't empty.
    \_cod
 
-\def\putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
-   \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\doImage{#2}[#4](#6){#7}}%
+\_def\putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+   \_edef\fullvref{\gentovref{#1}}%
+   \_edef\fullvrefm{\_ea\renumvref\fullvref\_relax}%
+   \_ea\newaction\_ea{\fullvrefm}{\doImage{#2}[#4](#6){#7}}%
 }
-\def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
+\_def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \botinsert
       \botTitle{#1}[#2]%
-      \kern3pt \nobreak
-      \hbox{\picw=\hsize #3\inspic{#4}}%
+      \_kern3pt \_nobreak
+      \_hbox{\picw=\hsize #3\inspic{#4}}%
    \endbot
 }
-\def\botTitle#1[#2]{\hbox{\captionfont
-   \ifx^#2^\else \botDest{#1}[#2]\fi
-   \rlap{\Grey \vrule height1.2em depth.5em width\hsize}\White\kern12pt #1}%
+\_def\botTitle#1[#2]{\_hbox{\captionfont
+   \_ifx^#2^\_else \botDest{#1}[#2]\_fi
+   \_rlap{\Grey \_vrule height1.2em depth.5em width\_hsize}\White\_kern12pt #1}%
 }
-\picdir={images/}
-\def\botDest#1[#2]{\label[#2]\wlabel{#1}\dest[ref:#2]}
+\_picdir={images/}
+\_def\botDest#1[#2]{\_label[#2]\_wlabel{#1}}
 
    \_doc
    `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
@@ -1188,11 +1186,11 @@
    `\newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
    \_cod
 
-\newcount\articlenum
-\def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
-   \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\doArticle{#2}[#4](#6)}%
+\_newcount\articlenum
+\_def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
+   \_edef\fullvref{\gentovref{#1}}%
+   \_edef\fullvrefm{\_ea\renumvref\fullvref\_relax}%
+   \_ea\newaction\_ea{\fullvrefm}{\doArticle{#2}[#4](#6)}%
 }
 
    \_doc
@@ -1209,48 +1207,48 @@
    These blocks divided by `\break` are inserted into `\botinsert`.
    \_cod
 
-\def\doArticle#1[#2](#3){% {Title}[number](params)
-   \incr\articlenum
+\_def\doArticle#1[#2](#3){% {Title}[number](params)
+   \_incr\articlenum
    \botinsert
-      \def\botDest##1[##2]{\trymakedest{a:\currbook/##2}}
-      \parindent=12pt \iindent=\parindent
-      \setbox0=\vbox{\hsize=.458\hsize \emergencystretch=1em
-         \hbadness=6000 \baselineskip=\dimexpr\baselineskip plus1pt
-         \def\Article[##1]{\endinput}
-         \penalty0
-         \long\def\searcharticle##1\Article[#2]{}
-         \ea\searcharticle \input \articlefile \relax}
-      \splittopskip=12pt
-      \setbox1=\vsplit0 to0pt % adding \splittopskip
-      \tmpdim=\vsize \advance\tmpdim by-24pt % \botTitle height plus above/below skips
-      \ifdim 2\tmpdim > \ht0 \tmpnum=1
-      \else
-         \tmpnum=\roundexpr{\bp{\ht0}/\bp{1.333\vsize}+0.999} % number of 2/3 pages
-      \fi
-      \multiply\tmpnum by2 % number of columns
-      \edef\_Ncols{\the\tmpnum}
-      \dimen0=\expr{1/\_Ncols}\ht0 \setbox6=\box0 % height of each two-columns part
-      \setbox0=\vbox{\_balancecolumns}
-      \tmpdim=\ht0 \advance\tmpdim by1.2\baselineskip
-      \setbox0=\vbox{\unvbox0 \global\setbox2=\lastbox}
-      \setbox0=\hbox{\unhbox2
-          \fornum 1..\_Ncols \do {\unskip \global\setbox1##1=\lastbox}}
-          \fornumstep -2: \_Ncols..1 \do {
-              \hrule height0pt\kern5pt\nobreak\vfill
-              \ifnum\_Ncols=##1 \botTitle{#1}[#2]\else \botTitle{}[]\fi
-              \kern3pt \nobreak
-              \hbox to\hsize{%
-                 \rlap{\LightGrey \vrule height\tmpdim depth6pt width\hsize}%
-                 \kern\parindent
-                 \box1##1\hss\box1\the\numexpr##1-1
-                 \kern\parindent
+      \_def\botDest##1[##2]{\trymakedest{a:\currbook/##2}}
+      \_parindent=12pt \_iindent=\_parindent
+      \_setbox0=\_vbox{\_hsize=.458\_hsize \_emergencystretch=1em
+         \_hbadness=6000 \_baselineskip=\_dimexpr\_baselineskip plus1pt
+         \_def\Article[##1]{\_endinput}
+         \_penalty0
+         \_long\_def\searcharticle##1\Article[#2]{}
+         \_ea\searcharticle \_input \articlefile \_relax}
+      \_splittopskip=12pt
+      \_setbox1=\_vsplit0 to0pt % adding \splittopskip
+      \tmpdim=\_vsize \_advance\tmpdim by-24pt % \botTitle height plus above/below skips
+      \_ifdim 2\tmpdim > \_ht0 \tmpnum=1
+      \_else
+         \tmpnum=\roundexpr{\_bp{\_ht0}/\_bp{1.333\_vsize}+0.999} % number of 2/3 pages
+      \_fi
+      \_multiply\tmpnum by2 % number of columns
+      \_edef\_Ncols{\_the\tmpnum}
+      \_dimen0=\_expr{1/\_Ncols}\_ht0 \_setbox6=\_box0 % height of each two-columns part
+      \_setbox0=\_vbox{\_balancecolumns}
+      \tmpdim=\_ht0 \_advance\tmpdim by1.2\_baselineskip
+      \_setbox0=\_vbox{\_unvbox0 \_global\_setbox2=\_lastbox}
+      \_setbox0=\_hbox{\_unhbox2
+          \_fornum 1..\_Ncols \_do {\_unskip \_global\_setbox1##1=\_lastbox}}
+          \_fornumstep -2: \_Ncols..1 \_do {
+              \_hrule height0pt\_kern5pt\_nobreak\_vfill
+              \_ifnum\_Ncols=##1 \botTitle{#1}[#2]\_else \botTitle{}[]\_fi
+              \_kern3pt \_nobreak
+              \_hbox to\_hsize{%
+                 \_rlap{\LightGrey \_vrule height\tmpdim depth6pt width\_hsize}%
+                 \_kern\_parindent
+                 \_box1##1\_hss\_box1\_the\_numexpr##1-1
+                 \_kern\_parindent
               }
-              \break
+              \_break
           }
    \endbot
 }
-\def\roundexpr#1{\ea\ea\ea\roundexprA\expr{#1}\relax}
-\def\roundexprA#1.#2\relax{\ifnum#1=0 0\else #1\fi}
+\_def\roundexpr#1{\_ea\_ea\_ea\roundexprA\_expr{#1}\_relax}
+\_def\roundexprA#1.#2\_relax{\_ifnum#1=0 0\_else #1\_fi}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1261,10 +1259,10 @@
    `\newaction{<full-vref>}{\dotopCite{<text>}}`.
    \_cod
 
-\def\putCite #1 #2{% chap:verse {text}
-   \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\dotopCite{#2}}%
+\_def\putCite #1 #2{% chap:verse {text}
+   \_edef\fullvref{\gentovref{#1}}%
+   \_edef\fullvrefm{\_ea\renumvref\fullvref\_relax}%
+   \_ea\newaction\_ea{\fullvrefm}{\dotopCite{#2}}%
 }
 
    \_doc
@@ -1277,26 +1275,26 @@
    The typesetting parameters differ in \"left" and \"right" case.
    \_cod
 
-\newcount\citenum
-\def\dotopCite #1{%
-   \topinsert
-   \typosize[12/16]\bi
-   \incr\citenum
-   \ifodd \trycs{ct!\the\citenum}{0}\relax
-       \leftskip=.3\hsize plus1fil \parfillskip=0pt
-       \noindent
-       \rlap{\hskip\hsize \kern-\leftskip \copy\rqqbox}\hfill
-   \else
-       \let\quotedby=\quotedbyright
-       \rightskip=.3\hsize plus 1fil
-       \noindent \llap{\copy\lqqbox}%
-   \fi
-   {\printCite{#1}\unskip}\par
-   \_ewref\sxdef{{ct!\the\citenum}{\string\mypage}}%
+\_newcount\citenum
+\_def\dotopCite #1{%
+   \_topinsert
+   \_typosize[12/16]\_bi
+   \_incr\citenum
+   \_ifodd \_trycs{ct!\_the\citenum}{0}\_relax
+       \_leftskip=.3\_hsize plus1fil \_parfillskip=0pt
+       \_noindent
+       \_rlap{\_hskip\_hsize \_kern-\_leftskip \_copy\rqqbox}\_hfill
+   \_else
+       \_let\quotedby=\quotedbyright
+       \_rightskip=.3\_hsize plus 1fil
+       \_noindent \_llap{\_copy\lqqbox}%
+   \_fi
+   {\printCite{#1}\_unskip}\_par
+   \_ewref\sxdef{{ct!\_the\citenum}{\_string\mypage}}%
 %   \vskip-.3\baselineskip
-   \endinsert
+   \_endinsert
 }
-\def\printCite#1{\pdfliteral{2 Tr .15 w .9 g}#1\pdfliteral{0 Tr 0 w 0 g}}
+\_def\printCite#1{\_pdfliteral{2 Tr .15 w .9 g}#1\_pdfliteral{0 Tr 0 w 0 g}}
 
    \_doc
    The `\lqbox` and `\rqbox` include the graphical marks for quotations. First
@@ -1306,17 +1304,17 @@
    the <author> at the last line if there is sufficient space.
    \_cod
 
-\newbox\lqqbox
-\newbox\rqqbox
-\setbox\lqqbox=\hbox{\lower3pt\hbox{\setfontsize{at70pt}\bf\LiRed„}}
-\setbox\rqqbox=\hbox{\kern2pt\lower38pt\hbox{\setfontsize{at70pt}\bf\LiRed“}}
-\ht\lqqbox=0pt \dp\lqqbox=0pt
-\ht\rqqbox=0pt \dp\rqqbox=0pt
+\_newbox\lqqbox
+\_newbox\rqqbox
+\_setbox\lqqbox=\_hbox{\_lower3pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed„}}
+\_setbox\rqqbox=\_hbox{\_kern2pt\_lower38pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed“}}
+\_ht\lqqbox=0pt \_dp\lqqbox=0pt
+\_ht\rqqbox=0pt \_dp\rqqbox=0pt
 
-\def\quotedby{\par}
-\def\quotedbyright#1{%
-   \unskip\nobreak\hfill\penalty0\hskip2em
-   \null\nobreak\hskip\iindent\hbox{#1}}
+\_def\quotedby{\_par}
+\_def\quotedbyright#1{%
+   \_unskip\_nobreak\_hfill\_penalty0\_hskip2em
+   \_null\_nobreak\_hskip\_iindent\_hbox{#1}}
 
    \_doc
    The following macros `\Cite`, `\insertCite` and `\swapCites` are used for
@@ -1330,50 +1328,50 @@
    `\cp!<article-num>!<label>`.
    \_cod
 
-\def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
-\def\insertCite #1#2{\def\citelabel{#1}%
-   \ifx\left#2\insertCiteleft
-   \else \ifx#2\right\insertCiteright\else
-   \errmessage{\noexpand\putCite#1: \left or \right expected}%
-   \fi\fi
+\_def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
+\_def\insertCite #1#2{\_def\citelabel{#1}%
+   \_ifx\left#2\insertCiteleft
+   \_else \_ifx#2\right\insertCiteright\_else
+      \_errmessage{\_noexpand\putCite#1: \_noexpand\left or \_noexpand\right expected}%
+   \_fi\_fi
 }
-\def\insertCiteleft {%
-   \ifnum\citepg=1 \opwarning{\noexpand\insertCite\citelabel: \noexpand\swapCites activated}\fi
-   \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
-   \else \insertCitelr \left \fi
+\_def\insertCiteleft {%
+   \_ifnum\citepg=1 \printwarn{\_noexpand\insertCite\citelabel: \_noexpand\swapCites activated}\_fi
+   \_ifodd \_numexpr\_trycs{cp!\_the\articlenum!\citelabel}{0}+\citepg\_relax
+   \_else \insertCitelr \_left \_fi
 }
-\def\insertCiteright{%
-   \ifodd \numexpr\trycs{cp!\the\articlenum!\citelabel}{0}+\citepg\relax
-   \insertCitelr \right \fi
+\_def\insertCiteright{%
+   \_ifodd \_numexpr\_trycs{cp!\_the\articlenum!\citelabel}{0}+\citepg\_relax
+   \insertCitelr \_right \_fi
 }
-\def\insertCitelr#1{\unskip\vadjust{\vbox{%
-   \_ewref\sxdef{{cp!\the\articlenum!\citelabel}{\string\mypage}}%
-   \vskip6pt
-   \advance\hsize by\parindent
-   \typosize[12/16]\bi\Grey
-       \ifx#1\left
-           \def\quotedby{\par\hfill}
-           \rightskip=\parindent plus1fil \leftskip=0pt
-           \setbox0\vbox{%
-              \medskip \noindent
-              \llap{\copy\lqqbox}\ignorespaces
-              \printCite{\cs{c!\the\articlenum!\citelabel}}\medskip}%
-           \hbox{\kern-\parindent\rlap{\White
-              \vrule height\ht0 width\dimexpr\hsize}\box0}%
-        \else
-           \leftskip=\parindent plus1fil
-           \parfillskip=0pt
-           \setbox0\vbox{%
-              \medskip \noindent
-              \rlap{\hskip\hsize\kern-\parindent\copy\rqqbox}\hfill
-              \ignorespaces \printCite{\cs{c!\the\articlenum!\citelabel}}\medskip}%
-           \rlap{\rlap{\White \vrule height\ht0 width\hsize}\box0}%
-        \fi
-   \vskip6pt
+\def\insertCitelr#1{\_unskip\_vadjust{\_vbox{%
+   \_ewref\_sxdef{{cp!\_the\articlenum!\citelabel}{\_string\mypage}}%
+   \_vskip6pt
+   \_advance\_hsize by\_parindent
+   \_typosize[12/16]\_bi\Grey
+       \_ifx#1\_left
+           \_def\quotedby{\_par\_hfill}
+           \_rightskip=\_parindent plus1fil \_leftskip=0pt
+           \_setbox0\_vbox{%
+              \_medskip \_noindent
+              \_llap{\_copy\lqqbox}\_ignorespaces
+              \printCite{\_cs{c!\_the\articlenum!\citelabel}}\_medskip}%
+           \_hbox{\_kern-\_parindent\_rlap{\White
+              \_vrule height\_ht0 width\_hsize}\_box0}%
+        \_else
+           \_leftskip=\_parindent plus1fil
+           \_parfillskip=0pt
+           \_setbox0\_vbox{%
+              \_medskip \_noindent
+              \_rlap{\_hskip\_hsize\_kern-\_parindent\_copy\rqqbox}\_hfill
+              \_ignorespaces \printCite{\_cs{c!\_the\articlenum!\citelabel}}\_medskip}%
+           \_rlap{\_rlap{\White \_vrule height\_ht0 width\_hsize}\_box0}%
+        \_fi
+   \_vskip6pt
 }}}
 
-\def\swapCites{\def\citepg{1}}
-\def\citepg{0}
+\_def\swapCites{\_def\citepg{1}}
+\_def\citepg{0}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1383,91 +1381,84 @@
 
 %% TBN page 236
 
-\newcount\shapenum
-\newdimen\ii \newdimen\w
-\def\oblom #1 od #2 odsadit #3 {\par \ii=#1 \w=\hsize
-   \ifdim\ii>\_zo \advance\w by-\ii
-   \else \advance\w by\ii \ii=\_zo \fi
-   \shapenum=1 \tmpnum=0 \def\shapelist{}
-   \loop \ifnum\shapenum<#2 \edef\shapelist{\shapelist\_zo\hsize}
-      \advance\shapenum by1 \repeat
-   \loop \edef\shapelist{\shapelist\ii\w}
-      \advance\tmpnum by1 \ifnum\tmpnum<#3 \repeat
-   \advance\shapenum by#3 \edef\shapelist{\shapelist\_zo\hsize}
+\_newcount\shapenum
+\_newdimen\ii \_newdimen\w
+\_def\oblom #1 od #2 odsadit #3 {\_par \ii=#1 \w=\_hsize
+   \_ifdim\ii>\_zo \_advance\w by-\ii
+   \_else \_advance\w by\ii \ii=\_zo \_fi
+   \shapenum=1 \tmpnum=0 \_def\shapelist{}
+   \_loop \_ifnum\shapenum<#2 \_edef\shapelist{\shapelist\_zo\_hsize}%
+      \_advance\shapenum by1 \_repeat
+   \_loop \_edef\shapelist{\shapelist\ii\w}%
+      \_advance\tmpnum by1 \_ifnum\tmpnum<#3 \_repeat
+   \_advance\shapenum by#3 \_edef\shapelist{\shapelist\_zo\_hsize}
    \doshape}
-\def\doshape{\parshape \shapenum \shapelist
-   \message{..... \parshape \shapenum \shapelist}
-} 
-\newcount\globpar
-\ifx\_partokenset \_undefined 
-   \def\doshape{\global\globpar=0 \def\par{\ifhmode\shapepar\fi}}
-   \def\shapepar{\prevgraf=\globpar \parshape\shapenum\shapelist
-      \endgraf \global\globpar=\prevgraf
-      \ifnum \prevgraf>\shapenum \let\par=\endgraf \fi}
-\else
-   \def\doshape{\global\globpar=0 \def\_par{\ifhmode\shapepar\fi}}
-   \def\shapepar{\prevgraf=\globpar \parshape\shapenum\shapelist
-      \endgraf \global\globpar=\prevgraf
-      \ifnum \prevgraf>\shapenum \let\_par=\endgraf \fi}
-\fi
+\_def\doshape{\_parshape \shapenum \shapelist} 
+\_newcount\globpar
+\_ifx\_partokenset \_undefined \_def\partoken{\par} \_else \_def\partoken{\_par} \_fi
+\_def\doshape{\_global\globpar=0 \_ea\_def\partoken{\_ifhmode\shapepar\_fi}}
+\_def\shapepar{\_prevgraf=\globpar \_parshape\shapenum\shapelist
+   \_endgraf \_global\globpar=\_prevgraf
+   \_ifnum \_prevgraf>\shapenum \_ea\_let\partoken=\_endgraf \_fi
+}
 
-\def\Citehereleft #1 (#2) #3{{
-   \par
-           \def\quotedby{\par\hfill}
-           \rightskip=\parindent plus1fil \leftskip=0pt
-           \setbox0\vbox{{%
-             \typosize[12/16]\bi\Grey
-              \hsize=.5\hsize
-              \medskip \noindent
-              \llap{\copy\lqqbox}\ignorespaces
-              \printCite{#3}\medskip}}%
-   \tmpdim=\ht0 \advance\tmpdim by\baselineskip
-   \xdef\lines{\the\numexpr \number\tmpdim / \number\baselineskip \relax}
-   \nointerlineskip\vbox to0pt{\kern#1\baselineskip #2
-           \hbox{\rlap{\White
-              \kern-3mm\vrule height\ht0 width.5\hsize}\box0}%
-   \vss}}
-   \tmpdim=\hsize \advance\tmpdim by-2\leftskip
+\_def\Citehereleft #1 (#2) #3{{
+   \_par
+           \_def\quotedby{\_par\_hfill}
+           \_rightskip=\_parindent plus1fil \_leftskip=0pt
+           \_setbox0\_vbox{{%
+              \_typosize[12/16]\_bi\Grey
+              \_hsize=.5\_hsize
+              \_medskip \_noindent
+              \_llap{\_copy\lqqbox}\_ignorespaces
+              \printCite{#3}\_medskip}}%
+   \tmpdim=\_ht0 \_advance\tmpdim by\_baselineskip
+   \_xdef\lines{\_the\_numexpr \_number\tmpdim / \_number\_baselineskip \_relax}%
+   \_nointerlineskip\_vbox to0pt{\_kern#1\_baselineskip #2
+           \_hbox{\_rlap{\White
+              \_kern-3mm\_vrule height\_ht0 width.5\_hsize}\_box0}%
+   \_vss}}
+   \tmpdim=\_hsize \_advance\tmpdim by-2\_leftskip
    \oblom {.5\tmpdim} od #1 odsadit {\lines}
 }
-\def\Citehereright #1 (#2) #3{{
-   \par
-           \def\quotedby{\par\parfillskip=0pt \hfill}
-           \leftskip=\parindent plus1fill \rightskip=0pt
-           \setbox0\vbox{{%
-             \typosize[12/16]\bi\Grey
-              \hsize=.5\hsize
-              \vskip\medskipamount \rlap{\kern\hsize\copy\rqqbox}\vskip-\medskipamount
-              \printCite{\noindent\ignorespaces #3}\medskip}}%
-   \tmpdim=\ht0 \advance\tmpdim by\baselineskip
-   \xdef\lines{\the\numexpr \number\tmpdim / \number\baselineskip \relax}
-   \nointerlineskip\vbox to0pt{\kern#1\baselineskip #2
-        \hbox to\hsize{\hss
-           \llap{\White \vrule height\ht0 width.5\hsize \kern-3mm}%
-           \llap{\box0}}
-   \vss}}
-   \tmpdim=\hsize \advance\tmpdim by-2\leftskip
+\_def\Citehereright #1 (#2) #3{{
+   \_par
+           \_def\quotedby{\_par\_parfillskip=0pt \_hfill}
+           \_leftskip=\_parindent plus1fill \_rightskip=0pt
+           \_setbox0\_vbox{{%
+              \_typosize[12/16]\_bi\Grey
+              \_hsize=.5\_hsize
+              \_vskip\_medskipamount \_rlap{\_kern\_hsize\_copy\rqqbox}\_vskip-\_medskipamount
+              \printCite{\_noindent\_ignorespaces#3}\_medskip}}%
+   \tmpdim=\_ht0 \_advance\tmpdim by\_baselineskip
+   \_xdef\lines{\_the\_numexpr \_number\tmpdim / \_number\_baselineskip \_relax}%
+   \_nointerlineskip\_vbox to0pt{\_kern#1\_baselineskip #2
+        \_hbox to\_hsize{\_hss
+           \_llap{\White \_vrule height\_ht0 width.5\_hsize \_kern-3mm}%
+           \_llap{\_box0}}
+   \_vss}}
+   \tmpdim=\_hsize \_advance\tmpdim by-2\_leftskip
    \oblom {-.5\tmpdim} od #1 odsadit {\lines}
 }
 
-\def\Citehere{\par \ifodd\pageno \ea\Citehereright \else \ea\Citehereleft \fi}
+\_def\Citehere{\_par \_ifodd\pageno \_ea\Citehereright \_else \_ea\Citehereleft \_fi}
 
-\def\insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
+\_def\insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
    \botinsert
       \botTitle{#1}[#3]%
-      \kern3pt \nobreak
-      \vbox{\picw=\hsize #5 #6}%
+      \_kern3pt \_nobreak
+      \_vbox{\_picwidth=\_hsize #5 #6}%
    \endbot
 }
-\def\putBot #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
-   \edef\fullvref{\gentovref{#1}}%
-   \edef\fullvrefm{\ea\renumvref\fullvref\relax}%
-   \ea\newaction\ea{\fullvrefm}{\insertBot{#2}[#4](#6){#7}}%
+\_def\putBot #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+   \_edef\fullvref{\gentovref{#1}}%
+   \_edef\fullvrefm{\_ea\renumvref\fullvref\_relax}%
+   \_ea\newaction\_ea{\fullvrefm}{\insertBot{#2}[#4](#6){#7}}%
 }
 
-\def\c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
-   \pdfsave\pdfrotate{#1}\rlap{\edef\tmpb{#3}\replstring\tmpb{ }{{ }}\def\tmpa{#2}%
-                 \ea\foreach\tmpb\do{##1\tmpa}}\pdfrestore \kern10mm
+\_def\c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
+   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\tmpb{#3}\_replstring\tmpb{ }{{ }}\_def\tmpa{#2}%
+                 \_ea\_foreach\tmpb\_do{##1\tmpa}}\_pdfrestore \_kern10mm
 }
 
    \_doc
@@ -1476,24 +1467,24 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \_cod
 
-\newdimen\colsep
+\_newdimen\colsep
 \colsep=10pt
 
-\def\Outline{
-   \medskip
+\_def\Outline{
+   \_medskip
 %   \filbreak
-   \outlinetit
-   \everylist={\ifcase\ilevel \or \style I \or \style A \or \style n \fi}
-   \sdef{_item:A}{\strut\uppercase\_ea{\_athe\itemnum}. }
-   \sdef{_item:I}{\strut\uppercase\_ea{\_romannumeral\itemnum}. }
-   \hsize=.5\hsize \advance\hsize by-\colsep
-   \emergencystretch=40pt
-   \leftskip=0pt \rightskip=0pt
+   \chaptit{\_mtext{outline}}%
+   \_everylist={\_ifcase\_ilevel \_or \_style I \_or \_style A \_or \_style n \_fi}
+   \_sdef{_item:A}{\_strut\_uppercase\_ea{\_athe\_itemnum}. }
+   \_sdef{_item:I}{\_strut\_uppercase\_ea{\_romannumeral\_itemnum}. }
+   \_hsize=.5\_hsize \_advance\_hsize by-\colsep
+   \_emergencystretch=40pt
+   \_leftskip=0pt \_rightskip=0pt
 }
-\def\rightnote#1{\par
-   \setbox0=\hbox{\kern\hsize \kern\colsep
-                  \vtop{\leftskip=0pt \kern0pt\noindent\strut\it#1}}
-   \ht0=0pt \dp0=0pt \box0 \nointerlineskip
+\_def\rightnote#1{\_par
+   \_setbox0=\_hbox{\_kern\_hsize \_kern\colsep
+                    \_vtop{\_leftskip=0pt \_kern0pt\_noindent\_strut\_it#1}}
+   \_ht0=0pt \_dp0=0pt \_box0 \_nointerlineskip
 }
 
    \_doc
@@ -1508,15 +1499,16 @@
    reduced because there is no material in them. 
    \_cod
 
-\def\normalchapnumbers{
-   \margins/2 a2 (25,25,20,20)mm
-   \lrmargin=0pt
-   \setbox0=\box\lqqbox \setbox0=\box\rqqbox
-   \def\printbeforefirst{%
-      \nobreak\medskip
+\_def\normalchapnumbers{
+   \_margins/2 a2 (25,25,20,20)mm
+   \_lrmargin=0pt
+   \_setbox0=\_box\lqqbox \_setbox0=\_box\rqqbox
+   \_def\printbeforefirst{%
+      \_nobreak\_medskip
       \printchapnote
-      \hangindent=\parindent \hangafter=-2 \noindent 
-      \llap{\vbox to0pt{\kern-8pt\hbox{\setfontsize{at23pt}\bf\Red\the\chapnum\kern5pt}\vss}}%
+      \_hangindent=\_parindent \_hangafter=-2
+      \_noindent \_llap{\_vbox to0pt
+         {\_kern-8pt\_hbox{\_setfontsize{at23pt}\_bf\Red\_the\chapnum\_kern5pt}\_vss}}%
    }
 }
 
@@ -1526,78 +1518,75 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \_cod
 
-\def\checksyntax#1 {%
-   \let\processbooks=\relax
-   \ifx\relax#1\relax \else
-      \begingroup 
-      \the\syntaxmacros
-      \wterm{^^J** checking file: #1 **^^J}
-      \input{#1}
-      \vfil\break
-      \endgroup
-   \ea\checksyntax \fi 
+\_def\checksyntax#1 {%
+   \_let\processbooks=\_relax
+   \_ifx\_relax#1\_relax \_else
+      \_begingroup 
+         \_the\syntaxmacros
+         \_wterm{^^J** checking file: #1 **^^J}
+         \_input{#1}
+         \_vfil\_break
+      \_endgroup
+   \_ea\checksyntax \_fi 
 }
-\def\fileend{}
+\_def\fileend{}
 
-\newtoks\syntaxmacros
-{\catcode`<=13
-\global\syntaxmacros{
-\def<#1>{\bgroup
-   \message{checking \unexpanded{<#1>}}%
-   \ifx\relax#1\relax \errmessage{empty link}\nobref\else \checkbref#1>\bref#1>\fi
-   \egroup
+\_newtoks\syntaxmacros
+{\_catcode`<=13
+\_global\syntaxmacros={
+\_def<#1>{\_bgroup
+   \_message{checking \_unexpanded{<#1>}}%
+   \_ifx\_relax#1\_relax \_errmessage{empty link}\nobref\_else \_afterfi{\checkbref#1>\bref#1>}\_fi
+   \_glet\linkpre=\linkpre \_glet\linkfspec=\linkfspec
+   \_egroup
 }   
-\def\checkbref#1#2>{%
-   \isinlist{.#1#2}{<}\iftrue \errmessage{duplicated \string<}\nobref\else
-   \ifx"#1\checkbrefQ #1#2>\else \checkbrefD #1#2>\fi\fi
+\_def\checkbref#1#2>{%
+   \_isinlist{.#1#2}{<}\_iftrue \_errmessage{duplicated \_string<}\nobref\_else
+   \_ifx"#1\checkbrefQ #1#2>\_else \checkbrefD #1#2>\_fi\_fi
 }
-\def\checkbrefQ "#1"#2#3>{\checkbrefD #2#3>}
-\def\checkbrefD #1>{%
-      \isinlist{.#1}{ }\iftrue\checkbrefS#1>\else\checkbrefN#1>\fi
+\_def\checkbrefQ "#1"#2#3>{\checkbrefD #2#3>}
+\_def\checkbrefD #1>{%
+      \_isinlist{.#1}{ }\_iftrue\checkbrefS#1>\_else\checkbrefN#1>\_fi
 }
-\def\checkbrefS #1 #2>{\checkbrefN#2>}
-\def\checkbrefN #1>{%
-   \def\tmpb{#1}
-   \ifx\tmpb\empty \errmessage{missing link data}\nobref\else
-      \replstring\tmpb{:}{}\replstring\tmpb{-}{}\replstring\tmpb{_}{}%
-      \replstring\tmpb{a}{}\replstring\tmpb{b}{}\replstring\tmpb{c}{}%
-      \setbox0=\hbox{\tmpnum=0\tmpb\relax}%
-      \ifdim\wd0>0pt \errmessage{nonnumeric link data}\nobref\fi
+\_def\checkbrefS #1 #2>{\checkbrefN#2>}
+\_def\checkbrefN #1>{%
+   \_def\tmpb{#1}
+   \_ifx\tmpb\_empty \_errmessage{missing link data}\nobref\_else
+      \_replstring\tmpb{:}{}\_replstring\tmpb{-}{}\_replstring\tmpb{_}{}%
+      \_replstring\tmpb{a}{}\_replstring\tmpb{b}{}\_replstring\tmpb{c}{}%
+      \_setbox0=\_hbox{\tmpnum=0\tmpb\relax}%
+      \_ifdim\wd0>0pt \_errmessage{nonnumeric link data}\nobref\_fi
    \fi
 }
-\def\nobref{\def\bref##1>{{\Red\string<##1>}}}
-\def\currbook{BK}
-\def\prelinkB{BK}
-\def\prelinkC{BK}
-\def\prelinkV{0}
-\def\nochapbooks{BK}
-\let\<=<
+\_def\nobref{\_def\bref##1>{{\Red\_string<##1>}}}
+\_def\currbook{BK}
+\_def\prelinkB{BK}
+\_def\prelinkC{BK}
+\_def\prelinkV{0}
+\_def\nochapbooks{BK}
+\_let\<=<
 
-\let\orix=\x
-\def\x/#1/{\def\tmpb{#1}%
-   \isinlist\tmpb\x\iftrue \badx
-   \else \isinlist\tmp<\iftrue \badx 
-   \else \isinlist\tmp\enditems\iftrue \badx \else \orix/#1/\fi\fi\fi
+\_let\orix=\x
+\_def\x/#1/{\_def\tmpb{#1}%
+   \_isinlist\tmpb\x\_iftrue \badx
+   \_else \_isinlist\tmp<\_iftrue \badx 
+   \_else \_isinlist\tmp\enditems\_iftrue \badx \_else \orix/#1/\_fi\_fi\_fi
 }
-\def\badx{\errmessage{unclosed \string\x/.../}}
+\_def\badx{\_errmessage{unclosed \_string\x/.../}}
 
-\def\Article[#1]{}
-\def\Cite #1 {\par\noindent{\bf Cite: }}
-\def\insertCite #1#2{}
+\_def\Article[#1]{}
+\_def\Cite #1 {\_par\_noindent{\_bf Cite: }}
+\_def\insertCite #1#2{}
 
-\def\putArticle #1 #2[#3]#4(#5){}
-\def\putCite #1:#2 {\par\noindent{\bf Cite: }}
-\def\putBot #1 #2[#3]#4(#5){\vbox}
+\_def\putArticle #1 #2[#3]#4(#5){}
+\_def\putCite #1:#2 {\_par\_noindent{\_bf Cite: }}
+\_def\putBot #1 #2[#3]#4(#5){\_vbox}
 
-\ifx\_partokenset\undefined
-   \def\tmp{\long\ea\def\csname Note\endcsname ##1 ##2##3\par}
-\else
-   \def\tmp{\long\ea\def\csname Note\endcsname ##1 ##2##3\_par}
-\fi
+\_def\c[#1/#2]#3{#3}
 
-\tmp {\par\noindent{\bf Note #1:} #3\par}
+\_long\_ea\_def\_csname Note\_endcsname #1 #2#3%
 
-%\loggingall
+   {\_par \_let\nextww\_undefined \_noindent{\_bf Note #1:} #3\_par}
 }}
 
 
@@ -1608,38 +1597,30 @@
    The temporary macros are here. I plan to rewrite them.
    \_cod
 
-\def\chaptit#1{\line{\hss\chapfont\Red#1\hss}
-   \nobreak
+\_def\chaptit#1{\_line{\_hss\chapfont\Red#1\_hss}
+   \_nobreak
 }
-\def\schaptit#1{\bigskip\chaptit{#1}\medskip}
+\_def\schaptit#1{\_bigskip\chaptit{#1}\_medskip}
 
-\def\introtit{\chaptit{\_mtext{intro}}}
-\def\outlinetit{\chaptit{\_mtext{outline}}}
+\_sdef{_mt:intro:en}{Introduction}    \_sdef{_mt:outline:en}{Outline}
+\_sdef{_mt:intro:cs}{Úvod}            \_sdef{_mt:outline:cs}{Osnova}
 
-\sdef{_mt:intro:en}{Introduction}    \sdef{_mt:outline:en}{Outline}  
-\sdef{_mt:intro:cs}{Úvod}            \sdef{_mt:outline:cs}{Osnova}  
+\_def\dopsat{{\Red !!! DOPSAT !!! }}
 
-
-\newcount \chapnum
-\def\source#1{}
-
-\def\dopsat{{\Red !!! DOPSAT !!! }}
-
-\def\setvariant#1{}
-\def\bibleinput#1 {\bgroup
-   \catcode`##=13 \bgroup\lccode`~=`## \lowercase{\egroup\let~}=\processline 
-   \input #1
-   \egroup
+\_def\bibleinput#1 {\_bgroup
+   \_catcode`##=13 \_bgroup\_lccode`~=`## \_lowercase{\_egroup\_let~}=\processline
+   \_input{#1}%
+   \_egroup
 }
 
-\def\bibname{}
+\_def\bibname{}
 
    \_doc
    Active character \code{<} used for references.
    \_cod
 
-\def\_afterload{\adef<{\bref}}
+\_def\_afterload{\_adef<{\bref}}
 \_afterload
 
-\endinput
+\_endinput
 \_endcode
