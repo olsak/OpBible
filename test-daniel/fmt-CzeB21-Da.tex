@@ -1,9 +1,10 @@
 \def\subtit#1{\par
-   \ifnum\currversenum=1 \else \medskip\fi
+   \ifnum\_opb_currversenum=1 \else \medskip\fi
    \line{\indent\Red\it#1\hss}\nobreak
-   \ifnum\currversenum=1 \vskip-\medskipamount\fi
+   \ifnum\_opb_currversenum=1 \vskip-\medskipamount\fi
    \smallskip
 }
+\let\printchapnote=\relax
 
 \FormatedBook{Da}
 \fmtpre{1:1}{\chaptit{V KRÁLOVSKÝCH SLUŽBÁCH}}
