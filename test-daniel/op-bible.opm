@@ -1171,24 +1171,26 @@
    destination of hyperlink based on the <label>, if the <label> isn't empty.
    \_cod
 
-\_def\putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+\_def\.putImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
    \_edef\.fullvref{\.gentovref{#1}}%
    \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
-   \_ea\.newaction\_ea{\.fullvrefm}{\doImage{#2}[#4](#6){#7}}%
+   \_ea\.newaction\_ea{\.fullvrefm}{\.doImage{#2}[#4](#6){#7}}%
 }
-\_def\doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
+\_def\.doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \.botinsert
-      \botTitle{#1}[#2]%
+      \.botTitle{#1}[#2]%
       \_kern3pt \_nobreak
       \_hbox{\picw=\hsize #3\inspic{#4}}%
    \.endbot
 }
-\_def\botTitle#1[#2]{\_hbox{\.captionfont
-   \_ifx^#2^\_else \botDest{#1}[#2]\_fi
+\_def\.botTitle#1[#2]{\_hbox{\.captionfont
+   \_ifx^#2^\_else \.botDest{#1}[#2]\_fi
    \_rlap{\Grey \_vrule height1.2em depth.5em width\_hsize}\White\_kern12pt #1}%
 }
 \_picdir={images/}
-\_def\botDest#1[#2]{\_label[#2]\_wlabel{#1}}
+\_def\.botDest#1[#2]{\_label[#2]\_wlabel{#1}}
+
+\_nspublic \putImage ;
 
    \_doc
    `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
@@ -1212,15 +1214,16 @@
    `\.newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
    \_cod
 
-\_newcount\articlenum
-\_def\putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
+\_newcount\.articlenum
+\_def\.putArticle #1 #2#3[#4]#5(#6){% chap:verse {Title} [number] (params)
    \_edef\.fullvref{\.gentovref{#1}}%
    \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
-   \_ea\.newaction\_ea{\.fullvrefm}{\doArticle{#2}[#4](#6)}%
+   \_ea\.newaction\_ea{\.fullvrefm}{\.doArticle{#2}[#4](#6)}%
 }
+\_nspublic \putArticle ;
 
    \_doc
-   The `\doArticle` `{<Title>}[<label>](<params>)` inserts the article to one
+   The `\.doArticle` `{<Title>}[<label>](<params>)` inserts the article to one
    or more pages by `\.botinsert`...`\.endbot`. The Article is printed to two columns per
    page, all collumns of the article is completely balanced.
    First, the whole text is saved to the `\box0`
@@ -1233,38 +1236,38 @@
    These blocks divided by `\break` are inserted into `\.botinsert`.
    \_cod
 
-\_def\doArticle#1[#2](#3){% {Title}[number](params)
-   \_incr\articlenum
+\_def\.doArticle#1[#2](#3){% {Title}[number](params)
+   \_incr\.articlenum
    \.botinsert
-      \_def\botDest##1[##2]{\.trymakedest{a:\.currbook/##2}}
+      \_def\.botDest##1[##2]{\.trymakedest{a:\.currbook/##2}}
       \_parindent=12pt \_iindent=\_parindent
       \_setbox0=\_vbox{\_hsize=.458\_hsize \_emergencystretch=1em
          \_hbadness=6000 \_baselineskip=\_dimexpr\_baselineskip plus1pt
          \_def\Article[##1]{\_endinput}
          \_penalty0
-         \_long\_def\searcharticle##1\Article[#2]{}
-         \_ea\searcharticle \_input \articlefile \_relax}
+         \_long\_def\.searcharticle##1\Article[#2]{}
+         \_ea\.searcharticle \_input \articlefile \_relax}
       \_splittopskip=12pt
       \_setbox1=\_vsplit0 to0pt % adding \splittopskip
-      \tmpdim=\_vsize \_advance\tmpdim by-24pt % \botTitle height plus above/below skips
-      \_ifdim 2\tmpdim > \_ht0 \_tmpnum=1
+      \_tmpdim=\_vsize \_advance\_tmpdim by-24pt % \.botTitle height plus above/below skips
+      \_ifdim 2\_tmpdim > \_ht0 \_tmpnum=1
       \_else
-         \_tmpnum=\roundexpr{\_bp{\_ht0}/\_bp{1.333\_vsize}+0.999} % number of 2/3 pages
+         \_tmpnum=\.roundexpr{\_bp{\_ht0}/\_bp{1.333\_vsize}+0.999} % number of 2/3 pages
       \_fi
       \_multiply\_tmpnum by2 % number of columns
       \_edef\_Ncols{\_the\_tmpnum}
       \_dimen0=\_expr{1/\_Ncols}\_ht0 \_setbox6=\_box0 % height of each two-columns part
       \_setbox0=\_vbox{\_balancecolumns}
-      \tmpdim=\_ht0 \_advance\tmpdim by1.2\_baselineskip
+      \_tmpdim=\_ht0 \_advance\_tmpdim by1.2\_baselineskip
       \_setbox0=\_vbox{\_unvbox0 \_global\_setbox2=\_lastbox}
       \_setbox0=\_hbox{\_unhbox2
           \_fornum 1..\_Ncols \_do {\_unskip \_global\_setbox1##1=\_lastbox}}
           \_fornumstep -2: \_Ncols..1 \_do {
               \_hrule height0pt\_kern5pt\_nobreak\_vfill
-              \_ifnum\_Ncols=##1 \botTitle{#1}[#2]\_else \botTitle{}[]\_fi
+              \_ifnum\_Ncols=##1 \.botTitle{#1}[#2]\_else \.botTitle{}[]\_fi
               \_kern3pt \_nobreak
               \_hbox to\_hsize{%
-                 \_rlap{\LightGrey \_vrule height\tmpdim depth6pt width\_hsize}%
+                 \_rlap{\LightGrey \_vrule height\_tmpdim depth6pt width\_hsize}%
                  \_kern\_parindent
                  \_box1##1\_hss\_box1\_the\_numexpr##1-1
                  \_kern\_parindent
@@ -1273,8 +1276,8 @@
           }
    \.endbot
 }
-\_def\roundexpr#1{\_ea\_ea\_ea\roundexprA\_expr{#1}\_relax}
-\_def\roundexprA#1.#2\_relax{\_ifnum#1=0 0\_else #1\_fi}
+\_def\.roundexpr#1{\_ea\_ea\_ea\.roundexprA\_expr{#1}\_relax}
+\_def\.roundexprA#1.#2\_relax{\_ifnum#1=0 0\_else #1\_fi}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1285,14 +1288,15 @@
    `\.newaction{<full-vref>}{\dotopCite{<text>}}`.
    \_cod
 
-\_def\putCite #1 #2{% chap:verse {text}
+\_def\.putCite #1 #2{% chap:verse {text}
    \_edef\.fullvref{\.gentovref{#1}}%
    \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
-   \_ea\.newaction\_ea{\.fullvrefm}{\dotopCite{#2}}%
+   \_ea\.newaction\_ea{\.fullvrefm}{\.dotopCite{#2}}%
 }
+\_nspublic \putCite ;
 
    \_doc
-   `\dotopCite` `{<text>}` creates the citation text by
+   `\.dotopCite` `{<text>}` creates the citation text by
    `\topinsert`...`\endinsert` form plain
    TeX. We distinguish two cases: the citation on a left page and the citation
    on a right page. We sawe the page position using `\_ewref` to the .ref
@@ -1301,44 +1305,44 @@
    The typesetting parameters differ in \"left" and \"right" case.
    \_cod
 
-\_newcount\citenum
-\_def\dotopCite #1{%
+\_newcount\.citenum
+\_def\.dotopCite #1{%
    \_topinsert
    \_typosize[12/16]\_bi
-   \_incr\citenum
-   \_ifodd \_trycs{ct!\_the\citenum}{0}\_relax
+   \_incr\.citenum
+   \_ifodd \_trycs{ct!\_the\.citenum}{0}\_relax
        \_leftskip=.3\_hsize plus1fil \_parfillskip=0pt
        \_noindent
-       \_rlap{\_hskip\_hsize \_kern-\_leftskip \_copy\rqqbox}\_hfill
+       \_rlap{\_hskip\_hsize \_kern-\_leftskip \_copy\.rqqbox}\_hfill
    \_else
-       \_let\quotedby=\quotedbyright
+       \_let\quotedby=\.quotedbyright
        \_rightskip=.3\_hsize plus 1fil
-       \_noindent \_llap{\_copy\lqqbox}%
+       \_noindent \_llap{\_copy\.lqqbox}%
    \_fi
-   {\printCite{#1}\_unskip}\_par
-   \_ewref\sxdef{{ct!\_the\citenum}{\_string\.mypage}}%
+   {\.printCite{#1}\_unskip}\_par
+   \_ewref\_sxdef{{ct!\_the\.citenum}{\_string\.mypage}}%
 %   \vskip-.3\baselineskip
    \_endinsert
 }
-\_def\printCite#1{\_pdfliteral{2 Tr .15 w .9 g}#1\_pdfliteral{0 Tr 0 w 0 g}}
+\_def\.printCite#1{\_pdfliteral{2 Tr .15 w .9 g}#1\_pdfliteral{0 Tr 0 w 0 g}}
 
    \_doc
-   The `\lqbox` and `\rqbox` include the graphical marks for quotations. First
+   The `\.lqqbox` and `\.rqqbox` include the graphical marks for quotations. First
    one is used at the left pages, second one at the right pages.\nl
    The macro `\quotedby{<author>}` puts the author of the quatation to the
    next line. The macro `\qutedbyright` (which is used at left pages) prints
    the <author> at the last line if there is sufficient space.
    \_cod
 
-\_newbox\lqqbox
-\_newbox\rqqbox
-\_setbox\lqqbox=\_hbox{\_lower3pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed„}}
-\_setbox\rqqbox=\_hbox{\_kern2pt\_lower38pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed“}}
-\_ht\lqqbox=0pt \_dp\lqqbox=0pt
-\_ht\rqqbox=0pt \_dp\rqqbox=0pt
+\_newbox\.lqqbox
+\_newbox\.rqqbox
+\_setbox\.lqqbox=\_hbox{\_lower3pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed„}}
+\_setbox\.rqqbox=\_hbox{\_kern2pt\_lower38pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed“}}
+\_ht\.lqqbox=0pt \_dp\.lqqbox=0pt
+\_ht\.rqqbox=0pt \_dp\.rqqbox=0pt
 
 \_def\quotedby{\_par}
-\_def\quotedbyright#1{%
+\_def\.quotedbyright#1{%
    \_unskip\_nobreak\_hfill\_penalty0\_hskip2em
    \_null\_nobreak\_hskip\_iindent\_hbox{#1}}
 
@@ -1354,24 +1358,24 @@
    `\cp!<article-num>!<label>`.
    \_cod
 
-\_def\Cite #1#2{\sdef{c!\the\articlenum!#1}{#2}}
-\_def\insertCite #1#2{\_def\citelabel{#1}%
-   \_ifx\left#2\insertCiteleft
-   \_else \_ifx#2\right\insertCiteright\_else
-      \_errmessage{\_noexpand\putCite#1: \_noexpand\left or \_noexpand\right expected}%
+\_def\.Cite #1#2{\_sdef{c!\_the\.articlenum!#1}{#2}}
+\_def\.insertCite #1#2{\_def\.citelabel{#1}%
+   \_ifx\_left#2\.insertCiteleft
+   \_else \_ifx#2\_right\.insertCiteright\_else
+      \_errmessage{\_noexpand\insertCite#1: \_noexpand\left or \_noexpand\right expected}%
    \_fi\_fi
 }
-\_def\insertCiteleft {%
-   \_ifnum\citepg=1 \.printwarn{\_noexpand\insertCite\citelabel: \_noexpand\swapCites activated}\_fi
-   \_ifodd \_numexpr\_trycs{cp!\_the\articlenum!\citelabel}{0}+\citepg\_relax
-   \_else \insertCitelr \_left \_fi
+\_def\.insertCiteleft {%
+   \_ifnum\.citepg=1 \.printwarn{\_noexpand\.insertCite\.citelabel: \_noexpand\.swapCites activated}\_fi
+   \_ifodd \_numexpr\_trycs{cp!\_the\.articlenum!\.citelabel}{0}+\.citepg\_relax
+   \_else \.insertCitelr \_left \_fi
 }
-\_def\insertCiteright{%
-   \_ifodd \_numexpr\_trycs{cp!\_the\articlenum!\citelabel}{0}+\citepg\_relax
-   \insertCitelr \_right \_fi
+\_def\.insertCiteright{%
+   \_ifodd \_numexpr\_trycs{cp!\_the\.articlenum!\.citelabel}{0}+\.citepg\_relax
+   \.insertCitelr \_right \_fi
 }
-\def\insertCitelr#1{\_unskip\_vadjust{\_vbox{%
-   \_ewref\_sxdef{{cp!\_the\articlenum!\citelabel}{\_string\.mypage}}%
+\_def\.insertCitelr#1{\_unskip\_vadjust{\_vbox{%
+   \_ewref\_sxdef{{cp!\_the\.articlenum!\.citelabel}{\_string\.mypage}}%
    \_vskip6pt
    \_advance\_hsize by\_parindent
    \_typosize[12/16]\_bi\Grey
@@ -1380,8 +1384,8 @@
            \_rightskip=\_parindent plus1fil \_leftskip=0pt
            \_setbox0\_vbox{%
               \_medskip \_noindent
-              \_llap{\_copy\lqqbox}\_ignorespaces
-              \printCite{\_cs{c!\_the\articlenum!\citelabel}}\_medskip}%
+              \_llap{\_copy\.lqqbox}\_ignorespaces
+              \.printCite{\_cs{c!\_the\.articlenum!\.citelabel}}\_medskip}%
            \_hbox{\_kern-\_parindent\_rlap{\White
               \_vrule height\_ht0 width\_hsize}\_box0}%
         \_else
@@ -1389,15 +1393,16 @@
            \_parfillskip=0pt
            \_setbox0\_vbox{%
               \_medskip \_noindent
-              \_rlap{\_hskip\_hsize\_kern-\_parindent\_copy\rqqbox}\_hfill
-              \_ignorespaces \printCite{\_cs{c!\_the\articlenum!\citelabel}}\_medskip}%
+              \_rlap{\_hskip\_hsize\_kern-\_parindent\_copy\.rqqbox}\_hfill
+              \_ignorespaces \.printCite{\_cs{c!\_the\.articlenum!\.citelabel}}\_medskip}%
            \_rlap{\_rlap{\White \_vrule height\_ht0 width\_hsize}\_box0}%
         \_fi
    \_vskip6pt
 }}}
+\_def\.swapCites{\_def\.citepg{1}}
+\_def\.citepg{0}
 
-\_def\swapCites{\_def\citepg{1}}
-\_def\citepg{0}
+\_nspublic \Cite \insertCite ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1407,28 +1412,28 @@
 
 %% TBN page 236
 
-\_newcount\shapenum
-\_newdimen\ii \_newdimen\w
-\_def\oblom #1 od #2 odsadit #3 {\_par \ii=#1 \w=\_hsize
-   \_ifdim\ii>\_zo \_advance\w by-\ii
-   \_else \_advance\w by\ii \ii=\_zo \_fi
-   \shapenum=1 \_tmpnum=0 \_def\shapelist{}
-   \_loop \_ifnum\shapenum<#2 \_edef\shapelist{\shapelist\_zo\_hsize}%
-      \_advance\shapenum by1 \_repeat
-   \_loop \_edef\shapelist{\shapelist\ii\w}%
+\_newcount\.shapenum
+\_newdimen\.ii \_newdimen\.w
+\_def\.oblom #1 od #2 odsadit #3 {\_par \.ii=#1 \.w=\_hsize
+   \_ifdim\.ii>\_zo \_advance\.w by-\.ii
+   \_else \_advance\.w by\.ii \.ii=\_zo \_fi
+   \.shapenum=1 \_tmpnum=0 \_def\.shapelist{}
+   \_loop \_ifnum\.shapenum<#2 \_edef\.shapelist{\.shapelist\_zo\_hsize}%
+      \_advance\.shapenum by1 \_repeat
+   \_loop \_edef\.shapelist{\.shapelist\.ii\.w}%
       \_advance\_tmpnum by1 \_ifnum\_tmpnum<#3 \_repeat
-   \_advance\shapenum by#3 \_edef\shapelist{\shapelist\_zo\_hsize}
-   \doshape}
-\_def\doshape{\_parshape \shapenum \shapelist} 
-\_newcount\globpar
-\_ifx\_partokenset \_undefined \_def\partoken{\par} \_else \_def\partoken{\_par} \_fi
-\_def\doshape{\_global\globpar=0 \_ea\_def\partoken{\_ifhmode\shapepar\_fi}}
-\_def\shapepar{\_prevgraf=\globpar \_parshape\shapenum\shapelist
-   \_endgraf \_global\globpar=\_prevgraf
-   \_ifnum \_prevgraf>\shapenum \_ea\_let\partoken=\_endgraf \_fi
+   \_advance\.shapenum by#3 \_edef\.shapelist{\.shapelist\_zo\_hsize}
+   \.doshape}
+\_def\.doshape{\_parshape \.shapenum \.shapelist} 
+\_newcount\.globpar
+\_ifx\_partokenset \_undefined \_def\.partoken{\par} \_else \_def\.partoken{\_par} \_fi
+\_def\.doshape{\_global\.globpar=0 \_ea\_def\.partoken{\_ifhmode\.shapepar\_fi}}
+\_def\.shapepar{\_prevgraf=\.globpar \_parshape\.shapenum\.shapelist
+   \_endgraf \_global\.globpar=\_prevgraf
+   \_ifnum \_prevgraf>\.shapenum \_ea\_let\.partoken=\_endgraf \_fi
 }
 
-\_def\Citehereleft #1 (#2) #3{{
+\_def\.Citehereleft #1 (#2) #3{{
    \_par
            \_def\quotedby{\_par\_hfill}
            \_rightskip=\_parindent plus1fil \_leftskip=0pt
@@ -1436,56 +1441,59 @@
               \_typosize[12/16]\_bi\Grey
               \_hsize=.5\_hsize
               \_medskip \_noindent
-              \_llap{\_copy\lqqbox}\_ignorespaces
-              \printCite{#3}\_medskip}}%
-   \tmpdim=\_ht0 \_advance\tmpdim by\_baselineskip
-   \_xdef\lines{\_the\_numexpr \_number\tmpdim / \_number\_baselineskip \_relax}%
+              \_llap{\_copy\.lqqbox}\_ignorespaces
+              \.printCite{#3}\_medskip}}%
+   \_tmpdim=\_ht0 \_advance\_tmpdim by\_baselineskip
+   \_xdef\.lines{\_the\_numexpr \_number\_tmpdim / \_number\_baselineskip \_relax}%
    \_nointerlineskip\_vbox to0pt{\_kern#1\_baselineskip #2
            \_hbox{\_rlap{\White
               \_kern-3mm\_vrule height\_ht0 width.5\_hsize}\_box0}%
    \_vss}}
-   \tmpdim=\_hsize \_advance\tmpdim by-2\_leftskip
-   \oblom {.5\tmpdim} od #1 odsadit {\lines}
+   \_tmpdim=\_hsize \_advance\_tmpdim by-2\_leftskip
+   \.oblom {.5\_tmpdim} od #1 odsadit {\.lines}
 }
-\_def\Citehereright #1 (#2) #3{{
+\_def\.Citehereright #1 (#2) #3{{
    \_par
            \_def\quotedby{\_par\_parfillskip=0pt \_hfill}
            \_leftskip=\_parindent plus1fill \_rightskip=0pt
            \_setbox0\_vbox{{%
               \_typosize[12/16]\_bi\Grey
               \_hsize=.5\_hsize
-              \_vskip\_medskipamount \_rlap{\_kern\_hsize\_copy\rqqbox}\_vskip-\_medskipamount
-              \printCite{\_noindent\_ignorespaces#3}\_medskip}}%
-   \tmpdim=\_ht0 \_advance\tmpdim by\_baselineskip
-   \_xdef\lines{\_the\_numexpr \_number\tmpdim / \_number\_baselineskip \_relax}%
+              \_vskip\_medskipamount \_rlap{\_kern\_hsize\_copy\.rqqbox}\_vskip-\_medskipamount
+              \.printCite{\_noindent\_ignorespaces#3}\_medskip}}%
+   \_tmpdim=\_ht0 \_advance\_tmpdim by\_baselineskip
+   \_xdef\.lines{\_the\_numexpr \_number\_tmpdim / \_number\_baselineskip \_relax}%
    \_nointerlineskip\_vbox to0pt{\_kern#1\_baselineskip #2
         \_hbox to\_hsize{\_hss
            \_llap{\White \_vrule height\_ht0 width.5\_hsize \_kern-3mm}%
            \_llap{\_box0}}
    \_vss}}
-   \tmpdim=\_hsize \_advance\tmpdim by-2\_leftskip
-   \oblom {-.5\tmpdim} od #1 odsadit {\lines}
+   \_tmpdim=\_hsize \_advance\_tmpdim by-2\_leftskip
+   \.oblom {-.5\_tmpdim} od #1 odsadit {\.lines}
 }
 
-\_def\Citehere{\_par \_ifodd\pageno \_ea\Citehereright \_else \_ea\Citehereleft \_fi}
+\_def\.Citehere{\_par \_ifodd\_pageno \_ea\.Citehereright \_else \_ea\.Citehereleft \_fi}
 
-\_def\insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
+\_nspublic \Citehere ;
+
+\_def\.insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
    \.botinsert
-      \botTitle{#1}[#3]%
+      \.botTitle{#1}[#3]%
       \_kern3pt \_nobreak
       \_vbox{\_picwidth=\_hsize #5 #6}%
    \.endbot
 }
-\_def\putBot #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+\_def\.putBot #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
    \_edef\.fullvref{\.gentovref{#1}}%
    \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
-   \_ea\.newaction\_ea{\.fullvrefm}{\insertBot{#2}[#4](#6){#7}}%
+   \_ea\.newaction\_ea{\.fullvrefm}{\.insertBot{#2}[#4](#6){#7}}%
 }
 
-\_def\c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
-   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\tmpb{#3}\_replstring\tmpb{ }{{ }}\_def\tmpa{#2}%
-                 \_ea\_foreach\tmpb\_do{##1\tmpa}}\_pdfrestore \_kern10mm
+\_def\.c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
+   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
+                 \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
 }
+\_nspublic \insertBot \putBot \c ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1493,25 +1501,26 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \_cod
 
-\_newdimen\colsep
-\colsep=10pt
+\_newdimen\.colsep
+\.colsep=10pt
 
-\_def\Outline{
+\_def\.Outline{
    \_medskip
 %   \filbreak
    \.chaptit{\_mtext{outline}}%
    \_everylist={\_ifcase\_ilevel \_or \_style I \_or \_style A \_or \_style n \_fi}
    \_sdef{_item:A}{\_strut\_uppercase\_ea{\_athe\_itemnum}. }
    \_sdef{_item:I}{\_strut\_uppercase\_ea{\_romannumeral\_itemnum}. }
-   \_hsize=.5\_hsize \_advance\_hsize by-\colsep
+   \_hsize=.5\_hsize \_advance\_hsize by-\.colsep
    \_emergencystretch=40pt
    \_leftskip=0pt \_rightskip=0pt
 }
-\_def\rightnote#1{\_par
-   \_setbox0=\_hbox{\_kern\_hsize \_kern\colsep
+\_def\.rightnote#1{\_par
+   \_setbox0=\_hbox{\_kern\_hsize \_kern\.colsep
                     \_vtop{\_leftskip=0pt \_kern0pt\_noindent\_strut\_it#1}}
    \_ht0=0pt \_dp0=0pt \_box0 \_nointerlineskip
 }
+\_nspublic \Outline \rightnote ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1525,10 +1534,10 @@
    reduced because there is no material in them. 
    \_cod
 
-\_def\normalchapnumbers{
+\_def\.normalchapnumbers{
    \_margins/2 a2 (25,25,20,20)mm
    \.lrmargin=0pt
-   \_setbox0=\_box\lqqbox \_setbox0=\_box\rqqbox
+   \_setbox0=\_box\.lqqbox \_setbox0=\_box\.rqqbox
    \_def\.printbeforefirst{%
       \_nobreak\_medskip
       \.printchapnote
@@ -1537,6 +1546,7 @@
          {\_kern-8pt\_hbox{\_setfontsize{at23pt}\_bf\Red\_the\.chapnum\_kern5pt}\_vss}}%
    }
 }
+\_nspublic \normalchapnumbers ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1544,47 +1554,46 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \_cod
 
-\_def\checksyntax#1 {%
+\_def\.checksyntax#1 {%
    \_let\processbooks=\_relax
    \_ifx\_relax#1\_relax \_else
       \_begingroup 
-         \_the\syntaxmacros
+         \_the\.syntaxmacros
          \_wterm{^^J** checking file: #1 **^^J}
          \_input{#1}
          \_vfil\_break
       \_endgroup
-   \_ea\checksyntax \_fi 
+   \_ea\.checksyntax \_fi 
 }
-\_def\fileend{}
 
-\_newtoks\syntaxmacros
+\_newtoks\.syntaxmacros
 {\_catcode`<=13
-\_global\syntaxmacros={
+\_global\.syntaxmacros={
 \_def<#1>{\_bgroup
    \_message{checking \_unexpanded{<#1>}}%
-   \_ifx\_relax#1\_relax \_errmessage{empty link}\nobref\_else \_afterfi{\checkbref#1>\.bref#1>}\_fi
+   \_ifx\_relax#1\_relax \_errmessage{empty link}\.nobref\_else \_afterfi{\.checkbref#1>\.bref#1>}\_fi
    \_glet\.linkpre=\.linkpre \_glet\.linkfspec=\.linkfspec
    \_egroup
 }   
-\_def\checkbref#1#2>{%
-   \_isinlist{.#1#2}{<}\_iftrue \_errmessage{duplicated \_string<}\nobref\_else
-   \_ifx"#1\checkbrefQ #1#2>\_else \checkbrefD #1#2>\_fi\_fi
+\_def\.checkbref#1#2>{%
+   \_isinlist{.#1#2}{<}\_iftrue \_errmessage{duplicated \_string<}\.nobref\_else
+   \_ifx"#1\.checkbrefQ #1#2>\_else \.checkbrefD #1#2>\_fi\_fi
 }
-\_def\checkbrefQ "#1"#2#3>{\checkbrefD #2#3>}
-\_def\checkbrefD #1>{%
-      \_isinlist{.#1}{ }\_iftrue\checkbrefS#1>\_else\checkbrefN#1>\_fi
+\_def\.checkbrefQ "#1"#2#3>{\.checkbrefD #2#3>}
+\_def\.checkbrefD #1>{%
+      \_isinlist{.#1}{ }\_iftrue\.checkbrefS#1>\_else\.checkbrefN#1>\_fi
 }
-\_def\checkbrefS #1 #2>{\checkbrefN#2>}
-\_def\checkbrefN #1>{%
-   \_def\tmpb{#1}
-   \_ifx\tmpb\_empty \_errmessage{missing link data}\nobref\_else
-      \_replstring\tmpb{:}{}\_replstring\tmpb{-}{}\_replstring\tmpb{_}{}%
-      \_replstring\tmpb{a}{}\_replstring\tmpb{b}{}\_replstring\tmpb{c}{}%
-      \_setbox0=\_hbox{\_tmpnum=0\tmpb\relax}%
-      \_ifdim\wd0>0pt \_errmessage{nonnumeric link data}\nobref\_fi
-   \fi
+\_def\.checkbrefS #1 #2>{\.checkbrefN#2>}
+\_def\.checkbrefN #1>{%
+   \_def\.tmpb{#1}
+   \_ifx\.tmpb\_empty \_errmessage{missing link data}\.nobref\_else
+      \_replstring\.tmpb{:}{}\_replstring\.tmpb{-}{}\_replstring\.tmpb{_}{}%
+      \_replstring\.tmpb{a}{}\_replstring\.tmpb{b}{}\_replstring\.tmpb{c}{}%
+      \_setbox0=\_hbox{\_tmpnum=0\.tmpb\_relax}%
+      \_ifdim\_wd0>0pt \_errmessage{nonnumeric link data}\.nobref\_fi
+   \_fi
 }
-\_def\nobref{\_def\.bref##1>{{\Red\_string<##1>}}}
+\_def\.nobref{\_def\.bref##1>{{\Red\_string<##1>}}}
 \_def\.currbook{}
 \_def\.prelinkB{BK}
 \_def\.prelinkC{BK}
@@ -1592,13 +1601,12 @@
 \_def\nochapbooks{BK}
 \_let\<=<
 
-\_let\orix=\x
-\_def\x/#1/{\_def\tmpb{#1}%
-   \_isinlist\tmpb\x\_iftrue \badx
-   \_else \_isinlist\tmp<\_iftrue \badx 
-   \_else \_isinlist\tmp\enditems\_iftrue \badx \_else \orix/#1/\_fi\_fi\_fi
+\_def\x/#1/{\_def\.tmpb{#1}%
+   \_isinlist\.tmpb\x\_iftrue \.badx
+   \_else \_isinlist\.tmp<\_iftrue \.badx
+   \_else \_isinlist\.tmp\enditems\_iftrue \.badx \_else \.x/#1/\_fi\_fi\_fi
 }
-\_def\badx{\_errmessage{unclosed \_string\x/.../}}
+\_def\.badx{\_errmessage{unclosed \_string\x/.../}}
 
 \_def\Article[#1]{}
 \_def\Cite #1 {\_par\_noindent{\_bf Cite: }}
@@ -1614,6 +1622,7 @@
 
    {\_par \_let\.nextww\_undefined \_noindent{\_bf Note #1:} #3\_par}
 }}
+\_nspublic \checksyntax ;
 
 
    \_doc
