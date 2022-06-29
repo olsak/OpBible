@@ -1,3 +1,4 @@
+- odstranit \FormatedBook, \CommentedBook
 - pridat hledani prislusneho \Article v souboru article-*.tex ... OK
 - pridat moznost ovlivnit zpusob vlozeni article pomoci parametru
 - pridat koncept souboru article ... OK

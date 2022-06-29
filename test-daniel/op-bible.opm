@@ -30,7 +30,7 @@
 \_vlna_singlechars {Czech}{AaIiVvOoUuSsZzKk}  % lowercase "a" added to this family
 
 \_showboxbreadth=0
-\_let\.notecolor=\Red
+\_let\notecolor=\Red
 
 \_def\LightGrey {\_setcmykcolor{0 0 0 .1}}
 \_def\LiRed {\_setcmykcolor{0 .2 .2 0}}
@@ -175,9 +175,9 @@
       \_sxdef{\.tmp}{\_cs{\.tmp}#2{#3}}\_fi}
 }
 \_newdimen\.frtop \_newdimen\.frbottom % positions of top and bottom text on the pages
-\_def\.frcolor{.9 g } % light grey -- color of blocks.
+\_def\.frcolor{.93 g } % light grey -- color of blocks.
 \_pgbackground={%
-   \_slet{_opb_tmp}{frm:\_the\_pageno}
+   \_slet{_opb_tmp}{frm:\_the\_gpageno}
    \_ifx\.tmp\_undefined \_def\.tmp{}\_fi
    \.frtop=\_dimexpr \_pdfpageheight-\_voffset+\_smallskipamount\_relax
    \.frbottom=\_dimexpr\_pdfpageheight-\_voffset-\_vsize-\_medskipamount\_relax
@@ -221,7 +221,7 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Book titles
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The macro `\BookTile <b-mark> <a-mark> {<title>}` declares titles
+   The macro `\BookTile <a-mark> <b-mark> {<title>}` declares titles
    of each Bible books. The <b-mark> is a book mark used in file names
    and <a-mark> is an actual book mark used in printed text.
 
@@ -232,7 +232,7 @@
    errors due to missing a space after `<b-mark>` or `<a-mark>`.
    \_cod
 
-\_outer\_def\.BookTitle #1 #2 #3{\_sxdef{btit!#2}{#3}\_sxdef{f!#2}{#1}}
+\_outer\_def\.BookTitle #1 #2 #3{\_sxdef{btit!#1}{#3}\_sxdef{f!#1}{#2}}
 
    \_doc
    The `\BookException <a-mark> {<code>}` macro adds the <code> to the
@@ -465,7 +465,7 @@
        \_ea\_ifx \_csname pword!#1\_endcsname \_empty
                  \_else \_ea\_ea\_ea\.upcasefirst \_csname pword!#1\_endcsname. \_fi}%
       \_cs{notetext!#1}}%
-   {\.notecolor#2}%
+   {\notecolor#2}%
 }
 \_def\_printfnotemark{}
 \_def\_textindent#1{\_noindent}
@@ -1325,6 +1325,7 @@
    \_endinsert
 }
 \_def\.printCite#1{\_pdfliteral{2 Tr .15 w .9 g}#1\_pdfliteral{0 Tr 0 w 0 g}}
+\_def\.printCite#1{{\Grey#1}}
 
    \_doc
    The `\.lqqbox` and `\.rqqbox` include the graphical marks for quotations. First

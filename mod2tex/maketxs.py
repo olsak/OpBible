@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import os
 
 if(len(sys.argv)<2):
     print("missing argument")
@@ -9,7 +10,9 @@ filename = sys.argv[1]
 buff = []
 buffname = None
 
-mainname = filename.split(".")[0]
+mainname,_ = os.path.splitext(filename)
+# filename.split(".")[0]
+mainname = os.path.basename(mainname)
 
 def writeBuff():
     with open(mainname+"-"+buffname+".txs",'w', encoding = 'utf-8') as f_buff:
@@ -46,11 +49,11 @@ with open(filename,'r', encoding = 'utf-8') as f:
                 inside_fence = False
                 line = line[:-1]+"\n"
             else: line = line+' '
-            buff.append(line)
+            buff.append(line.replace("\xa0"," "))
     assert inside_fence == False
     writeBuff()
 
 with open(mainname+"-books.tex", "w", encoding = 'utf-8') as f_books:
     for book,abbv in zip(books,abbvs):
-        f_books.write("\\BookTitle "+abbv+" {"+book+"}\n")
+        f_books.write("\\BookTitle "+abbv+" "+abbv+" {"+book+"}\n")
         
