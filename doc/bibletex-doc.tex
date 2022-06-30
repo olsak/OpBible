@@ -4,15 +4,16 @@
 \fixmnotes\right
 \fontfam[schola]
 \def\TODO{{\Red TODO}}
-\verbchar`
 \mnotesize=25mm
 \everytt{\typosize[9/]\catcode`<=13 }
 \everyintt{\catcode`<=13 }
+\def\`{\bgroup \_setverb \toindex}
+\def\toindex#1`{\egroup{\tt\Magenta #1}\ea\iindex\ea{\ignoreit#1}}
+\def\_printii #1&{\noindent{\tt\bslash#1}\quad}
+\verbchar`
 \catcode`<=13 \def<#1>{{$\langle$\it#1$\rangle$}}
+
 \hyperlinks\Blue\Blue
-\def\`#1`{\ea\toindex\ea{\detokenize{#1}}}
-\def\toindex#1{{\tt\Magenta \detokenize{#1}\unskip}\ea\iindex\ea{\ignoreit#1}}
-\def\_printii #1&{\noindent{\tt\bslash#1}\unskip\quad}
 
 {\nopagenumbers
 
