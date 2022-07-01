@@ -84,7 +84,7 @@
    * Defines \`\.btit` as the book title.
    * Calls \^`\.newbook{<a-mark>}`
    * Prints title of the book to the terminal and to the log.
-   * Calls \^`\bex!<a-mark>` in order to apply the \^`\BookExceptions` data.
+   * Calls \^`\bex!<a-mark>` in order to apply the \^`\BookException` data.
    * Inputs introduction file if it exists. The real `\input` and formatin
      of the introduction text is done by the `\.printintro` macro.
    * Inputs format definition file if it exists. Information is saved to the
@@ -209,7 +209,7 @@
 
    \_doc
    The \`\BookException` `<a-mark> {<code>}` macro adds the <code> to the
-   \`\bex!``<a-mark>` macro. It is used in \^`\.processbooks`
+   \`\bex!``<a-mark>` macro. It is used in \^`\processbooks`
    loop in the group before files are read. You can redefine some filenames
    or something more special here.\nl
    Macros \`\BookPre` `<a-mark> {<code>}` and \`\BookPost` `<a-mark> {<code>}`

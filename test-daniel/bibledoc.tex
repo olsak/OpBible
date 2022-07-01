@@ -1,3 +1,4 @@
+\let\_optexprintii=\_printii
 \load [doc.opm]
 
 \outlines{0}
@@ -11,6 +12,13 @@ The code of the `op-bible.opm` macro file is described here.
 \printdoc op-bible.opm
 
 \sec Index
+
+\def\_printii #1&{%
+   \ifcsname cs:#1\endcsname
+      \noindent \hskip-\iindent {\tt \link[cs:#1]\Blue{\bslash#1} }\else
+      \ifcsname cs:^#1\endcsname \noindent \hskip-\iindent {\tt\bslash#1 }\else
+         \afterfi{\afterfi{\_optexprintii #1&}}\fi\fi }
+\def\_pgprintA #1{#1}
 
 \begmulti 3
 \makeindex
