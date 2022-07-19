@@ -766,8 +766,8 @@
    \_ifx\.ltextV\_empty \_ifx\.ltextC\_empty \_else \_ea\.linkfspecone \.linkfspec\_end \_fi\_fi
    \_if a\.linkpre\_relax \_ea\.linkfspecarticle \.linkfspec\_end \_fi
    \_if i\.linkpre\_relax \_ea\.linkfspecintro \.linkfspec\_end \_fi
-   \.linklog{\.sspace <\_unexpanded\_ea{\.linkspec}>\.linkpost = [\.linkpre:\.linkfspec]%
-           {\_ifx\.brefH\_empty\_unexpanded\_ea{\.ltextP}\_else\_unexpanded\_ea{\.linktext}\_fi}}%
+   \.linklog{\.sspace <\.linkspec>\.linkpost = [\.linkpre:\.linkfspec]%
+           {\_ifx\.brefH\_empty\_unexpanded\_ea{\.ltextP}\_else \.linktext\_fi}}%
    \.ensuredest \.createlink
 }
 \_def\.linkfspecone #1:#2\_end {\_def\.linkfspec{#1:1}\_def\.prelinkV{1}}
