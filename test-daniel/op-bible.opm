@@ -82,6 +82,7 @@
    * Defines \`\amark` as <a-mark> (an actual mark of the book used in the text).
    * Defines \`\bmark` as <b-mark> (a mark of the book used in file names).
    * Defines \`\.btit` as the book title.
+   * Saves `<a-mark>` to the \`\.currbook` macro.
    * Calls \^`\.newbook{<a-mark>}`
    * Prints title of the book to the terminal and to the log.
    * Calls \^`\bex!<a-mark>` in order to apply the \^`\BookException` data.
@@ -118,12 +119,13 @@
       \_edef\bmark{\_cs{f!#1}}
       \_edef\.btit{\_cs{btit!#1}}
       \_begingroup
+         \_edef\.currbook{#1}
          \.newbook{#1}
          \_wterm{** \_cs{btit!#1} {#1} **}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
          \_else \.printwarn{File with introduction text \introfile\_space not found}\_fi
-         \.CommentedBook{#1}
+%         \.CommentedBook{#1}
          \_isfile{\fmtfile}\_iftrue \_input{\fmtfile}
          \_else \.printwarn{File with format info \fmtfile\_space not found}\_fi
          \_isfile{\notesfile}\_iftrue \_input{\notesfile}
@@ -142,7 +144,7 @@
    \_cod
 
 \_def\.newbook#1{\_vfil\_supereject
-   \_edef\.currbook{#1}\_let\.prelinkB=\.currbook \.chapnum=0
+   \_let\.prelinkB=\.currbook \.chapnum=0
    \_def\.prelinkC{0}\_def\.prelinkV{0}
    \_global\_headline={\_hfil \_ea\.setheadline\_ea{\.btit}}
    \_line{\_hss\.bookfont\.btit\_hss}
@@ -227,7 +229,7 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Actions
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   We create the output in two steps. First step: the data from `\Note`
+   We create the output in two steps. First step: the data from \^`\Note`
    etc.\ are read and saved to the \TeX/ memory. For each such data element the
    \"action" is registered to a list of actions of the given verse. Each
    Bible verse has its list of actions.
@@ -235,10 +237,10 @@
    file and all appropriate actions (registered to this verse) are
    processed before the verse text is printed. These actions can modify the
    selected parts of the verse text.\nl
-   `\alist!<full-vref>` is the list of actions associated with the verse
+   \`\alist!``<full-vref>` is the list of actions associated with the verse
    `<full-vref>`. The <full-vref> is full reference to the verse in the format
                <book-mark>/<chapter-num>:<verse-num>\nl
-   `\.newaction{<full-vref>}{<action-body>}` allocates new action.
+   \`\.newaction``{<full-vref>}{<action-body>}` allocates new action.
    \_cod
 
 \_def\.newaction#1#2{%
@@ -248,13 +250,13 @@
 
    \_doc
    A typical \"action" is `\.replpre`. The actions are processed for each
-   Bible verse when the verse text is saved to the `\.buff` macro. The
-   `\.buff` macro is processed after all actions of given verse are done.\nl
-   `\.replpre{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
+   Bible verse when the verse text is saved to the \^`\.buff` macro. The
+   \^`\.buff` macro is processed after all actions of given verse are done.\nl
+   \`\.replpre``{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
    by `<prefix>{<text>}` in `\.buff` macro. If the <text> is empty then
    `<prefix>{}` is inserted at the beginning of the `\.buff`.\nl
-   If <text> does not exists then <fail> is processed. The <fail>
-   macro can use `\.text` where <text> is saved.
+   If <text> does not exists then <fail> is processed. It can report failed <text> by
+   the `\.text` macro.
    \_cod
 
 \_def\.replpre#1#2#3{%
@@ -273,31 +275,29 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec The `\Note` macro
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The first parameter of the `\Note` macro is `<gen-vref>`.
+   The first parameter of the \^`\Note` macro is `<gen-vref>`.
    It is generalized reference to the Bible verse. It can be
    `<chapter-num>:<verse>` (the <book-mark> is appended from
-   `\CommentedBook` token list) or `<chapter-num>:<verse-from>-<verse-to>`
+   the \^`\.currbook` macro) or `<chapter-num>:<verse-from>-<verse-to>`
    (only <verse-from> is used for generating <gen-vref>.\nl
-   `\.gentovref{<gen-vref>}` expands to <full-vref>. 
+   \`\.gentovref``{<gen-vref>}` expands to <full-vref>. 
    \_cod
 
-\_newtoks\.CommentedBook
-\_def\.gentovref#1{\the\.CommentedBook/\.gentovrefA#1-\end}
+\_def\.gentovref#1{\.currbook/\.gentovrefA#1-\end}
 \_def\.gentovrefA#1-#2\end{#1}
 
-\_nspublic \CommentedBook ;
-
    \_doc
-   `\.renumvref <full-vref>\_relax` does re-caclulating of <full-vref> using `\renum` data.
+   \`\.renumvref`` <full-vref>\_relax` does re-caclulating of <full-vref> using
+   \^`\renum` data.
    \_cod
 
 \_def\.renumvref #1/#2\_relax{#1/\_trycs{rn!\tmark!#1/#2}{#2}}
 
    \_doc
-   The `<word>` given as a parameter of the `\Note` macro (see bellow) is used as a word
+   The `<word>` given as a parameter of the \^`\Note` macro (see bellow) is used as a word
    phrase which should be be searched in the given verse text. This parameter `<word>`
-   is transformed first by expansion of `\.transformword{<word>}` to the `<tword>` variant
-   and the `<tword>` is actually used for searching. The `\.transformword{<word>}`
+   is transformed first by expansion of \^`\.transformword{<word>}` to the `<tword>` variant
+   and the `<tword>` is actually used for searching. The \`\.transformword``{<word>}`
    expands to the variant of the <word> declared by `\.vdef`. If not declared then it
    expands to the <word> itself, i.e <tword> is equal to <word> in this case.
    \_cod
@@ -308,43 +308,51 @@
 }
 
    \_doc
-   `\Note <gen-vref> <space> {<word>} <text> \par`
+   \`\Note`` <gen-vref> <space> {<word>} <text> \par`
    transforms <word> to the <tword> (see above),
    saves <text> and activates replace-action of <tword> to
-   `\.doNote{<note-num>}{<tword>}` in given verse. 
+   \^`\.doNote{<note-num>}{<tword>}` in given verse. 
    \nl
    There is an alternative syntax 
-   `\Note <gen-vref> <space> {<word>}={<pword>} <text> \par`
-   If <pword> is given then is is printed in the note instead <tword>.
+   \^`\Note <gen-vref> <space> {<word>}={<pword>} <text> \par`
+   If <pword> is given then it is printed in the note instead <tword>.
    More precisely: transformed <word> is used for searching
    (and it is kept in the verse unchanged) but <pword> is
    printed in the note.\nl
-   The `\ww` can precede `\Note`. If it is true then the <word> is prepared in
-   `\nextww` and `<pword>` is in `\nextwwA`. Otherwise, the macros `\nextww`
-   and `\nextwwA` are undefined.\nl
+   The \^`\ww` can precede \^`\Note`. If it is true then the <word> is prepared in
+   \`\nextww` and `<pword>` is in \`\nextwwA`. Otherwise, the macros \^`\nextww`
+   and \^`\nextwwA` are undefined.\nl
    `\Note` does exactly following:
    \begitems
-   * Allocates new <note-num>,
-   * Transforms <gen-vref> to <full-vref> using `\.gentovref`.
-   * Modifies <full-vref> if `\renum` was declared using `\.renumvref` and
-     saves the result to `\.fullvrefm`.
-   * Use `\nextww` and `\nextwwA` as <tword> and <pword> if they are defined.
-   * Otherwise transforms <word> to <tword> by `\.transformword`.
-   * Reads <pword> (word to be printed in the note) if the alternative syntax
-     with `={<pword>}` is used. Else <pword> is equal to <tword>. 
-   * Defines `\notetext!<note-num>` as <text>.
-   * Defines `\noteref!<note-num>` as <full-vref>.
-   * Defines `\notepre!<note-num>` as numeric part of modified <full-vref>
-     and calculates <from>-<to> part (if exists in <gen-vref>) using `\renumlabel` macro.
+   * Calculates <full-vref> using `\.gentovref{<genv-ref>}` and svese it to
+     \`\.fullvref`.
+   * If the verse number of <full-vref> is zero, we want to insert the
+     note-text before the chapter. This is one by the \^`\.NoteB` macro.
+   * Allocates new <note-num>, i.e. \`\.notenum` is <note-num>.
+   * Modifies <full-vref> if \^`\renum` was declared using `\.renumvref` and
+     saves the result to \`\.fullvrefm`.
+   * Uses \^`\.nextww` and \^`\.nextwwA` as <tword> and <pword> if they are defined.
+   * Otherwise transforms <word> to <tword> by \^`\.transformword`.
+   * Reads <pword> (word to be printed in the note) by `\.NoteA` if the alternative syntax
+     with `={<pword>}` is used. Else <pword> is equal to <tword>.
+     Use it only if \^`\.nextww` is undefined.
+   * Defines \`\notetext!``<note-num>` as <text>.
+   * Defines \`\noteref!``<note-num>` as <full-vref> re-calulated by \^`\renum`.
+   * Defines \`\notepre!``<note-num>` as numeric part of modified <full-vref>.
+     and calculates <from>-<to> part (if exists in <gen-vref>) using \^`\.renumlabel` macro.
      This is printed prefix of the `\Note`.
-   * Defines `\pword!<note-num>` as <pword>,
-   * Does\nl
-   `\.newaction{<full-vref>}{\.replpre{\.doNote{<note-num>}}{<tword>}{\.notefail{<note-num>}}}`.
+   * Defines \`\pword!``<note-num>` as <pword>,
+   * Does
+    \^`\.newaction{<full-vref>}{\.replpre{\.doNote{<note-num>}}`\nl
+    \null\hskip14em            `{<tword>}{\.notefail{<note-num>}}}`.\nl
+     This is done by \`\.AddNote``{<full-vref>}{<note-num>}{<tword>}`.
    \enditems
+   Note that \^`\Note` is defined as `\outer` in order to report correctly typical
+   mistakes with missing empty line the ⟨text⟩ of a previous `\Note`.
    \_cod
 
 \_newcount\.notenum
-\_outer\_def\.Note #1 #2{%
+\_def\.Note #1 #2{%
    \_edef\.fullvref{\.gentovref{#1}}%
    \_ea\.isversezero\.fullvref\_iftrue
       \_ea\.NoteB
@@ -378,24 +386,31 @@
       \.newaction{#1}{\.replpre{\.doNote{#2}}{#3}{\.notefail{#2}}}%
    \_fi
 }
+%\_outer\_def\Note{\.Note} % will be done at the end of this macro file
+
+   \_doc
+   The \`\.NoteB`` <text> \par`
+   does not register any action to the verse but defines
+   `\chapnote!<full-vref>` as the <text>. This chapter note will be printed
+   before the chapter starts.
+   \_cod
+
 \_def\.NoteB #1% #1 separated by \par or \_par
 
 {%
-   \_sdef{!chapnote:\.fullvref}{\_ignorespaces#1}%
+   \_sdef{chapnote!\.fullvref}{\_ignorespaces#1}%
 }
 \_def\.isversezero#1/#2:#3\_iftrue{\_ifnum #3=0 }
 
-\_nspublic \Note ;
-
    \_doc
-   `\renumlabel` `<full-vref>\_relax` expands to the numeric part of
-   <full-vref> and appends the `--<to>` part if the `\tmp` macro is in the
+   \`\.renumlabel` `<full-vref>\_relax` expands to the numeric part of
+   <full-vref> and appends the `--<to>` part if the `\.tmp` macro is in the
    format `<chapter>:<from>-<to>`. The <to> part is re-calculated in order to
    the the number of verses between `<from>` and `<to>` be kept.
    If the `<to>` part is in the format <chapter>:<verse>
-   then it is unchanged. The `\renumlabel` macro must be expandable, so we
-   cannot use `\isinlist` and we prepare special expandable macros `\isdivis`
-   and `\iscolon`.
+   then it is unchanged. The \^`\.renumlabel` macro must be expandable, so we
+   cannot use `\isinlist` and we prepare special expandable macros
+   \^`\.isdivisin` and \^`\.iscolonin`.
    \_cod
 
 \_def\.renumlabel#1/#2\_relax{#2%
@@ -406,16 +421,16 @@
 }
 
    \_doc
-   The `\``Note` text is processed and printed in the second step, when the 
+   The \^`\Note` text is processed and printed in the second step, when the 
    `.txs` file is read. Actions are assigned to each verse and they are run
    before the appropriate verse is printed. And `\``Note` action says:
    \begtt
    \.replpre{\.doNote{<note-num>}}{<tword>}{\.notefail{<note-num>}}
    \endtt
    It means that the `<tword>` is searched in the verse text and
-   replaced by `\.doNote{<note-num>}{<tword>}`.
-   If `<tword>` is not found then `\.notefail{<note-num>}` prints warning
-   about it and `\.doNote{<note-num>}{}` is prefixed before the verse text.
+   replaced by \^`\.doNote{<note-num>}{<tword>}`.
+   If `<tword>` is not found then \`\.notefail``{<note-num>}` prints warning
+   about it and\nl \^`\.doNote{<note-num>}{}` is prefixed before the verse text.
    \_cod
 
 \_def\.notefail#1{%
@@ -424,8 +439,8 @@
 }
 
    \_doc
-   And the `\.doNote{<note-num>}{<tword>}` prints the real note text in the second step,
-   when the verse text from `\.buff` is processed.
+   The \`\.doNote``{<note-num>}{<tword>}` prints the real note text in the second step,
+   when the verse text from \^`\.buff` is processed.
    \_cod
 
 \_def\.prevtmpb{}
@@ -446,20 +461,21 @@
    \_doc
    The phrase `{<word>}` used in notes must be exactly the same as the word used in
    the `.txs` text. But we want to capitalize the first letter of the <word>
-   when printing. You can say `\let\.upcasefirts=\relax` if you don't want
+   when printing by \`\.upcasefirst`.
+   You can say `\let\.upcasefirts=\relax` if you don't want
    this feature.
    \_cod
 
 \_def\.upcasefirst #1{\_uppercase{#1}}
 
    \_doc
-   Because there is asynchronous processing of the `\``Note` text, we have a problem
+   Because there is asynchronous processing of the \^`\Note` text, we have a problem
    when an error occurs here. We cannot reference to appropriate line where
-   the `\``Note` is written. So, we print the parameters of processed
-   `\``Note` to the log file. The user can look into this file and the last
-   printed `\``Note` parameters here refers probably to the `\``Note` where the
+   the \^`\Note` is written. So, we print the parameters of processed
+   \^`\Note` to the log file. The user can look into this file and the last
+   printed \^`\Note` parameters here refers probably to the \^`\Note` where the
    reason of the error is.\nl
-   The logging is done by `\.notelog{<text>}`. It is `\wlog` by default but
+   The logging is done by \`\.notelog``{<text>}`. It is `\wlog` by default but
    you can set it to `\ignoreit` or `\wterm`.
    \_cod
 
@@ -478,7 +494,6 @@
    All these commands allocate new action using `\.newaction`.
    \_cod
 
-\_let\FormatedBook=\.CommentedBook
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
 \_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpre{\.fmtafter{#3}}{#2}{\.fmtfail{#3}}}}
@@ -596,9 +611,9 @@
    \_nobreak \_nointerlineskip \_noindent
 }
 \_def\.printchapnote{%
-   \_ifcsname !chapnote:\.currbook/\_the\.chapnum:0\_endcsname
+   \_ifcsname chapnote!\.currbook/\_the\.chapnum:0\_endcsname
       {\_leftskip=\_parindent plus1fill \_rightskip=\_leftskip
-       \_noindent\_it \_cs{!chapnote:\.currbook/\_the\.chapnum:0}\_par}
+       \_noindent\_it \_cs{chapnote!\.currbook/\_the\.chapnum:0}\_par}
       \_medskip
    \_fi
 }
@@ -1682,10 +1697,14 @@
    \_input{#1}%
    \_egroup
 }
+\_let\FormatedBook=\_ignoreit  % for backward compatibility
+\_let\CommentedBook=\_ignoreit % for backward compatibility
 
    \_doc
    Active character \code{<} used for references.
    \_cod
+
+\_outer\_def\Note{\.Note}
 
 \_def\_afterload{\_adef<{\.bref}}
 \_afterload
