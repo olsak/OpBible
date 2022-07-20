@@ -485,13 +485,13 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting data from format files
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   `\fmtpre {<gen-vref>}{<what>}` adds <what> to `\.fmtprebuff`, i.e.\ at the
+   \`\fmtpre`` {<gen-vref>}{<what>}` adds <what> to \`\.fmtprebuff`, i.e.\ at the
    beginning of the verse.\nl
-   `\ftmadd {<gen-vref>}{<what>}` adds <what> to `\.buff`, i.e.\ at the end
+   \`\ftmadd`` {<gen-vref>}{<what>}` adds <what> to \`\.buff`, i.e.\ at the end
    of the verse.\nl
-   `\fmtins {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
-   verse. If <text> is not found then <what> is inserted like `\fmtpre` does it\nl
-   All these commands allocate new action using `\.newaction`.
+   \`\fmtins`` {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
+   verse. If <text> is not found then <what> is inserted like \^`\fmtpre` does it\nl
+   All these commands allocate new action using \^`\.newaction`.
    \_cod
 
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
@@ -499,14 +499,14 @@
 \_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpre{\.fmtafter{#3}}{#2}{\.fmtfail{#3}}}}
 \_def\.fmtafter#1#2{#2#1}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
-\_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\_unexpanded\_ea{\.text}" not found}}
+\_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
 
 \_nspublic \fmtpre \fmtadd \fmtins ; 
 
    \_doc
-   `\begcenter` starts the centering mode. It opens a group and does
-   setting. User must use paired `\endcenter` in order to close this group.
-   The `\centeringmode` status is checked by `\encenter` because curious error
+   \`\begcenter` starts the centering mode. It opens a group and does
+   setting. User must use paired \`\endcenter` in order to close this group.
+   The \`\centeringmode` status is checked by \^`\encenter` because curious error
    (about `#` character) should be occur without this checking.
    \_cod
 
@@ -531,22 +531,22 @@
    \sec Printing verses from `.txs` files
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    When Bible text is processed then book mark is saved to
-   `\.currbook` and each input line is separated to the
+   \^`\.currbook` and each input line is separated to the
    <chapter-num>:<verse-num> and <verse-text>.\nl
-   The `\processverse <full-vref><space><verse-text>\_end` is repeatedly processed.
+   The \`\.processline`` <chapter>:<verse><space><verse-text>^^J` is repeatedly processed.
    \_cod
 
 \_eoldef\.processline#1{\.processverse \.currbook/#1\_end}
 
    \_doc
-   `\.processverse <full-vref><space><verse-text>\_end` does
+   \`\.processverse`` <full-vref><space><verse-text>\_end` does
    \begitems
-   * defines `\.currverse` as <full-vref>,
-   * prepares `\.currversenum`, `\.currversetext`, `\.currchapnum` from <full-vref>,
-   * defines `\.buff` as <verse-text>,
-   * processes all actions from `\alist!<full-vref>`,
-   * if `\.currchapnum` changed, prints new chapter by `\.printchap` 
-   * prints verse from `\.buff` using `\.printverse`
+   * defines \`\.currverse` as <full-vref>,
+   * prepares \`\.currversenum`, \`\.currversetext`, \`\.currchapnum` from <full-vref>,
+   * defines \`\.buff` as <verse-text>,
+   * processes all actions from \`\alist!``<full-vref>`,
+   * if \^`\.currchapnum` changed, prints new chapter by \^`\.printchap` 
+   * prints verse from \^`\.buff` using \^`\.printverse`
    \enditems
    \_cod
 
@@ -574,12 +574,12 @@
    \_def\.currversenum{#1}\_def\.currversetext{#1--#2}}
 
    \_doc
-   `\.printverse` prints verse from `\.currversenum` and (possibly changed) `\.buff`.
+   \`\.printverse` prints verse from \^`\.currversenum` and (possibly changed) \^`\.buff`.
    It prints the single raised verse number first.\nl
-   `\.printchap` prints beginning of the new chapter.
-   `\.printbeforefirst` is a macro which is executed just before first verse
-   of the chapter, after all material from `\fmtpre` is executed. I.e after
-   printing a chapter name (if declared by `\fmtpre`). 
+   \`\.printchap` prints beginning of the new chapter.
+   \`\.printbeforefirst` is a macro which is executed just before first verse
+   of the chapter, after all material from \^`\fmtpre` is executed. I.e after
+   printing a chapter name (if declared by \^`\fmtpre`). 
    \_cod
 
 \_def\.printverse{%
