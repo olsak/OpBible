@@ -68,6 +68,17 @@
    \_gobal\_ea\_addto\_csname#1\_endcsname{#2}\_else \_global\_sdef{#1}{#2}\_fi}
 
    \_doc
+   We prepare expandable if-macros:\nl
+   \`\.isspacein`` <text> \_iftrue` is true if `<text>` includes a space.\nl
+   \`\.iscolonin`` <text>:\_iftrue` is true if `<text>` includes a colon.\nl
+   \`\.isdivisin`` <text>-\_iftrue` is true if `<text>` includes a divis.
+   \_cod
+
+\_def\.isspacein #1 #2\_iftrue{\_isempty{#2}\_iffalse}
+\_def\.iscolonin #1:#2\_iftrue{\_isempty{#2}\_iffalse}
+\_def\.isdivisin #1-#2\_iftrue{\_isempty{#2}\_iffalse}
+
+   \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec The main loop over Bible books
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -320,7 +331,7 @@
    (and it is kept in the verse unchanged) but <pword> is
    printed in the note.\nl
    The \^`\ww` can precede \^`\Note`. If it is true then the <word> is prepared in
-   \`\nextww` and `<pword>` is in \`\nextwwA`. Otherwise, the macros \^`\nextww`
+   \^`\nextww` and `<pword>` is in \^`\nextwwA`. Otherwise, the macros \^`\nextww`
    and \^`\nextwwA` are undefined.\nl
    `\Note` does exactly following:
    \begitems
@@ -622,35 +633,25 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Bible references
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   We prepare temporary macros first.\nl
-   `\.isspacein <text> \_iftrue` is true if `<text>` includes a space.\nl
-   `\.iscolonin <text>:\_iftrue` is true if `<text>` includes a colon.\nl
-   `\.isdivisin <text>-\_iftrue` is true if `<text>` includes a divis.
-   \_cod
 
-\_def\.isspacein #1 #2\_iftrue{\_isempty{#2}\_iffalse}
-\_def\.iscolonin #1:#2\_iftrue{\_isempty{#2}\_iffalse}
-\_def\.isdivisin #1-#2\_iftrue{\_isempty{#2}\_iffalse}
-
-   \_doc
    The \code{\<} will be set to active as character equivalent to
-   the macro `\.bref<text>>`. This macro does all job with the hyperlinks.
+   the macro \`\.bref``<text>>`. This macro does all job with the hyperlinks.
    Fist of all, it scans the parts of the `<text>` and saves them to
    \begitems
-   * `\.ltextP` ... the text before a link specification (given in `"..."`)
-   * `\.ltextB` ... the book mark followed by `~`
-   * `\.ltextC` ... the chapter number followed by `:`
-   * `\.ltextV` ... the verse number
-   * `\.ltextS` ... sub-verse identifier (`a` if there is a verse `4a`)
-   * `\.ltextF` ... the `--` if the `<from>-<to>` format is given
-   * `\.ltextN` ... the `<to>` part from the `<from>-<to>` format.
+   * \`\.ltextP` ... the text before a link specification (given in `"..."`)
+   * \`\.ltextB` ... the book mark followed by `~`
+   * \`\.ltextC` ... the chapter number followed by `:`
+   * \`\.ltextV` ... the verse number
+   * \`\.ltextS` ... sub-verse identifier (`a` if there is a verse `4a`)
+   * \`\.ltextF` ... the `--` if the `<from>-<to>` format is given
+   * \`\.ltextN` ... the `<to>` part from the `<from>-<to>` format.
    \enditems
    All these macros above can be empty if the appropriate part of the
    scanned `<text>` is missing.
-   The `\.linkpre` macro includes `v` if it is verse link,
+   The \`\.linkpre` macro includes `v` if it is verse link,
    includes `n` if it is note link and `g` if it is gloss link.
-   These macros will be converted due to `\renum` data (if needed)
-   and printed by `\.linktext`.
+   These macros will be converted due to \^`\renum` data (if needed)
+   and printed by \`\.linktext`.
    \_cod
 
 \_def\.linktext{\.ltextP\.ltextB\.ltextC\.ltextV\.ltextS\.ltextF\.ltextN}
@@ -694,15 +695,15 @@
 
    \_doc
    Because the verse number can be in the format `11b`, we need to separate
-   the numeric part of this and save it to `\.ltextV` and the rest is saved
-   to `\.ltextS`. This is done by the `\.versedef <verse>\relax` macro.
+   the numeric part of this and save it to \^`\.ltextV` and the rest is saved
+   to \^`\.ltextS`. This is done by the \`\.versedef`` <verse>\relax` macro.
    \_cod
 
 \_def\.versedef {\_afterassignment\.versedefB \_tmpnum=0}
 \_def\.versedefB #1\_relax{\_edef\.ltextV{\_the\_tmpnum}\_def\.ltextS{#1}}
 
    \_doc
-   Now, we create `\.linkfspec` from scanned data. It is <full-vref>
+   Now, we create \`\.linkfspec` from scanned data. It is <full-vref>
    used for hyperlinks. We must manage all situations of incomplete links.
    \_cod
 
@@ -719,18 +720,18 @@
 \_let\.ltextsCin=\.ltextCin
 
    \_doc
-   `\.prelinkB` is <book-mark> of last referenced book.
-   `\.prelinkC` is <chapter-num> of last referenced chapter.
+   \`\.prelinkB` is <book-mark> of last referenced book.
+   \`\.prelinkC` is <chapter-num> of last referenced chapter.
    They are used if the reference is not full. They are initialized at the
    beginning of books and chapters and they are changed locally in the `\``Note` text.
-   If the \code{\<} is used then they are re-initialized.
+   If the \code{\\<} is used then they are re-initialized.
    \_cod
 
 \_def\<{\_let\.prelinkB=\.currbook \_let\.prelinkC=\.currchapnum \_let\.prelinkV=\.currversenum \.bref}
 
    \_doc
-   `\.oncebref` includes an additional macros which have to be processed in
-   the single link, for example `\reduceref`. The `\everybref` token list
+   \`\.oncebref` includes an additional macros which have to be processed in
+   the single link, for example \`\reduceref`. The \`\everybref` token list
    includes macros which have to be applied for all links.
    \_cod
 
@@ -739,21 +740,21 @@
 \_nspublic \everybref ;
 
    \_doc
-   Macro `\.brefL` recalculates `\.linkfspec` and `\.linktext` due to `\renum` data and
-   creates the link `\.linkpre:\.linkfspec` with the text `\.linktext`.\nl
-   `\.renumlinktext <full-vref-ori>\_relax<full-vref-modified>\_relax`
-   does re-calculation of the parts of the `\.linktext` macro.\nl
-   The `\.linkfspecone` solves situation when chapter is given but no verse
+   Macro \`\.brefL` recalculates \^`\.linkfspec` and \^`\.linktext` due to \^`\renum` data
+   and creates the link `\.linkpre:\.linkfspec` with the text \^`\.linktext`.\nl
+   \`\.renumlinktext`` <full-vref-ori>\_relax<full-vref-modified>\_relax`
+   does re-calculation of the parts of the \^`\.linktext` macro.\nl
+   The \`\.linkfspecone` solves situation when chapter is given but no verse
    number: we must set the verse number to 1.\nl
    If the link destination is article, then the `<full-vref>` has reduced
-   format `<book>/<chapter>`. If the link destiantion is itroduction then
+   format `<book>/<chapter>`. If the link destination is itroduction then
    the `<full-vref>` has more reduced format: `<book>/`.\nl
-   `\.linklog {<text>}` macro prints logging info of the link in the format
+   \`\.linklog`` {<text>}` macro prints logging info of the link in the format
    \begtt \catcode`<=13 \adef({\string<} \adef){\string>}
    (<link-spec>) = [<full-vref>]{<printed-link>}
    \endtt
-   `\.linklog` is `\wlog` by default and when `\tracinglinks` is set.
-   It is `\ignreit` when `\notracinglinks` is set.
+   \^`\.linklog` is `\wlog` by default and when `\tracinglinks` is set.
+   It is `\ignreit` when \^`\notracinglinks` is set.
    You can set it to `\wterm` if you want.
    \_cod
 
@@ -780,7 +781,8 @@
    \_ifx\.ltextN\_empty \_else
       \_ifx\.ltextF\.ltextDD
           \_isinlist\.ltextN{:}\_iftrue
-             \_ifcsname rn!\tmark!#1/\.ltextN\_endcsname \_edef\.ltextN{\_cs{rn!\tmark!#1/\.ltextN}}\_fi
+             \_ifcsname rn!\tmark!#1/\.ltextN\_endcsname \_edef\.ltextN{\_cs{rn!\tmark!#1/\.ltextN}}%
+             \_fi
           \_else \_edef\.ltextN{\_the\_numexpr#6+\.ltextN-#3\_relax}\_fi
       \_else \_let\.tmp=\_ignoreit % \.ltextN is a list of verses, for example 7,9,13
           \_ea\_foreach\.ltextN,\_do ##1,{\_edef\.tmp{\.tmp,\_the\_numexpr#6+##1-#3}}%
@@ -794,7 +796,7 @@
 \_def\.linkpost{\_if v\.linkpre \_else \.linkpre\_fi \_space}
 
    \_doc
-   `\tracinglinks` and `\notracinglinks` are defined here.
+   \`\tracinglinks` and \`\notracinglinks` are defined here.
    \_cod
 
 \_def\tracinglinks{\_let\.linklog=\_wlog}
@@ -802,13 +804,12 @@
 \tracinglinks
 
    \_doc
-   `\.createlink` creates link only if it refers to the place of printed book
+   \`\.createlink` creates link only if it refers to the place of printed book
    because we don't want to see many warnings about unreferenced links when
    we try to print only selected books. It creates link 
    `\.linkpre:\.linkfspec` with the text `\.linktext`\nl
    The link is created only if the book is to be printed, i.e. the
-   `\pbook!<book>` is defined. The link is created always if a user declared
-   `\tracingallrefs`.
+   `\pbook!<book>` is defined.
    \_cod
 
 \_def\.createlink{{%
@@ -823,19 +824,19 @@
    \_doc
    We don't create destinations for all verses, notes etc. but only for
    those which are referenced.
-   The macro `\.ensuredest` is called from `\.createlink` and it saves immediatelly
+   The macro \`\.ensuredest` is called from \^`\.createlink` and it saves immediatelly
    `\sdef{<link>:<full-vref>}{}`
-   to the special file `\jobname.xrf`. And the macro `\pg` saves immediatelly
+   to the special file `\jobname.xrf`. And the macro \^`\pg` saves immediatelly
    `\sdef{pg:<link>:<full-vref>}{??}` to this file.
    This `.xrf` file is read before standard
    `.ref` file. All link destinations save `\.Xdest{<full-vref>}` to the
-   `.ref` file. The macro `\.Xdest` does nothing if `\pg:<link>:<full-vref>` is not
-   defined (from `.rfx` file). Otherwise, it is defined as a correct pageno.
-   This result is used in the `\pg` macro.
+   `.ref` file. The macro \`\.Xdest` does nothing if `\pg:<link>:<full-vref>` is not
+   defined (from `.xrf` file). Otherwise, it is defined as a correct pageno.
+   This result is used in the \^`\pg` macro.
    If `\<link>:<full-vref>` is not defined, no link destination is crated.
    First \TeX/ run creates `.ref` and `.xrf` files and does not create any
    hyperlink destinations. Second \TeX/ run uses data from these files
-   and create correct hyperlinks and page numbers.
+   and creates correct hyperlinks and page numbers.
    \_cod
 
 \_newwrite\.xrf
@@ -854,8 +855,8 @@
 }
 
    \_doc
-   The `\pg` macro should be used after \code{<...>}, i.e. the `\.linkpre`
-   and `\.linkfspec` are defined. We use them. And the page number is saved to
+   The \`\pg` macro should be used after \code{<...>}, i.e. the \^`\.linkpre`
+   and \^`\.linkfspec` are defined. We use them. And the page number is saved to
    the `\pg:<link>:<full-vref>` macro in the second \TeX/ run.
    \_cod
 
@@ -872,8 +873,8 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Language variants
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   `\variants <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
-   sets `\.numvariants=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
+   \`\variants`` <number-of-variants> {<tmark-A>} {<tmark-B>} {<tmark-C>} ...`\nl
+   sets \`\.numvariants``=<number-of-variants>` and does `\def\tmarkA{<tmark-A>}`
    `\def\var!1{<tmarkA>}` `\def\var!2{<tmark-B>}` `\def\var!3{<tmark-C>}` etc.
    \_cod
 
@@ -894,13 +895,13 @@
 \_nspublic \variants ;
 
    \_doc
-   `\vdef {<phrase-A>} {<phrase-B>} {<phrase-C>} ...` does\nl
+   \`\vdef`` {<phrase-A>} {<phrase-B>} {<phrase-C>} ...` does\nl
    `\def\v!<tmark-B>!<phrase-A>{<phrase-B>}`
    `\def\v!<tmark-C>!<phrase-A>{<phrase-C>}` etc.
    Empty parameter is interpreted as undefined data.
-   The internal macro `\.vdefB` implements the error message if there is too few
-   parameters of `\.vdef` and we were read next `\.vdef`.
-   The `\.sedef` used in the `\.vdefB{<number>}{<param>}` does real work and 
+   The internal macro \`\.vdefB` implements the error message if there is too few
+   parameters of \^`\vdef` and we were read next \^`\vdef`.
+   The \^`\.sedef` used in the \^`\.vdefB{<number>}{<param>}` does real work and 
    it defines (rougly sepaking):
    \begtt \catcode`<=13
    If <param> is "  \def \v!<tmark>!<phrase-A> {<previous param>}
@@ -936,13 +937,13 @@
 \_nspublic \vdef ;
 
    \_doc
-   `\x/<phrase>/` expands to `\v!<tmark>!<phrase>` if such control sequence
-   is defined else it expands simply to `<phrase>` using `\xA`.
-   The `<tmark>` is actual value of the `\tmark` macro.\nl
-   Note that if `\tmark` expands to `<t-markA>` (used in the `\variants`
-   macro), then the `\v!<tmark>!<phrase>` is not defined and the `\x` macro
+   \`\x``/<phrase>/` expands to \`\v!``<tmark>!<phrase>` if such control sequence
+   is defined else it expands simply to `<phrase>` using \^`\xA`.
+   The `<tmark>` is actual value of the \^`\tmark` macro.\nl
+   Note that if \^`\tmark` expands to `<t-markA>` (used in the `\variants`
+   macro), then the `\v!<tmark>!<phrase>` is not defined and the \^`\x` macro
    expands to the <phrase> directly.\nl
-   `\xA <phrase>/` expands to `<phrase>` and prints warning, if `\tmark`
+   \`\xA`` <phrase>/` expands to `<phrase>` and prints warning, if `\tmark`
    is not the first `<t-markA>`.
    \_cod
 
@@ -954,17 +955,17 @@
 \_nspublic \x ;
 
    \_doc
-   `\ww` `{<phrase-A>} {<phrase-B>} ...` has the same number of parameters as `\vdef`.
+   \`\ww` `{<phrase-A>} {<phrase-B>} ...` has the same number of parameters as `\vdef`.
    They are separated by spaces. Each parameter can be in the \"single form",
    i.e.\ `{<phrase-A>}` or in the \"extended form", i.e.\ `{<phrase-A>}={<printed-A>}`.
-   The macro searchs the correct phrase (given by the `\.varnum`) and saves
-   it to the `\nextww`. The `\nextwwA` is set to `\nextww` if there is
-   single form of the parameter else `\nextwwA` is <printed-A> part of
+   The macro searchs the correct phrase (given by the \^`\.varnum`) and saves
+   it to the \`\nextww`. The \^`\nextwwA` is set to `\nextww` if there is
+   single form of the parameter else \`\nextwwA` is <printed-A> part of
    the parameter in the extended form. These macros are used in the next
-   `\``Note` where they are re-set to `\undefined` meaning.
+   \^`\Note` where they are re-set to `\undefined` meaning.
    \_cod
 
-\_outer\_def\.ww{%
+\_def\.ww{%
    \_ifx\.varnum\_undefined \.setvarnum \_fi
    \_tmpnum=0
    \_ifx\.nextww\_undefined \_ea\.wwA
@@ -982,19 +983,19 @@
 }
 \_def\.redefwwA =#1\_end{\_def\.nextwwA{#1}}
 
-\_nspublic \ww ;
+% \_outer\_def\ww{\.ww} % will be done at the end of this macro file
 
    \_doc
-   The `\switch` macro reads a pair of parameters using `\.switchA`
+   The \`\switch` macro reads a pair of parameters using \`\.switchA`
    and processes the list of variants in `\foreach` loop. If an element from
-   the list is equal with `\tmark` then the `#2` (saved in
-   `\.switchD` token list) is run and next parameter pairs are read by
-   `\.switchN`, i.e. they are ignored.\nl
-   The `\``Note` and `\``ww` are defined as `\outer` in order to better diagnose
-   mistakes with number of parameters of `\``ww` or missig empty line after `\``Note`
-   text. But we want to skip such objects in `\switch` parameters. This is
-   the reason why we run `\unsetouter` before the `\switch` parameter is
-   read and we run `\setouter` in order to return to the normal setting.
+   the list is equal with \^`\tmark` then the `#2` (saved in
+   \`\.switchD` token list) is run and next parameter pairs are read by
+   \`\.switchN`, i.e. they are ignored.\nl
+   The \^`\Note` and \^`\ww` are defined as `\outer` in order to better diagnose
+   mistakes with number of parameters of \^`\ww` or missig empty line after
+   \^`\Note` text. But we want to skip such objects in \^`\switch` parameters. This is
+   the reason why we run \`\.unsetouter` before the \^`\switch` parameter is
+   read and we run \`\.setouter` in order to return to the normal setting.
    \_cod
 
 \_newtoks\.switchD
@@ -1009,15 +1010,13 @@
 \_long\_def\.switchI #1#2{\_futurelet\.next\.switchB}
 \_def\.switchC{\_ifx\tmp\tmark \_the\.switchD \_fi}
 \_def\.unsetouter{\_slet{ww}{_relax}\_slet{Note}{_relax}}
-\_def\.setouter{\_slet{ww}{_opb_iww}\_slet{Note}{_opb_iNote}}
-\_let\.iww=\.ww    % backup of outer ww
-\_let\.iNote=\.Note % backup of outer Note
+\_def\.setouter{\_outer\_def\ww{\.ww}\_outer\_def\Note{\.Note}}
 
 \_nspublic \switch ;
 
    \_doc
-   `\.setvarnum` sets the `\.varnum` as the position number of the current
-   language variant due to the value of `\tmark`. The `\variants`
+   \`\.setvarnum` sets the \`\.varnum` as the position number of the current
+   language variant due to the value of `\tmark`. The \^`\variants`
    declaration must precede.
    \_cod
 
@@ -1035,7 +1034,7 @@
 }
 
    \_doc
-   `\renum <book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
+   \`\renum` `<book-mark> <chapter-num>:<verse-num> = <t-mark> <chap-num>:<from>-<to>`
    does
    \begtt
    \def \rn!<t-mark>!<full-vref>{<chap-num>:<from>}
@@ -1704,7 +1703,8 @@
    Active character \code{<} used for references.
    \_cod
 
-\_outer\_def\Note{\.Note}
+\_outer\_def\Note {\.Note}
+\_outer\_def\ww   {\.ww}
 
 \_def\_afterload{\_adef<{\.bref}}
 \_afterload

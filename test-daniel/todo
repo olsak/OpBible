@@ -1,4 +1,4 @@
-- odstranit \FormatedBook, \CommentedBook
+- odstranit \FormatedBook, \CommentedBook ... OK
 - pridat hledani prislusneho \Article v souboru article-*.tex ... OK
 - pridat moznost ovlivnit zpusob vlozeni article pomoci parametru
 - pridat koncept souboru article ... OK
@@ -10,4 +10,5 @@
 - zminka o moznosti vazat opakovane slova, nebudou-li cervena
 - varianty sazby cisel kapitol
 - zaradit \Citehere zavisle na prave-leve strane
+- implementovat \reduceref
 
