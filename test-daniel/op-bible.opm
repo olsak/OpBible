@@ -1055,7 +1055,7 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting notes to the page
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   We declare new insert `\.noteins` used in the `\output` routine.
+   We declare new insert \`\.noteins` used in the `\output` routine.
    \_cod
 
 \_newinsert \.noteins
@@ -1064,8 +1064,8 @@
 \_dimen\.noteins=\_maxdimen      % full page of notes allowed
 
    \_doc
-   The `\.noteinsert {<text>}` inserts its parameter to the `\.noteins`.
-   We open the `\insert` and set basic parameters using `\.noteset`.
+   The \`\.noteinsert`` {<text>}` inserts its parameter to the \^`\.noteins`.
+   We open the `\insert` and set basic parameters using \`\.noteset`.
    Then the empty box with strut height is inserted in vertical mode
    (in order to consecutive notes have good baselineskip between them).
    Then the `<text>` is printed and the paragraph is finalized.
@@ -1092,13 +1092,13 @@
 }
 
    \_doc
-   We add macros for inserting two columns of notes from `\.noteins` into the
-   page. First, we add `\noterule` with the space given by
-   `\skip\.noteins`. The `\.noteins` material is prefixed by `\penalty0` (in
+   We add macros for inserting two columns of notes from \^`\.noteins` into the
+   page. First, we add \`\noterule` with the space given by
+   `\skip\.noteins`. The \^`\.noteins` material is prefixed by `\penalty0` (in
    order to allow the next `\vsplit` operation) and the `\vfil` is added (in order
    to the case when the second column is smaller than the first one).
    The `\splittopskip` is set and first `\vsplit to0pt` adds skip given by
-   `\splittopskip` to the `\.noteins`. The `\_balancecolumns` from \OpTeX/
+   `\splittopskip` to the \^`\.noteins`. The `\_balancecolumns` from \OpTeX/
    for splitting to two columns is used. We need to set `\_Ncols`, `\_dimen0`
    and `\_box6` before running `\_balancecolumns`. We need to insert
    `\vskip\splittopskip` because `\_balancecolumns` supposes that the typesetting point
@@ -1130,9 +1130,9 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting images and articles to the page
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   `\.botins` is analogue insert as `\_topins` but the material is inserted
+   \`\.botins` is analogue insert as `\_topins` but the material is inserted
    to the bottom of the page. The material is created by
-   `\.botinsert...\.endbot` pair of control sequences.
+   \`\.botinsert``...`\`\.endbot` pair of control sequences.
    We use it for inserting images and articles to the page.
    \_cod
 
@@ -1148,12 +1148,12 @@
 \_dimen\.botins=\_maxdimen % no limit per page
 
    \_doc
-   `\putImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
+   \`\putImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
    inserts the given image to the page where the begining of the verse given
    by <chapter>:<verse> exists. We register a new action by
-   `\.newaction{<full-vref>}{\doImage{<title>}[<label>](<params>){<image-file>}}`.
-   The `\doImage` puts the image by `\.botinsert`...`\.endbot` pair.
-   The `\botTitle{<title>}[<label>]` prints the title of the image (or
+   \^`\.newaction{<full-vref>}{\.doImage{<title>}[<label>](<params>){<image-file>}}`.
+   The \`\.doImage` puts the image by \^`\.botinsert`...\^`\.endbot` pair.
+   The \`\.botTitle``{<title>}[<label>]` prints the title of the image (or
    article or watever is put to the bottom of the page) and inserts the
    destination of hyperlink based on the <label>, if the <label> isn't empty.
    \_cod
@@ -1180,9 +1180,9 @@
 \_nspublic \putImage ;
 
    \_doc
-   `\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
+   \`\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
    inserts an article given in the file `articles-*.tex` signed by
-   `\Article [<label>]`. The article starts at the page where
+   \`\Article`` [<label>]`. The article starts at the page where
    <chapter>:<verse> is or at the next page. The article is in two-columns
    style and it is divided to $k$ two-columns parts each of them is inserted
    at the bottom of the next page.
@@ -1192,13 +1192,13 @@
    a part, the height does not exceeds 2/3 of the page. But single two-column part
    can be higher.
 
-   `\putArticle` registers `\doArticle` using `\.newaction`.
-   `\doArticle` is run at the beginning of given verse and creates an
-   `\botisert`. The insert material is breakable at its beginig and between
-   each two-column boxes created by the `\balancecolumn` macro.
+   \^`\putArticle` registers \^`\.doArticle` using \^`\.newaction`.
+   \^`\.doArticle` is run at the beginning of given verse and creates an
+   \^`\.botisert`. The insert material is breakable at its beginig and between
+   each two-column boxes created by the `\_balancecolumn` macro.
 
    We register a new action by
-   `\.newaction{<full-vref>}{\doArticle{<title>}[<label>](<params>)}`.
+   `\.newaction{<full-vref>}{\.doArticle{<title>}[<label>](<params>)}`.
    \_cod
 
 \_newcount\.articlenum
@@ -1210,8 +1210,9 @@
 \_nspublic \putArticle ;
 
    \_doc
-   The `\.doArticle` `{<Title>}[<label>](<params>)` inserts the article to one
-   or more pages by `\.botinsert`...`\.endbot`. The Article is printed to two columns per
+   The \`\.doArticle` `{<Title>}[<label>](<params>)` inserts the article to one
+   or more pages by the pair \^`\.botinsert`...\^`\.endbot`.
+   The Article is printed to two columns per
    page, all collumns of the article is completely balanced.
    First, the whole text is saved to the `\box0`
    with given column size and the number of pages is calculated in `\_tmpnum`.
@@ -1220,7 +1221,7 @@
    Finally we do re-boxing the output of `\_balancecolumns` in order to
    reach individual columns and create pairs of them by `\fornum` loop.
    These pairs are completed to blocks with LightGrey background.
-   These blocks divided by `\break` are inserted into `\.botinsert`.
+   These blocks divided by `\break` are inserted into \^`\.botinsert`.
    \_cod
 
 \_def\.doArticle#1[#2](#3){% {Title}[number](params)
