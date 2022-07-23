@@ -451,18 +451,28 @@
 
    \_doc
    The \`\.doNote``{<note-num>}{<tword>}` prints the real note text in the second step,
-   when the verse text from \^`\.buff` is processed.
+   when the verse text from \^`\.buff` is processed.\nl
+   The `<chapter>:<verse>` is printed from \^`\notepre!` only if it differs
+   from previous one, i.e.\ from \`\.prevnotepre`.
+   The <pword> is printed with uppercase first letter by \^`\.upcasefirst`
+   and with appended dot, but the dot is not printed
+   if the <pword> ends by `?` or `!`.
    \_cod
 
-\_def\.prevtmpb{}
+\_def\.prevnotepre{}
 \_def\.doNote#1#2{%
    \_edef\.tmpb{\_cs{notepre!#1}}%
    \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \.noteinsert{%
-      {\_bf \_ifx\.prevtmpb\.tmpb \_else \.tmpb \_enskip \_glet\.prevtmpb=\.tmpb \_fi
+      {\_bf \_ifx\.prevnotepre\.tmpb \_else \.tmpb \_enskip \_glet\.prevnotepre=\.tmpb \_fi
        \.trymakedest{n:\_cs{noteref!#1}}%
-       \_ea\_ifx \_csname pword!#1\_endcsname \_empty
-                 \_else \_ea\_ea\_ea\.upcasefirst \_csname pword!#1\_endcsname. \_fi}%
+       \_edef\.tmpb{\_csname pword!#1\_endcsname}%
+       \_ifx\.tmpb\_empty \_else
+           \_addto\.tmpb{.}%
+           \_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}%
+           \_ea\.upcasefirst \.tmpb\_space
+       \_fi
+      }% end of \bf
       \_cs{notetext!#1}}%
    {\notecolor#2}%
 }
