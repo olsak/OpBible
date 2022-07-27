@@ -1194,6 +1194,14 @@ dojde ke změně tohoto nastavení: čísla kapitol pak jsou vsazena do levého
 horního rohu prvního odstavce a zvětšené značky uvozovek jsou zrušeny.
 Vnější okraj je pak zmenšen, protože v něm už není žádný tiskový materiál.  
 
+Implicitně zaujímá každá poznámka `\Note` nový odstavec ve dvousloupcové
+sazbě. Pomocí `\mergednotes` je možné zajistit, že všechny poznámky vztažené
+k jedinému verši jsou vždy spojeny do společného odstavce. Ale je to za cenu
+toho, že se nezaručí, aby výskyt frází v hlavním textu byl na stejné straně
+jako fráze v poznámce. Celý odstavec spojené poznámky se propojí pouze se
+začátkem verše, tj. začátek verše a začátek poznámky k verši jsou na stejné
+straně, samotné fráze se neprohledávají.
+
 Další varianty formátování stránek jsou zatím jen v plánu a nejsou
 implementovány.
 

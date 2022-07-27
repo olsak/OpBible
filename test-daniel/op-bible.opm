@@ -388,11 +388,17 @@
       \_sdef{pword!\_the\.notenum\_ea}\_ea{\.nextwwA}%
       \_let\.nextww=\_undefined \_let\.nextwwA=\_undefined
    \_fi
+   \.reducetword
    \_ea\.addNote\_expanded{{\.fullvrefm}{\_the\.notenum}{\.tword}}%
 }
 \_def\.addNote#1#2#3{%
    \_ifx^#3^% \.tword is empty
-      \.newaction{#1}{\_addto\.prebuff{\.doNote{#2}{}}}%
+      \_edef\.tmp{\_cs{notepre!#2}}%
+      \_ea \.isdivisin\.tmp-\_iftrue
+         \.newaction{#1}{\.replpre{\.doNote{#2}}{}{}}%
+      \_else
+         \.newaction{#1}{\_addto\.prebuff{\.doCNote{#2}{}}}%
+      \_fi
    \_else
       \.newaction{#1}{\.replpre{\.doNote{#2}}{#3}{\.notefail{#2}}}%
    \_fi
@@ -468,8 +474,7 @@
        \.trymakedest{n:\_cs{noteref!#1}}%
        \_edef\.tmpb{\_csname pword!#1\_endcsname}%
        \_ifx\.tmpb\_empty \_else
-           \_addto\.tmpb{.}%
-           \_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}%
+           \_addto\.tmpb{.}\.punctpword
            \_ea\.upcasefirst \.tmpb\_space
        \_fi
       }% end of \bf
@@ -480,14 +485,60 @@
 \_def\_textindent#1{\_noindent}
 
    \_doc
-   The phrase `{<word>}` used in notes must be exactly the same as the word used in
-   the `.txs` text. But we want to capitalize the first letter of the <word>
+   The <pword> is typically all lowercase.
+   But we want to capitalize the first letter of the <pword>
    when printing by \`\.upcasefirst`.
    You can say `\let\.upcasefirts=\relax` if you don't want
    this feature.
    \_cod
 
 \_def\.upcasefirst #1{\_uppercase{#1}}
+
+   \_doc
+   The dot is added to <pword> when it is printed. But if <pword> ends by
+   `!` or `?` then the added dot is uggly. We have to correct it in
+   the \`\.punctpword` macro. Note that <pword> is saved to `\.tmpb`.
+   \_cod
+
+\_def\.punctpword{\_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}}
+
+   \_doc
+   When \^`\Note` has empty parameter <word> (i.e. <tword>) then it is anchored to the
+   beginning of the verse. Moreower, if there are more such Notes referenced
+   to the same verse then we merge all such notes to single note. So
+   \`\.doCNote``{<notenum>}` is run from \^`\.prebuff` and it only adds the text of
+   the note to the \`\.Cnotetext` buffer. When \^`\.prebuff` is completed then
+   \`\.printCnote` prints the merged note.
+   \_cod
+
+\_def\.doCNote #1{%
+   \_edef\.tmpb{\_csname pword!#1\_endcsname}%
+   \_ifx\.tmpb\_empty \_else
+       \_addto\.tmpb{.}\.punctpword
+       \_edef\.tmpb{{\_noexpand\_bf \_ea\.upcasefirst\.tmpb\_noexpand~}}%
+       \_ea\_addto \_ea\.Cnotetext \_ea{\.tmpb}%
+   \_fi
+   \_ea\_ea\_ea\_addto\_ea\_ea\_ea\.Cnotetext\_ea\_ea\_ea{\_csname notetext!#1\_endcsname}%
+}
+\_def\.printCnote{
+   \_ifx\.Cnotetext\_empty \_else
+      \.noteinsert{%
+         {\_bf \_ea\.nobook\.currverse\_relax \.trymakedest{n:\.currverse}} \.Cnotetext
+      }
+   \_fi
+}
+\_def\.nobook #1/#2\_relax {#2} % only chapter:verse is printed
+
+   \_doc
+   `\.reducetword` does nothing by default. But \`\megrednotes`
+   re-defines it, so all \^`\Note`s are referenced to the begining of the
+   verse and nothing is searched. The \^`\Note`s with the same verse are merged in
+   this case using \^`\.doCNote`.
+   \_cod
+
+\_def\.reducetword{}
+\_def\.mergednotes{\_def\.reducetword{\_def\.tword{}}}
+\_nspublic \mergednotes ;
 
    \_doc
    Because there is asynchronous processing of the \^`\Note` text, we have a problem
@@ -576,7 +627,7 @@
    \_edef\.currverse{#1}%
    \.preparechapverse #1
    \_let\.prelinkV=\.currversenum
-   \_def\.buff{#2}\_def\.fmtprebuff{}\_def\.prebuff{}%
+   \_def\.buff{#2}\_def\.fmtprebuff{}\_def\.prebuff{}\_def\.Cnotetext{}%
    \_ifx\.verseto\_empty \_csname alist!#1\_endcsname \_else
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
@@ -612,7 +663,7 @@
        \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
    \_raise5pt\_hbox{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\_fi}%
-   \.prebuff\.buff \_space
+   \.prebuff\.printCnote\.buff \_space
 }
 \_def\.printchap{\_bigskip}
 
