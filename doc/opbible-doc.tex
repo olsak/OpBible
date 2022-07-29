@@ -396,6 +396,15 @@ adresáři `sources/` tedy můžete mít \uv{datový sklad} všech základních 
 Bible pro všechny použité varianty překlady najednou. V případě šesti variant
 překladu tam tedy máte $6\times66=396$ souborů.
 
+Máte-li v `.txs` souborech něco, co chcete nakonec formátovat jinak, je možné
+v hlavním souboru použít \`\cnvtext``{<co>}{<jak>}`. \TeX/ v každém verši z
+`.txs` souboru vyhledá všechny výskyty `<co>` a nahradí je `<jak>`.
+Například máte-li v `.txs` souborech úseky textu v hranatých závorkách, tedy
+`[něco takového]` a chcete je tisknout kuzívou, pište:
+\begtt
+\cnvtext{[}{\bgroup\it}  \cnvtext{]}{\/\egroup}
+\endtt
+
 
 \secc[fmt] Údaje určující formátování základního textu v souborech `fmt-*.tex`
 

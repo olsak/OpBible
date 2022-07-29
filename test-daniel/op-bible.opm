@@ -628,6 +628,7 @@
    \.preparechapverse #1
    \_let\.prelinkV=\.currversenum
    \_def\.buff{#2}\_def\.fmtprebuff{}\_def\.prebuff{}\_def\.Cnotetext{}%
+   \.prepareversetext
    \_ifx\.verseto\_empty \_csname alist!#1\_endcsname \_else
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
@@ -644,6 +645,17 @@
 \_def\.defversefromto #1-#2\_end{%
    \_def\.versefrom{#1}\_def\.verseto{#2}%
    \_def\.currversenum{#1}\_def\.currversetext{#1--#2}}
+
+   \_doc
+   User can do little changes in the verse text using \`\cnvtext``{<what>}{<replaced>}`.
+   For example you can do `\cnvtext{[}{\bgroup\it}\cnvtext{]}{\/\egroup}`
+   for making `[words]` in brackets printed italics.
+   \_cod
+
+\_def\.prepareversetext{}
+\_def\.cnvtext#1#2{\_addto\.prepareversetext{\_replstring\.buff{#1}{#2}}}
+\_nspublic \cnvtext ;
+
 
    \_doc
    \`\.printverse` prints verse from \^`\.currversenum` and (possibly changed) \^`\.buff`.
