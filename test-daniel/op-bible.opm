@@ -117,6 +117,7 @@
    \_cod
 
 \_def\.processbooks {\_par
+   \_ifx\tmark\_undefined \_def\tmark{none}\_fi
    \.checknochapbooks
    \_useit{\_ea\.processbooksA \printedbooks} {}
    \_useit{\_ea\.processbooksB \printedbooks} {}
@@ -132,7 +133,7 @@
       \_begingroup
          \_edef\.currbook{#1}
          \.newbook{#1}
-         \_wterm{** \_cs{btit!#1} {#1} **}
+         \_wterm{** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
          \_else \.printwarn{File with introduction text \introfile\_space not found}\_fi
