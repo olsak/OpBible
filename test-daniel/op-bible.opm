@@ -1555,6 +1555,7 @@
    \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
                  \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
 }
+\_let\c=\_undefined
 \_nspublic \insertBot \putBot \c ;
 
    \_doc
