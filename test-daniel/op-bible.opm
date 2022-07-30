@@ -272,11 +272,11 @@
    \_cod
 
 \_def\.replpre#1#2#3{%
-   \_ifx^#2^\_def\.tmp{#1^}\_ea\_ea\_ea\_def\_ea\_ea\_ea\.buff\_ea\_ea\_ea{\_ea\.tmp\_ea^\.buff}%
+   \_ifx^#2^\_def\.tmp{#1{}}\_ea\_ea\_ea\_def\_ea\_ea\_ea\.buff\_ea\_ea\_ea{\_ea\.tmp\.buff}%
    \_else
       \_def\.replpredo##1#2##2\_end{%
          \_ifx\_end##2\_end \_def\.text{#2}#3% <fail>
-         \_else \.replsave ##1#1^#2^##2\_end \_fi
+         \_else \.replsave ##1#1{#2}##2\_end \_fi
       }%
       \_def\.replsave##1#2\_end{\_def\.buff{##1}}%
       \_ea\.replpredo\.buff#2\_end
@@ -464,9 +464,9 @@
    \.replpre{\.doNote{<note-num>}}{<tword>}{\.notefail{<note-num>}}
    \endtt
    It means that the `<tword>` is searched in the verse text and
-   replaced by \^`\.doNote{<note-num>}^<tword>^`.
+   replaced by \^`\.doNote{<note-num>}{<tword>}`.
    If `<tword>` is not found then \`\.notefail``{<note-num>}` prints warning
-   about it and\nl \^`\.doNote{<note-num>}^``^` is prefixed before the verse text.
+   about it and\nl \^`\.doNote{<note-num>}{}` is prefixed before the verse text.
    \_cod
 
 \_def\.notefail#1{%
@@ -475,7 +475,7 @@
 }
 
    \_doc
-   The \`\.doNote``{<note-num>}^<tword>^` prints the real note text in the second step,
+   The \`\.doNote``{<note-num>}{<tword>}` prints the real note text in the second step,
    when the verse text from \^`\.buff` is processed.\nl
    The `<chapter>:<verse>` is printed from \^`\notepre!` only if it differs
    from previous one, i.e.\ from \`\.prevnotepre`.
@@ -485,7 +485,7 @@
    \_cod
 
 \_def\.prevnotepre{}
-\_def\.doNote#1^#2^{%
+\_def\.doNote#1#2{%
    \_edef\.tmpb{\_cs{notepre!#1}}%
    \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \.noteinsert{%
