@@ -265,18 +265,18 @@
    Bible verse when the verse text is saved to the \^`\.buff` macro. The
    \^`\.buff` macro is processed after all actions of given verse are done.\nl
    \`\.replpre``{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
-   by `<prefix>{<text>}` in `\.buff` macro. If the <text> is empty then
-   `<prefix>{}` is inserted at the beginning of the `\.buff`.\nl
+   by `<prefix>^<text>^` in `\.buff` macro. If the <text> is empty then
+   `<prefix>^``^` is inserted at the beginning of the `\.buff`.\nl
    If <text> does not exists then <fail> is processed. It can report failed <text> by
    the `\.text` macro.
    \_cod
 
 \_def\.replpre#1#2#3{%
-   \_ifx^#2^\_def\.tmp{#1{}}\_ea\_ea\_ea\_def\_ea\_ea\_ea\.buff\_ea\_ea\_ea{\_ea\.tmp\.buff}%
+   \_ifx^#2^\_def\.tmp{#1^}\_ea\_ea\_ea\_def\_ea\_ea\_ea\.buff\_ea\_ea\_ea{\_ea\.tmp\_ea^\.buff}%
    \_else
       \_def\.replpredo##1#2##2\_end{%
-         \_ifx^##2^\_def\.text{#2}#3% <fail>
-         \_else \.replsave ##1#1{#2}##2\_end \_fi
+         \_ifx\_relax##2\_relax \_def\.text{#2}#3% <fail>
+         \_else \.replsave ##1#1^#2^##2\_end \_fi
       }%
       \_def\.replsave##1#2\_end{\_def\.buff{##1}}%
       \_ea\.replpredo\.buff#2\_end
@@ -446,9 +446,9 @@
    \.replpre{\.doNote{<note-num>}}{<tword>}{\.notefail{<note-num>}}
    \endtt
    It means that the `<tword>` is searched in the verse text and
-   replaced by \^`\.doNote{<note-num>}{<tword>}`.
+   replaced by \^`\.doNote{<note-num>}^<tword>^`.
    If `<tword>` is not found then \`\.notefail``{<note-num>}` prints warning
-   about it and\nl \^`\.doNote{<note-num>}{}` is prefixed before the verse text.
+   about it and\nl \^`\.doNote{<note-num>}^``^` is prefixed before the verse text.
    \_cod
 
 \_def\.notefail#1{%
@@ -457,7 +457,7 @@
 }
 
    \_doc
-   The \`\.doNote``{<note-num>}{<tword>}` prints the real note text in the second step,
+   The \`\.doNote``{<note-num>}^<tword>^` prints the real note text in the second step,
    when the verse text from \^`\.buff` is processed.\nl
    The `<chapter>:<verse>` is printed from \^`\notepre!` only if it differs
    from previous one, i.e.\ from \`\.prevnotepre`.
@@ -467,7 +467,7 @@
    \_cod
 
 \_def\.prevnotepre{}
-\_def\.doNote#1#2{%
+\_def\.doNote#1^#2^{%
    \_edef\.tmpb{\_cs{notepre!#1}}%
    \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \.noteinsert{%
@@ -570,7 +570,7 @@
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
 \_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpre{\.fmtafter{#3}}{#2}{\.fmtfail{#3}}}}
-\_def\.fmtafter#1#2{#2#1}
+\_def\.fmtafter#1^#2^{#2#1}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
 \_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
 
@@ -629,7 +629,6 @@
    \.preparechapverse #1
    \_let\.prelinkV=\.currversenum
    \_def\.buff{#2}\_def\.fmtprebuff{}\_def\.prebuff{}\_def\.Cnotetext{}%
-   \.prepareversetext
    \_ifx\.verseto\_empty \_csname alist!#1\_endcsname \_else
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
@@ -676,6 +675,7 @@
        \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
    \_raise5pt\_hbox{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\_fi}%
+   \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
 }
 \_def\.printchap{\_bigskip}
@@ -1652,13 +1652,13 @@
 
    By default, chapter numbers are in the outer margin and quotes characters
    too. 
-   The `\normalchapnums` macro moves chater numbers to the left side in the
+   The `\normalchapnumbers` macro moves chater numbers to the left side in the
    first paragraph, cquotes characters are removed and outer margins are
    reduced because there is no material in them. 
    \_cod
 
 \_def\.normalchapnumbers{
-   \_margins/2 a2 (25,25,20,20)mm
+   \_margins/2 a4 (25,25,20,20)mm
    \.lrmargin=0pt
    \_setbox0=\_box\.lqqbox \_setbox0=\_box\.rqqbox
    \_def\.printbeforefirst{%
