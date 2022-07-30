@@ -275,13 +275,31 @@
    \_ifx^#2^\_def\.tmp{#1^}\_ea\_ea\_ea\_def\_ea\_ea\_ea\.buff\_ea\_ea\_ea{\_ea\.tmp\_ea^\.buff}%
    \_else
       \_def\.replpredo##1#2##2\_end{%
-         \_ifx\_relax##2\_relax \_def\.text{#2}#3% <fail>
+         \_ifx\_end##2\_end \_def\.text{#2}#3% <fail>
          \_else \.replsave ##1#1^#2^##2\_end \_fi
       }%
       \_def\.replsave##1#2\_end{\_def\.buff{##1}}%
       \_ea\.replpredo\.buff#2\_end
    \_fi
 }
+
+   \_doc
+   \`\.replpost``{<text>}{<post>}{<fail>}` 
+   searches <text> in `\.buff` and adds <post> after the <text>. If the
+   <text> is not found then <fail> is executed.
+   The \^`\.replpost` is used by \^`\fmtins` because we want to insert the
+   <post> material directly.
+   \_cod
+
+\_def\.replpost#1#2#3{%
+   \_def\.replpostdo##1#1##2\_end{%
+       \_ifx\_end##2\_end \_def\.text{#2}#3% <fail>
+       \_else \.replsave ##1#1#2##2\_end \_fi
+   }%
+   \_def\.replsave##1#1\_end{\_def\.buff{##1}}%
+   \_ea\.replpostdo\.buff#1\_end
+}
+
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -569,8 +587,7 @@
 
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
-\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpre{\.fmtafter{#3}}{#2}{\.fmtfail{#3}}}}
-\_def\.fmtafter#1^#2^{#2#1}
+\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpost{#2}{#3}{\.fmtfail{#3}}}}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
 \_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
 
