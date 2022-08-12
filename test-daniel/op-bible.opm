@@ -144,6 +144,7 @@
          \_else \.printwarn{File with notes \notesfile\_space not found}\_fi
          \_cs{bpr!#1}
          \.bibleinput{\txsfile}
+         \.chapafter % material after the last chapter
          \_cs{bpo!#1}
       \_endgroup
       \_ea \.processbooksB
@@ -236,6 +237,18 @@
 \_outer\_long\_def\.BookPost      #1 #2{\.myaddto{bpo!#1}{#2}}
 
 \_nspublic \BookTitle \BookException \BookPre \BookPost ;
+
+   \_doc
+   The `\ChapterPre``{<code>}` and `\ChapterPost``{<code>}` inserts <code>
+   before each chapter and after each chapetr. The <data> are the same for
+   each chapter, it does not vary depending on the Book or Chapter number.
+   \_cod
+
+\_long\_def\.ChapterPre  #1{\_def\.chapbefore{#1}}
+\_long\_def\.ChapterPost #1{\_def\.chapafter{#1}}
+
+%\_outer\_def\ChapterPre  {\.ChapterPre}
+%\_outer\_def\ChapterPost {\.ChapterPost} % be done at the end of this file
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -635,7 +648,8 @@
    * prepares \`\.currversenum`, \`\.currversetext`, \`\.currchapnum` from <full-vref>,
    * defines \`\.buff` as <verse-text>,
    * processes all actions from \`\alist!``<full-vref>`,
-   * if \^`\.currchapnum` changed, prints new chapter by \^`\.printchap` 
+   * if \^`\.currchapnum` changed, prints `\.chapafter` (for previous chapter)
+     and `\.chapbefore` (for new chapter).
    * prints verse from \^`\.buff` using \^`\.printverse`
    \enditems
    \_cod
@@ -650,7 +664,9 @@
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
    \_ifnum\.currchapnum=\.chapnum \_else
-       \_let\.prelinkC=\.currchapnum \.chapnum=\.currchapnum\_relax \.printchap \_fi
+       \_ifnum\.chapnum>1 \.chapafter \_fi
+       \_let\.prelinkC=\.currchapnum \.chapnum=\.currchapnum\_relax
+       \.chapbefore \_fi
    \.printverse
 }
 \_def\.preparechapverse #1/#2:#3 {\_def\.currchapnum{#2}%
@@ -677,7 +693,6 @@
    \_doc
    \`\.printverse` prints verse from \^`\.currversenum` and (possibly changed) \^`\.buff`.
    It prints the single raised verse number first.\nl
-   \`\.printchap` prints beginning of the new chapter.
    \`\.printbeforefirst` is a macro which is executed just before first verse
    of the chapter, after all material from \^`\fmtpre` is executed. I.e after
    printing a chapter name (if declared by \^`\fmtpre`). 
@@ -695,8 +710,6 @@
    \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
 }
-\_def\.printchap{\_bigskip}
-
 \_def\.printbeforefirst{%
    \_par\_nobreak \_medskip
    \.printchapnote
@@ -719,6 +732,14 @@
       \_medskip
    \_fi
 }
+   \_doc
+   \`\.chapbefore` is processed before each chapter.
+   \`\.chapafter` is processad after each chapetr.
+   User can define values by `\ChapterPre` and `\ChapterPost` macros.
+   \_cod
+
+\_def\.chapbefore{\_bigskip}  \_def\.chapafter{}
+
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1798,6 +1819,8 @@
 
 \_outer\_def\Note {\.Note}
 \_outer\_def\ww   {\.ww}
+\_outer\_def\ChapterPre  {\.ChapterPre}
+\_outer\_def\ChapterPost {\.ChapterPost}
 
 \_def\_afterload{\_adef<{\.bref}}
 \_afterload
