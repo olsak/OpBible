@@ -1163,6 +1163,19 @@ Pravidlo redukce odkazů nastavené pomocí `\reduceref` lze vypnout
 příkazem `\noreduceref`. Od něj až do konce poznámky (\TeX/ové skupipny)
 se odkazy chovají, jakoby `\reduceref` nebylo zapnuté.
 
+\secc[knihajinak] Značka pro knihu se může vytisknout jinak
+
+Je-li značka pro knihu deklarovaná v různých překladových variantách různě pomocí
+`\vdef`, pak v~odkazech používejte výhradně údaj <kniha> podle první
+varianty. Je-li ale pomocí `\tmark` nastavena nějaká alternativní překladová
+varianta, nakonec se odkaz vytiskne podle údaje `\vdef` této překladové varianty.
+Vnitřně se ale odkazy propojují podle základní varianty. Tuto vlastnost
+využijete, pokud deklarujete pomocí `\vdef` třeba pro značky `1Pa` a `2Pa`
+alternativní text `1Let` a `2Let` při variantě B21 (Bible pro 21. století). Když pak
+napíšete odkaz \code{<"viz" 1Pa 2:3>}, dostanete {\Blue viz 1Pa~2:3} v obvyklých
+překladových variantách, ale vytiskne se {\Blue viz 1Let~2:3}, použijete-li
+překladovou variantu~B21.
+
 \secc[fudaj] Nepodařené odkazy, tj. odkazy na neexistující místo
 
 Je-li uveden odkaz na neexistující verš nebo neexistující poznámku, pak
