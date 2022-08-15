@@ -5,7 +5,7 @@
 
 %\mergednotes
 
-\def\tmark       {B21}                        % Variant of translation
+\def\tmark       {SNC}                        % Variant of translation
 \def\txsfile     {./Cze\tmark-\bmark.txs}     % Localization of .txs files
 \def\fmtfile     {./fmt-Cze\tmark-\amark.tex} % Localisation of fmts
 \def\notesfile   {./notes-\amark.tex}         % Localisation of notes
@@ -23,6 +23,8 @@
         {SNC}{\def\bibname{Slovo na cestu}}
 
 %\loggingall
+
+\switch {SNC} {\quotationmarks{„}{“}}
 
 \input {vars.tex}         % Language variants
 

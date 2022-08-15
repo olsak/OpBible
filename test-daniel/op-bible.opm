@@ -1793,6 +1793,22 @@
    The temporary macros are here. I plan to rewrite them.
    \_cod
 
+
+\_def\.quotationmarks#1#2{%
+   \.cnvtext{"}{\.doquotmark}%
+   \_def\.doquotmark {\_futurelet\.next\.doquotmarkA}%
+   \_def\.doquotmarkA {%
+      \_let\.doquotmarkB=#1\relax
+      \_ea\_ifx\_space\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx\_space\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx\_endgraf\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx\_endcenter\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx.\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx,\.next \_let\.doquotmarkB=#2\_fi
+      \.doquotmarkB}%
+}
+\_nspublic \quotationmarks ;
+
 \_def\.chaptit#1{\_line{\_hss\.chapfont\Red#1\_hss}
    \_nobreak
 }

@@ -94,17 +94,7 @@
      {Webster}    {\def\bibname{Noah Webster's Bible}}% 
         %{YLT}        {\def\bibname{Young's Literal Translation}}% 
 
-\switch {NETfree}   {\cnvtext{"}{\enqq}}
-\def\enqq{\futurelet\next\enqqA}
-\def\enqqA{\let\enqqB=“\relax
-   \_ea\ifx\space\next \let\enqqB=”\fi
-   \ifx\space\next \let\enqqB=”\fi
-   \ifx\endgraf\next \let\enqqB=”\fi
-   \ifx\endcenter\next \let\enqqB=”\fi
-   \ifx.\next \let\enqqB=”\fi
-   \ifx,\next \let\enqqB=”\fi
-   \enqqB
-}
+\switch {NETfree}   {\quotationmarks{“}{”}}
 
 %\loggingall
 

@@ -409,6 +409,21 @@ Například máte-li v `.txs` souborech úseky textu v hranatých závorkách, t
 \cnvtext{[}{\bgroup\it}  \cnvtext{]}{\/\egroup}
 \endtt
 
+Může se stát, že `.txs` soubor nepoužívá správné typografické uvozovky (tj. v
+češtině „...“), ale místo nich tam jsou programátorské uvozovky {\tt"}...{\tt"}. 
+Bez zásahu do `.txs` souboru je možné toto opravit přidáním pokynu do
+hlavního souboru:
+\begtt
+\quotationmarks{„}{“}
+\endtt
+Pak se budou automaticky nahrazovat programátorské uvozovky v `.txs` souboru českými
+typografickými. Podobně můžete v hlavním souboru deklarovat nahrazování
+anglickými uvozovkami či jinými, paříklad deklarací
+`\quotationmarks{`“`}{`”`}`.
+Programátorská uvozovka je pak implicitně
+nahrazena otevírací typografickou (první parametr v deklaraci), ale pokud za
+ní následuje mezera, konec verše, konec odstavce, tečka nebo čárka, je
+nahrazena zavírací typografickou uvozovkou.
 
 \secc[fmt] Údaje určující formátování základního textu v souborech `fmt-*.tex`
 
