@@ -861,6 +861,9 @@
    If the link destination is article, then the `<full-vref>` has reduced
    format `<book>/<chapter>`. If the link destination is itroduction then
    the `<full-vref>` has more reduced format: `<book>/`.\nl
+   If the book mark is declared by `\vdef` then the printed version of the book
+   mark is transformed depending on the current `\tmark`. This is done by
+   the the \`\.newlinkB` macro.\nl
    \`\.linklog`` {<text>}` macro prints logging info of the link in the format
    \begtt \catcode`<=13 \adef({\string<} \adef){\string>}
    (<link-spec>) = [<full-vref>]{<printed-link>}
@@ -879,8 +882,9 @@
    \_ifx\.ltextV\_empty \_ifx\.ltextC\_empty \_else \_ea\.linkfspecone \.linkfspec\_end \_fi\_fi
    \_if a\.linkpre\_relax \_ea\.linkfspecarticle \.linkfspec\_end \_fi
    \_if i\.linkpre\_relax \_ea\.linkfspecintro \.linkfspec\_end \_fi
-   \.linklog{\.sspace <\.linkspec>\.linkpost = [\.linkpre:\.linkfspec]%
-           {\_ifx\.brefH\_empty\_unexpanded\_ea{\.ltextP}\_else \.linktext\_fi}}%
+   \_ifx \.ltextB\_empty \_else \_ea \.newltextB \.ltextB \_fi
+   \.linklog{\.sspace <\_unexpanded\_ea{\.linkspec}>\.linkpost = [\.linkpre:\.linkfspec]%
+           {\_ifx\.brefH\_empty \.ltextP \_else \.linktext\_fi}}%
    \.ensuredest \.createlink
 }
 \_def\.linkfspecone #1:#2\_end {\_def\.linkfspec{#1:1}\_def\.prelinkV{1}}
@@ -903,6 +907,8 @@
    \_fi
 }
 \_def\.ltextDD{--}
+
+\_def\.newltextB #1~{\_edef\.ltextB{\_trycs{v!\tmark!#1}{#1}~}}
 
 \_def\.sspace{\_space\_space\_space\_space}
 \_def\.linkpost{\_if v\.linkpre \_else \.linkpre\_fi \_space}
@@ -1103,26 +1109,23 @@
    the list is equal with \^`\tmark` then the `#2` (saved in
    \`\.switchD` token list) is run and next parameter pairs are read by
    \`\.switchN`, i.e. they are ignored.\nl
-   The \^`\Note` and \^`\ww` are defined as `\outer` in order to better diagnose
-   mistakes with number of parameters of \^`\ww` or missig empty line after
-   \^`\Note` text. But we want to skip such objects in \^`\switch` parameters. This is
-   the reason why we run \`\.unsetouter` before the \^`\switch` parameter is
-   read and we run \`\.setouter` in order to return to the normal setting.
+   The \^`\Note` and \^`\ww` and more macros are defined as `\outer` in order to
+   better diagnose mistakes with their parameters.
+   But we want to skip such objects in \^`\switch` parameters. This is the reason
+   why we set `\_suppressoutererror=1` during the \^`\switch` is processed.
    \_cod
 
 \_newtoks\.switchD
-\_def\.switch {\_let\.switchN=\.switchA \.unsetouter \.switchN}
-\_long\_def\.switchA #1#2{\.switchD={\.setouter #2\_let\.switchN=\.switchI}%
+\_def\.switch {\_let\.switchN=\.switchA \_suppressoutererror=1 \.switchN}
+\_long\_def\.switchA #1#2{\.switchD={#2\_let\.switchN=\.switchI}%
    \_ifx\_relax#1\_relax \_the\.switchD
    \_else \_foreach #1,\_do ##1,{\_def\tmp{##1}\.switchC}%
    \_fi
    \_futurelet\.next\.switchB
 }
-\_def\.switchB{\_ifx\.next\_bgroup \.unsetouter \_ea\.switchN \_else \.setouter \_fi}
+\_def\.switchB{\_ifx\.next\_bgroup \_ea\.switchN \_else \_suppressoutererror=0 \_fi}
 \_long\_def\.switchI #1#2{\_futurelet\.next\.switchB}
 \_def\.switchC{\_ifx\tmp\tmark \_the\.switchD \_fi}
-\_def\.unsetouter{\_slet{ww}{_relax}\_slet{Note}{_relax}}
-\_def\.setouter{\_outer\_def\ww{\.ww}\_outer\_def\Note{\.Note}}
 
 \_nspublic \switch ;
 
