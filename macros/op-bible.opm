@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.01 Aug 2022>}
+\_message{This is OP-Bible, version <0.02 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -630,6 +630,28 @@
 }
 \_nspublic \begcenter \endcenter ;
 
+   \_doc
+   `\begpoetry` and `\endopetry` opens and closes the poetry environment,
+   they can be used by `\fmtpre`, `\fmtadd`, `\fmtins` macros. The
+   `\ind``<digit>` gives an indentaion in the poetry environment. The
+   `\begpoetry` starts with indentation 1. Each line in the poetry
+   environment must be indented, use `\fmtins` and the last word from
+   previous line.  
+   \_cod
+
+\_def\.ind#1{\_par\_noindent\_hskip\_iindent\_hskip#1\_iindent \_spacefactor=1001 }
+\_def\.begpoetry{\_par \_ifnum\_lastpenalty<10000 \_medskip \_fi
+   \_bgroup \_def\.poetrymode{y}
+   \_parindent=0pt
+   \ind1%
+}
+\_def\.endpoetry{\_par
+   \_ifx\.poetrymode\_undefined
+      \.printwarn{\_noexpand\endpoetry ignored: no \_noexpand\begpoetry precedes}
+   \_else \_egroup \_medskip \_fi
+}
+\_nspublic \ind \begpoetry \endpoetry ;
+
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -658,10 +680,10 @@
 
 \_newcount\.chapnum
 \_def\.processverse #1 #2\_end{%
-   \_edef\.currverse{#1}%
+   \_xdef\.currverse{#1}%
    \.preparechapverse #1
    \_let\.prelinkV=\.currversenum
-   \_def\.buff{#2}\_def\.fmtprebuff{}\_def\.prebuff{}\_def\.Cnotetext{}%
+   \_gdef\.buff{#2}\_gdef\.fmtprebuff{}\_gdef\.prebuff{}\_gdef\.Cnotetext{}%
    \_ifx\.verseto\_empty \_csname alist!#1\_endcsname \_else
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
@@ -674,12 +696,12 @@
 \_def\.preparechapverse #1/#2:#3 {\_def\.currchapnum{#2}%
    \_def\.verseto{}%
    \.isdivisin #3-\_iftrue \.defversefromto #3\_end
-   \_else \_def\.currversenum{#3}\_let\.currversetext=\.currversenum
+   \_else \_def\.currversenum{#3}\_glet\.currversetext=\.currversenum
    \_fi
 }
 \_def\.defversefromto #1-#2\_end{%
    \_def\.versefrom{#1}\_def\.verseto{#2}%
-   \_def\.currversenum{#1}\_def\.currversetext{#1--#2}}
+   \_def\.currversenum{#1}\_gdef\.currversetext{#1--#2}}
 
    \_doc
    User can do little changes in the verse text using \`\cnvtext``{<what>}{<replaced>}`.
@@ -708,10 +730,12 @@
    \_else \_fornum \.versefrom..\.verseto \_do{%
        \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
-   \_raise5pt\_hbox{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
+   \_raise5pt\_hboxorllap{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
    \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
 }
+\_def\_hboxorllap{\_ifnum\_spacefactor=1001 \_ea\_llap \_else \_ea\_hbox \_fi}
+
 \_def\.printbeforefirst{%
    \_par\_nobreak \_medskip
    \.printchapnote
@@ -1848,3 +1872,8 @@
 
 \_endnamespace
 \_endcode
+
+2022-08-19 0.01 version released
+           0.02 \begpoetry, \endpoetry, \ind inplemented,
+                \def\.buff etc. changed to \gdef\.buff (bug fixed)
+
