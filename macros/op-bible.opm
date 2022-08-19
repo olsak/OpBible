@@ -2,6 +2,8 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
+\_message{This is OP-Bible, version <0.01 Aug 2022>}
+
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Preparatory work
