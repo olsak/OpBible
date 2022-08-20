@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.02 Aug 2022>}
+\_message{This is OP-Bible, version <0.03 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -597,14 +597,18 @@
    of the verse.\nl
    \`\fmtins`` {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
    verse. If <text> is not found then <what> is inserted like \^`\fmtpre` does it\nl
-   All these commands allocate new action using \^`\.newaction`.
+   All these commands allocate new action using \^`\.newaction`.\nl
+   \`\.addpre``\macro{<text>}` adds the text to the macro before its
+   original contents.
    \_cod
 
-\_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
+\_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\.addpre\.fmtprebuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
 \_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpost{#2}{#3}{\.fmtfail{#3}}}}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
 \_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
+\_def\.addpre#1#2{\_ea\.addpreA \_ea{#1}{#2}#1}
+\_def\.addpreA #1#2#3{\_def#3{#2#1}}
 
 \_nspublic \fmtpre \fmtadd \fmtins ; 
 
@@ -631,26 +635,24 @@
 \_nspublic \begcenter \endcenter ;
 
    \_doc
-   `\begpoetry` and `\endopetry` opens and closes the poetry environment,
-   they can be used by `\fmtpre`, `\fmtadd`, `\fmtins` macros. The
-   `\ind``<digit>` gives an indentaion in the poetry environment. The
-   `\begpoetry` starts with indentation 1. Each line in the poetry
-   environment must be indented, use `\fmtins` and the last word from
-   previous line.  
+   `\ind``{<number>}` gives an indentaion in the poetry environment. 
+   It is used in `\fmtpoetry`, the `\ind``{<number>}` is inserted typically
+   by \^`\fmtins` or \^`\fmtpre`.
+   The `\spacefactor` is set to 1001`, this value is used
+   by the macro \^`\hboxorllap`: the verse number is llaped after `\ind`.
    \_cod
 
-\_def\.ind#1{\_par\_noindent\_hskip\_iindent\_hskip#1\_iindent \_spacefactor=1001 }
-\_def\.begpoetry{\_par \_ifnum\_lastpenalty<10000 \_medskip \_fi
-   \_bgroup \_def\.poetrymode{y}
-   \_parindent=0pt
-   \ind1%
+\_def\.ind#1{\_par\_noindent \_hskip#1\_iindent \_spacefactor=1001 }
+
+\_def\.fmtpoetry#1#2{\_def\.tmpa{#1}\.fmtpoetA #2\_end}
+\_def\.fmtpoetA #1/{\_def\.tmpb{#1}\_tmpnum=1 \.fmtpoetB}
+\_def\.fmtpoetB #1{\_ifx/#1 \_incr\_tmpnum \_ea\.fmtpoetB \_else \_afterfi{\.fmtpoetC#1}\_fi}
+\_def\.fmtpoetC #1{%
+   \_expanded{\_ifx\.tmpb\_empty \_noexpand\.fmtpre{\.tmpa}\_else
+              \_noexpand\.fmtins{\.tmpa}{\.tmpb}\_fi{\_noexpand\.ind{\_the\_tmpnum}}}%
+   \_ifx\_end#1 \_else \_afterfi{\.fmtpoetA#1}\_fi
 }
-\_def\.endpoetry{\_par
-   \_ifx\.poetrymode\_undefined
-      \.printwarn{\_noexpand\endpoetry ignored: no \_noexpand\begpoetry precedes}
-   \_else \_egroup \_medskip \_fi
-}
-\_nspublic \ind \begpoetry \endpoetry ;
+\_nspublic \ind \fmtpoetry ;
 
 
    \_doc
@@ -719,7 +721,10 @@
    It prints the single raised verse number first.\nl
    \`\.printbeforefirst` is a macro which is executed just before first verse
    of the chapter, after all material from \^`\fmtpre` is executed. I.e after
-   printing a chapter name (if declared by \^`\fmtpre`). 
+   printing a chapter name (if declared by \^`\fmtpre`).\nl
+   The verse number is shifted up and it is in an `\hbox` or it is llapped in the
+   poetry environment, more exactly immediatelly after \^`\ind` is used. The
+   \`\.hboxorllap` macro does this game.
    \_cod
 
 \_def\.printverse{%
@@ -730,11 +735,11 @@
    \_else \_fornum \.versefrom..\.verseto \_do{%
        \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
-   \_raise5pt\_hboxorllap{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
+   \_raise5pt\.hboxorllap{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
    \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
 }
-\_def\_hboxorllap{\_ifnum\_spacefactor=1001 \_ea\_llap \_else \_ea\_hbox \_fi}
+\_def\.hboxorllap{\_ifnum\_spacefactor=1001 \_ea\_llap \_else \_ea\_hbox \_fi}
 
 \_def\.printbeforefirst{%
    \_par\_nobreak \_medskip
@@ -1876,4 +1881,4 @@
 2022-08-19 0.01 version released
            0.02 \begpoetry, \endpoetry, \ind inplemented,
                 \def\.buff etc. changed to \gdef\.buff (bug fixed)
-
+2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
