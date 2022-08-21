@@ -466,6 +466,48 @@ a <fmt-pokyn> nezařadí vůbec.
 Jak může vypadat použití příkazů `\fmt*` je vidět například v souboru
 `fmt-BKR-Da.tex`.
 
+Mimo `\begcenter` a `\endcenter` je možné použít řízené odsazování pomocí
+\`\ind``<číslo>`. V místě vložení se ukončí řádek a další řádek začíná
+odsazen o `<číslo>` odstavcových zarážek. Vkládání takových `\ind` příkazů
+prostřednictvím `\fmtins` nebo `\fmtpre` může být ale docela pracné a
+nepřhledné, přitom například v knize Jeremiáš je mnoho veršů rozděleno do
+různě odsazených řádků. K tomu účelu může sloužit příkaz \`\fmtpoetry`, jehož
+použití nejprve ukážeme na příkladě pro překlad CEP knihy Jeremiáš
+(srovnejte si to se skutečnou sazbou příslušných veršů této knihy):
+
+\begtt
+\fmtpre{23:9}{\endgraf}
+\fmtpoetry{23:9}{prorocích:// nitru,/// chvějí,// člověk,/// vínem,///}
+\fmtpoetry{23:10}{// cizoložníků,/// kletbou/// vyschly;/// zlem///}
+\fmtpoetry{23:11}{// rouhají,/// činy,///}
+\fmtpoetry{23:12}{// kluzká,/// temnoty// padnou;/// zlo,// trestu,///}
+\fmtpoetry{23:13}{// nepatřičnost:/// Baalově///}
+\fmtpoetry{23:14}{// věc:/// klamání.// zlovolníků,/// činů.// Sodoma///}
+\fmtins{23:9}{prorocích:}{\bigskip}
+\fmtpre{23:13}{\medskip}
+\fmtpre{23:14}{\medskip}
+\fmtpre{23:15}{\bigskip}
+\endtt
+
+\`\fmtpoetry``{<číslo-kapitoly>:<číslo-verše>}{<forátovací-údaje>}` se
+věnuje formátování konkrétně uvedeného verše. Ve <formátovacích-údajích> se
+vyskytují slova z konců řádků následovaná jedním nebo více lomítky. Počet
+lomítek udává, o kolik odstavcových zarážek bude odsazen další řádek za
+uvedeným slovem. <formátovací-údaje> musejí nutně skončit jedním nebo více
+lomítky a mohou (ale nemusí) začínat jedním nebo více lomítky, Pokud
+začínají, je i začátek verše odsazen o~příslušný počet odstavcových zarážek,
+ale číslo verše je vysazeno vystrčené mírně doleva do prostoru odstavcové
+zarážky.
+
+Chceme-li při použití \`\fmtpoetry` navíc vložit vertikální mezery, je to
+možné, ale až po příkazu `\fmtpoetry`, jak je vidět i v ukázce, kde je
+vložena mezera polovičního řádku \`\medskip` a mezera celého řádku
+\`\bigskip`. Platí totiž pravidlo, že pokud na stejné místo pomocí `\fmtins`
+nebo `\fmtpre` vložíte více formátovacích pokynů, ty se nakonec provedou v
+opačném pořadí, než byly do `.fmt` souboru vloženy, Takže se například
+dle ukázky uvedené výše nejprve provede na začátku verše 23:13 `\medskip` a
+pak se následující řádek odsadí o dvě odstavcové zarážky podle `\fmtpoetry`.
+
 \secc Poznámky v souborech `notes-*.tex`
 
 Tyto soubory (umístěné podle deklarace `\notesfile` v hlavním souboru)

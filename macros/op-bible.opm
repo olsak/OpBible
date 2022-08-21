@@ -195,7 +195,7 @@
    There is a list of single-chapter books \`\nochapbooks`. User
    must define it. The marks of these single-chapter books are separated by spaces
    here. The first and the last space are added to the \^`\nochapbooks`
-   macro because we need them in \^`\.brefBookChapter`. 
+   macro because we need them in \`\.brefBookChapter`. 
    The \`\.checknochapbooks` macro does it, moreower, it checks if the 
    \^`\nochapbooks` is defined. If not, it prints warning.
    \_cod
@@ -365,8 +365,8 @@
    (and it is kept in the verse unchanged) but <pword> is
    printed in the note.\nl
    The \^`\ww` can precede \^`\Note`. If it is true then the <word> is prepared in
-   \^`\nextww` and `<pword>` is in \^`\nextwwA`. Otherwise, the macros \^`\nextww`
-   and \^`\nextwwA` are undefined.\nl
+   \^`\.nextww` and `<pword>` is in \^`\.nextwwA`. Otherwise, the macros \^`\.nextww`
+   and \^`\.nextwwA` are undefined.\nl
    `\Note` does exactly following:
    \begitems
    * Calculates <full-vref> using `\.gentovref{<genv-ref>}` and svese it to
@@ -541,7 +541,7 @@
    beginning of the verse. Moreower, if there are more such Notes referenced
    to the same verse then we merge all such notes to single note. So
    \`\.doCNote``{<notenum>}` is run from \^`\.prebuff` and it only adds the text of
-   the note to the \`\.Cnotetext` buffer. When \^`\.prebuff` is completed then
+   the note to the \`\.Cnotetext` buffer. When \`\.prebuff` is completed then
    \`\.printCnote` prints the merged note.
    \_cod
 
@@ -615,7 +615,7 @@
    \_doc
    \`\begcenter` starts the centering mode. It opens a group and does
    setting. User must use paired \`\endcenter` in order to close this group.
-   The \`\centeringmode` status is checked by \^`\encenter` because curious error
+   The \`\centeringmode` status is checked by \^`\endcenter` because curious error
    (about `#` character) should be occur without this checking.
    \_cod
 
@@ -635,14 +635,22 @@
 \_nspublic \begcenter \endcenter ;
 
    \_doc
-   `\ind``{<number>}` gives an indentaion in the poetry environment. 
+   \`\ind``{<number>}` gives an indentaion in the poetry environment. 
    It is used in `\fmtpoetry`, the `\ind``{<number>}` is inserted typically
    by \^`\fmtins` or \^`\fmtpre`.
-   The `\spacefactor` is set to 1001`, this value is used
-   by the macro \^`\hboxorllap`: the verse number is llaped after `\ind`.
+   The `\spacefactor` is set to 1001, this value is used
+   by the macro \^`\.hboxorllap`: the verse number is llaped after `\ind`.
    \_cod
 
 \_def\.ind#1{\_par\_noindent \_hskip#1\_iindent \_spacefactor=1001 }
+
+   \_doc
+   \`\fmtpoetry``{<gen-vref>}{<fmt-data>}` saves `<gen-vref>` to `\.tmpa`
+   and runs <fmt-data> in recursive loop using \`\.fmtpoetA`.
+   The \`\.fmtpoetB` counts the number of slashes in local recursive loop
+   and saves the result to the `\_tmpnum`. The \`\.fmtpoetC` inserts desired
+   material using \`\fmtpre` or \`\fmtins` and using `\ind{\_the\_tmpnum}`.
+   \_cod
 
 \_def\.fmtpoetry#1#2{\_def\.tmpa{#1}\.fmtpoetA #2\_end}
 \_def\.fmtpoetA #1/{\_def\.tmpb{#1}\_tmpnum=1 \.fmtpoetB}
@@ -1108,8 +1116,8 @@
    They are separated by spaces. Each parameter can be in the \"single form",
    i.e.\ `{<phrase-A>}` or in the \"extended form", i.e.\ `{<phrase-A>}={<printed-A>}`.
    The macro searchs the correct phrase (given by the \^`\.varnum`) and saves
-   it to the \`\nextww`. The \^`\nextwwA` is set to `\nextww` if there is
-   single form of the parameter else \`\nextwwA` is <printed-A> part of
+   it to the \`\.nextww`. The \^`\.nextwwA` is set to `\.nextww` if there is
+   single form of the parameter else \`\.nextwwA` is <printed-A> part of
    the parameter in the extended form. These macros are used in the next
    \^`\Note` where they are re-set to `\undefined` meaning.
    \_cod
@@ -1340,7 +1348,7 @@
 
    \^`\putArticle` registers \^`\.doArticle` using \^`\.newaction`.
    \^`\.doArticle` is run at the beginning of given verse and creates an
-   \^`\.botisert`. The insert material is breakable at its beginig and between
+   \^`\.botinsert`. The insert material is breakable at its beginig and between
    each two-column boxes created by the `\_balancecolumn` macro.
 
    We register a new action by
@@ -1501,7 +1509,8 @@
    \_fi\_fi
 }
 \_def\.insertCiteleft {%
-   \_ifnum\.citepg=1 \.printwarn{\_noexpand\.insertCite\.citelabel: \_noexpand\.swapCites activated}\_fi
+   \_ifnum\.citepg=1 
+       \.printwarn{\_noexpand\.insertCite\.citelabel: \_noexpand\.swapCites activated}\_fi
    \_ifodd \_numexpr\_trycs{cp!\_the\.articlenum!\.citelabel}{0}+\.citepg\_relax
    \_else \.insertCitelr \_left \_fi
 }
