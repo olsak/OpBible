@@ -466,8 +466,14 @@ a <fmt-pokyn> nezařadí vůbec.
 Jak může vypadat použití příkazů `\fmt*` je vidět například v souboru
 `fmt-BKR-Da.tex`.
 
-Mimo `\begcenter` a `\endcenter` je možné použít řízené odsazování pomocí
-\`\ind``<číslo>`. V místě vložení se ukončí řádek a další řádek začíná
+Příkaz \`\fmtfont``{<číslo-kapitoly>:<číslo-verše>}{<fráze>}{<font>}`
+slouží k označení vybrané fráze zvoleným fontem.
+Například `\fmtfont{1:26}{lidé}{\em}` v knize Genesis způsobí, že slovo
+\"lidé" bude vytištěno kurzívou, protože `\em` je přepínač do kurzívy.
+Namísto `\em` je možno použít jakýkoli jiný přepínač fontu.
+
+Mimo `\begcenter` a `\endcenter` je také možné použít řízené odsazování pomocí
+\`\ind``<číslo>`. V~místě vložení se ukončí řádek a další řádek začíná
 odsazen o `<číslo>` odstavcových zarážek. Vkládání takových `\ind` příkazů
 prostřednictvím `\fmtins` nebo `\fmtpre` může být ale docela pracné a
 nepřhledné, přitom například v knize Jeremiáš je mnoho veršů rozděleno do

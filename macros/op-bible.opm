@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.03 Aug 2022>}
+\_message{This is OP-Bible, version <0.04 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -299,20 +299,20 @@
 }
 
    \_doc
-   \`\.replpost``{<text>}{<post>}{<fail>}` 
-   searches <text> in `\.buff` and adds <post> after the <text>. If the
+   \`\.replprepost``{<text>}{<pre>}{<post>}{<fail>}`
+   searches <text> in `\.buff` and adds <pre> before and <post> after the <text>. If the
    <text> is not found then <fail> is executed.
-   The \^`\.replpost` is used by \^`\fmtins` because we want to insert the
+   The \^`\.replprepost` is used by \^`\fmtins` (with empty <pre>) because we want to insert the
    <post> material directly.
    \_cod
 
-\_def\.replpost#1#2#3{%
-   \_def\.replpostdo##1#1##2\_end{%
-       \_ifx\_end##2\_end \_def\.text{#1}#3% <fail>
-       \_else \.replsave ##1#1#2##2\_end \_fi
+\_def\.replprepost#1#2#3#4{%
+   \_def\.replprepostdo##1#1##2\_end{%
+       \_ifx\_end##2\_end \_def\.text{#1}#4% <fail>
+       \_else \.replsave ##1#2#1#3##2\_end \_fi
    }%
    \_def\.replsave##1#1\_end{\_def\.buff{##1}}%
-   \_ea\.replpostdo\.buff#1\_end
+   \_ea\.replprepostdo\.buff#1\_end
 }
 
 
@@ -604,7 +604,7 @@
 
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\.addpre\.fmtprebuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
-\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replpost{#2}{#3}{\.fmtfail{#3}}}}
+\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replprepost{#2}{}{#3}{\.fmtfail{#3}}}}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
 \_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
 \_def\.addpre#1#2{\_ea\.addpreA \_ea{#1}{#2}#1}
@@ -662,6 +662,10 @@
 }
 \_nspublic \ind \fmtpoetry ;
 
+\_def\.fmtfont#1#2#3{%
+   \.newaction{\.gentovref{#1}}{\.replprepost{#2}{\bgroup#3}{\egroup}{\.fmtwarnf}}}
+\_def\.fmtwarnf{\.printwarn{\_string\fmtfont: \.currverse: The text "\.text" not found}}
+\_nspublic \fmtfont ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1891,3 +1895,4 @@
            0.02 \begpoetry, \endpoetry, \ind inplemented,
                 \def\.buff etc. changed to \gdef\.buff (bug fixed)
 2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
+2022-08-23 0.04 \fmtfont implemented
