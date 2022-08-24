@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.05 Aug 2022>}
+\_message{This is OP-Bible, version <0.06 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -755,7 +755,7 @@
 
 \_def\.printbeforefirst{%
    \_par\_nobreak \_medskip
-   \.printchapnote
+   \.trychapnote
    \_setbox0=\_vtop{\_kern-1.5ex \_ewref\_sxdef{{ch!\.currbook/\_the\.chapnum}{\_string\.mypage}}
                     \_hbox{\_setfontsize{at50pt}\_bf\LiRed\_the\.chapnum}}
    \_dp0=0pt
@@ -770,16 +770,20 @@
 }
 
    \_doc
-   \`\.printchapnote` implements printing the notes declared by `\Note` `<chapnum>:0`.
+   \`\.printchapnote``{<text>}` implements printing the notes declared by `\Note` `<chapnum>:0`.
+   It is run using \`\.trychapnote` only if the relevant not is declared.
    \_cod
 
-\_def\.printchapnote{%
+\_def\.trychapnote{%
    \_ifcsname chapnote!\.currbook/\_the\.chapnum:0\_endcsname
-      {\_leftskip=\_parindent plus1fill \_rightskip=\_leftskip
-       \_noindent\_it \_cs{chapnote!\.currbook/\_the\.chapnum:0}\_par}
-      \_medskip
-   \_fi
+      \.printchapnote{\_cs{chapnote!\.currbook/\_the\.chapnum:0}}\_fi
 }
+\_def\.printchapnote #1{\_par
+      {\_leftskip=\_parindent plus1fill \_rightskip=\_leftskip \_noindent\_it #1\_par}
+      \_medskip
+}
+\_nspublic \printchapnote ;
+
    \_doc
    \`\.chapbefore` is processed before each chapter.
    \`\.chapafter` is processad after each chapetr.
@@ -1753,7 +1757,7 @@
    \_setbox0=\_box\.lqqbox \_setbox0=\_box\.rqqbox
    \_def\.printbeforefirst{%
       \_nobreak\_medskip
-      \.printchapnote
+      \.trychapnote
       \_hangindent=\_parindent \_hangafter=-2
       \_noindent \_llap{\_vbox to0pt
          {\_kern-8pt\_hbox{\_setfontsize{at23pt}\_bf\Red\_the\.chapnum\_kern5pt}\_vss}}%
@@ -1910,3 +1914,4 @@
 2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
 2022-08-23 0.04 \fmtfont implemented
 2022-08-24 0.05 \subtit implemented
+           0.06 \printchapnote reimplemented
