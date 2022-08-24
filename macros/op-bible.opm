@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.04 Aug 2022>}
+\_message{This is OP-Bible, version <0.05 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -768,6 +768,11 @@
    \_nobreak \_vskip-\_medskipamount
    \_nobreak \_nointerlineskip \_noindent
 }
+
+   \_doc
+   \`\.printchapnote` implements printing the notes declared by `\Note` `<chapnum>:0`.
+   \_cod
+
 \_def\.printchapnote{%
    \_ifcsname chapnote!\.currbook/\_the\.chapnum:0\_endcsname
       {\_leftskip=\_parindent plus1fill \_rightskip=\_leftskip
@@ -1861,7 +1866,15 @@
 }
 \_def\.schaptit#1{\_bigskip\.chaptit{#1}\_nobreak\_medskip}
 
-\_nspublic \chaptit \schaptit ;
+\_def\.subtit#1{\_par
+   \_ifnum\.currversenum=1 \_else \_medskip\_fi
+   \_line{\_indent\.subtitfont #1\_hss}\_nobreak
+   \_ifnum\.currversenum=1 \_vskip-\_medskipamount\_fi
+   \_smallskip
+}
+\_def\.subtitfont {\Red\_it}
+
+\_nspublic \chaptit \schaptit \subtit ;
 
 \_sdef{_mt:intro:en}{Introduction}    \_sdef{_mt:outline:en}{Outline}
 \_sdef{_mt:intro:cs}{Úvod}            \_sdef{_mt:outline:cs}{Osnova}
@@ -1896,3 +1909,4 @@
                 \def\.buff etc. changed to \gdef\.buff (bug fixed)
 2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
 2022-08-23 0.04 \fmtfont implemented
+2022-08-24 0.05 \subtit implemented
