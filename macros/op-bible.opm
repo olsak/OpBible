@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.07 Aug 2022>}
+\_message{This is OP-Bible, version <0.08 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -504,6 +504,7 @@
    \_edef\.tmpb{\_cs{notepre!#1}}%
    \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \.noteinsert{%
+%      \message{\meaning\.tmpb ?= \meaning\.prevnotepre}
       {\_bf \_ifx\.prevnotepre\.tmpb \_else \.tmpb \_enskip \_glet\.prevnotepre=\.tmpb \_fi
        \.trymakedest{n:\_cs{noteref!#1}}%
        \_edef\.tmpb{\_csname pword!#1\_endcsname}%
@@ -547,6 +548,8 @@
 
 \_def\.doCNote #1{%
    \_edef\.tmpb{\_csname pword!#1\_endcsname}%
+   \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {}={\_cs{pword!#1}} (#1)}%
+   \_edef\.prevnotepre{\_cs{notepre!#1}}%
    \_ifx\.tmpb\_empty \_else
        \_addto\.tmpb{.}\.punctpword
        \_edef\.tmpb{{\_noexpand\_bf \_ea\.upcasefirst\.tmpb\_noexpand~}}%
@@ -1926,3 +1929,4 @@
 2022-08-24 0.05 \subtit implemented
            0.06 \printchapnote reimplemented
 2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
+           0.08 \doCNote: bug fixed with undefined \.prevnotepre
