@@ -646,7 +646,7 @@
 
 \_newifi\_ifopb_firstverse
 
-\_def\.ind#1{\_unless \_ifopb_firstverse \_par\_fi
+\_def\.ind#1{\_unless \_ifopb_firstverse \_par \_else \_hskip-\_parindent \_fi
    \_noindent
    \_hskip#1\_iindent \_spacefactor=1001 }
 
