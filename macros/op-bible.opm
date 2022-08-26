@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.06 Aug 2022>}
+\_message{This is OP-Bible, version <0.07 Aug 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -602,7 +602,8 @@
    original contents.
    \_cod
 
-\_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\.addpre\.fmtprebuff{#2}}}
+\_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
+\_def\.fmtpreind#1#2{\.newaction{\.gentovref{#1}}{\.addpre\.preindbuff{#2}}}
 \_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
 \_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replprepost{#2}{}{#3}{\.fmtfail{#3}}}}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
@@ -638,25 +639,30 @@
    \`\ind``{<number>}` gives an indentaion in the poetry environment. 
    It is used in `\fmtpoetry`, the `\ind``{<number>}` is inserted typically
    by \^`\fmtins` or \^`\fmtpre`.
+   It ends the current line by `\par` only if we are not at beginning of a verse~1.\nl
    The `\spacefactor` is set to 1001, this value is used
    by the macro \^`\.hboxorllap`: the verse number is llaped after `\ind`.
    \_cod
 
-\_def\.ind#1{\_par\_noindent \_hskip#1\_iindent \_spacefactor=1001 }
+\_newifi\_ifopb_firstverse
+
+\_def\.ind#1{\_unless \_ifopb_firstverse \_par\_fi
+   \_noindent
+   \_hskip#1\_iindent \_spacefactor=1001 }
 
    \_doc
    \`\fmtpoetry``{<gen-vref>}{<fmt-data>}` saves `<gen-vref>` to `\.tmpa`
    and runs <fmt-data> in recursive loop using \`\.fmtpoetA`.
    The \`\.fmtpoetB` counts the number of slashes in local recursive loop
    and saves the result to the `\_tmpnum`. The \`\.fmtpoetC` inserts desired
-   material using \`\fmtpre` or \`\fmtins` and using `\ind{\_the\_tmpnum}`.
+   material using \`\fmtprepoet` or \^`\fmtins` and using `\ind{\_the\_tmpnum}`.
    \_cod
 
 \_def\.fmtpoetry#1#2{\_def\.tmpa{#1}\.fmtpoetA #2\_end}
 \_def\.fmtpoetA #1/{\_def\.tmpb{#1}\_tmpnum=1 \.fmtpoetB}
 \_def\.fmtpoetB #1{\_ifx/#1 \_incr\_tmpnum \_ea\.fmtpoetB \_else \_afterfi{\.fmtpoetC#1}\_fi}
 \_def\.fmtpoetC #1{%
-   \_expanded{\_ifx\.tmpb\_empty \_noexpand\.fmtpre{\.tmpa}\_else
+   \_expanded{\_ifx\.tmpb\_empty \_noexpand\.fmtpreind{\.tmpa}\_else
               \_noexpand\.fmtins{\.tmpa}{\.tmpb}\_fi{\_noexpand\.ind{\_the\_tmpnum}}}%
    \_ifx\_end#1 \_else \_afterfi{\.fmtpoetA#1}\_fi
 }
@@ -697,7 +703,7 @@
    \_xdef\.currverse{#1}%
    \.preparechapverse #1
    \_let\.prelinkV=\.currversenum
-   \_gdef\.buff{#2}\_gdef\.fmtprebuff{}\_gdef\.prebuff{}\_gdef\.Cnotetext{}%
+   \_gdef\.buff{#2}\_gdef\.fmtprebuff{}\_gdef\.preindbuff{}\_gdef\.prebuff{}\_gdef\.Cnotetext{}%
    \_ifx\.verseto\_empty \_csname alist!#1\_endcsname \_else
       \_fornum \.versefrom..\.verseto \_do{\_csname alist!\.currbook/\.currchapnum:##1\_endcsname}%
    \_fi
@@ -734,6 +740,8 @@
    \`\.printbeforefirst` is a macro which is executed just before first verse
    of the chapter, after all material from \^`\fmtpre` is executed. I.e after
    printing a chapter name (if declared by \^`\fmtpre`).\nl
+   The \`\.fmtprebuf` includes \`\ind` command from \`\fmtpoetry` if the
+   verse should be indented at its begin before the verse number.
    The verse number is shifted up and it is in an `\hbox` or it is llapped in the
    poetry environment, more exactly immediatelly after \^`\ind` is used. The
    \`\.hboxorllap` macro does this game.
@@ -741,13 +749,15 @@
 
 \_def\.printverse{%
    \.fmtprebuff % material accumulated by \fmtpre
-   \_ifnum\.currversenum=1 \.printbeforefirst \_fi
+   \_ifnum\.currversenum=1 \.firstversetrue \.printbeforefirst \_fi
    \_quitvmode \_mark{\.currchapnum:\.currversetext}%
    \_ifx\.verseto\_empty \.trymakedest{v:\.currverse}%
    \_else \_fornum \.versefrom..\.verseto \_do{%
        \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
+   \.preindbuff
    \_raise5pt\.hboxorllap{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
+   \.firstversefalse
    \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
 }
@@ -1915,3 +1925,4 @@
 2022-08-23 0.04 \fmtfont implemented
 2022-08-24 0.05 \subtit implemented
            0.06 \printchapnote reimplemented
+2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
