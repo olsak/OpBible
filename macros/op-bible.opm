@@ -504,7 +504,6 @@
    \_edef\.tmpb{\_cs{notepre!#1}}%
    \.notelog{\_space\_space \_csstring\\Note \.tmpb\_space {#2}={\_cs{pword!#1}} (#1)}%
    \.noteinsert{%
-%      \message{\meaning\.tmpb ?= \meaning\.prevnotepre}
       {\_bf \_ifx\.prevnotepre\.tmpb \_else \.tmpb \_enskip \_glet\.prevnotepre=\.tmpb \_fi
        \.trymakedest{n:\_cs{noteref!#1}}%
        \_edef\.tmpb{\_csname pword!#1\_endcsname}%
@@ -1475,7 +1474,7 @@
 
 \_newcount\.citenum
 \_def\.dotopCite #1{%
-   \_topinsert
+   \.topinsertnopar
    \_typosize[12/16]\_bi
    \_incr\.citenum
    \_ifodd \_trycs{ct!\_the\.citenum}{0}\_relax
@@ -1494,6 +1493,8 @@
 }
 \_def\.printCite#1{\_pdfliteral{2 Tr .15 w .9 g}#1\_pdfliteral{0 Tr 0 w 0 g}}
 \_def\.printCite#1{{\Grey#1}}
+
+\_def\.topinsertnopar{\_umidfalse \_upagefalse \_begingroup\_setbox0=\_vbox\_bgroup\_resetattrs}
 
    \_doc
    The `\.lqqbox` and `\.rqqbox` include the graphical marks for quotations. First
@@ -1930,3 +1931,4 @@
            0.06 \printchapnote reimplemented
 2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
            0.08 \doCNote: bug fixed with undefined \.prevnotepre
+                \.topinsertnopar introduced, bug with \par in \.dotopCite fixed
