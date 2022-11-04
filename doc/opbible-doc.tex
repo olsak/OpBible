@@ -670,6 +670,75 @@ Například:
   souboru, viz sekci~\ref[hlavni].
 \enditems
 
+Chceme-li vložit obrázek s doplněným textem nebo cokoli jiného na dolní část
+strany podle čísla verše, použijeme \`\putBot`:
+\begtt
+\putBot <číslo-kapitoly>:<číslo-verše> {<titulek>} [<lejblík>] (<parametry>) {<data>}
+\endtt
+
+Zde `<data>` označují pokyny pro vložení obrázku textu nebo obojího. Ostatní
+parametry se interpretují shodně jako v příkaze `\putImage`. Například
+
+\begtt
+\putBot 2:1 {Danielovy vize} [danielovyvize] () {\inspic{Nabuco.pdf}}
+\endtt
+%
+se chová stejně jako výše uvedený příklad příkazu `\putImage`. K zařazení
+obrázku nyní potřebujeme použít makro \OpTeX/u `\inspic`. Můžete pak
+kombinovat i obrázek s textem, tedy třeba:
+\begtt
+\putBot 10:1 {Říše Danielových vzdálených vizí} [mapa-dainel-vize] () {
+   \Heros \cond \setfontsize{at 9pt}\rm % nastavení fontu pro texty
+   \inspic{mapa-danvize.pdf}
+   \puttext 20mm 30mm {Text překrývající obrázek}
+   \puttext 30mm 50mm {Další text překrývající obrázek} 
+}
+\endtt
+%
+V ukázce jsme použili makro \OpTeX/u `\puttext <x-posun> <y-posun> {<text>}`
+které umístí `<text>` relativně k aktuálnímu místu sazby (v ukázce relativně
+ke spodnímu levému rohu právě vloženého obrázku `mapa-danvize.pdf`) podle  
+`<x-posun>` ve směru vodorovném a  `<y-posun>` ve směru svislém.
+
+Uvnitř parametru příkazu `\puttext` je možné použít příkaz 
+`\c[<ini>/<step>]{<text>}`, který umožní `<text>` vypsat podél oblouku.
+Například
+\begtt
+\puttext 2mm 37mm {\c[-10/\kern4pt\pdfrotate{2.5}]{PTOLEMAIOVCI}}
+\endtt
+%
+Příkaz `\c` bere postupně písmena ze zadaného `<text>`u a klade mezi ně
+formátovací pokyny podle `<step>`. Přitom první písmeno natočí podle `<ini>`
+stupňů. To umožní například přes obrázky map psát názvy pohoří, států atd. mírně
+\"do zatáčky".
+
+Chcete-li mít místo pod textem podložené světlým stínem, aby byl text lépe
+čitelný, můžete místo `\puttext` použít `putstext`. Pokud chcete přes
+obrázek napsat třeba celý ostavec textu, pak je možno v parametru `\puttext`
+nebo `\putstext` vytvořit `\vtop`, nastavit šířku odstavce `\hsize` a dále
+vložit potřebný text typicky po `\noindent` (což potlačí odstavcovou
+zarážku). Příklad ukazuje použití `\putstext`, takže celý odstavec bude podložen
+světlým stínem.
+
+\begtt
+\putstext 54.15mm 20.5mm {\vtop{\hsize9.1cm \baselineskip10pt \noindent
+     Svatá země byla pod nadvládou Ptolemaiovské dynastie (tzn. Egypta) od roku 323 
+     do 198 př. Kr.; pak pod nadvládou Seleukovců (tedy Sýrie) od 198 do 142 př. Kr.}}
+\endtt
+
+Kromě příkazu `\putBot` je možno stejným způsobem použít i `\insertBot`:
+\begtt
+\insertBot {<titulek>} [<lejblík>] (<parametry>) {<data>}
+\endtt
+%
+V tomto případě se titulek a `<data>` vloží na spodek aktuálně tvořené strany, takže
+se toto vložení neváže na konkrétní číslo verše. Takový obrázek lze vložit
+tam, kde neprobíhá sazba biblického
+textu z `.txs` souboru a není tedy potřeba obrázek vázat na číslo verše a 
+vkládat pomocí `\putBot` nebo `\putImage`. Typická situace pro použití
+`\insertBot` je v souborech s úvody ke knihám, thedy v~souborech `intro-*.tex`
+souborech. 
+
 \secc Vložení článků
 
 Článek s textem (typicky delším než poznámka) lze umístit podobně jako

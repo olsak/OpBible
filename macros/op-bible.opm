@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.08 Aug 2022>}
+\_message{This is OP-Bible, version <0.09 Nov 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1647,8 +1647,23 @@
 
 \_nspublic \Citehere ;
 
+   \_doc
+   \`\insertBot` `{<title>} [<label>] (<params>) {<data>}`
+   inserts a material from `<data>` to the bottom of the current page
+   or next page if it is unable to fit to the current one.
+   The material is titled by `<title>` and it can be referred by `<label>`.
+   The `<params>` can inclue a special setting used locally for the priting
+   of this material.
+
+   \`\putBot` `<chapter>:<verse> {<title>} [<label>] (<params>) {<data>}`
+   behaves like `\insertBot`, but the result is printed to the bottom of the
+   page where the verse `<chapter>:<verse>` is, or to the next page if the
+   material is unable to fit to the current one.
+   \_cod
+
 \_def\.insertBot #1#2[#3]#4(#5)#6{% {Title} [label] (params) {data}
    \.botinsert
+      \_leftskip=0pt \_rightskip=0pt \_relax
       \.botTitle{#1}[#3]%
       \_kern3pt \_nobreak
       \_vbox{\_picwidth=\_hsize #5 #6}%
@@ -1659,13 +1674,50 @@
    \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
    \_ea\.newaction\_ea{\.fullvrefm}{\.insertBot{#2}[#4](#6){#7}}%
 }
+\_nspublic \insertBot \putBot ;
+
+   \_doc
+   \`\putstext``<x-pos> <y-pos> {<text>}` 
+   behaves like `\puttext` from \OpTeX, but moreover, it inserts a 
+   \"white shadow" as a background of the text. It can be used as text
+   printed over a pictures (maps etc.).\nl
+   \`\shadowedtext``{text}` creates an `\hbox{<text>}` with \"white shadow"
+   as background.
+   \_cod
+
+\_def\.putstext{\_ea\_ea\_ea\.putstextA\_scantwodimens}
+\_def\.putstextA#1#2#3{%
+   \_setbox0=\_hbox{\.shadowedtext{#3}}%   
+   \_dimen1=#1sp \_dimen2=#2sp \_puttextB
+}
+\_def\.shadowedtext#1{%
+   \.insertwhiteshadowresources
+   \_setbox0=\_hbox{#1}%
+   \_hbox{\_tmpdim=\_ht0 \_advance\_tmpdim by\_dp0
+      \_lower\_dp0\_hbox{%
+         \_pdfliteral{q /trans gs 1 g 
+            \_fornum 1..10\_do{\_oval{\_bp{\_wd0}}{\_bp{\_tmpdim}}{2+##1/2} f } Q}}%
+      \_box0}%
+}
+\_def\.insertwhiteshadowresources{%
+   \_addextgstate{trans}{<</ca .1>>}%
+   \_glet\.insertwhiteshadowresources=\_relax
+}
+\_nspublic \putstext \shadowedtext ;
+
+   \_doc
+   \`\c``[<init-rot>/<step>]{<text>}` prints the `<text>` around a curve.
+   Each letter or space from `<text>` is processed individually. The first
+   letter is rotated by `<init>` degrees. Next letters are printed after
+   `<step>` transformation is applied.
+   \_cod
 
 \_def\.c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
    \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
                  \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
 }
 \_let\c=\_undefined
-\_nspublic \insertBot \putBot \c ;
+\_nspublic \c ;
 
    \_doc
    \`\.printintro` macro (by default) prints the itroduction of th book from
@@ -1932,3 +1984,4 @@
 2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
            0.08 \doCNote: bug fixed with undefined \.prevnotepre
                 \.topinsertnopar introduced, bug with \par in \.dotopCite fixed
+2022-11-04 0.09 \putstext implemented, \leftskip=0pt inscluded to \insertBot.
