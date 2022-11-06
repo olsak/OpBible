@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.09 Nov 2022>}
+\_message{This is OP-Bible, version <0.10 Nov 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1677,49 +1677,6 @@
 \_nspublic \insertBot \putBot ;
 
    \_doc
-   \`\putstext``<x-pos> <y-pos> {<text>}` 
-   behaves like `\puttext` from \OpTeX, but moreover, it inserts a 
-   \"white shadow" as a background of the text. It can be used as text
-   printed over a pictures (maps etc.).\nl
-   \`\shadowedtext``{text}` creates an `\hbox{<text>}` with \"white shadow"
-   as background.
-   \_cod
-
-\_def\.putstext{\_ea\_ea\_ea\.putstextA\_scantwodimens}
-\_def\.putstextA#1#2#3{%
-   \_setbox0=\_hbox{\.shadowedtext{#3}}%   
-   \_dimen1=#1sp \_dimen2=#2sp \_puttextB
-}
-\_def\.shadowedtext#1{%
-   \.insertwhiteshadowresources
-   \_setbox0=\_hbox{#1}%
-   \_hbox{\_tmpdim=\_ht0 \_advance\_tmpdim by\_dp0
-      \_lower\_dp0\_hbox{%
-         \_pdfliteral{q /trans gs 1 g 
-            \_fornum 1..10\_do{\_oval{\_bp{\_wd0}}{\_bp{\_tmpdim}}{2+##1/2} f } Q}}%
-      \_box0}%
-}
-\_def\.insertwhiteshadowresources{%
-   \_addextgstate{trans}{<</ca .1>>}%
-   \_glet\.insertwhiteshadowresources=\_relax
-}
-\_nspublic \putstext \shadowedtext ;
-
-   \_doc
-   \`\c``[<init-rot>/<step>]{<text>}` prints the `<text>` around a curve.
-   Each letter or space from `<text>` is processed individually. The first
-   letter is rotated by `<init>` degrees. Next letters are printed after
-   `<step>` transformation is applied.
-   \_cod
-
-\_def\.c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
-   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
-                 \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
-}
-\_let\c=\_undefined
-\_nspublic \c ;
-
-   \_doc
    \`\.printintro` macro (by default) prints the itroduction of th book from
    the \^`\introfile`, prints the title "Introduction" (depending on the
    current language and puts all introduction text between \^`\.begblock`
@@ -1777,6 +1734,79 @@
 \_def\.printframe #1#2#3#4{\_edef\.frameslist{\.frameslist
     \_bp{#1} \_bp{#2} \_bp{#3} \_bp{#4} re f }%
 }
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   Insertions objects over pictures (maps)
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \_cod
+
+   \_doc
+   \`\putstext``<x-pos> <y-pos> {<text>}` 
+   behaves like `\puttext` from \OpTeX, but moreover, it inserts a 
+   \"white shadow" as a background of the text. It can be used as text
+   printed over a pictures (maps etc.).\nl
+   \`\shadowedtext``{text}` creates an `\hbox{<text>}` with \"white shadow"
+   as background.\nl
+   \`\shadowparameter` is a number of \"transparency amount" used
+   for `\"white shadows". User can re-define it but it must be done before
+   first usage of `\putstext` or `\shadowedtext` and it is used for whole
+   document.
+   \_cod
+
+\_def\.putstext{\_ea\_ea\_ea\.putstextA\_scantwodimens}
+\_def\.putstextA#1#2#3{%
+   \_setbox0=\_hbox{\.shadowedtext{#3}}%   
+   \_dimen1=#1sp \_dimen2=#2sp \_puttextB
+}
+\_def\.shadowedtext#1{%
+   \.insertwhiteshadowresources
+   \_setbox0=\_hbox{#1}%
+   \_hbox{\_tmpdim=\_ht0 \_advance\_tmpdim by\_dp0
+      \_lower\_dp0\_hbox{%
+         \_pdfliteral{q /trans gs 1 g 
+            \_fornum 1..10\_do{\_oval{\_bp{\_wd0}}{\_bp{\_tmpdim}}{2+##1/2} f } Q}}%
+      \_box0}%
+}
+\_def\.insertwhiteshadowresources{%
+   \_addextgstate{trans}{<</ca \shadowparameter>>}%
+   \_glet\.insertwhiteshadowresources=\_relax
+}
+\def\shadowparameter{.1} % default value of "transparency"
+
+\_nspublic \putstext \shadowedtext ;
+
+   \_doc
+   \`\c``[<init-rot>/<step>]{<text>}` prints the `<text>` around a curve.
+   Each letter or space from `<text>` is processed individually. The first
+   letter is rotated by `<init>` degrees. Next letters are printed after
+   `<step>` transformation is applied.
+   \_cod
+
+\_def\.c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
+   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
+                 \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
+}
+\_let\c=\_undefined
+\_nspublic \c ;
+
+   \_doc
+   \`\town` `<dimen> <dimen>` puts a circle with given \`\townparams`
+   to the given place `<dimen> <dimen>`. It works like
+   `\puttext <dimen> <dimen> {<circle>}`.
+   \_cod
+
+\_def\townparams{    % default parameters of the circle:
+   \_hhkern=.8pt     % diameter of the disc 
+   \_lwidth=.5pt     % tickness of the outline
+   \_fcolor=\Red     % color of the inner disc
+   \_lcolor=\Black   % color of the outline
+}
+\_def\.town {\_ea\_ea\_ea\.townA\_scantwodimens}
+\_def\.townA #1#2{\_setbox0=\_hbox{\_incircle[\_hhkern=0pt \_vvkern=0pt \townparams]{}}%
+   \_dimen1=#1sp \_dimen2=#2sp \_puttextB
+}
+\_nspublic \town ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1984,4 +2014,5 @@
 2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
            0.08 \doCNote: bug fixed with undefined \.prevnotepre
                 \.topinsertnopar introduced, bug with \par in \.dotopCite fixed
-2022-11-04 0.09 \putstext implemented, \leftskip=0pt inscluded to \insertBot.
+2022-11-04 0.09 \putstext implemented, \leftskip=0pt included to \insertBot.
+2022-11-05 0.10 \town implemented.

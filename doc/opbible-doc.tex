@@ -726,6 +726,20 @@ světlým stínem.
      do 198 př. Kr.; pak pod nadvládou Seleukovců (tedy Sýrie) od 198 do 142 př. Kr.}}
 \endtt
 
+Příkaz \`\town` `<x-posun> <y-posun>` vloží do místa podle <x-posun>,
+<y-posun> kolečko. Barva kolečka, jeho velikost a tloušťka a barva obrysové
+čáry se řídí parametry definovanými v `\townparams`. Implicitní parametry
+jsou
+\begtt
+\def\townparams{    
+   \hhkern=.8pt     % poloměr koužku 
+   \lwidth=.5pt     % tloušťka obrysové čáry
+   \fcolor=\Red     % barva kroužku
+   \lcolor=\Black   % barva obrysové čáry
+}
+\endtt
+
+
 Kromě příkazu `\putBot` je možno stejným způsobem použít i `\insertBot`:
 \begtt
 \insertBot {<titulek>} [<lejblík>] (<parametry>) {<data>}
