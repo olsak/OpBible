@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.10 Nov 2022>}
+\_message{This is OP-Bible, version <0.11 Nov 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1749,7 +1749,7 @@
    \`\shadowedtext``{text}` creates an `\hbox{<text>}` with \"white shadow"
    as background.\nl
    \`\shadowparameter` is a number of \"transparency amount" used
-   for `\"white shadows". User can re-define it but it must be done before
+   for \"white shadows". User can re-define it but it must be done before
    first usage of `\putstext` or `\shadowedtext` and it is used for whole
    document.
    \_cod
@@ -1807,6 +1807,51 @@
    \_dimen1=#1sp \_dimen2=#2sp \_puttextB
 }
 \_nspublic \town ;
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Chiasm
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \_cod
+
+   \_doc
+   The pair \`\begChiasm`...\`\endChiasm` defines chiasm environemnt. It
+   behaves like `\begitems`...`\enditems`, but
+   you can use given number of `*` which denotes the indentation level.
+   The letters A, B, C, etc. will be prefixed automatically and when you are
+   in the backward phase then C', B', A' are prefixed. You can try:
+   \begtt
+   \begChiasm
+   * Předkové a rané zkušenosti (\<11:10-12:9>)
+   ** Rané kontakty s ostatními národy (\<12:10-14:24>)
+   *** Smlouva s Bohem (\<15:1-17:27>)
+   ** Pozdní kontakty s ostatními národy (\<18:1-21:34>)
+   * Potomci a smrt (\<22:1-25:18>)
+   \endChiasm
+   \endtt
+   \_cod
+
+\_def\.keepstyle{\_defaultitem=\_printitem}
+\_def\.easylist{\_adef*{\.countlist}}
+\_def\.aast{\.countlist}
+\_def\.countlist{\_tmpnum=1 \.countlistA}
+\_def\.countlistA{\_futurelet\.next\.countlistB}
+\_def\.countlistB{\_ifx\.next\.aast \_ea\.countlistC\_else \_ea\.countlistD \_fi}
+\_def\.countlistC#1{\_incr\_tmpnum \.countlistA}
+\_def\.countlistD{%
+   \_ifnum\_tmpnum>\_ilevel \_fornum \_ilevel..\_tmpnum-1 \_do{\_begitems\.easylist}\_else
+   \_ifnum\_tmpnum<\_ilevel \_fornum \_tmpnum..\_ilevel-1 \_do{\_enditems}\_fi\_fi
+   \_startitem}
+
+\_def\.qq#1{{\_bf#1\_trycs{Level:\_the\_ilevel}{}}\_space\_aftergroup\.qqA}
+\_def\.qqA{\_sdef{Level:\_the\_ilevel}{\_rlap{'}}}
+\_def\.ChiasmNumbering{\_ea\.qq \_Uchar \_numexpr `A-1+\_ilevel\_relax\_space} % A, B, C, D, etc.
+\_sdef{_item:q}{}%for chiasms with no leading alphabet letters
+\_sdef{_item:Q}{\.ChiasmNumbering}
+\_def\.begChiasm{\_begitems \.easylist \_style Q \.keepstyle}
+\_def\.endChiasm{\_fornum 1..\_ilevel \_do{\_enditems}}
+
+\_nspublic \begChiasm \endChiasm ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2004,15 +2049,16 @@
 \_endnamespace
 \_endcode
 
-2022-08-19 0.01 version released
-           0.02 \begpoetry, \endpoetry, \ind inplemented,
-                \def\.buff etc. changed to \gdef\.buff (bug fixed)
-2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
-2022-08-23 0.04 \fmtfont implemented
-2022-08-24 0.05 \subtit implemented
-           0.06 \printchapnote reimplemented
-2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
+2022-11-18 0.11 \begChiasm, \endChiasm included here
+2022-11-05 0.10 \town implemented.
+2022-11-04 0.09 \putstext implemented, \leftskip=0pt included to \insertBot.
            0.08 \doCNote: bug fixed with undefined \.prevnotepre
                 \.topinsertnopar introduced, bug with \par in \.dotopCite fixed
-2022-11-04 0.09 \putstext implemented, \leftskip=0pt included to \insertBot.
-2022-11-05 0.10 \town implemented.
+2022-08-26 0.07 \.preindbuff implemented, bug with verse 1 with \fmtpoetry fixed
+           0.06 \printchapnote reimplemented
+2022-08-24 0.05 \subtit implemented
+2022-08-23 0.04 \fmtfont implemented
+2022-08-20 0.03 \fmtpoetry implemented, \begpoetry \endpoetry removed
+           0.02 \begpoetry, \endpoetry, \ind inplemented,
+                \def\.buff etc. changed to \gdef\.buff (bug fixed)
+2022-08-19 0.01 version released
