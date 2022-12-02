@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.11 Nov 2022>}
+\_message{This is OP-Bible, version <0.12 Dec 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1448,6 +1448,45 @@
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Inserting images over two pages
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   We can insert an image at the bottom of the page which spans from even to
+   odd page. The macro
+   \`\insertSpanImage``{<Title>} [<label>] (<params>) {<image file>}`
+   does it.
+   \_cod
+
+\_newbox \.spanpicbox
+
+\_def\.insertSpanImage #1#2[#3]#4(#5)#6{%
+   \_par \_penalty0
+   \_tmpdim=\_pagewidth
+   \_advance\_tmpdim by-\_hoffset
+   \_global\_setbox\.spanpicbox=\_hbox{\_picwidth=2\_tmpdim \_inspic{#6}}
+   \_ifodd\_pageno % to bude potreba udelat lepe
+      \_gdef\.inspicbox##1{%
+         \.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}
+         \_gdef\.inspicbox####1{####1}
+       }
+   \_else
+      \.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}
+   \_fi
+}
+\_def\.inspicbox #1{#1}
+
+\_def \_endoutput{%
+   \_ifvoid\.spanpicbox\_else \.addpicbox\_fi
+   \_advancepageno
+   {\_globaldefs=1 \_the\_nextpages \_nextpages={}}%
+   \_ifnum\_outputpenalty>-20000 \_else\_dosupereject\_fi
+}
+\_def\.addpicbox{\.inspicbox{\.insertBot{}[](){\_moveleft\_pagewidth\_box\.spanpicbox\_kern-1ex}}}
+
+\_nspublic \insertSpanImage ;
+
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Inserting citations to the page
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    `\putCite` `<gen-vref> {<text>}` creates a citation <text> inserted to the
@@ -2049,6 +2088,7 @@
 \_endnamespace
 \_endcode
 
+2022-12-02 0.12 \insertSpanImage introduced
 2022-11-18 0.11 \begChiasm, \endChiasm included here
 2022-11-05 0.10 \town implemented.
 2022-11-04 0.09 \putstext implemented, \leftskip=0pt included to \insertBot.
