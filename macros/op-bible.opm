@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.12 Dec 2022>}
+\_message{This is OP-Bible, version <0.13 Dec 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1452,8 +1452,42 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    We can insert an image at the bottom of the page which spans from even to
    odd page. The macro
-   \`\insertSpanImage``{<Title>} [<label>] (<params>) {<image file>}`
-   does it.
+   \`\insertSpanImage``{<Title>} [<label>] (<params>) {<image file>}` does it.
+   The image is placed at the bottom of the pages using following rule:
+   if the `\insertSpanImage` occurrs at the current page $c$ then
+   \begitems
+   * if $c$ is even and the image height fits to the current page then the
+     image is inserted to pages $c$, $c+1$,
+   * if $c$ is even and the image height doesn't fit to the current page then
+     the image is inserted to pages $c+2$, $c+3$,
+   * if $c$ is odd then the image is inserted to pages $c+1$, $c+2$.
+   \enditems
+   The macro `\insertImage` saves the image in the box `\.spanpicbox`.
+   The `\_picwidth` of the image is calculated as 2*(`\_hsize`*<inner_margin>).
+   I.e. when we put the box to the page firstly
+   then only the left half of its size is printed.
+
+   Next, \^`\insertSpanImage` checks if the current page is even. If it is true and
+   if there is sufficient space `\pagegoal-\pagetotal` at the current page, the
+   image is inserted to the current page using the `\.startinsertSpanImage`
+   which runs `\.insertBot` in fact. The second part of the image is printed
+   because `\_endoutput` (processed at the end of the output routine where
+   first part of the image is inserted) runs `\.addpicbox`. The
+   `\.addpicbox` runs second `\.insertBot` which is printed on the next
+   page.
+
+   If the current page is odd, then `\insertSpanImage` doesn't run `\.startinsertSpanImage`
+   immediatelly, but `\_endouput` inserts first part of the image using
+   `\.inspicbox` which is equal to `\.inspicboxafter` in this case. It
+   processes `\.startinsertSpanImage` which inserts the first part of the
+   image on the next page (even) page.
+
+   If the current page is even but the image cannot fit to the current page
+   then the delay using `\_endoutput` is activated too. But the
+   `\.ispicboxafter` checks that the current page is even and it does nothing in
+   this case. Next page is ofdd, so `\.ispicboxafter` invoked by next
+   `\_endinput` inserts the first part of the image which will be printed on
+   the next (even) page.
    \_cod
 
 \_newbox \.spanpicbox
@@ -1463,17 +1497,24 @@
    \_tmpdim=\_pagewidth
    \_advance\_tmpdim by-\_hoffset
    \_global\_setbox\.spanpicbox=\_hbox{\_picwidth=2\_tmpdim \_inspic{#6}}
+   \_gdef\.startinsertSpanImage {\.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}}
    \_ifodd\_pageno % to bude potreba udelat lepe
-      \_gdef\.inspicbox##1{%
-         \.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}
-         \_gdef\.inspicbox####1{####1}
-       }
+      \_glet\.inspicbox=\.inspicboxafter
    \_else
-      \.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}
+      \_ifdim \_dimexpr \_pagegoal-\_pagetotal > \_dimexpr \_ht\.spanpicbox+2em \_relax
+         \.startinsertSpanImage
+      \_else
+         \_glet\.inspicbox=\.inspicboxafter
+      \_fi
    \_fi
 }
-\_def\.inspicbox #1{#1}
-
+\_let\.inspicbox=\_useit
+\_def\.inspicboxafter #1{%
+   \_ifodd\_pageno
+       \.startinsertSpanImage
+       \_glet\.inspicbox=\_useit
+   \_fi
+}
 \_def \_endoutput{%
    \_ifvoid\.spanpicbox\_else \.addpicbox\_fi
    \_advancepageno
@@ -2088,6 +2129,7 @@
 \_endnamespace
 \_endcode
 
+2022-12-09 0.13 beter concept of putting \insertSpanImage's
 2022-12-02 0.12 \insertSpanImage introduced
 2022-11-18 0.11 \begChiasm, \endChiasm included here
 2022-11-05 0.10 \town implemented.
