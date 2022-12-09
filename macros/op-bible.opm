@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.13 Dec 2022>}
+\_message{This is OP-Bible, version <0.14 Dec 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1497,8 +1497,11 @@
    \_tmpdim=\_pagewidth
    \_advance\_tmpdim by-\_hoffset
    \_global\_setbox\.spanpicbox=\_hbox{\_picwidth=2\_tmpdim \_inspic{#6}}
-   \_gdef\.startinsertSpanImage {\.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1ex}}
-   \_ifodd\_pageno % to bude potreba udelat lepe
+   \_gdef\.startinsertSpanImage {\.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1.2ex}}
+   \.doinsertSpanImage
+}
+\_def\.doinsertSpanImage{%
+   \_ifodd\_pageno
       \_glet\.inspicbox=\.inspicboxafter
    \_else
       \_ifdim \_dimexpr \_pagegoal-\_pagetotal > \_dimexpr \_ht\.spanpicbox+2em \_relax
@@ -1521,9 +1524,29 @@
    {\_globaldefs=1 \_the\_nextpages \_nextpages={}}%
    \_ifnum\_outputpenalty>-20000 \_else\_dosupereject\_fi
 }
-\_def\.addpicbox{\.inspicbox{\.insertBot{}[](){\_moveleft\_pagewidth\_box\.spanpicbox\_kern-1ex}}}
+\_def\.addpicbox{\.inspicbox{\.insertBot{}[](){\_moveleft\_pagewidth\_box\.spanpicbox\_kern-1.2ex}}}
 
-\_nspublic \insertSpanImage ;
+   \_doc
+   \`\insertSpanText``{<Title>} [<label>] (<params>) {<text>}` does the same
+   as `\insertSpanImage`, but the <text> is inserted instead
+   the image. The `\hsize` is locally set to the desired width of the text
+   when `<text>` is processed in a `\vbox`,
+   i.e. to 2*(`\hsize`+`<inner_margin>`).
+   \_cod
+
+\_def\.insertSpanText #1#2[#3]#4(#5)#6{%
+   \_par \_penalty0
+   \_tmpdim=\_pagewidth
+   \_advance\_tmpdim by-\_hoffset
+   \_setbox0=\_hbox to2\_tmpdim{\_hss\_vbox{\_hsize=2\_tmpdim
+      \_leftskip=0pt \_rightskip=0pt \_relax \_kern3pt #6}\_hss}
+   \_global\_setbox\.spanpicbox=
+      \_hbox{\_rlap{\White \_vrule width\_wd0 height\_ht0 depth\_dp0}\_box0}
+   \_global\_ht\.spanpicbox=\_dimexpr\_ht\.spanpicbox-3pt\_relax
+   \_gdef\.startinsertSpanImage {\.insertBot {#1}[#3](#5){\_copy\.spanpicbox \_kern-1.2ex}}
+   \.doinsertSpanImage
+}
+\_nspublic \insertSpanImage  \insertSpanText ;
 
 
    \_doc
@@ -2129,6 +2152,7 @@
 \_endnamespace
 \_endcode
 
+2022-12-09 0.14 \insertSpanText introduced
 2022-12-09 0.13 beter concept of putting \insertSpanImage's
 2022-12-02 0.12 \insertSpanImage introduced
 2022-11-18 0.11 \begChiasm, \endChiasm included here
