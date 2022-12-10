@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.14 Dec 2022>}
+\_message{This is OP-Bible, version <0.15 Dec 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1534,7 +1534,7 @@
    i.e. to 2*(`\hsize`+`<inner_margin>`).
    \_cod
 
-\_def\.insertSpanText #1#2[#3]#4(#5)#6{%
+\_long\_def\.insertSpanText #1#2[#3]#4(#5)#6{%
    \_par \_penalty0
    \_tmpdim=\_pagewidth
    \_advance\_tmpdim by-\_hoffset
@@ -1915,9 +1915,7 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Chiasm
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   \_cod
 
-   \_doc
    The pair \`\begChiasm`...\`\endChiasm` defines chiasm environemnt. It
    behaves like `\begitems`...`\enditems`, but
    you can use given number of `*` which denotes the indentation level.
@@ -1982,6 +1980,85 @@
    \_ht0=0pt \_dp0=0pt \_box0 \_nointerlineskip
 }
 \_nspublic \Outline \rightnote ;
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Timelines
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \begitems
+   * \`\timeline``<num>` sets the totla number of years (or other units) in time-line.
+   * \`\timelinewidth``<dimen>` sets the width of time-line.
+   * \`\l` is shortcut for `\baselineskip` (an be used in `\vskip` parameter).
+   \enditems
+   \_cod
+
+\_def\.l{\_baselineskip}
+\_newcount\.timeline      \.timeline=100       % default
+\_newdimen\.tlwidth       \.tlwidth=10cm % default
+\_def\.timelinewidth{\_afterassignment\.timelinewidthA\.tlwidth}
+\_def\.timelinewidthA{\_par\_hbox to\.tlwidth{}}
+
+\_nspublic \l \timeline \timelinewidth ;
+
+   \_doc
+   All objects used for creating time-line are defined by `\puttext`, i.e.\
+   they don't shift the current typesetting point.
+
+   `\arrowtext` `<from>..<to> (<settings>) {<text>}`
+   creates a horizontal line with arrows. Its width and its position is
+   given by `<from>..<to>` time units. The `<settings>` can include font
+   selector, color settings of something similar for `<text>`.
+   The `<text>` is placed to the center of the line.
+   \_cod
+
+\_def\.arrowtext #1..#2(#3)#4{%
+   \_puttext \.pos{#1}0pt
+      {\_lower.745ex\_hbox to\_dimexpr\.pos{#2}-\.pos{#1}{#3\.Larrow{ #4 }\.Rarrow}}
+}
+\_def\.Larrow{$\leftarrow$\_kern-.8em\_leaders\_vrule height.65ex depth-.42ex\_hfil}
+\_def\.Rarrow{\_leaders\_vrule height.65ex depth-.42ex\_hfil\_kern-.8em$\rightarrow$}
+\_def\.rule{\_leaders\_vrule height.12ex depth.12ex\_hfil}
+\_def\.pos#1{\_expr{#1/\_the\.timeline}\.tlwidth}
+
+\_nspublic \arrowtext ;
+
+   \_doc
+   `\tlput` `<above/below> <where> <llap or rlap or nothing> (<format ot text>) {<text>}`
+   puts the <text> to the timeline. The <text> can include more lines
+   separated by `\cr`. The parameter `<above/below>` is `a` or `b` and means
+   the <text> position: above
+   the current point or below it. <where> is the position of the text in time units.
+   <llap or rlap> is `\llap` or `\llap` and it menans that text is encapsulated
+   to \llap, \rlap. If nothing is here the text is centered.
+   The <format of text> can include the font setting, color setting etc.
+   \_cod
+
+\_def\.tlput #1 #2 #3(#4)#5{%
+   \_let\.Lhss=\_hss \_let\.Rhss=\_hss
+   \_ifx#3\_rlap\_relax \_let\.Lhss=\_relax \_let\.Rhss=\_hss   \_fi
+   \_ifx#3\_llap\_relax \_let\.Lhss=\_hss   \_let\.Rhss=\_relax \_fi
+   \_puttext \.pos{#2}0pt {\_hbox to0pt{\.Lhss #4\.tltext#1{#5}\.Rhss}}
+}
+\_def\.tltext#1#2{\_ifx#1a\_vbox\_else
+   \_vtop\_fi{\_kern0pt\_halign{\.Lhss##\.Rhss\_cr\_strut#2\_crcr}}%
+}
+\_nspublic \tlput ;
+
+   \_doc
+   \`\tline``<from>..<to>` prints the line. Its length and position is given
+   by `<from>..<to>` time units.\nl
+   \`\tlines``{<data|separated|by|>}` creates a list of short vertical lines.
+   Each line is represented by one `|`. The distance between lines (in time
+   units) are given in the praameter.
+   \_cod
+
+\_def\.tline #1..#2 {%
+   \_puttext \.pos{#1}0pt {\_hbox to \_dimexpr\.pos{#2}-\.pos{#1}{\.rule}}
+}
+\_def\.tlines#1{\_puttext 0pt0pt{\_hbox{\_foreach #1|\_do##1|{\.vrul\_hskip\.pos{0##1}}}}}
+\_def\.vrul{\_def\.vrul{\_kern-.12ex\_vrule height.7\.l depth.7\.l width.24ex \_kern-.12ex}}
+
+\_nspublic \tline \tlines ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2152,6 +2229,7 @@
 \_endnamespace
 \_endcode
 
+2022-12-10 0.15 Timeline macros moved to op-bible
 2022-12-09 0.14 \insertSpanText introduced
 2022-12-09 0.13 beter concept of putting \insertSpanImage's
 2022-12-02 0.12 \insertSpanImage introduced
