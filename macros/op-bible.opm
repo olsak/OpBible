@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.15 Dec 2022>}
+\_message{This is OP-Bible, version <0.16 Dec 2022>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -675,6 +675,7 @@
 \_def\.fmtwarnf{\.printwarn{\_string\fmtfont: \.currverse: The text "\.text" not found}}
 \_nspublic \fmtfont ;
 
+
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Printing verses from `.txs` files
@@ -1121,8 +1122,8 @@
    \_doc
    \`\x``/<phrase>/` expands to \`\v!``<tmark>!<phrase>` if such control sequence
    is defined else it expands simply to `<phrase>` using \^`\xA`.
-   The `<tmark>` is actual value of the \^`\tmark` macro.\nl
-   Note that if \^`\tmark` expands to `<t-markA>` (used in the `\variants`
+   The `<tmark>` is actual value of the `\tmark` macro.\nl
+   Note that if `\tmark` expands to `<t-markA>` (used in the `\variants`
    macro), then the `\v!<tmark>!<phrase>` is not defined and the \^`\x` macro
    expands to the <phrase> directly.\nl
    \`\xA`` <phrase>/` expands to `<phrase>` and prints warning, if `\tmark`
@@ -1170,7 +1171,7 @@
    \_doc
    The \`\switch` macro reads a pair of parameters using \`\.switchA`
    and processes the list of variants in `\foreach` loop. If an element from
-   the list is equal with \^`\tmark` then the `#2` (saved in
+   the list is equal with `\tmark` then the `#2` (saved in
    \`\.switchD` token list) is run and next parameter pairs are read by
    \`\.switchN`, i.e. they are ignored.\nl
    The \^`\Note` and \^`\ww` and more macros are defined as `\outer` in order to
@@ -1462,7 +1463,7 @@
      the image is inserted to pages $c+2$, $c+3$,
    * if $c$ is odd then the image is inserted to pages $c+1$, $c+2$.
    \enditems
-   The macro `\insertImage` saves the image in the box `\.spanpicbox`.
+   The macro `\insertSpanImage` saves the image in the box `\.spanpicbox`.
    The `\_picwidth` of the image is calculated as 2*(`\_hsize`*<inner_margin>).
    I.e. when we put the box to the page firstly
    then only the left half of its size is printed.
@@ -1493,6 +1494,7 @@
 \_newbox \.spanpicbox
 
 \_def\.insertSpanImage #1#2[#3]#4(#5)#6{%
+   \.checkpicbox
    \_par \_penalty0
    \_tmpdim=\_pagewidth
    \_advance\_tmpdim by-\_hoffset
@@ -1526,6 +1528,10 @@
 }
 \_def\.addpicbox{\.inspicbox{\.insertBot{}[](){\_moveleft\_pagewidth\_box\.spanpicbox\_kern-1.2ex}}}
 
+\_def\.checkpicbox{%
+   \_ifvoid\.spanpicbox\_else \_errmessage{Two span Image/Text at single place not allowed}\_fi
+}
+
    \_doc
    \`\insertSpanText``{<Title>} [<label>] (<params>) {<text>}` does the same
    as `\insertSpanImage`, but the <text> is inserted instead
@@ -1535,6 +1541,7 @@
    \_cod
 
 \_long\_def\.insertSpanText #1#2[#3]#4(#5)#6{%
+   \.checkpicbox
    \_par \_penalty0
    \_tmpdim=\_pagewidth
    \_advance\_tmpdim by-\_hoffset
@@ -1547,6 +1554,38 @@
    \.doinsertSpanImage
 }
 \_nspublic \insertSpanImage  \insertSpanText ;
+
+   \_doc
+   \`\putSpanImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
+   runs \^`\insertSpanImage` at the page where the begining of the verse given
+   by <chapter>:<verse> exists. We register a new action by
+   \^`\.newaction{<full-vref>}{\.doSpanImage{<title>}[<label>](<params>){<image-file>}}`.\nl
+   \`\putSpanText` `<chatper>:<verse> {<title>} [<label>] (<params>) {<text>}`
+   runs \^`\insertSpanText` at the page where the begining of the verse given
+   by <chapter>:<verse> exists. The `<text>` is saved to `\spant!\the\.spantxtnum`
+   and only the name of this macro is registered by the `\.newaction`.
+
+   Note that the image/text itself is inserted at the current page $c$ and
+   $c+1$ or at $c+1$, $c+2$ or at $c+2$, $c+3$.
+   \_cod
+
+\_newcount\.spantextnum
+\_def\.putSpanImage #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+   \_edef\.fullvref{\.gentovref{#1}}%
+   \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
+   \_ea\.newaction\_ea{\.fullvrefm}{\.insertSpanImage{#2}[#4](#6){#7}}%
+}
+\_long\_def\.putSpanText #1 #2#3[#4]#5(#6)#7{% chap:verse {Title} [label] (params) {image-file.pdf}
+   \_edef\.fullvref{\.gentovref{#1}}%
+   \_edef\.fullvrefm{\_ea\.renumvref\.fullvref\_relax}%
+   \_incr\.spantextnum
+   \_global\_sdef{spant!\_the\.spantextnum}{#7}%
+   \_ea\.putSpanTextA
+      \_expanded{{\.fullvrefm}\_ea}\_csname spant!\_the\.spantextnum\_endcsname {#2}[#4](#6)%
+}
+\_def\.putSpanTextA #1#2#3[#4](#5){\.newaction{#1}{\.insertSpanText{#3}[#4](#5){#2}}}
+
+\_nspublic \putSpanImage \putSpanText ;
 
 
    \_doc
@@ -2029,7 +2068,7 @@
    the <text> position: above
    the current point or below it. <where> is the position of the text in time units.
    <llap or rlap> is `\llap` or `\llap` and it menans that text is encapsulated
-   to \llap, \rlap. If nothing is here the text is centered.
+   to `\llap`, `\rlap`. If nothing is here the text is centered.
    The <format of text> can include the font setting, color setting etc.
    \_cod
 
@@ -2229,6 +2268,7 @@
 \_endnamespace
 \_endcode
 
+2022-12-11 0.16 \putSpanImage, \putSpanText implemented
 2022-12-10 0.15 Timeline macros moved to op-bible
 2022-12-09 0.14 \insertSpanText introduced
 2022-12-09 0.13 beter concept of putting \insertSpanImage's
