@@ -242,7 +242,7 @@
 
    \_doc
    The `\ChapterPre``{<code>}` and `\ChapterPost``{<code>}` inserts <code>
-   before each chapter and after each chapetr. The <data> are the same for
+   before each chapter and after each chapter. The <code> is the same for
    each chapter, it does not vary depending on the Book or Chapter number.
    \_cod
 
@@ -799,7 +799,7 @@
 
    \_doc
    \`\.chapbefore` is processed before each chapter.
-   \`\.chapafter` is processad after each chapetr.
+   \`\.chapafter` is processad after each chapter.
    User can define values by `\ChapterPre` and `\ChapterPost` macros.
    \_cod
 
@@ -2025,7 +2025,7 @@
    \sec Timelines
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \begitems
-   * \`\timeline``<num>` sets the totla number of years (or other units) in time-line.
+   * \`\timeline``<num>` sets the total number of years (or other units) in time-line.
    * \`\timelinewidth``<dimen>` sets the width of time-line.
    * \`\l` is shortcut for `\baselineskip` (an be used in `\vskip` parameter).
    \enditems
@@ -2088,7 +2088,7 @@
    by `<from>..<to>` time units.\nl
    \`\tlines``{<data|separated|by|>}` creates a list of short vertical lines.
    Each line is represented by one `|`. The distance between lines (in time
-   units) are given in the praameter.
+   units) are given in the parameter.
    \_cod
 
 \_def\.tline #1..#2 {%
