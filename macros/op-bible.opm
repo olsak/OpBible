@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.16 Dec 2022>}
+\_message{This is OP-Bible, version <0.17 Jan 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -163,6 +163,7 @@
    \_def\.prelinkC{0}\_def\.prelinkV{0}
    \_global\_headline={\_hfil \_ea\.setheadline\_ea{\.btit}}
    \_line{\_hss\.bookfont\.btit\_hss}
+   \_label[cref!#1]\_wlabel{#1}
    \_par\_nobreak\_medskip
 }
 
@@ -713,7 +714,9 @@
    \_ifnum\.currchapnum=\.chapnum \_else
        \_ifnum\.chapnum>1 \.chapafter \_fi
        \_let\.prelinkC=\.currchapnum \.chapnum=\.currchapnum\_relax
-       \.chapbefore \_fi
+       \.chapbefore
+       \_label[cref!\.currbook\_space\_the\.chapnum]\_wlabel{\.currbook~\_the\.chapnum}%
+   \_fi
    \.printverse
 }
 \_def\.preparechapverse #1/#2:#3 {\_def\.currchapnum{#2}%
@@ -992,7 +995,10 @@
    we try to print only selected books. It creates link 
    `\.linkpre:\.linkfspec` with the text `\.linktext`\nl
    The link is created only if the book is to be printed, i.e. the
-   `\pbook!<book>` is defined.
+   `\pbook!<book>` is defined.\nl
+   \`\tracingouterlinks` acivates logging of broken links to non-existed
+   books. By default, these links are not logged because we assume that
+   no whole Bible is processed but only selected books.
    \_cod
 
 \_def\.createlink{{%
@@ -1050,6 +1056,14 @@
    \_immediate\_write\.xrf{\_string\_sdef{pg:\.linkpre:\.linkfspec}{??}}%
 }
 \_nspublic \pg ;
+
+   \_doc
+   `\cref` if simply `\ref` with `cref!` prefix.
+   \_cod
+
+\_def\.cref[#1]{\_ref[cref!#1]}
+
+\_nspublic \cref ;
 
 
    \_doc
@@ -2268,6 +2282,7 @@
 \_endnamespace
 \_endcode
 
+2023-01-12 0.17 \cref implemented
 2022-12-11 0.16 \putSpanImage, \putSpanText implemented
 2022-12-10 0.15 Timeline macros moved to op-bible
 2022-12-09 0.14 \insertSpanText introduced
