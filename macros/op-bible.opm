@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.17 Jan 2023>}
+\_message{This is OP-Bible, version <0.18 Jan 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -910,16 +910,6 @@
 \_def\<{\_let\.prelinkB=\.currbook \_let\.prelinkC=\.currchapnum \_let\.prelinkV=\.currversenum \.bref}
 
    \_doc
-   \`\.oncebref` includes an additional macros which have to be processed in
-   the single link, for example \`\reduceref`. The \`\everybref` token list
-   includes macros which have to be applied for all links.
-   \_cod
-
-\_newtoks\.everybref
-\_def\.oncebref{}
-\_nspublic \everybref ;
-
-   \_doc
    Macro \`\.brefL` recalculates \^`\.linkfspec` and \^`\.linktext` due to \^`\renum` data
    and creates the link `\.linkpre:\.linkfspec` with the text \^`\.linktext`.\nl
    \`\.renumlinktext`` <full-vref-ori>\_relax<full-vref-modified>\_relax`
@@ -951,6 +941,8 @@
    \_if a\.linkpre\_relax \_ea\.linkfspecarticle \.linkfspec\_end \_fi
    \_if i\.linkpre\_relax \_ea\.linkfspecintro \.linkfspec\_end \_fi
    \_ifx \.ltextB\_empty \_else \_ea \.newltextB \.ltextB \_fi
+%   \message{\meaning\.linkfspec, \meaning\.ltextC, \meaning\.currchapnum}%
+   \.reducelinktext
    \.linklog{\.sspace <\_unexpanded\_ea{\.linkspec}>\.linkpost = [\.linkpre:\.linkfspec]%
            {\_ifx\.brefH\_empty \.ltextP \_else \.linktext\_fi}}%
    \.ensuredest \.createlink
@@ -980,6 +972,29 @@
 
 \_def\.sspace{\_space\_space\_space\_space}
 \_def\.linkpost{\_if v\.linkpre \_else \.linkpre\_fi \_space}
+
+   \_doc
+   \`\.reducelinktext` does nothing or reduces printed link if its book is
+   equal to the current book and if its chapter is equal to printed chapter.
+   It is activated by \`\reduceref` and deactivated by \`\noreduceref`.
+   The \`\re` macro activates `\.reducelinktext` only for single `\.bref`.
+   \_cod
+
+\_def\.reducelinktextA{%
+   \_edef\.tmp{\.currbook~}%
+   \_ifx\.ltextB\.tmp \_def\.ltextB{}%
+      \_edef\.tmp{\_trycs{_opb_currchapnum}{?}:}%
+      \_ifx\.ltextC\.tmp \_def\.ltextC{}%
+   \_fi\_fi
+   \_ifcsname _opb_reA\_endcsname \_let\.reducelinktext=\.reA \_fi % after \re
+}
+\_def\.reduceref{\_let\.reducelinktext=\_reducelinktextA}
+\_def\.noreduceref{\_let\.reducelinktext=\_relax}
+\.noreduceref % default
+
+\_def\.re{\_let\.reA=\.reducelinktext \.reduceref}
+
+\_nspublic \reduceref \noreduceref \re ;
 
    \_doc
    \`\tracinglinks` and \`\notracinglinks` are defined here.
@@ -1458,7 +1473,7 @@
           }
    \.endbot
 }
-\_def\.roundexpr#1{\_ea\_ea\_ea\.roundexprA\_expr{#1}\_relax}
+\_def\.roundexpr#1{\_ea\.roundexprA\_expanded{\_expr{#1}}\_relax}
 \_def\.roundexprA#1.#2\_relax{\_ifnum#1=0 0\_else #1\_fi}
 
    \_doc
@@ -2282,6 +2297,7 @@
 \_endnamespace
 \_endcode
 
+2023-01-23 0.18 \reduceref, \noreduceref, \re implemented
 2023-01-12 0.17 \cref implemented
 2022-12-11 0.16 \putSpanImage, \putSpanText implemented
 2022-12-10 0.15 Timeline macros moved to op-bible
