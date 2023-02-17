@@ -319,7 +319,7 @@ názvu, jako je název hlavního souboru.
 Hlavní soubor pro použití \OpBible/ (například `main.tex`) může vypadat takto:
 
 \begtt
-\load[op-bible]  % makra OpBible
+\load[opbible]  % makra OpBible
 \cslang          % inicializace českých vzorů dělení slov
 
 % Varianty překladu:
@@ -352,7 +352,7 @@ Hlavní soubor pro použití \OpBible/ (například `main.tex`) může vypadat t
 
 Pojďme se nyní podívat, co který z těch řádků dělá a které budou vyžadovat úpravy z Vaší strany pro konkrétní  potřeby Vašeho projektu.
 
-Pomocí \`\load[op-bible]` načte \TeX/ makra balíčku \OpBible/. To je ten nejdůležitější program, který se stará o sazbu.%, čili tady nemusíte (naopak: nesmíte) nic měnit.
+Pomocí \`\load[opbible]` načte \TeX/ makra balíčku \OpBible/. To je ten nejdůležitější program, který se stará o sazbu.%, čili tady nemusíte (naopak: nesmíte) nic měnit.
 
 Příkaz \`\cslang` nastaví české vzory dělení slov, předpokládá se tedy český
 text. Přitom `cs` je ISO zkratka jazyka, můžete použít i jiné jazyky:
@@ -1965,7 +1965,7 @@ takovém případě neprovede nic, takže základní text Bible se vůbec nenač
 %
 %
 %\begtt
-%\load[op-bible]  % macros OpBible
+%\load[opbible]  % macros OpBible
 %\cslang
 %\def\shadowparameter{0.075}
 %%\checksyntax notes-Da intro-Da articles-Da fmt-BKR-Da {} 
@@ -2179,7 +2179,7 @@ Tím se myslí `\amark`, `\tmark` atd? Nestačí rejsřík, který je připojen?
 \secc[summa-main] Hlavní soubor `main.tex`
 
 \begtt
-\load[op-bible]  % macros OpBible
+\load[opbible]  % macros OpBible
 \cslang
 
 %\checksyntax notes-Da intro-Da articles-Da fmt-BKR-Da {} % Error tracer; when active, \processbooks is disabled (does nothing)
