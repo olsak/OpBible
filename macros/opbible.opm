@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.18 Jan 2023>}
+\_message{This is OP-Bible, version <0.19 Feb 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -223,7 +223,11 @@
    errors due to missing a space after `<b-mark>` or `<a-mark>`.
    \_cod
 
-\_outer\_def\.BookTitle #1 #2 #3{\_sxdef{btit!#1}{#3}\_sxdef{f!#1}{#2}}
+\_def\genbooks{}
+\_def\.BookTitle #1 #2 #3{%
+   \_sxdef{btit!#1}{#3}\_sxdef{f!#1}{#2}\_sxdef{fb!#2}{#1}%
+   \_addto\genbooks{#2 }%
+}
 
    \_doc
    The \`\BookException` `<a-mark> {<code>}` macro adds the <code> to the
@@ -2230,6 +2234,47 @@
 }}
 \_nspublic \checksyntax ;
 
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Generating templates from templates
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+   The
+   \`\filegen``{<file-name-template>}<cr><file-content-template><cr>\endfile`
+   saves the <file-name-template> to \`\.filename` and `<file-content-template>`
+   to \`\.filecontent`. Then it runs a loop over \`\genbooks`.
+   The `\genbooks` macro is defined by \^`\BookTitle` and user can re-define it.\nl
+   The \`\.btitle``{<bmark or amark>}` expands to full title of the given book.
+   \_cod
+
+\_newwrite\.outfile
+\_def\.filegen #1 {\_par
+   \_begingroup \_addto\genbooks{ }\_def\.filename{#1}%
+   \_setverb \_endlinechar=`\^^J \.filegenA
+}
+\_ea\_def \_ea\.filegenA \_expanded{#1^^J\_csstring\\endfile#2^^J}{%
+   \_def\.filecontent{#1}%
+   \_ea\_foreach\genbooks \_do ##1 {%
+      \_bgroup
+      \_ifx^##1^\_else
+      \_replstring\.filename{@@}{##1}%
+      \_isfile{\.filename}\_iftrue \_opwarning{file "\.filename" exists already}%
+      \_else
+         \_wterm{creating file: \.filename}%
+         \_immediate\_openout\.outfile={\.filename}%
+         \_replstring\.filecontent{@@@}{\.btitle{##1}}%
+         \_replstring\.filecontent{@@}{##1}%
+         \_immediate\_write\.outfile{\.filecontent}\_immediate\_closeout\.outfile
+      \_fi\_fi
+      \_egroup
+   }%
+   \_endgroup
+}
+\_def\.btitle#1{\_ifcsname fb!#1\_endcsname \_trycs{btit!\_cs{fb!#1}}{#1}%
+   \_else \_trycs{btit!#1}{#1}\fi
+}
+\_nspublic \filegen ;
+
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2290,6 +2335,7 @@
 \_outer\_def\ww   {\.ww}
 \_outer\_def\ChapterPre  {\.ChapterPre}
 \_outer\_def\ChapterPost {\.ChapterPost}
+\_outer\_def\BookTilte   {\.BookTitle}
 
 \_def\_afterload{\_adef<{\.bref}}
 \_afterload
@@ -2297,6 +2343,7 @@
 \_endnamespace
 \_endcode
 
+2023-02-25 0.18 \filegen introduced
 2023-01-23 0.18 \reduceref, \noreduceref, \re implemented
 2023-01-12 0.17 \cref implemented
 2022-12-11 0.16 \putSpanImage, \putSpanText implemented

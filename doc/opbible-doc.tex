@@ -1,6 +1,6 @@
 \load [vlna]
 \csquotes \cslang
-\margins/1 a4 (20,,,)mm
+\margins/1 a4 (,,,)mm
 \fixmnotes\right
 \fontfam[schola]
 \def\TODO{{\Red TODO}}
@@ -1955,6 +1955,80 @@ ale projeví přímočaře.
 Poznámka: použití \`\checksyntax` deaktivuje příkaz \`\processbooks`, který v
 takovém případě neprovede nic, takže základní text Bible se vůbec nenačte.
 
+
+\sec Generování výchozích souborů `notes`, `fmt`, `intro`
+
+Pokud soubory `notes`, `fmt`, `intro` neexistují, \OpBible/ se nezlobí a
+chová se stejně, jakoby byly prázdné. Možná ale budete chtít mít tyto
+soubory pro všechny knihy Bible již připraveny v odpovídajících adresářích a
+s krátkým úvodním obsahem. Šablony pro takové soubory si můžete
+napsat do zvláštního souboru (např. `templates.tex`) a pak tento soubor
+zpracovat příkazem `optex templates`. Tím vygenerujete výchozí soubory
+podle specifikovaných šablon pro všechny knihy Bible.
+Pokud soubor s daným jménem už existuje, zůstává zachován (tj. není
+přepsán výchozím souborem) a objeví se o tom varování na termínálu a
+v `log` souboru.
+
+Nejprve potřebujete soubor `books.tex` s názvy a zkratkami všech knih Bible,
+jak se o něm praví v sekci~\ref[books]. Ten může být vygenerován třeba
+z Swordu skriptem `mod2tex`, viz sekci~\ref[txs].
+
+V souboru `templates.tex` je třeba pomocí `\input` nejprve načíst makro
+`opbible.opm`, dále soubor `books.tex` a potom můžete stanovit
+šablony souborů příkazem \`\filegen` takto:
+
+\begtt
+\filegen {<název-souboru>}
+<obsah souboru>
+\endfile
+\endtt
+%
+přitom <název souboru> musí obsahovat a <obsah souboru> může obsahovat dvojznak
+`@@`, který se automaticky zamění za zkratku knihy <bmark> stanovenou v `bible.tex` a vygeneruje se
+tolik výchozích souborů, kolik je v `books.tex` deklarováno titulů knih.
+Napříkad `templates.tex` může vypadat takto:
+
+\begtt
+\input opbible.opm
+\input books.tex
+
+\filegen {intro-@@.tex}
+% Úvod do knihy @@
+\endfile
+
+\filegen {notes-@@.tex}
+% Poznámky ke knize @@
+
+%\ww {}  {}  {}  {}  {}  {}
+%    BKR PSP CSP CEP B21 SNC
+%\Note 1:1 {} text ukončen prázdným řádkem
+\endfile
+\endtt
+%
+Příkaz `optex templates` v tomto případě vygeneruje 66 souborů
+`intro-1Jn.tex`, `intro-1kor.tex`, atd. se specifikovaným jednořádkovým
+obsahem a dále 66 `notes` souorů se specifikovaným pětiřádkovým obsahem.
+
+V <obsahu souboru> můžete použít také trojznak `@@@`, který se zamění ze
+celý titul knihy. Takže po secifikaci `% Úvod do knihy @@@` dostanete
+soubory s textem `% Úvod` {\tt do knihy První Mojžíšova (Genesis)}, dále
+`% Úvod do knihy Druhá Mojžíšova (Exodus)` atd.
+
+V ukázce jsou názvy souborů voleny tak, že se vygenerují v aktuálním
+adresáři. Máte-li v tomto adresáři připraveny podadresáře odpovídajících
+názvů, je možné soubory generovat přímo do nich, pište třeba
+`\filegen {intros/intro-@@.tex}`.
+
+Chcete-li vygenerovat jiný seznam souborů, než odpovídá seznamu <bmark>
+uvedeném v souboru `books.tex`, definujte po přečtení `books.tex`
+makro \`\genbooks` a Vámi zvolenými zkratkami. Například po
+\begtt
+\def\genbooks {Gn Ex Lv Nu Dt Joz}
+\endtt
+%
+bude příkaz `\filegen` generovat jen šablony pro pět knih s uvedenými
+zkratkami. Definovat `\genbooks` můžete také před každým `\filegen`, pak
+budete mít zkratky knih pro různé typy suborů různé.
 
 
 %Tahle sekce je asi zbytečnám tak ji mažu. Předpokládám, že dodáme jako součást distribuce něco jako "blank project" se soubory, které nebudou obsahovat teologický materiál (leda jako samply), ale příklady použitelných definic, třeba s komentářem, co dělají.
