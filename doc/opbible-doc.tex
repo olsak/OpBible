@@ -1701,6 +1701,10 @@ Výše uvedená ukázka byla zapsána jako
 
 {\bf Na co si dát pozor:} Uvnitř `\insertBot` se nesmí vyskytnout prázdný řádek.
 
+Příkaz \`\putBot` `<číslo verše> {<titul>} [<lejblík>] (<příkazy>) {<kód>}`
+se chová podobně jako \`\insertBot`, ale obrázek či diagram vloží nikoli na aktuální
+stránku, ale na stránku, kde se nachází verš udaný svým <šíslem verše>.
+Takové příkazy lze použít v souboru s poznámkami, například na jeho konci.
 
 
 \secc[town] Makro `\town` pro symbol města na mapě
@@ -2228,11 +2232,99 @@ budete mít zkratky knih pro různé typy suborů různé.
 %
 %\secc[sample-intro] Příklad souboru pro Úvod
 %
-\sec[suma] Shrnutí uživatelských definic
+\sec[suma] Shrnutí základních příkazů a definic
 
 %Sem bych dal všechno, co uživatel může potřebovat nastavit. Kdyby se to mohlo vejít na dvě strany,  mohli bychom doporučit to vytisknout jako cheat-sheet.
 
-Tím se myslí `\amark`, `\tmark` atd? Nestačí rejsřík, který je připojen?
+\secc Typicky v hlavním souboru
+
+\begitems
+* \`\tmark`: `\def\tmark{<t-zkratka>}`: deklarace t-zkratky překladu, např. BKR, PSP.
+* \`\txsfile`: `\def\txsfile {<maska názvu souboru>}`: deklarace umístění `.txs`. 
+  V masce názvu souboru je možné používat `\amark` nebo `\bmark`. 
+* \`\notesfile`: `\def\notesfile {<maska názvu souboru>}`: deklarace umístění
+   souborů s poznámkami. 
+* \`\introfile`: `\def\introfile {<maska názvu souboru>}`: deklarace umístění
+   souborů s úvodu ke knihám. 
+* \`\articlefile`: `\def\articlefile {<maska názvu souboru>}`: deklarace umístění
+   souborů s články.
+* \`\fmtfile`: `\def\fmtfile {<maska názvu souboru>}`: deklarace umístění
+   souborů s formátovacími údaji. 
+* \`\input``{<název souboru>}`: čtení dalšího souboru v daném místě.
+* \`\printedbooks`: `\def\printedbooks {<seznam a-značek knih>}`:
+  seznam knih, které se zpracují příkazem `\processbooks`.
+* \`\processbooks`: pokyn ke zpracování Bible.
+\enditems
+V hlavním souboru je třeba definova výše uvedené příkazy, 
+přečíst `books.tex`, `vars.tex` a nakonec spusti zpracování příkazem
+\`\processboks`.
+
+\secc Typicky v souboru `books.tex`
+
+\begitems
+* \`\BookTitle` `<a-značka> <b-značka> <titul>`: deklaruje pro každou knihu
+  a-značku, b-značku a titul. Při zpracování každé jednotlivé knihy se automaticky provede
+  `\def\amark{<a-značka>}` a `\def\bmark{b-značka}`. Přitm a-zančka se používá v
+  odkazech v textu Bible, dále b-značka se může používat v názvech souborů.
+* \`\BookException` `<a-značka> {<kód>}`: před před zpracováním knihy se
+  se provede <kód>.
+* \`\BookPre` `<a-značka> {<kód>}`: po vytištění úvodu před hlavním textem
+  deklarované knihy se provede <kód>.
+* \`\BookPost` `<a-značka> {<kód>}`: po vytištění hlavního textu
+  deklarované knihy se provede <kód>.
+* \`\nochapbooks`: `\def\nochapbooks{<seznam>}`: seznam a-značek knih, které
+  se nedělí na kapitoly.
+\enditems
+
+\secc Typicky v souboru `vars.tex`
+
+Tento soubor deklaruje variantní fráze pro různé verze překladu Bible.
+
+\begitems
+* \`\variants` `<počet>` `<seznam t-zkratek variant překladu>`: deklaruje počet
+  variant překladu a seznam \hbox{t-zkratek}. Počet musí odpovídat počtu
+  t-zkratek také počtu parametrů příkazů \`\vdef` a \`\ww`.
+* \`\vdef` `<varianty fráze>`; deklaruje varianty fráze, první z nich je
+  referenční. Varianty fráze se dávají dosvorek, tedy `{<takto>}`.
+\enditems
+
+\secc Typicky v souboru poznámek
+
+\begitems
+* \`\Note` `<číslo verše> {<komentovaná fráze>} <text poznámky ukončený prázdným řádkem>`:
+  deklaruje poznámku.
+* \`\ww` `<varianty fráze>`: musí předcházet příkazu \`\Note`. V
+  jednotlivých variantách překladu bude následující poznámka vázána na frázi
+  konkrétního znění podle aktuálně definované t-značky.
+* \`\x``/<fráze>/`: vytiskne se fráze podle aktuální t-značky a podle
+  deklarace \`\vdef`. Parametr <fráze> je referenční fráze a vytiskne se
+  tento parametr, není-li definovaná t-značka nebo je definovaná první
+  t-značka ze seznamu t-značek vymezených příkazem \`\variants`.
+* \`\putBot` `<číslo verše> {<titul>} [<lejblík>] (<příkazy>) {<kód>}`:
+  založí obrázek/diagram ve spodní části stránky, na níž se nachází <číslo verše>.
+\enditems
+
+\secc Typicky v souboru s úvodem ke knize
+
+... \TODO, doplnit
+
+\secc Typicky v souboru s články
+
+... \TODO, doplnit
+
+\secc Typicky v souboru s formátovacími údaji
+
+... \TODO, doplnit
+
+\secc Při vytváření map
+
+... \TODO, doplnit
+
+\secc Při vytváření časových os
+
+... \TODO, doplnit
+
+
 
 
 \sec Rejstřík

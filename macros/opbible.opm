@@ -2241,7 +2241,7 @@
 
    The
    \`\filegen``{<file-name-template>}<cr><file-content-template><cr>\endfile`
-   saves the <file-name-template> to \`\.filename` and `<file-content-template>`
+   saves <file-name-template> to \`\.filename` and `<file-content-template>`
    to \`\.filecontent`. Then it runs a loop over \`\genbooks`.
    The `\genbooks` macro is defined by \^`\BookTitle` and user can re-define it.\nl
    The \`\.btitle``{<bmark or amark>}` expands to full title of the given book.
