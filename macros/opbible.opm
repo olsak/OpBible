@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.19 Feb 2023>}
+\_message{This is OP-Bible, version <0.20 Apr 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -501,7 +501,7 @@
    from previous one, i.e.\ from \`\.prevnotepre`.
    The <pword> is printed with uppercase first letter by \^`\.upcasefirst`
    and with appended dot, but the dot is not printed
-   if the <pword> ends by `?` or `!`.
+   if the <pword> ends by `?` or `!` or `.`.
    \_cod
 
 \_def\.prevnotepre{}
@@ -535,11 +535,11 @@
 
    \_doc
    The dot is added to <pword> when it is printed. But if <pword> ends by
-   `!` or `?` then the added dot is uggly. We have to correct it in
+   `!` or `?` or `.` then the added dot is uggly. We have to correct it in
    the \`\.punctpword` macro. Note that <pword> is saved to `\.tmpb`.
    \_cod
 
-\_def\.punctpword{\_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}}
+\_def\.punctpword{\_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}\_replstring\.tmpb{..}{.}}
 
    \_doc
    When \^`\Note` has empty parameter <word> (i.e. <tword>) then it is anchored to the
@@ -2343,7 +2343,8 @@
 \_endnamespace
 \_endcode
 
-2023-02-25 0.18 \filegen introduced
+2023-04-02 0.20 \_punctpword removes dot after ?, ! and dot.
+2023-02-25 0.19 \filegen introduced
 2023-01-23 0.18 \reduceref, \noreduceref, \re implemented
 2023-01-12 0.17 \cref implemented
 2022-12-11 0.16 \putSpanImage, \putSpanText implemented
