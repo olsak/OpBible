@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.20 Apr 2023>}
+\_message{This is OP-Bible, version <0.21 Apr 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -513,7 +513,7 @@
        \.trymakedest{n:\_cs{noteref!#1}}%
        \_edef\.tmpb{\_csname pword!#1\_endcsname}%
        \_ifx\.tmpb\_empty \_else
-           \_addto\.tmpb{.}\.punctpword
+           \_addto\.tmpb{.\_relax}\.punctpword
            \_ea\.upcasefirst \.tmpb\_space
        \_fi
       }% end of \bf
@@ -539,7 +539,8 @@
    the \`\.punctpword` macro. Note that <pword> is saved to `\.tmpb`.
    \_cod
 
-\_def\.punctpword{\_replstring\.tmpb{!.}{!}\_replstring\.tmpb{?.}{?}\_replstring\.tmpb{..}{.}}
+\_def\.punctpword{\_replstring\.tmpb{!.\_relax}{!}\_replstring\.tmpb{?.\_rleax}{?}%
+   \_replstring\.tmpb{..\_relax}{.}}
 
    \_doc
    When \^`\Note` has empty parameter <word> (i.e. <tword>) then it is anchored to the
@@ -2343,6 +2344,7 @@
 \_endnamespace
 \_endcode
 
+2023-04-21 0.21 \_punctpword corrected
 2023-04-02 0.20 \_punctpword removes dot after ?, ! and dot.
 2023-02-25 0.19 \filegen introduced
 2023-01-23 0.18 \reduceref, \noreduceref, \re implemented
