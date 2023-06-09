@@ -1,5 +1,6 @@
 \load [vlna]
 \enquotes \enlang
+\xdef\uvozovky{"} % for programmer's quote marks inside <"...">
 \margins/1 a4 (,,,)mm
 \fixmnotes\right
 \fontfam[schola]
@@ -249,29 +250,29 @@ and run `optex main.tex`. View the resulting PDF file `main.pdf` with a PDF view
 \secc[main] Main file with information about all other files
 
 The main file is the file that is submitted to \TeX/ first. For example, it is
-listed on the command line to start \TeX/u. It contains information about what
+listed on the command line to start \TeX/. It contains information about what
 other files to be read by \TeX/. Finally, \TeX/ will create a PDF file of the same
-name as the main file name.
+name as the main file name and with the extension `.pdf`.
 
-The main file for RUNNING \OpBible/ (for example, `main.tex`) might look something like this:
+The main file for running \OpBible/ (for example, `main.tex`) might look something like this:
 
 \begtt
 \load[opbible] % of the OpBible macro
 \enlang % initializing English hyphenation patterns
 
 % Translation variants:
-\def\tmark {BBE} %  Bible in Basic English
+\def\tmark {BBE}      %  Bible in Basic English
 %\def\tmark {Jubilee2000} % Jubilee 2000
 %\def\tmark {NETfree} % New English Tranlation
-%\def\tmark {UKJV} % Updated King James Version
-%\def\tmark {RNKJV} % Restored Names King James Version
+%\def\tmark {UKJV}    % Updated King James Version
+%\def\tmark {RNKJV}   % Restored Names King James Version
 %\def\tmark {Webster} % Webster Bible
 
-\input {Cze-vars.tex} % Phrase declarations for different translation options
-\input {Cze-books.tex} % Book titles and bookmarks \amark
+\input {vars.tex}  % Phrase declarations for different translation options
+\input {books.tex} % Book titles and bookmarks \amark
 
-\def\txsfile {sources/Eng\tmark-\amark.txs} % Location of txs files
-\def\fmtfile {formats/fmt-Eng\tmark-\amark.tex} % Location of fmt files
+\def\txsfile {sources/\tmark-\amark.txs} % Location of txs files
+\def\fmtfile {formats/fmt-\tmark-\amark.tex} % Location of fmt files
 \def\notesfile {notes/notes-\amark.tex} % Location of notes files
 \def\introfile {others/intro-\amark.tex} % Location of book introduction files
 \def\articlefile {others/articles-\amark.tex} % Location of article files
@@ -287,7 +288,7 @@ The main file for RUNNING \OpBible/ (for example, `main.tex`) might look somethi
 \bye
 \endtt
 
-Now let's see what each of these lines does and which ones will require modification on your part for the specific needs of your project.
+Now, let's see what each of these lines does and which ones will require modification on your part for the specific needs of your project.
 
 Using `\load[opbible]`,  the \TeX/ loads macros of the \OpBible/ package. This is the most important program that takes care of the typesetting.
 
@@ -297,10 +298,10 @@ text. The `en` is an ISO language abbreviation, you can use other languages:
 etc. All these language options are listed in the \ulink[https://petr.olsak.net/optex/]{\OpTeX/ documentation.}
 
 The command `\def\tmark {<mark>}` defines the macro \`\tmark` as a mark
-of the translation used (you can remember Translation mark). The marks of all available translations are listed in the file `vars.tex`. 
+of the translation used {\em Translation mark}. The marks of all available translations are listed in the file `vars.tex`. 
 One of them should be selected as the mark of the currently processed
 translation. For example, `BBE` is the mark for the Bible in Basic English.
-In the example, six of the usual options for defining a translation marker in the case of English Bibles are given. Only one option (the one actually selected) does not have the `%` comment in front of it. 
+In the example, six of the usual options for defining a translation marker in the case of English Bibles are given. Only one option (the one actually selected) does not have the `%` comment character in front of it. 
 
  
 If you are looking at a book in progress in the `BBE` translation, leave the `main.tex` file in the above form.
@@ -309,70 +310,69 @@ the line with the UKJV. Then the `\tmark` definition section will look like this
 
 \begtt
 % Translation variants:
-%\def\tmark {BBE} %  Bible in Basic English
+%\def\tmark {BBE}      %  Bible in Basic English
 %\def\tmark {Jubilee2000} % Jubilee 2000
 %\def\tmark {NETfree} % New English Tranlation
-\def\tmark {UKJV} % Updated King James Version
-%\def\tmark {RNKJV} % Restored Names King James Version
+\def\tmark {UKJV}    % Updated King James Version
+%\def\tmark {RNKJV}   % Restored Names King James Version
 %\def\tmark {Webster} % Webster Bible
 \endtt
 
-One of the translations must always be active, in other words, the `\tmark` has to be defined. If you forget to put a percent sign before the line you want to comment out, the world won't fall apart; the very last definition that \TeX\ loads, which will redefine any previous ones, will apply.
+One of the translations must always be active, in other words, the \`\tmark` has to be defined. If you forget to put a percent sign before the line you want to comment out, the world won't fall apart; the very last definition that \TeX\ loads, which will redefine any previous ones, will apply.
 
 \`\input {vars.tex}` reads the configuration about the translation variants
 from the `vars.tex` file. 
 See section~\ref[vars] for details. Do not touch this line, even though you will probably be editing the `vars.tex` file called by this line.
 
-The \`\input {books.tex}` reads the information about the marks (abbreviations) of the books of the Bible and they are book names are assigned. 
+The \`\input {books.tex}` reads the information about the marks (abbreviations) of the books of the Bible and they are book names are assigned here. 
 This information is discussed in more detail in section~\ref[books]. 
 
-The macro `\txsfile` (defined by `\def`) specifies the location of `.txs`
+The macro \`\txsfile` (defined by `\def`) specifies the location of `.txs`
 files in the directory structure. For each book of the Bible, there has to be
 one `.txs` file containing the core text for that book. File
  names vary by book mark, and if there are multiple translations, the file name 
-also includes the translation mark. In the `\txsfile` macro, you can use 
+also includes the translation mark. In the \`\txsfile` macro, you can use 
  \`\tmark` as the translation mark and \`\amark` or \`\bmark` as the book mark. 
  For book marks, see section~\ref[books], for the format of `.txs` files, see the  discussion in the section~\ref[txs]. 
- In the example,  `.txs` files are  located in the `sources/` directory and are  named `Eng<translation-tag>-<translation-tag-book>.txs`, so for example `EngBBE-Gen.tex`.
- %%To asi potřebujeme doladit. Budeme používat předponu Eng? A pokud ano, kde ano a kde ne?
+ In the example shown above,  `.txs` files are  located in the `sources/` directory and are  named `<translation-tag>-<book-tag>.txs`, so for example `BBE-Gen.tex`.
+ %%To asi potřebujeme doladit. PO: Nebudeme pouzivat predponu Eng, opravil jsem to.
 
 
 The English translations mentioned above are ready to go, you don't have to create them for yourself.
 If you need some other existing translation, you need to get it into a format usable for OpBible,  in the same form as the `*.txs` files in the `sources/` directory.
 The `maketxs` script (see~\ref[txs]) will help you prepare individual `.txs` books from an existing source.
 
-If you happen to be creating a brand new translation and plan to use it with OpBible, it probably wouldn't hurt to compose files one by one for each book directly in the desired format, see also~\ref[txs].
+If you are going to create a brand new translation and plan to use it with OpBible, it probably wouldn't hurt to compose files one by one for each book directly in the desired format, see also~\ref[txs].
 
 The \`\fmtfile` macro defines the location of the files specifying the formatting
-of the core text. Each book of the Bible of each translation used has its own formatting file.
+of the core text. Each book of the Bible of each translation uses its own formatting file.
 This is something that (unlike the notes) cannot be common to all translations,
 because the paragraph breaks and added headings can (and do) differ for each translation.
 Our intent was so-called non-destructive editing, in other words, formatting the biblical text
-without interfering with it.
-These files are discussed in section~\ref[fmt].
+without interfering with the `.txs` files.
+The formatting files are discussed in section~\ref[fmt].
 
 The macro \`\notesfile` defines the location of the notes files.
-That's  where you will write your commenting notes. 
+That's  where you will write your commenting notes printed with the core text. 
 
 Each book Bible has its own notes file. 
-The notes refer to a place in the core text, and it is the job of \TeX/ to create pages with both the core text and the commenting notes. 
+The notes refer to a place in the core text, and it is the job of \TeX/ to create pages with both the core text and the commenting notes together. 
 For more details on how to write notes files, see section~\ref[note]. 
 Notice that the note files are common to all translations, i.e. there are no separate files distinguished by \`\tmark`. 
 The note writing rules allow for the possibility to have various translations over 
 one common notation, as long as they are in one language (e.g. English; see section~\ref[translations]). If you want to write
 notes for a completely different language, it is the best  to start a new project (preferably in 
-another directory) with different `.txs` files, different formatting and note files.
+another main directory) with different `.txs` files, different formatting and note files.
 
 The macro \`\introfile` specifies the files where the introductions to
-each book. It is possible (and advisable) to create a separate introduction file for each book.
-
+each book are written. So, it is possible (and advisable) to create an individual introduction text for each Bible book.
 
 The macro \`\articlefile` specifies the names of files  which contain the theological articles.
-The articles and similar stuff can be placed practically anywhere Bible, on any page with the core text
-(i.e., NOT in the Introduction). %\TODO: write...
+The articles and similar stuff can be placed practically anywhere in the Bible, on any page interleaved with the core text but not with introduction text. 
+%\TODO: write... ???
 
-The macro \`\printedbooks` contains the marks of the books you want  \TeX/ to process.
-The sample calls to process the entire Bible, i.e. all 66~books of the Protestant canon.
+The macro \`\printedbooks` contains the marks of the books you want to process by \TeX/.
+The example above calls to process of the entire Bible, i.e. all 66~books of the Protestant canon are printed.
 If you're only doing test prints, for example, you can process only some of the
 books of the Bible and have an alternative definition in the main file, for example
 `\def\printedbooks{Dan}`. Just put it after the definition for the entire Bible, because
@@ -382,16 +382,16 @@ later definitions of the same macro take precedence over any earlier ones.
 The \`\processbooks` command starts processing all the books specified in the macro
 \`\printedbooks`.  For each book, \TeX/ will read the corresponding core text from
 `.txs` file, formats it using the data from the appropriate formatting
-file and appends the notes from the appropriate note file.
-You don't need to change anything here.
+file and appends the notes from the appropriate note file. The introduction text for books and the articles are added too.
+%You don't need to change anything here.
 
 The \`\bye` command will terminate \TeX/.
-Anything you type after this farewell to \TeX will be ignored.
+Anything you type after this farewell to \TeX/ will be ignored.
 
 
 
 
-You can also add your own macros and settings to the main file before \`\processbooks`, which will affect the entire typesetting completely.
+You can also add your own macros and settings to the main file before \`\processbooks`, which will affect the entire typesetting.
 
 For example, you can put a \`\ChapterPre``{<code>}` or \`\ChapterPost``{<code>}` declaration. These codes are then executed before and after each chapter.
 %For example, \readplan -- we need to finish
@@ -420,18 +420,14 @@ BBE for  Bible in Basic English, Jubilee2000 for Jubilee 2000, NETfree for New E
 The translation variants thus defined must match the definitions of `\tmark` in the main `main.tex` file, including upper or lower case.
 
 Consider in advance the number of translations you want to use (changing their number later will be very difficult, though not impossible)
-and especially the order of the translations: the same order in which they are declared in the definition of `\variants`  will apply to the entire project.
+and especially the order of the translations: the same order in which they are declared in the definition of \`\variants`  will apply to the entire project.
 In all the notes commenting on a phrase that spells differently in different translations, you will list the different versions in that precise order.
 
 
 If you know that a phrase or word will appear more often than just in a single comment, 
-you can define it directly in this `vars.tex` file using the \`\vdef` command.
+you can define it directly in the `vars.tex` file using the \`\vdef` command.
 The number of phrases listed after \`\vdef` must be exactly the same as the number of
 `<number-variant>`, each of them enclosed in brackets, and they must correspond to the translation variants in the same order as the variants listed in the declaration of \`\variants`. For example:
-
-
-
-
 
 \begtt
 \vdef {Greece} {Greece} {Greece} {Grecia} {Grecia} {Grecia}
@@ -455,7 +451,7 @@ whereas there can be more \`\vdef` commands defining variant phrases in the file
 translation variants,  not just the country of Greece.
 
 
-The whole passages of text can be handled differently depending on the translation variant set. The branching command  \`\switch`is used for this purpose. 
+The whole passages of text can be handled differently depending on the translation variant set. The branching command  \`\switch` is used for this purpose. 
 It is discussed in more detail in the section~\ref[switch]. 
 For example, the names of individual translations (which are then used in the page header) can be declared differently for different translations using `\def\bibname`:
 \begtt
@@ -465,15 +461,16 @@ For example, the names of individual translations (which are then used in the pa
         {NETfree}{\def\bibname{New English Tranlation}}%
         {UKJV}{\def\bibname{Updated King James Version}}%
         {RNKJV}{\def\bibname{Restored Names King James Version}}%
-        {Webster}{\def\bibname{Webster Bible}}%
+        {Webster}{\def\bibname{Webster Bible}}
 
 \endtt
 This particular declaration is a part of the already prepared `vars.tex` file.
+%% zkontrolovat, zda tomu tak opravdu je
 
 \secc[books] Books names file
 
-In the main file, there is an instruction to read the books names file, for example
-`\input {books.tex}`. That file must contain the commands
+In the main file, there is an instruction to read the books names file. The example
+above from section~\ref[main] uses `\input {books.tex}`. That file must contain the commands
 \`\BookTitle` in the format:
 \begtt
 \BookTitle <a-mark> <b-mark> {<non-abbreviated book title>}
@@ -491,26 +488,25 @@ The beginning of a file read this way might look like this:
 \BookTitle Jdg Judg {Judges}
 ...
 \endtt
-In the first column after \`\BookTitle`, there are `<a-marks>`, which are further
-used in the text of the notes and are used to create links to the Bible passages and other notes. 
+In the first column after \`\BookTitle`, there are `<a-mark>`s, which are further
+used in the text of the notes and are used to create links to the Bible passages and other notes. The <a-mark>s are visible in printed text when the references are used.
 
-
-In the second column, there are `<b-marks>`, which can be the same as
-`<a-marks>`, but may also be different. It is possible, for example, that the names of the `.txs`
+In the second column, there are `<b-mark>`s, which can be the same as
+`<a-mark>`s, but may also be different. It is possible, for example, that the names of the `.txs`
 files were created by exporting from some software and the bookmarks are different than
 we need to use in the text of our notes. Then it is possible that in the main file
 declare the location of the `.txs` files using \`\bmark` instead of \`\amark`, i.e.
 \begtt
-\def\txsfile {sources/Cze\tmark-\bmark.txs}
+\def\txsfile {sources/\tmark-\bmark.txs}
 \endtt
-and have the files `CzeBKR-Gen.txs`, `CzeBKR-Exod.txs`, while in the text (including the references) we use
-the marks `Gn`, `Ex`, etc., not `Gen`, `Exod`.
+and have the files `BKR-Gen.txs`, `BKR-Exod.txs`, while in the text (including the references) we use
+the marks `Gn`, `Ex`, etc., not `Gen`, `Exod`. The <b-mark>s are never printed in the text.
 
 The macro \`\amark` contains the `<a-mark>` of the currently processed book and the macro
 macro \`\bmark` includes the `<b-mark>` of the book currently being processed.
 
 Note that the macro \`\printedbooks` (in the file `main.tex`) with the marks of all the books we want to
-to process (see section~\ref[main]) contains `<a-marks>`, not `<b-marks>`.
+process (see section~\ref[main]) contains `<a-mark>`s, not `<b-mark>`s.
 
 In the third parameter after \`\BookTitle`, the book names are in brackets.
 
@@ -529,10 +525,10 @@ using the \`\BookException`, \`\BookPre`, \`\BookPost` commands. They have the f
 \BookPost <a-mark> {<text-after-book>}
 \endtt
 
-The <exception-text> is inserted before reading all files of the book defined by the <a-mark>
-inside the cycle  for reading all books with `\processbooks`. Then
+The <exception-text> is inserted before reading all files of the book (`.txs`, format, notes, intro, article files)
+inside the cycle  for reading all books with \`\processbooks`. Then
 the <text-before-book> is inserted after the book files have been read but before
-the first verse is processed. Finally, the <text-after-book> is inserted after the last
+the first verse (or introduction text) is processed. Finally, the <text-after-book> is inserted after the last
 verse of the book.
 
 Example of using \`\BookException`:
@@ -561,18 +557,18 @@ This is achieved by defining a macro \`\nochapbooks` which must contain the <a-m
 
 \secc[txs] Core text format, called `.txs` files
 
-The core text of the Bible is assumed to be stored in `.txs` files.
+The core text of the Bible is assumed to be stored in `.txs` files
 (text source). Each of the ~66~ books of the Bible is stored in its own `.txs` file.
 The names of the `.txs` files and their locations must match the `\def\txsfile` declaration
 in the `main.tex` file (see~section~\ref[main]).
 
 Each line of the `.txs` file contains one Bible verse started with 
-`#<chapter-number>:<verse-number>`. The verses must be listed in the correct
+`#<chapter-num>:<verse-num>`. The verses must be listed in the correct
 order. For example, the beginning of the `BBE-Dan.txs` file looks like this (parts of the text are omitted in the sample):
 
 \begtt
-#1:1 In the third year of the rule of Jehoiakim, king of Judah ... shutting it in with his forces.
-#1:2 And the Lord gave into his hands Jehoiakim, king of Judah ... and he put the vessels into the store-house of his god. 
+#1:1 In the third year of the rule of Jehoiakim, king of Judah ... with his forces.
+#1:2 And the Lord gave into his hands Jehoiakim, king of Judah ... store-house of his god. 
 ...
 \endtt
 
@@ -591,7 +587,7 @@ to convert them into text format. To do this, just type the following into the c
 mod2tex module > file
 \endtt 
 where `module` is the name of the module. In the resulting file
-you have the complete base text of the translation (module).
+you have the complete core text of the translation (module).
 For example, after
 \begtt
 mod2tex KJVA > KJVA.out
@@ -602,7 +598,7 @@ This can now be split into `.txs` files with the command
 maketxs KJVA.out
 \endtt
 This command will create the `KJVA-books.tex` file in addition to the 66 `.txs` files, in which
-which contains the titles and abbreviations of each book, so there is:
+contains the titles and abbreviations of each book, so there is:
 \begtt
 \BookTitle Gen Gen {Genesis}
 \BookTitle Exod Exod {Exodus}
@@ -615,7 +611,7 @@ which contains the titles and abbreviations of each book, so there is:
 \endtt
 
 These titles are in English, as the Sword source does not use non-English module names. 
-It is therefore it is necessary to manually edit this file and insert the titles of your local language instead of English ones. 
+If your language is a non-English then it is necessary to manually edit this file and insert the titles of your local language instead of English ones.
 The abbreviations of the books are listed twice as well. The first one should be changed according to convention of abbreviations in your language's Bibles and the second column of abbreviations can stay in English as it already is (as these second abbreviations, the <b-marks>, will be part of the `.txs` file names).  
 
 Then the declaration 
@@ -626,7 +622,7 @@ in the main file will cause the created `.txs` files to be searched for
 in the `sources/` directory and their names are assumed
 `EngKJVA-Gen.txs`, `EngKJVA-Exod.txs`, `EngKJVA-Lev.txs`, etc.
 
-If the rare case should arise that you were to compile the Bible from several different sources, say the Old Testament you wanted in Dr. Jan Hejčl's translation and the New Testament in František Žilka's translation, you would have to play a bit with the file names so that the resulting definition of `\tmark` would be the same for the whole Bible. The two `*.out` files (e.g. `HEJCL.out` and `ZILKA.out`)\fnote{Their modules are not on Sword, the `*.out` files would have to be created by downloading them from e.g. `https://obohu.cz` and converting them to the desired form with some clever script (or manually?).} would have to be merged into one and then named e.g. `CzeHecjlZilka.out` and  only then execute `maketxs CzeHejclZilka.out`.  Now you can have a `\def\tmark{HejclZilka}` definition in the main `main.tex` file and 
+If the rare case should arise that you were to compile the Bible from several different sources, say the Old Testament you wanted in Dr. Jan Hejčl's translation and the New Testament in František Žilka's translation, you would have to play a bit with the file names so that the resulting definition of `\tmark` would be the same for the whole Bible. The two `*.out` files (e.g. `HEJCL.out` and `ZILKA.out`)\fnote{Their modules aren't on Sword, the `.out` files would have to be created by downloading them from e.g. `https://obohu.cz` and converting them to the desired form with some clever script (or manually?).} would have to be merged into one and then named e.g. `CzeHecjlZilka.out` and  only then execute `maketxs CzeHejclZilka.out`.  Now you can have a `\def\tmark{HejclZilka}` definition in the main `main.tex` file and 
 the resulting study Bible will have Hejčl's Old Testament and Žilka's New Tenstament.
 
 
@@ -634,7 +630,7 @@ the resulting study Bible will have Hejčl's Old Testament and Žilka's New Tens
 
 From now on, you no longer need to modify  `.txs` files in any way.
 In the `sources/` directory, you can have a “data store of all the core Bible texts for all used translation variants at one place. In the case of the six variants
-translation of Protestant canon, you have $6 times 66=396$ files.
+translation of Protestant canon, you have $6 \times 66=396$ files here.
 
 
 
@@ -650,11 +646,9 @@ For example, if you have sections of text in square brackets in the `.txs` files
 It may turn out that the `.txs` file does not use the correct typographical quotation marks (i.e. in English “...”), but instead there are the programmer's quote marks {\tt"}...{\tt"}. 
 Without interfering with the `.txs` file, this can be fixed by adding an instruction to
 the main file:
-\begtt
-\quotationmarks{“}{”}
-\endtt
+`\quotationmarks{`“`}{`”`}`.
 This will automatically replace the programmer's quote marks in the `.txs` file with correct English  typographical quotation marks. 
-Similarly, you can declare the replacement of the programmer's quote marks with 
+Similarly, you can declare the replacement of the programmer's quote marks
 with Czech or any other other quotation marks, for example by declaring
 `\quotationmarks{`„`}{`“`}`.
 The programmer's quote mark is then implicitly
@@ -671,7 +665,7 @@ to center-justification   and back.
 
 %\mnote{\code{\\fmtadd} \code{\fmtpre} \code{\fmtins}}
 
-Since we don't want to interfere with the core text, \fnote{Think of them as the
+Since we don't want to interfere with the core text,\fnote{Think of them as the
 Holy Scriptures, therefore an “untouchable” texts. The only reason that might entitle 
 you to interfere with the basic text is the unlikely possibility that you might find an 
 error in the source from the Sword (or wherever you've got it from), when compared against the hard copy. Then it is really better to fix such error on the spot.} 
@@ -693,7 +687,7 @@ The syntax for using these commands is as follows:
 \fmtadd{<chapter-number>:<verse-number>}{<fmt-command>}
 \fmtins{<chapter-number>:<verse-number>}{<phrase>}{<fmt-command>}
 \endtt
-where <fmt-command> is the ``command'' given to \TeX/ for formatting.
+where <fmt-command> is the \"command" given to \TeX/ for formatting.
 %\mnote{\code{\\endgraf} \code{\\begcenter} \code{\\endcenter}}
 For example, \`\endgraf` marks the end of a paragraph; \`\begcenter` opens a passage with
 centred text which must be somewhere later closed  with \`\endcenter`. Or 
@@ -703,7 +697,7 @@ centred text which must be somewhere later closed  with \`\endcenter`. Or
 %\mnote{\code{\\fmtadd} \code{\fmtpre} \code{\fmtins}}
 The \`\fmtpre`  inserts <fmt-command>
 at the beginning of the specified verse (before the verse number which is printed in a form 
-of a top index). 
+of a superscript). 
 The \`\fmtadd`  inserts <fmt-command> at the end of the specified verse.
 Finally, \`\fmtins` inserts <fmt-command> inside the verse after the first occurrence of the 
 specified <phrase> that must literally exist in the verse. Otherwise, \TeX/ prints a warning 
@@ -718,7 +712,7 @@ For example, the `\fmtfont{1:26}{people}{\em}` in the book of Genesis will print
 \"people"  in italics, because `\em` is an intelligent italics switch (it automatically adds the italics correction `\/` after the word, which you don't have to worry about, but which you would if you switched to italics with the regular `\it`).
 Any other font switch can be used instead of `\em`.
 
-In addition to `\begcenter` and `\endcenter`, it is also possible to use controlled 
+In addition to \`\begcenter` and \`\endcenter`, it is also possible to use controlled 
 indentation with \`\ind``<number>` (as indent). 
 At the point of insertion, the line is terminated and the next line begins indented by the
 `<number>` of paragraph indents. However, inserting such `\ind` commands
@@ -729,16 +723,15 @@ We will first demonstrate its use in the example of the NETfree translation of
 Daniel 6:26--27:
 
 \medskip
-\picw=.5\hsize
-\centerline{\inspic{images/NETfreeDan-crop.pdf} }
+\centerline{\picw=.7\hsize\inspic{images/NETfreeDan-crop.pdf} }
 \vskip-2pt % it's on two sides, so it looks a little smooth
 
 
 
 The poetic part of this sample was typeset this way:
 \begtt
-\fmtpoetry{6:26}{God; // forever. / destroyed; //}
-\fmtpoetry{6:27}{/ delivers // wonders /// earth. / Daniel // }
+\fmtpoetry{6:26}{God;// forever./ destroyed;//}
+\fmtpoetry{6:27}{/ delivers// wonders/// earth./ Daniel// }
   \fmtins{6:26}{Daniel.}{\medskip\hglue-2mm}
   \fmtadd{6:27}{\bigskip}
 \endtt
@@ -756,17 +749,17 @@ contain words from the ends of a line followed by one or more slashes. Number of
 of slashes indicates how many paragraph indents the next line after the
 that word is shifted to the right. <formatting-data> must necessarily end with one or more
 slashes and may (but do not have to) begin with one or more slashes.  If
-the do begin, the beginning of the line is indented by the appropriate number of paragraph indents,
-but the verse number is set off slightly to the left in the space of a paragraph
+it do begin, the beginning of the line is indented by the appropriate number of paragraph indents,
+but the verse number is set off slightly to the left to the space of a paragraph
 indentation.
 
-If we want to insert extra vertical spaces when using \`\fmtpoetry`, it is
-is possible, but only after the `\fmtpoetry` command, as you can  see in the example where
+If we want to insert extra vertical spaces when using \`\fmtpoetry`. It is
+is possible, but only after the \`\fmtpoetry` command, as you can  see in the example where
 \`\medskip` (half line space) is inserted. 
-The rule is that when you use more formatting commands like `\fmtins` or `\fmtpre` in poetry, 
-these multiple formatting instructions will eventually be executed in
+The rule is that when you use more formatting commands like \`\fmtins` or \`\fmtpre` in poetry, 
+these multiple formatting instructions will eventually be executed
 in the reverse order, so for example, for the verse 6:26
-in the above example, first `\medskip` is executed at the beginning of the poetic part of the verse 26, after the name Daniel followed by a period: `\fmtins{6:26}{Daniel.}{\medskip\hglue-2mm}`
+in the above example, first `\medskip` is executed at the beginning of the poetic part of the verse 26, after the name Daniel followed by a period: `\fmtins{6:26}{Daniel.}{\medskip\hglue-2mm}`.
 Then indent of the next line is reduced by `\hglue2mm` in order to stick the quotation marks out of the poetry block. 
 % To zrušíme, jestli půjde uvozovky vystrkovat automaticky. Kdyby ne, takhle to může fungovat taky.
 
@@ -1158,7 +1151,7 @@ example above might also look like this:
  Quotation marks in place of a phrase cannot be used in definitions of `\ww` (see~chapter~\ref[ww]) that precede `\Note`. They only work in the `\vdef` definition in the variants file, to be applied for the entire Bible. 
 
 
-\secc[ww] Variant phrase declarations for pairing notes with text
+\secc[ww] Variant phrase declarations for matching notes with text
 
 The \`\Note` command may be immediately preceded by a declaration of the search
 phrase by variant translations using \`\ww` (this is an abbreviation for watchword).
@@ -1220,7 +1213,7 @@ The last line of the `notes-*.tex` file for a particular book that \TeX\ loads s
 Whatever follows below this instruction on subsequent lines will not be seen by \TeX. (But don't confuse it with `\end` or `\bye` so that \TeX\ doesn't stop running at this point but continues reading
 other files.)
 
-So under `\endinput` we can have a few lines ready, e.g. in this form:
+So under `\endinput` we can have a few lines prepared, e.g., in this form:
 
 \begtt
 \ww {}={} % BBE
@@ -1236,9 +1229,7 @@ and then just copy these lines in place of the new note, edit the chapter number
 which phrases belong where, whether you write them out manually or paste them from a Bible program or online resources.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%6.3
-
-\secc[switch] Text process branching by translation variants
+\secc[switch] Text processing branching by translation variants
 
 %\mnote{\code{\\switch}}
 You can use the \`\switch` command to branch the text processing in
@@ -1289,7 +1280,6 @@ The `\switch` command cannot be used in the parameters of other macros. Only the
 command `\x/<phrase>/` works there.
 
 
-%%%%%%%%%%%%%%%%%%%%%5
 
 
 \secc[renum] Renumbering verses according to translation variants
@@ -1350,7 +1340,7 @@ If the renumbering is to refer to a single verse, the identical
 %it is enough that we know how to handle it: 
 %We write ``renum Da 2:28 = SNC 2:28-28'' before this new note, and everything works as it should: Where the numbering diverges, it renumbers; where it
 %it matches, it stays the same.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555
+
 
 \sec[links] Methods of creating hyperlinks
 
@@ -1362,264 +1352,294 @@ structured text. It contains (in the Protestant canon) 66 books with established
 each book has its chapters numbered from one and each chapter has verses
 numbered from one. So there is no need to have \TeX/ generate these numbers
 automatically (as it does when typesetting, say, a technical text that is broken down into
-chapters and sections), and thus there is no need to use reams in the source
-in the source document (which \TeX/ assigns to the generated numbers during processing) and to reference the
-these funnels, as described in section 1.4.3 of the \OpTeX/ documentation. It is
-much more efficient to refer directly to a specific place in the Bible that already has
-for many centuries now, with a fixed book, chapter number and verse number.
-(The Archbishop of Canterbury, Stephen Langton, in the early 13th century, when he was teaching at the University of Paris [and not yet an archbishop]
-divided the Bible into chapters. 
-Then, in the mid-16th century, the French printer Robert Estienne divided the New Testament into verses and added the Old Testament,
-which Jewish scribes had centuries earlier divided into verses, but cunningly not into chapters.
-Since 1553, when Estienne published the first French Bible so numbered, we have used this system to this day.)
+chapters and sections), and thus there is no need to use labels in the source
+document (which \TeX/ would assigns to the generated numbers during processing) and to refer by these labels, 
+as described in section 1.4.3 of the \OpTeX/ documentation. 
+It is much more efficient to refer directly to a specific place in the Bible that already has
+for many centuries now,  fixed chapter and verse numbers.\fnote{%
+The Archbishop of Canterbury, Stephen Langton, in the early 13th century, when he was teaching at the University of Paris [and has not yet become an 
+archbishop] divided the Bible into chapters. 
+Then, in the mid-16th century, the French books printer Robert Estienne divided the New Testament into verses and added the Old Testament, 
+which Jewish scribes had centuries earlier divided into verses (but not into chapters).
+Since 1553, when Estienne published the first French Bible thus numbered, we have used this system to this day.}
 
 
-We write references to a specific place in the Bible between \code{<} and \code{>}.
-these characters is printed as written (with the exceptions noted below). 
-But \TeX/ must be able to interpret the reference correctly in order to
-make it active with a possible click-through to the correct place in the Bible. This is done by
-for this purpose, which is the subject of this section.
+ 
+ 
+The references to a specific place in the Bible are written between \code{<} and \code{>}.
+The text between these characters is printed as written (with the exceptions mentioned below). 
+Nevertheless, \TeX/ has to be able to interpret the reference correctly in order to
+make it active with a clicking capability to the correct place in the Bible. This is done by
+rather large amount of rules, therefore this section is dedicated to them.
 
-Basic rule with full details
 
-The reference between \code{<} and \code{>} is of the form `"<text>" <data>` or just
-`<data>`. However, the complete `<data>` is of the form
-`<book> <chapter>:<verse>`. Here `<book>` is the abbreviation of the book (it must be followed by
+\secc[uudaj] Basic rule with complete data
+
+The reference between \code{<} and \code{>} is of the form 
+\begtt\catcode`<=12
+<"text" data>
+\endtt
+\ or just`<data>`. 
+However, the complete `<data>` is of the form `<book> <chapter>:<verse>`. Here `<book>` is the abbreviation of the book (it must be followed by
 space), `<chapter>` is the chapter number, and `<verse>` is the verse number.
 Example:
 
 \begtt \catcode`<=12
-... see also verse <Jr 8:13>
-... see also <"verse" Jr 8:13>
+... see also verse <Jer 8:13>
+... see also <"verse" Jer 8:13>
 \endtt
-In the first case it prints ... see also verse {\Blue Jr 8:13} and in the second case
-... see also {\Blue verse Jr 8:13}. The active (allowing click-through) will be in both cases
-the area marked in blue here and the click-through leads to Jr 8:13.
+In the first case it prints ... see also verse {\Blue Jer 8:13} and in the second case
+... see also {\Blue verse Jer 8:13}. 
+In both cases the area marked in blue will be active (clickable) and will lead to Jer 8:13.
+
 
 \secc Link specifier
 
-The link ending character `>` may be followed closely by a link specifier, which
-is one of the letters:
+The link's closing  character `>` may be immediately (i.e., without a space) followed by a link 
+specifier, which is one of the letters:
 \begitems
 * `n` ... refers to a note,
-* `g` ... refers to a gloss (which will come into play if another version of \OpBible/ with double-column typesetting of the base text is ever created),
+* `g` ... refers to a gloss (which will hopefully come into play in some of the next versions of \OpBible/ with the core text typeset in two columns),
 * `a` ... refers to an article,
-* `i` ... refers to the introduction.
+* `i` ... refers to an introduction.
 \enditems
-The link specifier is not printed, it is just internal information where it should
-the active link (i.e. ~mouse click). If it is not followed by a terminating
-character `>` is followed by any of these specifiers, it is a link to the verse
-(this is probably the most common case).
+The link specifier is not printed in PDF, it is just internal information where 
+the active link should click. If the closing character `>` 
+ is not followed by any of these specifiers, it is a link to the verse 
+(probably the most common case).
 Example of a note reference:
 
 \begtt \catcode`\<=12
-... see <"note on" Jr 7:4>n for more information.
+... see <"note on" Jer 7:4>n for more information.
 \endtt
-prints ... see {\Blue note to Jr 7:4} for more information.
-The click-through leads to the first note to ~Jr~7:4, not to the verse itself.
+prints ... see {\Blue note to Jer 7:4} for more information.
+The click leads to the first note on Jer~7:4, not to the verse itself.
 
 In the case of a reference to an article (specifier `a`), the full entry has the format
-`<book> <chapter>`, i.e., the verse information is missing because the articles can be understood as introductions
-to chapters. In the case of a reference to the introduction to a book (specifier `i`), the full
-entry is in the format `<book>` (lacking both chapter and verse information) because it
-are book introductions. In~other cases, the full entry has the format as it was
-discussed in section~\ref[uudaj] except as described in~section~\ref[vudaj]
+`<book> <chapter>`, i.e., the verse information is missing because the articles can be understood as introductions to chapters. In the case of a reference to the introduction to a book (specifier `i`), the full entry is in the format `<book>` (lacking both chapter and verse information) because these
+are book introductions. In~other cases, the full entry has the format as 
+described in section~\ref[uudaj], with the  exception described in~section~\ref[vudaj].
 
 \secc[vudaj] Exception for the format of the full entry for some books
 
-Books Abd, Fm, 2Jn, 3Jn, and Ju are not divided into chapters. In a reference to a verse, note
-to a verse or a gloss to one of these books, the chapter information is missing
-and the format of a complete reference looks like this: `<book> <verse>`. To let \TeX/ know that
-to apply this exception, the list of abbreviations for these books needs to be defined in
-macro \`\nochapbooks`. For example, the `Cze-books.tex` file says
+Books Obad, Phlm, 2John, 3John, and Jude are not divided into chapters. 
+In a reference to a verse, note to a verse or a gloss to one of these books, 
+the chapter information is missing and the format of a complete reference looks like this: 
+`<book> <verse>`. In order to teach \TeX/ to apply this exception, the list of abbreviations for these books needs to be defined in macro \`\nochapbooks`. For example, the `books.tex` file says
 \begtt
-\def\nochapbooks{Abd Fm 2Jn 3Jn Ju}
+\def\nochapbooks{Obad Phlm 2John 3John Jude}
 \endtt
-Since there are different book abbreviations for different languages, this macro is needed
-to define this macro depending on the language used.
+Since there are different book abbreviations for different languages, this macro  needs to be defined
+according to the language used. In any case, the abbreviations have to be exactly the same as the ones declared by the `\printedbooks` macro in the main file.
 
 
-\secc[bored] Incomplete
+\secc[bored] Incomplete data
 
-Sometimes the reader can determine the location of a verse from the context, so `<data>` may not be complete. In ~{{incomplete data}}, there may be a missing `<book>` or
-`<book> <chapter>:` or all of it. For example:
+Sometimes the reader can determine the location of a verse from the context, therefore `<data>` does't need to be complete. In the {{\em incomplete data}}, there may be a  `<book>` missing, or
+`<book> <chapter>:` or even  everything. For example:
 
 \begtt \catcode`<=12
-... we also see an analogy in <"verses" Jr 8:13>, <9:7> and <11:3>
-... see verses <Jr 8:13>, <15>, <17>
+... we also see an analogy in <"verses" Jer 8:13>, <9:7> and <11:3>
+... see verses <Jer 8:13>, <15>, <17>
 ... see all <"verses" Jr 8:13>--<22>,
-... (cf. <Jr 8:13> and <"his note">n).
+... (cf. <Jr 8:13> and <"its note">n).
 \endtt
-Printed:
-... We also see an analogy in {\Blue verses Jr 8:13}, {\Blue 9:7} and {\Blue 11:3}
-... see verses {\Blue Jr 8:13}, {\Blue 15}, {\Blue 17}
-... see all of {\Blue verse Jr 8:13}--{\Blue 22}.
-... (cf. {\Blue Jr 8:13} and {\Blue note}).
+Yields:
+
+... We also see an analogy in {\Blue verses Jer 8:13}, {\Blue 9:7} and {\Blue 11:3}
+... see verses {\Blue Jer 8:13}, {\Blue 15}, {\Blue 17}
+... see all of {\Blue verse Jer 8:13}--{\Blue 22}.
+... (cf. {\Blue Jer 8:13} and {\Blue its note}).
 
 The entries `9:7`, `11:3`, `15`, `17`, `22` and the last blank
-in these examples are incomplete. The reader knows that they refer to
-the book of Jeremiah and that, where no chapter is given, they refer to chapter 8 of
+in these examples are incomplete data. The reader knows that they refer to
+the book of Jeremiah and where no chapter is given, they refer to chapter 8 of
 Jeremiah. In the last example with a blank, the reader knows that it is a note
-k~Jr~8:13.
-links (to be clicked on) because the incomplete entry takes
-unspecified information from the previous entry. This rule applies
-locally to a single text object: note, article, introduction, etc. If the very first entry in
-the very first entry in a text object is incomplete, the unspecified information is replaced with
-by the abbreviation of the book currently being processed, or by the number of the current chapter,
-or verse.
+on~Jer~8:13.
+\TeX/ knows that too, and assignes correct links (to be clicked on) to the incomplete entries
+because incomplete entries take the unspecified information from the previous last entry. 
+This rule applies locally to a single text object: note, article, introduction, etc. If the very 
+first entry in  a given text object is incomplete, the unspecified information is replaced with by 
+the abbreviation of the book currently being processed, or by the number of the current chapter,
+or verse, respectively.
+
+
+
+
 
 If an incomplete entry is prefixed with `\`, the unspecified information is taken from
 the book or chapter or verse currently being processed, regardless of which entry
 precedes. For example:
 \begtt \catcode`<=12
-\Note 4.5 {} The idea is repeated in <Jr 4:5>. But you will also find it mentioned in \<8:3>.
+\Note 4.5 {} The idea is repeated in <Jer 4:5>. Also, compare to \<8:3>.
 \endtt
-Here the reference {\Blue 8:3} leads to verse 3 of chapter 8 of the actual book. If there
-the `` sign was not there, then this reference would lead to 8:3 of Jeremiah.
+Here the reference {\Blue 8:3} leads to verse 3 of chapter 8 of the actual book. If 
+the backslash sign `\`  were not there, then this reference would click to 8:3 of Jeremiah.
 
-An incomplete entry is printed as is, as incomplete. The above rules on its
-are only done internally so that the active link will work properly after
-mouse click.
+An incomplete entry is printed as is, as incomplete. The above rules 
+only apply internally so that the active link will work properly after a mouse click.
 
 There is another different format for incomplete data: the verse number is missing. This
 is indicated by the presence of the book abbreviation and the absence of a colon and
-it is not a book from the `\nochapbooks` exception list. Thus, the entry is in the form
+that it is not a book from the `\nochapbooks` exception list. Thus, the entry is in the form
 `<book> <chapter>` (separated by a space). In this case, \TeX/ will create
 internal reference to the first verse of the chapter. Examples:
 \begtt \catcode`<=12
-... see <"chapter" Da 7>
+... see <"chapter" Dan 7>
 ... Joseph's story (<Gn 39-41>)
 \endtt
 In the second example, the range of chapters is given and \TeX/ creates an internal link to
-the first verse of chapter 39. Compare also with section~\ref[verse range].
+the first verse of chapter 39. Compare also with the section~\ref[verse range].
 
 
 \secc[verse range] Format for the verse range and for the section in the verse
 
-In each entry, it is possible to have `<verse>` instead of `<chapter>:<verse>`
-to write a range of verses in the format
-`<from>-<to>`. The \TeX/ will create an internal link to the first verse of the range only and
-turns the hyphen (character `-`, ASCII 45) in the range into a dash. Examples:
+In each entry, it is possible to have  a range of verses in the format `<from>-<to>`
+instead of just `<verse>` or `<chapter>:<verse>`. 
+ The \TeX/ will create an internal link to the first verse of the range only and
+turns the hyphen sign (character `-`, ASCII 45) in the range into an en-dash. 
+
+Examples:
 
 \begtt \catcode`<=12
-<Jr 8:3-7>,
-<Jr 8:3-9:5>,
+<Jer 8:3-7>,
+<Jer 8:3-9:5>,
 <3-7>,
 <8:3-7>.
 \endtt
-For example, the first link in this example prints as {\Blue Jr 8:3--7}
-and only offers a link to Jr~8:3.
+For example, the first link in this example prints as {\Blue Jer 8:3--7}
+and offers a link only to Jer~8:3.
 
-Sometimes you need to link to a section of a verse, not the whole verse. This is done
+Sometimes we need to refer to a part of a verse, not the whole verse. This is done
 by appending a letter immediately after the verse number. For example,
 \begtt \catcode`<=12
-... see <Da 9:11b>
+... see <Dan 9:11b>
 \endtt
 You can append such a letter to both complete and incomplete references. For the purpose of
-hyperlink, these letters are ignored but printed. Thus, the example given
-prints ... see {\Blue Da~9:11b}, but the link goes to Da~9:11.
+hyperlink, these letters are ignored but printed in PDF. Thus, the example given
+prints ... see {\Blue Dan~9:11b}, but the link leads to Dan~9:11.
 
-\secc Concealment of data
+\secc Concealed data
 
 When none of the rules are sufficient to create an internal link from a link
-listed above, you can make everything in the link
-to print, enclose it in `"..."` and the subsequent entry to create the internal
-link, to hide. To do this, just append the character `"` just after the closing quotation mark
-underscore `_` followed by the data. This entry is not printed. For example,
+listed above, you can enclose everything in the link to be printed in `"..."` 
+and hide the subsequent entry to create the internal link. 
+To do this, just append underscore `_` followed by the data right after the closing prgrammers' quotation mark  `"` Such entry is not printed. For example,
 \begtt \catcode`<=12
 <"First Book of Samuel"_1Sa 1:1>
 \endtt
-prints only the text {\Blue First Book of Samuel}, which internally refers to the first
-verse of this book.
+prints only the text {\Blue First Book of Samuel}, which internally refers (the click jumps) to the first verse of this book.
+
+
 
 \secc[Renum] Renumbering the reference
 
-If a link points to a verse that has a different translation in a particular language
-numbering specified by the `\renum` macro, then enter the reference according to
-the default numbering and \TeX/ will recalculate it itself according to the data specified in
-`\renum`. It prints the recalculated data and uses it for the internal reference.
+If a link points to a verse that has a different number than the default translation 
+(the first translation among the parameters  of `\variants` declaration), then  
+ enter the reference according to the default numbering and \TeX/ will recalculate it itself according to the data specified by `\renum`. 
+ It prints the recalculated data and uses it for the internal reference.
 Cf.~\ref[renum]. 
 
 \secc Data reduction
 
-You may want to write the complete data in parentheses for the reference and require it to be automatically 
-reduction to incomplete if they refer to the current book.
+You may find it helpful to be able to write the complete data in parentheses for the reference and expect it to be automatically  reduced to incomplete if they refer to the current book.
 If they do not refer to the current book, the entry will remain complete. You can do this by
 by adding a \`\re` before the opening parenthesis of the entry (the eventual reduction rule 
 applies only to this single entry) or by using the \`\reduceref` command. If you
-you use it in a note (or in a \TeX group), the reduction rule is applied 
-for all subsequent complete entries of that note (of that \TeX/group). 
-When used in a rate declaration,
-the eventual reduction rule is applied to all complete data in the document. 
+you use it in a note (or inside a \TeX group), the reduction rule is applied 
+for all subsequent complete entries of that note (or of that \TeX/ group). 
+When used in a document declaration, the eventual reduction rule is applied to all complete data in the document. 
+
 Example:
 
 \begtt \catcode`<=12
-\re<"verse" Da 7:3>
+\re<"verse" Dan 7:3>
 \endtt
-is printed as {\Blue verse Da~7:3} if this reference is given outside the book
-Daniel. However, when this reference is given in the book of Daniel, it is printed
-only {\Blue verse~7:3}, which internally refers to Da~7:3. 
+is printed as {\Blue verse Dan~7:3} if this reference is given outside the book
+Daniel. However, when this reference is given inside the book of Daniel, it is printed
+only as {\Blue verse~7:3}, which internally refers to Dan~7:3. 
 
-The link reduction rule set by \`\reduceref` can be turned off 
-with the \`\noreduceref` command. From there to the end of the note (\TeX/ groups)
+The reference reduction rule set by \`\reduceref` can be turned off 
+with the \`\noreduceref` command. From there to the end of the note (\TeX/ group)
 links behave as if `\reduceref` were not turned on.
 
-\secc[bookajinak] The marker for a book can be printed differently
 
-If the bookmark is declared differently in different translations using
-`\vdef`, then use only the <book> entry in the ~references according to the first
-variant. However, if any alternative translation is set using `\tmark`
-variant, the link will eventually print according to the `\vdef` entry of that translation variant.
-Internally, however, links are linked according to the base variant. This property
-This feature is useful if you are declaring `\vdef` for tags `1Pa` and `2Pa` (Paralipomenon)
-alternative text for `1Let` and `2Let` (Chronicles) in variant B21 (Bible for the 21st century). When then
-you type the reference \code{<"see" 1Pa 2:3>}, you get {\Blue see 1Pa~2:3} in the usual
-translation variants, but it will print {\Blue see 1Let~2:3} if you use
-translation variant~B21.
 
-\secc[fudaj] Failed links, i.e. links to a non-existent place
+
+\secc[knihajinak] The book's abbreviation (a-mark) can be printed differently
+
+If the mark for a book is declared differently in different translations following
+`\vdef`, then use only the <book> entry in the references according to the first (default)
+variant. However, if you currently use an  alternative translation via `\tmark`, 
+the link will be printed according to the `\vdef` entry of that alternative translation variant.
+Internally, however, references are linked according to the default variant.
+
+You'll find this feature is useful when you run across two different translations 
+which name the same book differently.
+In English it is rarely the case but let's suppose that (hypothetically) there exists an English 
+translation that prefers “Paralipomenon” over “Chronicles”. Let's call this hypothetical 
+translation “Greek.”
+Your default translation (the first translation in the `\variants` declaration)
+uses “Chronicles” as all English translations usually do. 
+
+Now  you can declare `\vdef` for marks `1Chr` and `2Chr` (Chronicles) for most of English 
+translations, especially the first one, and an alternative text for `1Par` and `2Par` 
+(Paralipomenon) for the “Greek” translation. 
+Then you can type the reference \code{<"see" 1Chr 2:3>}, you get {\Blue see 1Chr~2:3} in the usual
+translation variants, but it will print {\Blue see 1Par~2:3} if you use
+translation variant~“Greek”.
+
+Non-English languages may use it more often, though. 
+For example, in the Czech language, most translations 
+use “Paralipomenon” where English Bible use “Chronicles” but there is one translation (B21) that uses 
+the title “Letopisů” instead of “Paralipomenon.” Then \code{<"viz" 1Pa 2:3>} yields  {\Blue viz 1Pa~2:3} in most of Czech translations, except in B21 where it gives {\Blue viz 1Let~2:3}.
+
+\secc[fudaj] Bad links, i.e. links to a non-existent spot
 
 If a reference is made to a non-existent verse or a non-existent note, then
-there are two possibilities. If it is a reference to a book that is deliberately not printed
-(because, for example, we are working with a test copy of only selected books of the Bible,
-see also \`\printedbooks` in section~\ref[main]), then the link is indeed colored,
-as if it were active, but it is not, and the \TeX/em processing log
-no warning appears. However, if the link points to a non-existent verse or
-note of the printed Bible, then the link is active, the click goes to
-the last page of the PDF file, and a warning appears in the log that the link
-is incorrect. However, the first time \TeX/ is processed, all
-links and there is a large number of warnings about incorrect links in the log.
-Only when \TeX/em is next processed are links pointing to
-existing site are correctly interlinked.
+there are two possibilities. If it is a reference to a book that is intentionally not being printed
+(since, for example, you are working on a test books selection,
+see also \`\printedbooks` in section~\ref[main]), then the link is  colored
+as if it were active, but it is not, and the \TeX/ gives
+no warning. However, if the link points to a non-existent verse or
+note within the printed books, then the link is active, the click goes to
+the last page of the PDF file, and a warning appears in the log, saying that the link
+is incorrect. However, the first time \TeX/ runs, all
+links lead to nowhere, thus there is a large number of warnings about incorrect links in the log.
+Only after you run \TeX/ the second time, the links pointing to existing places are correctly interlinked.
 
 
 \secc Link Tracing
 
 By default, detailed link tracing is enabled in the log file.
-Turn this off with \`\notracinglinks` and back on with \`\tracinglinks`.
-In addition, use \`\tracingouterlinks` to disable the suppression of link warnings on
-non-existent books, allowing the log to find any non-existent links from
-due to a typo in the bookmark.
+You can turn this off by saying \`\notracinglinks` and back on with \`\tracinglinks`.
+In addition, you can use \`\tracingouterlinks` to disable the suppression of link warnings on
+non-existent books, allowing the log to find any non-existent links resulting from
+ a typo in the bookmark.
 
-\secc Chapter and book links
+\secc Links to  books and chapters 
 
-To link to a book with a link to the beginning of that book, write
-\`\cref``[<book>]`, for example, `\cref[Gn]` will print {\Blue Gn} with a link to
-the beginning of the book of Genesis. Similarly, `\cref[Gn 2]` will print {\Blue Gn~2} with a click through
-to the beginning of the Day of Rest chapter. If you want to print something else, then for
-`[...]` must be closely followed by `{<text>}`, where `<text>` is the text that
-to be printed and become the active link. So, for example
-`\cref[Gn 2]{Rest Day}` will print {\Blue Rest Day} with a link to
-the corresponding chapter.
+If you want a reference to a book that would click to the beginning of that book, 
+write \`\cref``[<book>]`. For example, `\cref[Gen]` will print {\Blue Gen} with a link to
+the beginning of the book of Genesis. Similarly, `\cref[Gen 2]` will print {\Blue Gen~2} with a click 
+leading to Gen 2:1. If you want to print something else, then 
+`[...]` must be closely followed by `{<text>}`, where `<text>` is the text 
+to be printed and to become the active link. So, for example
+`\cref[Gen 2]{The Day of Rest}` will print {\Blue The Day of Rest} with a~link to the beginning of 
+the corresponding chapter (Gen 2:1).
 
 \secc Links to pages
 
-You can place an unprintable page link target in your text using \`\pglabel``[<glue>]` and
-then you can link to the page using \`\pgref``[<glue>]`. In place of
-`\pgref[<glyph>]` will print the number of the clickable page.
-Similar to `\cref`, you can use `\pgref[<picker>]{<text>}`
-to print a `<text>` other than the page number that clicks through to the place where
-where the `\pglabel[<glue>]` is located.
+You can place an invisible page link target in your text using \`\pglabel``[<label>]` and
+then you can link to that page using \`\pgref``[<label>]`; this
+ will print the clickable number of that target page.
+Similar to `\cref`, you can use `\pgref[<label>]{<text>}`
+to print a `<text>` other than the page number; the text now clicks  to the place where
+where the `\pglabel[<label>]` is located.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 
 
@@ -1627,35 +1647,32 @@ where the `\pglabel[<glue>]` is located.
 
 \secc[map-variants] Translation variants
 
-Just as you can change the wording of a search phrase in a note to match the actual base text, you can prepare 
-the description of the map (and similar graphical objects showing expressions that vary in different translations) to always match the current version of the Bible.
+Just as you can change the wording of a search phrase in a note to match the current core text, 
+you can also create the map description (and similar graphical objects showing expressions that vary in different translations) to always match the current version of the Bible.
 
-Assuming that we have a blank map that we want to describe with its legend, any text is placed over an image as follows:
+Assuming that we have a blank map that we want to describe with its legend, any text can be placed over an image in the following way:
 \begtt
-\puttext 5mm 62mm{{{\bi Mediterranean}}}
+\puttext 5mm 62mm{{{\bi Mediterranean sea}}}
 \endtt
 
-The first dimension (`5mm`) determines the horizontal offset on the x-axis, the second the vertical offset on the y-axis, with the coordinate `0mm 0mm` being the bottom left corner of the image.
+The first dimension (`5mm`) determines the horizontal offset on the x-axis, the second the vertical offset on the y-axis, with the coordinates `0mm 0mm` being the bottom left corner of the image.
 
 
 
 
 
 \medskip
-\line{\picw=150pt \inspic{images/BKR-Da-intro-map.png} \hss\inspic{images/CEP-Da-intro-map.png} \hss\inspic{images/B21-Da-intro-map.png} } 
+\centerline{\picw=200pt \inspic{images/BBE.png} \hss\inspic{images/NETfree.png} } 
 \medskip
-\leftline{Map from the Introduction to Daniel:  BKR \hss CEP \hss B21}
+\leftline{Map from the Introduction to Daniel:  BBE \hss NETfree}
 \medskip
-For example, you can notice how in the sample above not only the phrases “midnight king” and “noon king”(BKR) change to “north king” and “south king” (CEP) and “south king”
-and “King of the North” (B21), which is a common active link as in the notes, but also the map description itself , e.g. 
-The name of the city of Susan (just above the Persian Gulf) from the King's name to Shushan in CEP and to Susa in B21.
-metamorphoses to Sinear and to Babylonia. The definitions of `\vdef` in the `Cze-vars.tex` file take care of this. 
+For example, you can notice how in the sample above not only that the biblical references are active hyperlinks, but also that the name of the city of Susan (just above the Persian Gulf) changes from the BBE's  Shushan into Susa of NETfree.
 
 The image must be loaded before the description can start, and everything in it must be inside the definition of `\insertBot`. 
 The above sample has been written as
 
 \begtt
-\insertBot {Daniel's Remote Viewing Realm}[map](){
+\insertBot {Daniel's Remote Visions Empires}[map](){
  \inspic{fertile-crescent-crop.pdf}% blind map 
   \Heros \cond \setfontsize{at 9pt}\rm %font
   \vskip-1mm 
@@ -1663,7 +1680,7 @@ The above sample has been written as
                      \baselineskip10pt %line spacing inside the box
                      \noindent %space saving, no need to indent
 \leftskip=3pt \rightskip=3pt %how much the semi-transparent shadow will overlap the text 
-  Soon after the death of Alexander the Great ... until the defeat by Rome in 63 B.C.}%end\vtop
+  Soon after Alexander's death ... was conquered by Rome.}%end\vtop
   }%end \putstext
   \LMfonts\sans \setfontsize{at9pt}\rm
   \puttext 145mm 29mm {<"Acts 2:9"_Acts 2:9>}
@@ -1676,38 +1693,47 @@ The above sample has been written as
   }%end \insertBot
 \endtt
 
-{\bf What to watch out for:} There must not be a blank line inside `\insertBot`.
-
-Command \`\putBot` `<verse number> {<title>} [<slash>] (<commands>) {<code>}`
+Command \`\putBot` `<verse number> {<title>} [<label>] (<commands>) {<code>}`
 behaves similarly to \`\insertBot`, but inserts the image or diagram not on the current
-page, but to the page where the verse specified by its <verse-string> is located.
-Such commands can be used in an annotation file, for example at the end of the file.
+page, but to the page where the verse specified by its <verse number> is located.
+Such commands can be used in the notes file, typically near its end.
+
+{\bf What to watch out for:} 
+ There must not be a blank line inside `\insertBot`.
+
+
 
 
 \secc[town] Macro `\town` for the town symbol on the map
 
 
-The towns of Jerusalem, Babylon, Tolul Dura, Susan and Ur are visible on the map as tiny circles with a red center and black perimeter.
-The properties of this ring can be set with the macro \`\townparams`, whose default values are as follows:
+The towns of Jerusalem, Babylon, Tolul Dura, Susan and Ur are visible on the map as tiny circles 
+with a red center and black perimeter.
+The properties of this circle can be set with the macro \`\townparams`, whose default values are 
+as follows:
 
 \begtt
 \def\townparams{
-   \hhkern=.8pt % radius of the sphere
+   \hhkern=.8pt % radius of the circle
    \lwidth=.5pt % contour line thickness
-   \fcolor=\Red % ring color
+   \fcolor=\Red % circle color
    \lcolor=\Black % contour line colour
 }
 \endtt
 
-The macro \`\town` itself places this marker with coordinates, similar to the macro `\puttext`, but without additional text, e.g.
+The macro \`\town` itself places this circle with coordinates, similar to the macro `\puttext`, 
+but without additional text, e.g.,
 
 \begtt
-  \town 101.5mm 53mm %town Babylon
+  \town 101.5mm 53mm %the city Babylon
 \endtt
+
+
 
 \secc [slope] Tilted text
 
-In the example we have the name of the city of Jerusalem printed at an oblique angle so that it does not clash with “king of the South” and can be seen clearly.
+In the example we have the name of the city of Jerusalem printed at an oblique angle so that it 
+does not clash with “king of the South” and can be seen clearly.
 This can be achieved by adding additional parameters to the `\puttext` definition:
 
 \begtt
@@ -1720,46 +1746,60 @@ The number `-40` was used to tilt the inscription. For further details see~\ref[
 
 \secc[maptitles] Inscriptions along the curve
 
-Some of the inscriptions on the map require “stretch” according to the terrain, especially the names of large areas, in this case the Ptolemaic and Seleucids, or the Persian Gulf, or perhaps the more minor
-names of rivers (Euphrates, Tigris, Nile). 
-We will change the additional parameters to `\puttext` as we have already seen when placing Jerusalem on the map in the v~\ref[slope].
+Some of the inscriptions on the map require “bending” according to the terrain, especially the 
+names of large areas, as in this case  “The Ptolemies” and “The Seleucids,” or the “Persian 
+Gulf,” or perhaps the tiny names of rivers (“Euphrates,” “Tigris,” “Nile”). 
+We will change the additional parameters to `\puttext` as we have already seen when placing 
+Jerusalem on the map in the~\ref[slope].
 
-The `\kern` command determines the spacing between letters; the digits in the `\pdfrotate` definition determine the strength of the curvature. A negative value bends the lettering concavely (like a rainbow), a positive value convexly (like a bowl).
+The `\kern` command determines the spacing between letters; the digits in the `\pdfrotate` 
+definition determine the strength of the curvature. A negative value bends the text concavely 
+(like a rainbow), a positive value convexly (like a bowl).
 The dynasties of Alexander's descendants are written on our map as follows:
 
 \begtt
-\puttext 62mm 70mm {\c[10/\kern7pt\pdfrotate{-1}]{SELEUKOVCI}}
-\puttext 2mm 37mm {\c[0/\kern4pt\pdfrotate{2.5}]{PTOLEMAI}}
+\puttext 62mm 70mm {\c[10/\kern7pt\pdfrotate{-1}]{THE SELEUCIDS}}
+\puttext 2mm 37mm {\c[0/\kern4pt\pdfrotate{2.5}]{THE PTOLEMIES}}
 \endtt
 
-If we needed a sign that waved in the shape of the letter S (it would be concave and convex at the same time), we would have to assemble it 
-from two or more `\puttext` statements, glued together to look like one continuous text. 
+If we need a sign that waves in the shape of the letter S (is concave and convex at 
+the same time), we would have to assemble it from two or more `\puttext` statements, glued 
+together to look like one continuous text. 
 
 
 
 
 \secc[bkgrnd] Partially transparent background of continuous text
 
+In the sample above, the continuous blocks of text have slightly lighter background through 
+which the map from below is still visible.
+This can be achieved by typing `\putstext` (think of Put-Shadowed-Text) in the place of 
+`\puttext`. This way you don't need any pre-prepared lighter spots on the blind map (see the 
+image bellow), having to “hit” it with the text. 
 
-In the \ref[map-variants] sample, the double continuous text in the map was originally placed in lighter rectangles prepared by the graphical editor (left image). The text then had to be inserted into these
-hit the text; if it didn't work, one had to redo the image and try to hit it again.
 
 \medskip
-\centerline{\picw=150pt\inspic images/fertile-crescent-crop-old.pdf
-\hss \inspic{images/Da-map-shadowed-text.png}%
-}
+\centerline{\picw=150pt\inspic{images/fertile-crescent-crop-old.pdf} }
+%\hss \inspic{images/Da-map-shadowed-text.png}%
+
 \smallskip
 
-It worked, but it was tediously laborious and time-consuming.
-\OpBible/ offers a more imaginative solution. 
-no pre-made areas. Before using `\putstext` for the first time, the level of transparency of the white shadow can be set by adjusting the default value of `\def\shadowparameter{.1}`
-(right image). `\def\shadowparameter{1}` means a solid opaque white background; a smaller number means more transparency.
-However, this value is then stored in the page-resources of the output PDF and is used the same on all subsequent pages, so it cannot be changed and have it in different places in the same document
-different on different pages. If perhaps there should be an unexpectedly excessive demand for the ability to change the transparency level on the fly, this may be an incentive for implementation in a possible future version of \OpBible/.
-For the moment, we did not find it necessary to complicate the macros by creating more and more page-resources, so the user should be satisfied with the option to set the transparency of the shadow under the text
-on maps uniformly for the entire Bible.  
+Before using `\putstext` for the first time, the level of transparency of the white shadow can 
+be set by adjusting the default value of `\def\shadowparameter{.1}`. 
+`\def\shadowparameter{1}` means a solid opaque white background; the smaller the number, 
+the more transparency. 
 
+However, this value is then stored in the page-resources of the output PDF and is used 
+the same  on all subsequent pages, so it cannot be changed and have it in different in 
+different places of the same document. 
+If perhaps there should be an unexpectedly excessive 
+demand for the ability to change the transparency level on the fly, this may be an incentive for 
+implementation in a possible future version of \OpBible/.
+For the moment, we did not find it necessary to complicate the macros by creating more and more 
+page-resources, so the user should be satisfied with the option to set the transparency of the 
+shadow under the text on maps uniformly for the entire Bible.  
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %\medskip
 %\centerline{\picw=150pt \hss\inspic{images/Da-map-shaded-text.png} } 
@@ -1772,7 +1812,7 @@ on maps uniformly for the entire Bible.
 If we want to insert an image or text across two pages in an open double page, we can
 use
 \begitems
-* \`\insertSpanImage`: inserts a prepared PDF image, can be used in the introduction of a book,
+* \`\insertSpanImage`: inserts a prepared PDF image, can be used in the book introduction,
 * \`\insertSpanText`: insert text (for example a timeline), can be used in the book introduction,
 * \`\putSpanImage`: insert a prepared PDF image, anchored relative to the number
    chapter and verse, can be used in the notes file,
@@ -1780,10 +1820,10 @@ use
 \enditems
 The `\insertSpanImage` and `\insertSpanText` commands place the image or text 
 at the bottom of two pages according to the following rule. Suppose that
-the command itself is executed when \TeX/ creates the current page with
-number $c$. Then
+the command itself is executed when \TeX/ creates the current page of
+the number $c$. Then
 \begitems
-* if $c$ is even and the image or text fits the current page in portrait,
+* if $c$ is even and the image's (or text's) height allows it to fit on the current page,
   it will be placed on pages $c$ and $c+1$,
 * if $c$ is even and the image or text does not fit on the current page,
   it will be placed on pages $c+2$ and $c+3$,
@@ -1884,81 +1924,140 @@ creates a 100th horizontal line and vertical lines on top of it to denote 20,
 
 \`\arrowtext` `<from>..<to> (<setting>) {<text>}`
 prints a horizontal line from <from> to <to> (data in years)
-and the middle of the line is broken and <text> is written at that point. At
-the edges of the line are arrows pointing outwards from the line.
+and the middle of the line is broken to give space for the <text> which written at that point. 
+Arrows pointing outwards from the line are at the edges of the line.
+
+This timeline is shrinked from a double-page size:
+\medskip
+\picw=1.1\hsize
+\inspic{images/timeline-crop.pdf}
+
+and was typeset as follows:
+
+\begtt
+\def\small{\typosize[8/10]}
+\putSpanText 12:40 {How long have been the Israelites in Egypt?} [] () {%we are in Exodus
+\timeline 430         % total number of years (or other units) in the timeline
+\timelinewidth 36cm   % the width of timeline (here: 430 years = 36 cm)
+\arrowtext 0..430 (\bf) {\hskip20mm 430 years \hskip1cm (Exod 12:40; Gal 3:16--17)} 
+                        % prints arrow from..to, (format) {text} in the middle; 
+                        %\hskip controls the spaces in the middle where two pages meet
+\vskip 2\l            % \vskip 2\baseineskip; \l is only shortcut for \baselineskip
+\tlput a   0 \rlap(\bf)   {Abraham received\cr promise (Gen 12:3-5,7; 15:5--6)}  % print text
+\tlput a 430 \llap(\bf)   {Moses received \cr the Law (Exod 24:12)}   % see \_doc above 
+                                                                      % for more details
+\vskip 1.5\l          % \vskip 1.5\baselineskip
+\tlput a   0 \rlap()      {Entered do Canaan (Gen 12:4)}               % print text
+\tlput a 430 \llap()      {Left Egypt (Exod 12:41)}                   % print text
+\tlput a 215      (\bf)   {\hskip-6mm Entire \hskip8mm Israel\cr 
+                                             \hskip 8mm arrived to 
+                                             \hskip7mm  Egypt (Gen 47:9)} % print text
+                      % all \tlput's between \vskip's is printed in the single line
+\vskip 1\l
+\tlput a 25   (\small)   {Isaac born (Gen 21:5)}  % text
+\tlput a 85   (\small)   {Jacob born (Gen 25:26)}  % text
+\vskip1.1\l
+\tline 0..430         % the horizontal line from..to
+\tlines {0|25|60|130|215|0} % the vertical short lines, numbers mean distance between them
+\vskip.2\l
+\tlput b 12.5 (\small)    {25 years}    % text printed below     
+\tlput b 55   (\small)    {60 years}    % i.e the current position is at the top of the text
+\vskip.7\l
+\tlput b 0    (\small)      {Abraham\cr 75 years}
+\tlput b 25   (\small)      {Abraham\cr 100 years}
+\tlput b 85   (\small)      {Isaac\cr 60 years}
+\tlput b 215  (\small)      {\hskip1cm Jacob\cr\hskip1cm 130 years}
+\vskip2.5\l
+\tlines {|215|215|}    % the vertical short lines
+\arrowtext 0..215 (\bf) {215 years in Canaan}  % arrows and text
+\arrowtext 215..430 (\bf) {215 years in Egypt}
+\vskip2\l
+\tlines {|30|400|}    % the vertical short lines
+\arrowtext 30..430 (\bf) {Abraham's seed afflicted \hskip1cm in a land not theirs for 400 years (Gen 15:13)}
+\tlput b 15 (\small) {25$+$5$=$30\cr Isaac weaned\cr in 5 years}
+\vskip.5\l
+\tlput b 65 (\small) {Ishmael bullied Isaac in Canaan \cr since the  day Isaac was weaned (Gen 21:8--9)}
+\tlput b 385 (\small) {Israel afflicted in Egypt (Exod 1:11)}
+\tlput b 215 () {\hskip2.5cm 430$-$30$=$400}
+}%end of \putSpanText
 
 
+\endtt
 \sec Page formatting variants
 
 By default, a single-column typeface is set for the main text of the Bible
 and for book introductions and annotations. Two-column type is set for
-verse notes.
+notes on verses.
 
-By default, chapter numbers are capitalized and in the outer margin. In the outer margin are also
-enlarged quotation marks attached to quotations. The command \`\normalchapnumbers`
-command changes this setting: chapter numbers are then inserted in the left
+By default, chapter numbers are capitalized and in the outer margin. 
+In the outer margin there are also
+enlarged quotation marks attached to quotations. 
+The command \`\normalchapnumbers` changes this setting: chapter numbers are then inserted in the left
 upper corner of the first paragraph and the enlarged quotation marks are removed.
-The outer margin is then shrunk because there is no more print material in it.  
+The outer margin is then shrunk because there is no more printed material in it.  
 
-By default, each \`\Note` occupies a new paragraph in a two-column
-typeface. By using `\mergednotes` it is possible to ensure that all notes referenced
-to a single verse are always combined into a common paragraph. But it comes at a cost
-of not ensuring that the occurrence of phrases in the main text is on the same page
-as the phrases in the note. The entire paragraph of the linked note will only link to
-the beginning of the verse, i.e. the beginning of the verse and the beginning of the note to the verse are on the same
-page, the phrases themselves are not searched.
 
-Other page formatting options are still in the planning stages and are not in this version of \OpBible/
-implemented.
+
+By default, each \`\Note` occupies a new paragraph in a  double column print. 
+Th command `\mergednotes` makes sure that all notes on a single verse are always 
+combined into a common paragraph. 
+However, this comes at a cost of loosing the ability for the phrase in the note
+to follow its original in the Biblical verse on the same page.
+In other words, the entire paragraph (compound of several notes on the same verse)
+links only  to the beginning of the verse, i.e. the beginning of the verse 
+and the beginning of the note to the verse are on the same page,
+but the phrases themselves are not being searched for.
+
+Other page formatting options are still in the planning stages and are not implemented in this version of \OpBible/.
 
 
 \sec Error search options
 
 It may happen that you make a typo in the `notes-*`, `intro-*` files,
-`articles-*`. If you had included the file directly in the whole Bible processing,
-TeX would report an error at a completely different point in time than when it read the file and
-tracing back such an error is very difficult, and typically the error
-occurs at a different stage of processing and thus is often reported at a very
-incomprehensible and misleading.
+`articles-*`. If you had included the file  directly to the whole Bible processing,
+\TeX/ would report an error at a completely different point in time than when it read the file; 
+tracing back such an error is then very difficult. Moreover, typically the error
+occurs at a different stage of processing and thus is often reported in a very
+incomprehensible and misleading way.
 
 However, it is possible to process newly written files directly first, but without
-but not linked to the main text, and in this mode errors are reported more directly.
+connection to the core text, and in this mode errors are reported more directly.
 To search for errors directly, use \`\checksyntax` <file list> `{}`
-Here the file list are the names of the files checked without the `.tex` extension,
-so you can have, for example, at the end of the main file:
+Here the file list are the names of the files to be checked without the `.tex` extension.
+You can have, for example, at the end of the main file, line like this:
 
 \begtt
 \checksyntax intro-Dan articles-Dan notes-Dan {}
 \endtt
 
-performs a direct check of the enumerated files. The output is the text of these
-files without any formatting emphasis. Syntax errors in the files are
-but will show up in a straightforward manner.
+This will perform a direct check of the listed files. The output is the text of these
+files without any formatting. Syntax errors in the files 
+will show up in significantly more straightforward manner.
 
 Note: using \`\checksyntax` disables the \`\processbooks` command, which in
-does nothing, so the base text of the Bible is not loaded at all.
+does nothing, so the core text of the Bible is not loaded at all.
 
 
 \secc Generating default files `notes`, `fmt`, `intro`
 
-If the files `notes`, `fmt`, `intro` do not exist, \OpBible/ does not get angry and
+If the files `notes`, `fmt`, `intro` do not exist, \OpBible/ does not complain and
 behaves as if they were empty. But you might want to have these
 files for all the books of the Bible already prepared in the appropriate directories and
 with a short introduction. Templates for such files can be
-write them in a separate file (e.g. `templates.tex`) and then
-file using the `optex templates` command. This will generate the default files
+written them in a separate file (e.g. `templates.tex`) and then
+run such file using the `optex templates` command. This will generate the default files
 according to the specified templates for all the books of the Bible.
 If a file with the specified name already exists, it is retained (i.e., it is not
-overwritten by the default file) and a warning will appear on the term and
+overwritten by the default file) and a warning about it will appear on the terminal and
 in the `log` file.
 
-First you need a `books.tex` file with the names and abbreviations of all the books of the Bible,
+First you need the `books.tex` file with the names and abbreviations for all the books of the Bible,
 as mentioned in the~\ref[books] section. This can be generated, for example
 from Sword using the `mod2tex` script, see section~\ref[txs].
 
-In the `templates.tex` file, the macro must first be loaded using `\input`.
-`opbible.opm`, then the `books.tex` file, and then you can specify
-file templates with the `\filegen` command as follows:
+In the `templates.tex` file, the macro `opbible.opm` must first be loaded using `\input`, 
+then the `books.tex` file, 
+and then you can specify file templates with the `\filegen` command as follows:
 
 \begtt
 \filegen {<file-name>}
@@ -1966,9 +2065,9 @@ file templates with the `\filegen` command as follows:
 \endfile
 \endtt
 %
-while <filename> must contain and <file-content> can contain a double character
-`@@`, which is automatically replaced by the book abbreviation <bmark> specified in `bible.tex` and generated
-as many default files as there are book titles declared in `books.tex`.
+There <filename> must (and <file-content> can) contain the double character `@@`, 
+which is automatically replaced by the book abbreviation <bmark> specified in `books.tex`. 
+As  many default files as there are book titles declared in `books.tex` are then automatically generated.
 For example, `templates.tex` might look like this:
 
 \begtt
@@ -1976,240 +2075,125 @@ For example, `templates.tex` might look like this:
 \input books.tex
 
 \filegen {intro-@@.tex}
-% Book Introduction @@
+%  Introduction to the book @@
 \endfile
 
 \filegen {notes-@@.tex}
-% Book notes @@
 
-%\ww {} {} {} {} {} {} {}
-% BKR PSP CSP CEP B21 SNC
-%\Note 1:1 {} text terminated with a blank line
+%  Notes on the book @@
+
+\endinput
+\ww 
+    {}={} % BBE
+    {}={} % Jubilee2000
+    {}={} % NETfree
+    {}={} % UKJV
+    {}={} % RNKJV
+    {}={} % Webster
+\Note 1:1 {}={} %text terminated with a blank line
 \endfile
 \endtt
 %
 The `optex templates` command will generate 66 files in this case
-`intro-1Jn.tex`, `intro-1kor.tex`, etc. with the specified single line
-and 66 `notes` files with specified five-line content.
+`intro-1John.tex`, `intro-1Cor.tex`, etc. with the specified single line
+and 66 `notes` files  (`notes-1John.tex`, etc.) with the content of the specified nine lines.
 
-You can also use the `@@@` triple character in the <file content>, which is interchanged from
-the full title of the book. So after specifying `% Book Introduction @@@` you will get
-files with the text `% Introduction` {\to the book of Genesis}, then
-`% Introduction to the Book of Exodus` etc.
+You can also use the triple character `@@@`in the <file-content>, which is then converted into
+the full title of the book. So after specifying 
+`%  Introduction to the book @@@` in the `templates.tex` file
+you will get the file with the text `% Introduction to The First Book of Moses (Genesis)`, 
+another with `% Introduction to The Second Book of Moses (Exodus)` etc.
 
 In the example, the file names are chosen so that they are generated in the current
 directory. If you have prepared subdirectories in this directory corresponding to
 names, it is possible to generate files directly into them, for example, write
 `\filegen {intros/intro-@@.tex}`.
 
-To generate a different list of files than the <bmark> list
-listed in the `books.tex` file, define `books.tex` after reading
-macro \`\genbooks` and your chosen shortcuts. For example, after
+To generate a list of files with the names other than the <bmark> list  in the `books.tex` file, 
+after reading in `books.tex`, define macro \`\genbooks` with your chosen set of abbreviations. 
+For example, after
 \begtt
-\def\genbooks {Gn Ex Lv Nu Dt Joz}
+\def\genbooks {Gn Ex Lv Nu Dt}
 \endtt
 %
 the `\filegen` command will only generate templates for the five books with the specified
-abbreviations. You can also define `\genbooks` before each `\filegen`, then
-you'll have different book abbreviations for different subfile types.
+abbreviations. You can also define `\genbooks` before each `\filegen`, in which case
+you'll be able to have different book abbreviations for different file types (e.g., `intro-Gen.tex` and `notes-Gn.tex`).
+
+\sec[tricks] Tricks and Stunts  
+
+This sections offers some inspiration for demanding users, eager to perform even greater miracles
+than what average \OpBible/ users might be satisfied with.
+
+\secc Chiasm
+
+Serious students of the Bible probably know that some parts of it are written in form of chiasm, for example, a single verse:
+\medskip
+\leftline{\hskip 2em{\bf A} Many that are first}
+\leftline{\hskip 3em{\bf B} shall be last;}
+\leftline{\hskip 3em{\bf B'} and the last}
+\leftline{\hskip 2em{\bf A'} shall be first.}
+\leftline{\hskip 4em{(Matthew 19:30) } }
+\medskip
+
+or a passage:
+
+\medskip
+Life of Abraham:
+
+\leftline{\hskip 2em{\bf A} Background and Early Experiences (11:10--12:9)}
+\leftline{\hskip 3em{\bf B} Earlier Contacts with Others (12:10--14:24)}
+\leftline{\hskip 4em{\bf C} Covenant with God (15:1--17:27)}
+\leftline{\hskip 3em{\bf B'} Later Contacts with Others (18:1--21:34)}
+\leftline{\hskip 2em{\bf A'} Progeny and Death (22:1--25:18)}
+\medskip
+
+or, for that matter, an entire book:
+
+\medskip
+Leviticus:
+
+\leftline{\hskip 2em{\bf A} Ritual (1--7)}
+\leftline{\hskip 3em{\bf B} Priesthood (8--10)}
+\leftline{\hskip 4em{\bf C} Purity (11--15)}
+\leftline{\hskip 5em{\bf D} Day of Atonement (16)}
+\leftline{\hskip 4em{\bf C'} Purity (17--20)}
+\leftline{\hskip 3em{\bf B'} Priesthood (21--22)}
+\leftline{\hskip 2em{\bf A'} Ritual (23--27)}
 
 
-%This section is probably useless so I'm deleting it. I suppose we'll ship something like a "blank project" as part of the distribution, with files that don't contain theological material (except as samples), but examples of usable definitions, perhaps with comments on what they do.
-%
-%\sec[examples] Examples
-%
-%\secc[sample-main] Example of the main file `main.tex`
-%
-%
-%\begtt
-%\load[opbible] % macros OpBible
-%\cslang
-%\def\shadowparameter{0.075}
-%%\checksyntax notes-Da intro-Da articles-Da fmt-BKR-Da {} 
-%%\normalchapnumbers  
-%%\mergednotes        
-%%\let\notecolor=\relax % disables \Red search phrases %
-%
-%%\input hebrew % Hebrew phrases are declared here
-%\input greek % Greek - "-
-%
-%% Variants of translation:
-%\def\tmark {BKR} % Bible royal
-%%\def\tmark {PSP} % Pavlik's Study Translation
-%%\def\tmark {CSP} % Czech study translation
-%%\def\tmark {CEP} % Czech Ecumenical Translation
-%%%\def\tmark {B21} % Bible for the 21st century
-%%\def\tmark {SNC} % Word for the Journey
-%
-%\input {Cze-vars.tex} % Variants of translation
-%\input {Cze-books.tex} % Book titles and marks
-%
-%\def\txsfile {sources/Cze\tmark-\amark.txs} % Location of .txs files
-%\def\fmtfile {formats/fmt-Cze\tmark-\amark.tex} % Location of fmts
-%\def\notesfile {notes/notes-\amark.tex} % Location of notes
-%\def\introfile {others/intro-\amark.tex} % Location of introductions
-%\def\articlefile {others/articles-\amark.tex} % Location of articles%
-%
-%\def\printedbooks {%
-% Gn Ex Lv Nu Dt Joz Sd Rt 1Sa 2Sa 1Kr 2Kr 1Pa 2Pa Ezd Neh
-% Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
-% Na Abk Sf Ag Za Mal 
-% Mt Mk Lk Jn Sk Ř 1K 2K Ga Ef Fp Ko 1Te 2Te 1Tm 2Tm 
-% Tt Fm Žd Jk 1Pt 2Pt 1Jn 2Jn 3Jn Ju Zj
-%}%
-%
-%\def\printedbooks{Da} 
-%\processbooks % Generates books declared in \printedbooks
-%\bye
-%\endtt%
-%
-%\secc[sample-notes] Example note file
-%
-%\begtt
-%\Note 1:0 {} 
-%\switch {BKR}{Taking Daniel and his companions to the royal court, 
-% 8. He was faithful to God, 
-% 17. being endowed with special gifts from God, he was made precious to them in the same court. }% 
-% {PSP}{}% 
-% {CSP}{Daniel separated}% 
-% {CEP}{God protects the faithful Judean Jinochim in the court of \x/Nabuchodonosor 
-% and will give them wisdom above others.}% 
-% {B21}{}%  
-% {SNC}{}%
-%
-%
-%\putArticle 1:18 {Redemption (\<1:18-19>)} [1] () %1Pt
-%
-%\ww {to the dead} %BKR
-% {to the dead} %PSP
-% {dead} %CSP
-% {dead} %CEP
-% {dead} %B21
-% {dead} %SNC
-% {} {} {} {}
-%\Note 4:6 {dead} Theological universalism (the doctrine that all will be saved) relies 
-on a second chance after death. 
-%This state of affairs is aptly illustrated by a teacher who would assign a homework assignment, 
-% and yet not set a due date for submission. 
-%If infinite time were indeed available for the decision to ask Christ for forgiveness, 
-no one would have done it.
-%
-%\putBot 2:1 {Daniel's Vision} [danielovyvize] () {
-% \Heros \cond \setfontsize{at 10pt}\rm
-% \inspic{Nabuco-crop.pdf}
-%puttext 5mm 112mm {\bf Four Kingdoms}
-% \puttext 110mm 112mm {\bf Chronology of Empires}
-% \puttext 13mm 107mm {Vision ch. 2}
-% \puttext 45mm 107mm {Vision of ch. 7}
-% \puttext 67mm 107mm {Vision ch. 8}
-% \puttext 90mm 107mm {Identification}
-% \puttext 139mm 104mm {600}
-% \puttext 139mm 90.5mm {500}
-% \puttext 139mm 76.5mm {400}
-%puttext 139mm 62.5mm {300}
-% \puttext 139mm 49mm {200}
-%puttext 139mm 45mm {167 BC}
-%puttext 139mm 41mm {Maccabees}
-%puttext 137mm 37mm {and the Hasmoneans}
-% \puttext 139mm 32mm {100}
-%puttext 139mm 21mm {\bf 0}
-%puttext 139mm 2mm {100}
-% \puttext 139mm 11mm {70 A.D.}
-% \puttext 139mm 7mm {Fall of Jerusalem}
-%\bf  
-% \puttext 144mm 108.5mm {626 BC}
-% \puttext 144mm 95.5mm {539 BC}
-%puttext 144mm 67mm {330 BC}
-%puttext 144mm 30mm {63 BC}
-%\puttext 15mm 91mm {\x/Golden head/}   
-% \puttext 48mm 91mm {Lev}
-% \puttext 90mm 91mm {\x/Babylon/ (<2:37-38>)}
-%\puttext 15mm 66mm {\x/Breasts and Shoulders}}   
-%\puttext 17mm 62mm {\x/silver}   
-%puttext 46mm 66mm {\x/Bear}   
-%puttext 70mm 66mm   
-% \puttext 90mm 66mm {Médo-Persie (<8:20>)}   
-%\puttext 15mm 46mm {\x/Belly and loins}}   
-%\puttext 20mm 42mm {\x/copper/}   
-% \puttext 46mm 44mm {\x/Pard/}   
-%puttext 70mm 44mm   
-% \puttext 90mm 44mm {\x/Greece/ (<8:21>)}   
-%\puttext 15mm 30mm {\x/Hnats}}
-%\puttext 15mm 26mm {\x/iron/}
-%puttext 45mm 30mm
-%puttext 46mm 26mm
-%puttext 90mm 30mm {Rome} 
-%\puttext 10mm 2mm
-%\puttext 15mm -2mm
-%}
-%
-%\putArticle 5:20 {Who was \x/Darius/the Mede?} [6] ()
-%
-%\putCite 1:8 {We do not achieve secondary things by declaring them primary. 
-%Secondary things are achieved only if first things come first. 
-%\quotedby{C. S. Lewis}}
-%
-%\putCite 3:30 {Courage is not only one of the virtues, but is the form of every virtue at the point of trial, 
-...that is, at the point of the most extreme reality.
-%\quotedby{C.S.Lewis}}
-%
-%\putCite 5:4 {Power corrupts, and absolute power corrupts absolutely. {\quotedby {Lord Acton}} 
-%
-%\putCite 6:11 {The life of a Christian is a life in enemy-occupied territory. {\quotedby{C.S.Lewis}}
-%
-%\endinput
-%
-%\ww {} %BKR
-% {} %PSP
-% {} %CSP
-% {} %CEP
-% {} %B21
-% {} %SNC
-%Note 1:1 {}     
-%
-%\endtt
-%
-%\secc[sample-articless] Example article file %
-%
-%\begtt
-%\Cite A
-%{In literature and art, no one who prides himself on originality will ever be original: 
-%while you're just trying to tell the truth (and it doesn't matter how many times it's been told), 
-nine times out of ten you'll become original without even noticing it. 
-%\quotedby {C. S. Lewis}
-%}
-%%\swapCites
-%
-%\Article [1] %Purchase 1Pt
-%
-%Imagine a scene from an action thriller: Your 16-year-old daughter is kidnapped by terrorists and
-%demanding a ransom. %
-%
-%You sell everything you have, go into debt to the point of death to raise the money you need,
-and then, with the money in your suitcase, you arrive at the agreed-upon spot in the middle of the bridge. 
-the designated end of the bridge as you were instructed. A van emerges from the darkness, stops in the middle of the bridge, 
-your daughter gets out, you're relieved she's alive and hopefully okay, she picks up the suitcase and throws it 
-into the car, then she turns towards you, slaps her left hand on her right bicep while holding up 
-her right fist with the back of her hand towards you while screaming: “Thank you, dumbass!” 
-%And jumps in the van and disappears.
-%
-%\insertCite A\left\
-%This spitting in the face of the love that sacrificed everything for us is what we do every time we put sin before holiness (\<"v." 15-16>).         
-%%\endtt
-%%Article, quotation, etc.
-%
-%\secc[sample-fmt] Example file `fmt`
-%
-%\begtt %CEP Jr
-%\fmtpoetry{23:28}{true.//// grain?",///}
-%\fmtpoetry{23:29}{// fire,/// of the Lord,///}
-%\fmtins{23:28}{pravdivě.}{\medskip}
-%\fmtpre{23:30}{\medskip}
-%
-%\fmtfont{23:28}{pravdivě}{\em}
-%\endtt
-%
-%\secc[sample-intro] Example file for Introduction
+The way to type such structures is rather easy.
+Entire chiasm has to be enclosed inside `\begChiasm` and `\endChiasm` pair; then number of asterixes at the beginning of each new line determines the indentation.
+You only have to type:
+
+\medskip
+\begtt
+\begChiasm 
+* Many that are first
+** shall be last;
+** and the last
+* shall be first.
+\endChiasm
+\medskip
+\endtt
+
+and \OpBible/ will take care of the rest. If you don't want to have the boldfaced {\bf A, B, C... B', A'} at the beginning of the lines, type `\style q` right after `\begChiasm`. If then you want them back, start the new chiasm with the line  `\begChiasm \style Q`. 
+
+%...
+
+\secc Formatting Dirty Tricks
+
+
+
+%...
+
+%???
+
+
+
+
+
+
 %
 \sec[sum] Summary of basic commands and definitions
 
