@@ -2005,7 +2005,6 @@
    \endtt
    \_cod
 
-\_def\.keepstyle{\_defaultitem=\_printitem}
 \_def\.easylist{\_adef*{\.countlist}}
 \_def\.aast{\.countlist}
 \_def\.countlist{\_tmpnum=1 \.countlistA}
@@ -2022,7 +2021,7 @@
 \_def\.ChiasmNumbering{\_ea\.qq \_Uchar \_numexpr `A-1+\_ilevel\_relax\_space} % A, B, C, D, etc.
 \_sdef{_item:q}{}%for chiasms with no leading alphabet letters
 \_sdef{_item:Q}{\.ChiasmNumbering}
-\_def\.begChiasm{\_begitems \.easylist \_style Q \.keepstyle}
+\_def\.begChiasm{\_begitems \.easylist \_style Q \_let\_defaultitem=\_printitem}
 \_def\.endChiasm{\_fornum 1..\_ilevel \_do{\_enditems}}
 
 \_nspublic \begChiasm \endChiasm ;
@@ -2345,6 +2344,7 @@
 \_endcode
 
 2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
+                \begChiasm: \.keepstyle corrected
 2023-04-21 0.21 \_punctpword corrected
 2023-04-02 0.20 \_punctpword removes dot after ?, ! and dot.
 2023-02-25 0.19 \filegen introduced
