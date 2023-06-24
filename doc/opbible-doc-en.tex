@@ -116,7 +116,6 @@ wherever we have seen fit, we add paragraphs entitled {\bf What to watch out for
 
 } % end of \nopagenumbers
 
-
 %\nonum\notoc
 \sec What makes the \OpBible/ specific?
 
@@ -826,8 +825,6 @@ the poetry block. In the example above, we used `\hglue-2mm`.
 
 % To zrušíme, jestli půjde uvozovky vystrkovat automaticky. Kdyby ne, takhle to může fungovat taky.
 
-
-
 \secc Notes in `notes-*.tex` files
 
 These files (located according to the `\notesfile` declaration in the main file)
@@ -848,7 +845,8 @@ the following  format. Each individual note is prefixed with the command \`\Note
 
 
 \begtt
-\Note <chapter-number>:<verse-number> {<phrase>} <note-text>
+\Note <chapter-number>:<verse-number> {<phrase>}
+<note-text>
 <blank line>
 \endtt
 For example:
@@ -882,15 +880,20 @@ we want to have in the printed note (e.g., the word in the core text is in
 a different case, or it is a slightly differently worded phrase). Then it is possible to type an equal sign immediately after the `{<phrase>}`, which in turn is followed by the  `{<phrase-to-be-printed>}`, i.e.,
 
 \begtt
-\Note <chapter-number>:<verse-number> {<phrase>}={<phrase-to-be-printed>} <note-text>
+\Note <chapter-number>:<verse-number> {<phrase>}={<phrase-to-be-printed>}
+<note-text>
 <blank line>
 \endtt
 In this case, <phrase> is searched for in the core text, but in the actual
 note, <phrase-to-be-printed> is printed as the note entry. For example:
 
 \begtt
-\Note 2:32-33 {head}={The head ... gold, its chest and arms ... silver, its belly and thighs ... bronze, its legs ... iron, its feet partly ... iron and partly ... clay} 
-Moving from the head to the feet of the image, there is a decrease not only in the  weight of the materials but also in its value. The image was clearly too heavy with fragile feet. It is an illustration of the fate of all human kingdoms and civilizations:  at the end, each of them will collapse by its own weight.
+\Note 2:32-33 {head}={The head ... gold, its chest and arms ... silver, its belly 
+   and thighs ... bronze, its legs ... iron, its feet partly ... iron and partly ... clay} 
+Moving from the head to the feet of the image, there is a decrease not only in the  weight
+of the materials but also in its value. The image was clearly too heavy with fragile feet.
+It is an illustration of the fate of all human kingdoms and civilizations:  at the end,
+each of them will collapse by its own weight.
 \endtt
 
 In this example, the phrase “head” is being searched for but the text “The head ... gold, its chest and arms ... silver, its belly and thighs ... 
@@ -908,8 +911,9 @@ It also increases the clarity of the source file.
 If the note refers to the whole verse (without a specified phrase), write
 `{}`, i.e., an empty search phrase. For example:
 \begtt
-\Note 1:1-21 {}={Keeping ritual purity} The prophet introduces the context of his book by recounting a 
-personal history (of his and of his friends) in the captivity, education, loyalty to God and service 
+\Note 1:1-21 {}={Keeping ritual purity}
+The prophet introduces the context of his book by recounting a personal history
+(of his and of his friends) in the captivity, education, loyalty to God and service 
 to King Nebuchadnezzar.
 \endtt
 
@@ -923,16 +927,11 @@ keyboard. Its code is~45. It must not be any special character that somehow rese
 dash.
 
 
-
-
-
-
-
 The order of printed notes on the same verse corresponds to the order of the phrases on which
 they comment in the core text. That means that the order in which they are written 
 in the source file is irrelevant. Notes that link to an entire verse using the empty parameter `{}`  are placed as the first, and if there are more than one of them, only then their order follows that in the source file.
 
-
+The phrases linked to the notes are printed in the \`\notecolor` color. By default it is red, but you can say (for example) `\let\notecolor=\relax` in your main file, if you don't want to colorize these phrases.
 
 
 \secc[break-verse] Page break within a verse  
@@ -941,7 +940,7 @@ If different notes comment on different phrases within a single verse, and at th
 
 In the sample Book of Daniel (of the Webster Bible translation), you can see this happen at the verse 10:20 
 (all the searched phrases are highlighted in red color). Look at page 23
-where you read “will I return to fight with the prince of Persia” and then at page 24 where the same verse continues with the phrase “the prince of Grecia.” The commenting notes follow their respective phrases on correct pages. 
+where you read “will I return to fight with the prince of Persia” and then at page 24 where the same verse continues with the phrase “the prince of Grecia.” The notes follow their respective phrases on correct pages. 
 (You probably do understand that in a real hard copy Bible the page 23 would be the right one, as all odd pages are, and 24 would be its other side after you turn the page, don't you?)
 
 \bigskip
@@ -999,7 +998,7 @@ For example:
 In the default typographic settings, it is printed in a strip that separates the upper part of the 
 page from the  the image itself.
 * `<label>` specifies the image's  reference label. You can then refer to it using \hfil\break
-\code{...see image \\ref [<daniels-visions>] on page \\pg}, which, 
+\code{...see image \\ref [daniels-visions] on page \\pg}, which, 
 %  ...see image` \`\ref` `[<daniels-visions>]` on page \`\pg`, which,  
   in the case of our example, prints ... see image {\Blue Daniel's Visions} on page~123.
   In doing so, the text in this link will be hyperlinked to the place where the image occurs. 
@@ -1066,7 +1065,6 @@ chapter), then the
 The * `<parameters>` are optional parameters that specify the formatting of the article. 
 If you are satisfied with the default settings (e.g., the width = `\hsize`) then leave the 
 parentheses `()` empty.
-  \TODO...
 \enditems
 
 The text of the articles to be inserted must be in the `articles-*.tex` file.
@@ -1075,9 +1073,9 @@ This file must contain a line started by \`\Article` as follows:
 \begtt
 \Article [<article-number>]
 \endtt
-This is followed by the text of the article. Then it can continue with the next
-`\Article` `[<article-number>]` followed by more text, etc. In one file
-all the articles for a given book are thus accumulated.
+This is followed by the text of the article. Then it can continue with the next article given by another command 
+`\Article` `[<article-number>]` followed by more text, etc.
+All the articles for a given book are thus accumulated in a singe file.
 
 If you specify the request \`\putArticle` but the corresponding file `article-*.tex`
 or the corresponding line  \`\Article` `[<article-number>]` does not exist, the \TeX will end with 
@@ -1091,7 +1089,7 @@ an error.
 
 %\mnote{\code{\\putCite}}
 The command \`\putCite` `<chapter-number>:<chapter-number> {<text>}`, 
-in default typographic setting, inserts <text> as a quotation at the beginning of
+by default, inserts <text> as a quotation at the beginning of
 page containing `<chapter-number>:<verse-number>`.
 
 The <text> itself may contain a \`\quotedby {<author>}` at the end. In such a case
@@ -1104,7 +1102,7 @@ The <text> itself may contain a \`\quotedby {<author>}` at the end. In such a ca
 For a controlled transition to a new line, you can use the \`\nl` (new line) command in <text>.
 
 
-\secc[cite] Inserting qutations in the margin of an article 
+\secc[cite] Inserting quotations in the margin of an article 
 
 Article text is formatted in two columns by default.
 It is possible to break the outer column and insert a quotation or something similar.
@@ -1126,7 +1124,7 @@ If the article is on the left-hand side of a double page, the quotation is place
 only by `\insertCite<letter>\left`, in other words `\insertCite<letter>\right` is
 ignored. If the article is on the right-hand side of an open double page, the placement is
 is governed only by `\insertCite <letter>\right`. The quotation will appear
-right below the line in which the `\insertCite` is given. The line itself is
+right below the line in which the \`\insertCite` is given. The line itself is
 is not split because of this (in other words, the paragraph is not terminated because of the 
 insertion of the quotation).
 
@@ -1146,7 +1144,7 @@ of a page, you can use the command \`\swapCites` at the beginning of the article
 switch the left/right position of the quotation.
 %\mnote{\code{\\swapCites}}
 But this should not be left on for the final printing, thus activated
-`\swapCites` will cause a warning to the terminal and to the log file.
+`\swapCites` will cause a warning printed to the terminal and to the log file.
 
 \sec[translations] Different (but similar) versions of the core text
 
