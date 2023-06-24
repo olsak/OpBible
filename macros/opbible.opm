@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.21 Apr 2023>}
+\_message{This is OP-Bible, version <0.22 Apr 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -656,7 +656,7 @@
 
 \_def\.ind#1{\_unless \_ifopb_firstverse \_par \_else \_hskip-\_parindent \_fi
    \_noindent
-   \_hskip#1\_iindent \_spacefactor=1001 }
+   \_hskip#1\_iindent \_spacefactor=1001 \_ignorespaces}
 
    \_doc
    \`\fmtpoetry``{<gen-vref>}{<fmt-data>}` saves `<gen-vref>` to `\.tmpa`
@@ -671,7 +671,7 @@
 \_def\.fmtpoetB #1{\_ifx/#1 \_incr\_tmpnum \_ea\.fmtpoetB \_else \_afterfi{\.fmtpoetC#1}\_fi}
 \_def\.fmtpoetC #1{%
    \_expanded{\_ifx\.tmpb\_empty \_noexpand\.fmtpreind{\.tmpa}\_else
-              \_noexpand\.fmtins{\.tmpa}{\.tmpb}\_fi{\_noexpand\.ind{\_the\_tmpnum}}}%
+              \_noexpand\.fmtins{\.tmpa}{\.tmpb}\_fi{ \_noexpand\.ind{\_the\_tmpnum}}}%
    \_ifx\_end#1 \_else \_afterfi{\.fmtpoetA#1}\_fi
 }
 \_nspublic \ind \fmtpoetry ;
@@ -2344,6 +2344,7 @@
 \_endnamespace
 \_endcode
 
+2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
 2023-04-21 0.21 \_punctpword corrected
 2023-04-02 0.20 \_punctpword removes dot after ?, ! and dot.
 2023-02-25 0.19 \filegen introduced
