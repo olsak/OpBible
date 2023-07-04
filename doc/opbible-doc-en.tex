@@ -60,7 +60,7 @@ their inclusion does not violate the license.
 \nonum\sec[preface] Preface
 
 
-The verse from Isaiah 49 on the title page is inspiring: It would be a small thing to write and typeset using \TeX/  just one Bible commentary  as one's life's work. The \OpBible/ offers the opportunity to write a commentary on any Bible version to anyone anywhere; once the annotation apparatus is complete, the study Bible is typeset. 
+The verse from Isaiah 49 on the title page is inspiring: It would be a small thing to write and typeset using \TeX/  just one Bible commentary  as one's life's work. The \OpBible/ offers the opportunity to write a commentary on any Bible version to anyone anywhere; once the notes apparatus is complete, the study Bible is typeset. 
 
 Šimon Konečný's long-standing vision of using \TeX/ to automatically typeset study Bibles came to fruition through a collaboration with Petr Olšák.  Starting from the realistic assumption that
 those who will use OpBible the most will also be those who have the least experience with \TeX/, we tried to make the usage as simple as possible.
@@ -72,9 +72,9 @@ it is rather quite a challenge for any programmer.
 Our intention to allow the production of a single commentary apparatus to go with multiple Bible translations simultaneously was
 further complicated by the fact that different versions of the Bible have different verse numbers in some places, differently broken paragraphs, 
 different structures of poetic passages, different placement of headings added by the translators; that  some translations have completely different book titles (and hence abbreviations),
-that file names cannot contain diacritics, but book references can and should, and countless other such oddities.
+that file names cannot contain diacritics but book references can and should, and countless other such oddities.
 
-All the problems we encountered have been overcome and everything works just fine to our satisfaction.  The resulting collection of tools is quite complicated,
+All the problems we encountered have been overcome and everything works just fine to our satisfaction.  The resulting collection of macros is quite complicated,
 therefore  the definitions usage is irritatingly sensitive to any transgressions against \TeX's syntax.
 
 That's why \OpBible/ includes tools to make it easier to find where typos, forgotten parentheses, etc. have been left; and in this documentation,
@@ -151,11 +151,13 @@ Now let's take a brief look at Daniel, chapter 2, where the animals, countries, 
 * {\it Greece\/} of BBE, Jubilee2000, and NETfree is {\it Grecia\/} in UKJV, RNKJV, and Webster.
 \enditems
 
-You can write your commentary in the way that the result would be all six translations at the same time, with no need to modify the notes file, while the notes (or charts, maps, etc.), will display the phrases as they appear in your current Bible. See sample book of Daniel, chapter two, the chart of Daniel's visions.
+You can write your commentary in the way that the result would be all six translations at the same time, with no need to modify the notes file, while the notes (or charts, maps, etc.), will display the phrases as they appear in your current Bible. See the sample book of Daniel, chapter two, the chart of Daniel's visions.
 
 In English, there are over 450 different translations of the Bible.
 Most of them are not being used anymore, but still, 
 you can choose from \ulink[https://bibleanswers.study/about-the-bible/types-of-bible-versions]{more than sixty} various English versions. 
+Actually, you can write your notes in a way that sixty (or a a hundred) various translations can be used with them at the same time, 
+without a need to change anything in the notes.
 
 
 * {\bf Interactive output format}:
@@ -184,8 +186,8 @@ you can choose from \ulink[https://bibleanswers.study/about-the-bible/types-of-b
 Although the intent of this program is to spread God's Word and the Good news contained therein, the 
 \OpBible/ itself {\it forgives nothing!} 
 (After all, what'd you expect, it's a software. Go to God for forgiveness.) As you'll read below, 
-the \OpBible/ loads all notes for one entire book of the Bible into memory at a time and only then  
-begins to digest these notes and piece them together into pages with their respective verses. If you 
+the \OpBible/ loads one entire book of the Bible into memory at a time and only then  
+begins to digest your notes and piece them together into pages with their respective verses. If you 
 happen to make a mistake in \TeX/ syntax (e.g., forget a closing bracket, etc.), \TeX/ will see the 
 error somewhere in the middle of this matching procedure, and this in turn will result in a 
 cluttered error message, in which it is highly likely that you will get lost and not find your way 
@@ -198,7 +200,7 @@ works as it should.  After that you may only  work with one of them, but it is a
 \TeX\ every time  after you finish each new note, so by its protests  you can easily find the one 
 in which you have the mistake.
 
-\recommended Use the Linux operating system. \OpBible/, as a macro file for \TeX, will run on any 
+\recommended Use the Linux operating system. \OpBible/, as a macro collection for \TeX, will run on any 
 system with the same results, but the Linux installation has
 several not-to-be-missed advantages. Among the most significant of these is the Evince PDF viewer, 
 whose newer (as of 2023) version can display the immediate context of a hyperlinked
@@ -1155,12 +1157,12 @@ option.
 
 If the variants are not declared with the \`\vdef` command, then
 \`\x``/<phrase>/` command used in the text will output <phrase>. However, it is possible to
-declare translation variants. The number of variants must be specified with the `\variants` command.
-(see section~\ref[vars]). This is done once in the whole document. Then the `\vdef` commands can 
-follow, always with as many parameters as the number of variants specified by the `\variants` 
-command. For example, 
+declare translation variants. The number of variants must be specified with the \`\variants` command.
+(see section~\ref[vars]). This is done once in the whole document. Then the \`\vdef` commands can 
+follow, always with as many parameters as the number of variants specified by the \`\variants` 
+command. For example:
 
-\begtt \typosize[8.5/11]
+\begtt
 \variants 6 {BBE} {Jubilee2000} {NETfree} {UKJV} {RNKJV} {Webster} 
 
 \vdef {took the kingdom} % BBE
@@ -1226,7 +1228,7 @@ If such a phrase needs to be used with \`\x/.../`, a warning will be printed.
 In addition, the parameter may contain a single `"` character, indicating that the
 the same phrase is used as in the previous parameter. So our
 example above might also look like this:
-\begtt \typosize[8.5/11]
+\begtt
 \vdef {took the kingdom} % BBE
       {possessed the kingdom} % Jubilee2000
       {take possession of the kingdom} % NETfree
@@ -1235,10 +1237,8 @@ example above might also look like this:
       {"} % Webster
 \endtt
 
-\watchout
- Quotation marks in place of a phrase cannot be used in definitions of `\ww` (see~chapter~\ref[ww]) 
- that precede `\Note`. They only work in the `\vdef` definition in the variants file, to be applied 
- for the entire Bible. 
+%\watchout % pridal jsem moznost {"} i pro \ww ve verzi 0.23
+% Quotation marks in place of a phrase cannot be used in definitions of `\ww` (see~chapter~\ref[ww]) that precede `\Note`. They only work in the `\vdef` definition in the variants file, to be applied for the entire Bible. 
 
 
 \secc[ww] Variant phrase declarations for matching notes with text
@@ -1248,21 +1248,20 @@ phrase by variant translations using \`\ww` (this is an abbreviation for watchwo
 The \`\ww` command has as many parameters as there are translation variants declared by
 \`\variants` command, and these parameters can be simple (in the format
 `{<wanted-phrase>}`) or compound (in the format
-`{<search-phrase>}={<what-to-print>}`). The immediately following `\Note`
+`{<search-phrase>}={<what-to-print>}`). The immediately following \`\Note`
 will then ignore its parameter for the search phrase and use the parameter from \`\ww`
 corresponding to the language variant being processed. For example:
 
-\begtt
-\ww
-{if you do not make clear to me the dream and the sense of it} % BBE
-{if ye will not make known unto me the dream with its interpretation} % Jubilee2000
-{If you do not inform me of both the dream and its interpretation} % NETfree
-{if all of you will not make known unto me the dream, with the interpretation thereof} % UKJV
-{if ye will not make known unto me the dream, with the interpretation thereof} % RNKJV
-{if ye will not make known to me the dream, with the interpretation of it} % Webster
-\Note 2:5 {If you do not tell me what my dream was and interpret it.} % NIV; ignored, could be empty.
-Nebuchadnezzar formulated a plan for testing his advisors. If they could not relate the dream back 
-to him he would have no confidence in their interpretation (see <"v." 9>). 
+\begtt \typosize[8/11] \catcode`<=12
+\ww {if you do not make clear to me the dream and the sense of it} % BBE
+    {if ye will not make known unto me the dream with its interpretation} % Jubilee2000
+    {If you do not inform me of both the dream and its interpretation} % NETfree
+    {if all of you will not make known unto me the dream, with the interpretation thereof} % UKJV
+    {if ye will not make known unto me the dream, with the interpretation thereof} % RNKJV
+    {if ye will not make known to me the dream, with the interpretation of it} % Webster
+\Note 2:5 {If you do not tell me what my dream was and interpret it.}
+    Nebuchadnezzar formulated a plan for testing his advisors. If they could not relate the dream back 
+    to him he would have no confidence in their interpretation (see <"v." 9>). 
 \endtt
 
 The `Note 2:5` given here searches the text in verse 2:5 for \"if you do not make clear to me the 
@@ -1275,24 +1274,26 @@ translation variants in the specified order.
 You can also specify a different phrase
 for searching and for printing in a note, as shown in the following example:
 
-\begtt
+\begtt \typosize[8/11]
 \ww {head}={head ... gold, ... breast and arms ... silver, ... middle and sides ... brass, legs ... 
-iron, ... feet in part of iron and in part of potter's earth} % BBE
+        iron, ... feet in part of iron and in part of potter's earth} % BBE
     {head}={head ... gold, ... breast and arms ... silver, ... belly and thighs... brass, legs ... 
-    iron, ... feet  part of iron and part of baked clay} % Jubilee2000
+        iron, ... feet  part of iron and part of baked clay} % Jubilee2000
     {head}={head ... gold, ... breast and arms ... silver, ... belly and thighs... brass, legs ... 
-    iron, ... feet  part of iron and part of clay} % NETfree
+        iron, ... feet  part of iron and part of clay} % NETfree
     {head}={head ... gold, ... breast and arms ... silver, ... belly and thighs... brass, legs ... 
-    iron, ... feet  part of iron and part of clay} % UKJV
+        iron, ... feet  part of iron and part of clay} % UKJV
     {head}={head ... gold, ... breast and arms ... silver, ... belly and thighs... brass, legs ... 
-    iron, ... feet  part of iron and part of clay} % RNKJV
+        iron, ... feet  part of iron and part of clay} % RNKJV
     {head}={head ... gold, ... breast and arms ... silver, ... belly and thighs... brass, legs ... 
-    iron, ... feet  part of iron and part of clay} % Webster
+        iron, ... feet  part of iron and part of clay} % Webster
 \Note 2:32-33 {} Moving from the head to the feet of the image, there is a decrease not only in the  
-weight of the materials but also in its value. The image was clearly too heavy with fragile feet. It 
-is an illustration of the fate of all human kingdoms and civilizations:  at the end, each of them 
-will collapse by its own weight.
+    weight of the materials but also in its value. The image was clearly too heavy with fragile feet.
+    It is an illustration of the fate of all human kingdoms and civilizations:  at the end, each 
+    of them will collapse by its own weight.
 \endtt
+
+The \`\ww` also accepts the parameters in the form `{"}` like the \`\vdef` does it. The value of previous parameter is used instead of `{"}`.
 
 The search and replace phrases are used exactly as they are written in
 parameters of the \`\ww` command. This does not apply to \`\Note` notes, which do not have
@@ -1329,9 +1330,8 @@ So under `\endinput` we can have a few lines prepared, e.g., in this form:
     {}={} % Webster
 \Note 1:1 {}={}
 \endtt
-
 and then just copy these lines in place of the new note, edit the chapter number and verses after 
-`\Note`, or delete `={}` where they are not needed. This way you don't lose track of where
+`\Note`, or delete `={}` where they are not needed. This way you don't lose track of
 which phrases belong where, whether you write them out manually or paste them from a Bible program 
 or online resources.
 
@@ -1348,15 +1348,15 @@ the language variant currently being processed. The command has the following sy
         {<list of variants>} {<what to do>}
 \endtt
 The pairs `{<list of variants>} {<what to do>}` can be given as many times as you like.
-After each pair `{{<list of variants>}{<what to do>}` (except for the very last pair) must be 
+After each pair `{<list of variants>}{<what to do>}` (except for the very last pair) must be 
 followed immediately and without spaces by another such pair,
 Therefore, when moving to the next line, write a percent sign after the closing parenthesis to cover 
 the gap from the end of the line. Gaps at the beginning of the next line do not matter.
 You can understand the percent sign after the pair as “next pair continues”.
 
-The `<list of variants>` is a single translation variant or a list of translation variants separated 
+The `<list of variants>` is a single translation variant mark or a list of translation variant marks separated 
 by a comma and no spaces. The \TeX/ then works as follows:
-If a variant defined by the `\mark` parameter occurs in the `<variant list>`, the
+If a variant defined by the \`\tmark` parameter occurs in the `<variant list>`, then
 the following `<what to do>` is executed. If there is no such variant,
 the following `<what to do>` is skipped. Example:
 \begtt
@@ -1385,7 +1385,7 @@ The `\switch` command can be used not only for single phrases within notes
 `\Note`, but also to entire sections of input text containing, for example, `\Note`,
 several `\Note` notes, several definitions, etc.
 
-The `\switch` command cannot be used in the parameters of other macros. Only the
+The `\switch` command cannot be used in the parameters of other macros. On the other hand, the
 command `\x/<phrase>/` works there.
 
 
@@ -1401,11 +1401,10 @@ the \`\renum` command can be used as follows:
 \renum <book-abbreviation> <default-chapter-number>:<default-verse-number> = <translation> 
 <chapter-number>:<verse-number-from>-<verse-number-to>
 \endtt
-where `<translation>` is the mark of a particular translation.
-
-The `<default-chapter-number>:<default-verse-number>`  is replaced with 
-<chapter-number>:<verse-number-from>-<verse-number-to> in `\def\tmark{<translation>}`
-Such renumbering does not only apply to
+where `<translation>` is the mark of a particular translation. If the `\tmark` is declared as `<translation>` using `\def\tmark{<translation>}` then
+the `<default-chapter-number>:<default-verse-number>`  is replaced with
+<chapter-number>:<verse-number-from>-<verse-number-to>.
+Such renumbering does not apply to
 this verse, but the entire range of verses defined by `<verse-number-from>-<verse-number-to>`.
 
 For example, let's suppose that
@@ -1419,7 +1418,7 @@ We number the notes according to the translation given as the first parameter of
 Renumbered translations change the note number according to the actual verse number that the note 
 comments on, including the reference, which is then printed as “See note on 10:21.”
 
-If the renumbering is to refer to a single verse, the identical 
+If the renumbering refer only to a single verse, then the identical 
 `<verse-number-from>` and `<verse-number-to>`  should be given, as in the example below:
 
 \begtt
