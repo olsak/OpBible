@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.22 Apr 2023>}
+\_message{This is OP-Bible, version <0.23 Jul 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1190,8 +1190,10 @@
        \_ea\.wwB \_fi
 }
 \_def\.wwA#1#2 {\_advance\_tmpnum by1
-   \_def\.nextww{#1}\_def\.nextwwA{#2}%
-   \_ifx\.nextwwA\_empty \_let\.nextwwA=\.nextww \_else \_ea \.redefwwA #2\_end \_fi
+   \_isequal{"}{#1}\_iffalse
+      \_def\.nextww{#1}\_def\.nextwwA{#2}%
+      \_ifx\.nextwwA\_empty \_let\.nextwwA=\.nextww \_else \_ea \.redefwwA #2\_end \_fi
+   \_fi
    \_ifnum\.varnum=\_tmpnum  \_ifnum\_tmpnum<\.numvariants  \_ea\_ea\_ea \.wwB \_fi
    \_else \_ea \.wwA \_fi
 }
@@ -2343,6 +2345,7 @@
 \_endnamespace
 \_endcode
 
+2023-07-04 0.23 \ww enables {"} parameters like \vdef
 2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
                 \begChiasm: \.keepstyle corrected
 2023-04-21 0.21 \_punctpword corrected
