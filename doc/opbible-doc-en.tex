@@ -1458,16 +1458,16 @@ If the renumbering refer only to a single verse, then the identical
 
 \sec[links] Methods of creating hyperlinks
 
-A reference is a section of text by which the reader, even after printing it, can tell to what other place in the text (or in the~internet) one can look at. Thus, it typically contains a numerical indication of page or the number of a chapter, section, etc. In addition, if the reader is working with a PDF viewer, then this section of text is {\em active}, i.e., when the mouse hovers over
+A reference is a part of the text by which the reader, even after printing it, can tell to what other place in the text (or in the~internet) one can look at. Thus, it typically contains a numerical indication of page or the number of a chapter, section, etc. In addition, if the reader is working with a PDF viewer, then this part of the text can be {\em active}, i.e., when the mouse hovers over
 this text you can click on it and the PDF viewer will go to the specified place in the document (or to the Internet).
 
 The Bible is invariably
 structured text. It contains (in the Protestant canon) 66 books with established markers for those books,
 each book has its chapters numbered from one and each chapter has verses
 numbered from one. So there is no need to have \TeX/ generate these numbers
-automatically (as it does when typesetting, say, a technical text that is broken down into
+automatically (as it does when typesetting, say, a technical text that is divided into
 chapters and sections), and thus there is no need to use labels in the source
-document (which \TeX/ would assigns to the generated numbers during processing) and to refer by these labels, 
+document (which \TeX/ would assigns to the generated numbers during processing) and to refer by these labels in the source file, 
 as described in section 1.4.3 of the \OpTeX/ documentation. 
 It is much more efficient to refer directly to a specific place in the Bible that already has
 for many centuries now,  fixed chapter and verse numbers.\fnote{%
@@ -1480,7 +1480,7 @@ Since 1553, when Estienne published the first French Bible thus numbered, we hav
 
  
  
-The references to a specific place in the Bible are written between \code{<} and \code{>}.
+The references to a specific place in the Bible are written between \code{<} and \code{>} in the source file.
 The text between these characters is printed as written (with the exceptions mentioned below). 
 Nevertheless, \TeX/ has to be able to interpret the reference correctly in order to
 make it active with a clicking capability to the correct place in the Bible. This is done by
@@ -1493,8 +1493,8 @@ The reference between \code{<} and \code{>} is of the form
 \begtt\catcode`<=12
 <"text" data>
 \endtt
-\ or just`<data>`. 
-However, the complete `<data>` is of the form `<book> <chapter>:<verse>`. Here `<book>` is the abbreviation of the book (it must be followed by
+\ or just \code{<}`data`\code{>}. 
+The complete `<data>` is of the form `<book> <chapter>:<verse>`. Here `<book>` is the abbreviation of the book (it must be followed by
 space), `<chapter>` is the chapter number, and `<verse>` is the verse number.
 Example:
 
@@ -1513,9 +1513,9 @@ The link's closing  character `>` may be immediately (i.e., without a space) fol
 specifier, which is one of the letters:
 \begitems
 * `n` ... refers to a note,
-* `g` ... refers to a gloss (which will hopefully come into play in some of the next versions of \OpBible/ with the core text typeset in two columns),
 * `a` ... refers to an article,
-* `i` ... refers to an introduction.
+* `i` ... refers to an introduction,
+* `g` ... refers to a gloss (which will hopefully come into play in some of the next versions of \OpBible/ with the core text typeset in two columns).
 \enditems
 The link specifier is not printed in PDF, it is just internal information where 
 the active link should click. If the closing character `>` 
@@ -1526,13 +1526,24 @@ Example of a note reference:
 \begtt \catcode`\<=12
 ... see <"note on" Jer 7:4>n for more information.
 \endtt
-prints ... see {\Blue note to Jer 7:4} for more information.
+prints ... see {\Blue note on Jer 7:4} for more information.
 The click leads to the first note on Jer~7:4, not to the verse itself.
 
 In the case of a reference to an article (specifier `a`), the full entry has the format
 `<book> <chapter>`, i.e., the verse information is missing because the articles can be understood as introductions to chapters. In the case of a reference to the introduction to a book (specifier `i`), the full entry is in the format `<book>` (lacking both chapter and verse information) because these
 are book introductions. In~other cases, the full entry has the format as 
 described in section~\ref[uudaj], with the  exception described in~section~\ref[vudaj].
+
+\secc[tochapter] References to whole chapters
+
+You can omit `:` and verse number in your reference text. Then the reference points to the first verse  of the given chapter. Examples:
+\begtt \catcode`<=12
+... see <"chapter" Dan 7>
+... Joseph's story (<Gn 39-41>)
+\endtt
+In the second example, the range of chapters is given and \TeX/ creates an internal link to
+the first verse of chapter 39. Compare also with the section~\ref[verse range].
+
 
 \secc[vudaj] Exception for the format of the full entry for some books
 
@@ -1546,6 +1557,8 @@ the chapter information is missing and the format of a complete reference looks 
 Since there are different book abbreviations for different languages, this macro  needs to be defined
 according to the language used. In any case, the abbreviations have to be exactly the same as the ones declared by the `\printedbooks` macro in the main file.
 
+Example: \code{see <Phlm 3>} prints
+see {\Blue Phlm 3} and it refers to verse 3 of the Philemon, not to chapter~3. On the other hand, \code{see <Gen 3>} prints see {\Blue Gen 3} and refers to the chapter 3 of the Genesis. It is the reference to whole chapter, as described in the section~\ref[tochapter].
 
 \secc[bored] Incomplete data
 
@@ -1559,8 +1572,7 @@ Sometimes the reader can determine the location of a verse from the context, the
 ... (cf. <Jr 8:13> and <"its note">n).
 \endtt
 Yields:
-
-... We also see an analogy in {\Blue verses Jer 8:13}, {\Blue 9:7} and {\Blue 11:3}
+... we also see an analogy in {\Blue verses Jer 8:13}, {\Blue 9:7} and {\Blue 11:3}
 ... see verses {\Blue Jer 8:13}, {\Blue 15}, {\Blue 17}
 ... see all of {\Blue verse Jer 8:13}--{\Blue 22}.
 ... (cf. {\Blue Jer 8:13} and {\Blue its note}).
@@ -1577,10 +1589,6 @@ first entry in  a given text object is incomplete, the unspecified information i
 the abbreviation of the book currently being processed, or by the number of the current chapter,
 or verse, respectively.
 
-
-
-
-
 If an incomplete entry is prefixed with `\`, the unspecified information is taken from
 the book or chapter or verse currently being processed, regardless of which entry
 precedes. For example:
@@ -1593,17 +1601,6 @@ the backslash sign `\`  were not there, then this reference would click to 8:3 o
 An incomplete entry is printed as is, as incomplete. The above rules 
 only apply internally so that the active link will work properly after a mouse click.
 
-There is another different format for incomplete data: the verse number is missing. This
-is indicated by the presence of the book abbreviation and the absence of a colon and
-that it is not a book from the `\nochapbooks` exception list. Thus, the entry is in the form
-`<book> <chapter>` (separated by a space). In this case, \TeX/ will create
-internal reference to the first verse of the chapter. Examples:
-\begtt \catcode`<=12
-... see <"chapter" Dan 7>
-... Joseph's story (<Gn 39-41>)
-\endtt
-In the second example, the range of chapters is given and \TeX/ creates an internal link to
-the first verse of chapter 39. Compare also with the section~\ref[verse range].
 
 
 \secc[verse range] Format for the verse range and for the section in the verse
@@ -1624,6 +1621,10 @@ Examples:
 For example, the first link in this example prints as {\Blue Jer 8:3--7}
 and offers a link only to Jer~8:3.
 
+The same can be applied to the chapreter range, as shown in the example in the section~\ref[rochapter].
+
+\secc References to subverses
+
 Sometimes we need to refer to a part of a verse, not the whole verse. This is done
 by appending a letter immediately after the verse number. For example,
 \begtt \catcode`<=12
@@ -1633,7 +1634,7 @@ You can append such a letter to both complete and incomplete references. For the
 hyperlink, these letters are ignored but printed in PDF. Thus, the example given
 prints ... see {\Blue Dan~9:11b}, but the link leads to Dan~9:11.
 
-\secc Concealed data
+\secc Hidden data
 
 When none of the rules are sufficient to create an internal link from a link
 listed above, you can enclose everything in the link to be printed in `"..."` 
@@ -1649,12 +1650,12 @@ prints only the text {\Blue First Book of Samuel}, which internally refers (the 
 \secc[Renum] Renumbering the reference
 
 If a link points to a verse that has a different number than the default translation 
-(the first translation among the parameters  of `\variants` declaration), then  
+(the first translation among the parameters  of \`\variants` declaration), then  
  enter the reference according to the default numbering and \TeX/ will recalculate it itself according to the data specified by `\renum`. 
  It prints the recalculated data and uses it for the internal reference.
 Cf.~\ref[renum]. 
 
-\secc Data reduction
+\secc Data reduction when printing
 
 You may find it helpful to be able to write the complete data in parentheses for the reference and expect it to be automatically  reduced to incomplete if they refer to the current book.
 If they do not refer to the current book, the entry will remain complete. You can do this by
@@ -1675,7 +1676,7 @@ only as {\Blue verse~7:3}, which internally refers to Dan~7:3.
 
 The reference reduction rule set by \`\reduceref` can be turned off 
 with the \`\noreduceref` command. From there to the end of the note (\TeX/ group)
-links behave as if `\reduceref` were not turned on.
+links behave as if \`\reduceref` were not turned on.
 
 
 
@@ -1683,9 +1684,9 @@ links behave as if `\reduceref` were not turned on.
 \secc[knihajinak] The book's abbreviation (a-mark) can be printed differently
 
 If the mark for a book is declared differently in different translations following
-`\vdef`, then use only the <book> entry in the references according to the first (default)
-variant. However, if you currently use an  alternative translation via `\tmark`, 
-the link will be printed according to the `\vdef` entry of that alternative translation variant.
+\`\vdef`, then use only the <book> entry in the references according to the first (default)
+variant. However, if you currently use an  alternative translation via \`\tmark`, 
+the link will be printed according to the \`\vdef` entry of that alternative translation variant.
 Internally, nevertheless, references are linked according to the default variant.
 
 You'll find this feature is useful when you run across two different translations 
@@ -1693,7 +1694,7 @@ which name the same book differently.
 In English it is rarely the case but let's suppose that (hypothetically) there exists an English 
 translation that prefers “Paralipomenon” over “Chronicles”. Let's call this hypothetical 
 translation “Greek.”
-Your default translation (the first translation in the `\variants` declaration)
+Your default translation (the first translation in the \`\variants` declaration)
 uses “Chronicles” as all English translations usually do. 
 
 Now  you can declare `\vdef` for marks `1Chr` and `2Chr` (Chronicles) for most of English 
@@ -1706,7 +1707,7 @@ translation variant~“Greek”.
 Non-English languages may use it more often, though. 
 For example, in the Czech language, most translations 
 use “Paralipomenon” where English Bibles use “Chronicles” but there is one translation (B21) that uses 
-the title “Letopisů” instead of “Paralipomenon.” 
+the title “Letopisů” instead of “Paralipomenon”. 
 Then \code{<"viz" 1Pa 2:3>} yields  {\Blue viz 1Pa~2:3} in most of Czech translations, except in B21 where it gives {\Blue viz 1Let~2:3}.
 
 \secc[fudaj] Bad links, i.e. links to a non-existent spot
@@ -1715,11 +1716,11 @@ If a reference is made to a non-existent verse or a non-existent note, then
 there are two possibilities. If it is a reference to a book that is intentionally not being printed
 (since, for example, you are working on a test books selection,
 see also \`\printedbooks` in section~\ref[main]), then the link is  colored
-as if it were active, but it is not, and the \TeX/ gives
+as if it were active, but it is not, and \TeX/ gives
 no warning. However, if the link points to a non-existent verse or
 note within the printed books, then the link is active, the click goes to
 the last page of the PDF file, and a warning appears in the log, saying that the link
-is incorrect. However, the first time \TeX/ runs, all
+is incorrect. However, when\TeX/ runs first time, all
 links lead to nowhere, thus there is a large number of warnings about incorrect links in the log.
 Only after you run \TeX/ the second time, the links pointing to existing places are correctly interlinked.
 
@@ -1730,7 +1731,7 @@ By default, detailed link tracing is enabled in the log file.
 You can turn this off by saying \`\notracinglinks` and back on with \`\tracinglinks`.
 In addition, you can use \`\tracingouterlinks` to disable the suppression of link warnings on
 non-existent books, allowing the log to find any non-existent links resulting from
- a typo in the bookmark.
+ a typo in the reference text.
 
 \secc Links to  books and chapters 
 
