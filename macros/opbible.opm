@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.23 Jul 2023>}
+\_message{This is OP-Bible, version <0.24 Jul 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -612,8 +612,8 @@
 
 \_def\.fmtpre#1#2{\.newaction{\.gentovref{#1}}{\_addto\.fmtprebuff{#2}}}
 \_def\.fmtpreind#1#2{\.newaction{\.gentovref{#1}}{\.addpre\.preindbuff{#2}}}
-\_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{#2}}}
-\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replprepost{#2}{}{#3}{\.fmtfail{#3}}}}
+\_def\.fmtadd#1#2{\.newaction{\.gentovref{#1}}{\_addto\.buff{\_empty#2}}}
+\_def\.fmtins#1#2#3{\.newaction{\.gentovref{#1}}{\.replprepost{#2}{}{\_empty#3}{\.fmtfail{#3}}}}
 \_def\.fmtfail#1{\.fmtwarn\_addto\.fmtprebuff{#1}}
 \_def\.fmtwarn{\.printwarn{\_string\fmtins: \.currverse: The text "\.text" not found}}
 \_def\.addpre#1#2{\_ea\.addpreA \_ea{#1}{#2}#1}
@@ -2294,7 +2294,7 @@
       \_ea\_ifx\_space\.next \_let\.doquotmarkB=#2\_fi
       \_ifx\_space\.next \_let\.doquotmarkB=#2\_fi
       \_ifx\_endgraf\.next \_let\.doquotmarkB=#2\_fi
-      \_ifx\_endcenter\.next \_let\.doquotmarkB=#2\_fi
+      \_ifx\_empty\.next \_let\.doquotmarkB=#2\_fi
       \_ifx.\.next \_let\.doquotmarkB=#2\_fi
       \_ifx,\.next \_let\.doquotmarkB=#2\_fi
       \.doquotmarkB}%
@@ -2345,6 +2345,7 @@
 \_endnamespace
 \_endcode
 
+2023-08-17 0.24 \quotationsmark corrected secondly
 2023-07-04 0.23 \ww enables {"} parameters like \vdef
 2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
                 \begChiasm: \.keepstyle corrected
