@@ -1926,9 +1926,9 @@ use
 * \`\insertSpanText`: insert text (for example a timeline), can be used in the book introduction,
 * \`\putSpanImage`: insert a prepared PDF image, anchored relative to the number
    chapter and verse, can be used in the notes file,
-* \`\putSpanText`: like `\putSpanImage`, but inserts text instead of an image.
+* \`\putSpanText`: like \`\putSpanImage`, but inserts text instead of an image.
 \enditems
-The `\insertSpanImage` and `\insertSpanText` commands place the image or text 
+The \`\insertSpanImage` and \`\insertSpanText` commands place the image or text 
 at the bottom of two pages according to the following rule. Suppose that
 the command itself is executed when \TeX/ creates the current page of
 the number $c$. Then
@@ -1942,34 +1942,37 @@ the number $c$. Then
 This ensures that the image or text will always be visible on the double page
 of an open book.
 
-The `\putSpanImage` or `\putSpanText` commands work according to the same rule,
+The \`\putSpanImage` or \`\putSpanText` commands work according to the same rule,
 only the number $c$ in this case corresponds to the page number on which the
 the beginning of the verse specified in the command parameter.
 
 These commands have the following parameters:
-
-\`\insertSpanImage` `{Title} [<column>] (<parameters>) {<filename>}`
-Here, <Title> is used in the header of the image and <snapshot> can be set,
-to refer to the image (and thus create an active link) using `\ref`.
-If you don't want to use the funnel, leave the parameter empty: `[]`.
+\medskip
+\`\insertSpanImage` `{Title} [<label>] (<parameters>) {<filename>}`
+\medskip\noindent
+The <Title> is used in the header of the image and <label> can be set,
+to refer to the image (and thus create an active link) using `\ref[<label>]` at another place.
+If unused, you can leave the parameter empty: `[]`.
 Furthermore, <parameters> can specify how the image is placed, typically this
 parameter is empty: `()`. Finally, <filename> is the name of the image file
 including the extension. Typically this is a PDF file, i.e., it has the extension `.pdf`.
-
+\medskip
 \`\insertSpanText` `{Title} [<column>] (<parameters>) {<text>}`
-The parameters are the same as `\insertSpanImage`, only the last parameter is different.
+\medskip\noindent
+The parameters are the same as \`\insertSpanImage`, only the last parameter is different.
 It contains the text to be printed across two pages. Typically there might be
-a set of `\timeline`, `\timelinewidth`, `\arrowtext`, `\tlput` commands can be used,
-`\tline`, `\tlines` to create a timeline, see the section~\ref[timeline].
-
+a set of `\timeline`, `\timelinewidth`, `\arrowtext`, `\tlput`, `\tline`, `\tlines` commands to create a timeline, see the section~\ref[timeline].
+\medskip
 \`\putSpanImage` `<chapter>:<string> {Title} [<column>] (<parameters>) {<filename>}`
+\medskip\noindent
 In addition, there is a <chapter>:<verse> specifying the verse whose beginning is on page $c$
-and the image is positioned according to the rule above. The other parameters are the same as
-for `\insertSpanImage`.
-
+and the image is positioned according to the rules mentioned above. The other parameters are the same as
+for \`\insertSpanImage`.
+\medskip
 \`\putSpanText` `<chapter>:<verse> {Title} [<image>] (<parameters>) {<text>}`
-behaves the same as `\insertSpanText`, but with the addition of the <chapter>:<string> parameter
-has the same meaning as in the `\putSpanImage` command.
+\medskip\noindent
+It behaves the same as \`\insertSpanText`, but with the addition of the <chapter>:<string> parameter
+has the same meaning as in the \`\putSpanImage` command.
 
 
 \secc[timeline] Commands to create a timeline
@@ -1997,14 +2000,14 @@ timeline in \`\insertSpanText` or \`\putSpanText`). For example:
 
 The timeline is built line by line. Commands for text or line segments that
 are on the same line are written below each other in any order. 
- \`\vskip` `<dimension>` command moves to the next line, where the dimension can be specified in
+ \`\vskip` `<dimension>` command moves to the next line, where the dimension can be specified
 in multiples of the line height using the unit \`\l`, i.e., `\vskip 1.5\l`
 means a shift of one and a half lines down.
 
 Text is inserted via \`\tlput` `<symbol> <position> <flag> (<setting>) {<text>}`.
-The <symbol> parameter can be `a` if we want the text to be above the current
-rate position, or `b` if we want the text to be below the current rate position.
-When the <symbol> is `a`, multiline text extends upwards, and when `b`, it extends downwards.
+The <symbol> parameter can be \"`a`" if we want the text to be above the current
+rate position, or \"`b`" if we want the text to be below the current rate position.
+When the <symbol> is \"`a`", multiline text extends upwards, and when \"`b`", it extends downwards.
 
 The <position> parameter is the location on the timeline (in years) to which the text should be attached. 
 From this point, the text will flow to the right if <flag> is specified by the \`\rlap` instruction, 
@@ -2043,7 +2046,7 @@ This timeline is shrinked from a double-page size:
 
 and was typeset as follows:
 
-\begtt
+\begtt \typosize[8/11]
 \def\small{\typosize[8/10]}
 \putSpanText 12:40 {How long have been the Israelites in Egypt?} [] () {%we are in Exodus
 \timeline 430         % total number of years (or other units) in the timeline
@@ -2082,10 +2085,10 @@ and was typeset as follows:
 \arrowtext 215..430 (\bf) {215 years in Egypt}
 \vskip2\l
 \tlines {|30|400|}    % the vertical short lines
-\arrowtext 30..430 (\bf) {Abraham's seed afflicted \hskip1cm in a land not theirs for 400 years (Gen 15:13)}
+\arrowtext 30..430 (\bf) {Abraham's seed afflicted in a land not theirs for 400 years (Gen 15:13)}
 \tlput b 15 (\small) {25$+$5$=$30\cr Isaac weaned\cr in 5 years}
 \vskip.5\l
-\tlput b 65 (\small) {Ishmael bullied Isaac in Canaan \cr since the  day Isaac was weaned (Gen 21:8--9)}
+\tlput b 65 (\small) {Ishmael bullied Isaac in Canaan \cr since the day Isaac was weaned (Gen 21:8--9)}
 \tlput b 385 (\small) {Israel afflicted in Egypt (Exod 1:11)}
 \tlput b 215 () {\hskip2.5cm 430$-$30$=$400}
 }%end of \putSpanText
