@@ -2059,7 +2059,7 @@ and was typeset as follows:
 \tlput a 430 \llap(\bf)   {Moses received \cr the Law (Exod 24:12)}   % see \_doc above 
                                                                       % for more details
 \vskip 1.5\l          % \vskip 1.5\baselineskip
-\tlput a   0 \rlap()      {Entered do Canaan (Gen 12:4)}               % print text
+\tlput a   0 \rlap()      {Entered do Canaan (Gen 12:4)}              % print text
 \tlput a 430 \llap()      {Left Egypt (Exod 12:41)}                   % print text
 \tlput a 215      (\bf)   {\hskip-6mm Entire \hskip8mm Israel\cr 
                                              \hskip 8mm arrived to 
@@ -2110,7 +2110,7 @@ The outer margin is then shrunk because there is no more printed material in it.
 
 
 By default, each \`\Note` occupies a new paragraph in a  double column print. 
-Th command `\mergednotes` makes sure that all notes on a single verse are always 
+The command \`\mergednotes` makes sure that all notes on a single verse are always 
 combined into a common paragraph. 
 However, this comes at a cost of loosing the ability for the phrase in the note
 to follow its original in the Biblical verse on the same page.
@@ -2124,17 +2124,17 @@ Other page formatting options are still in the planning stages and are not imple
 
 \sec Error search options
 
-It may happen that you make a typo in the `notes-*`, `intro-*` files,
-`articles-*`. If you had included the file  directly to the whole Bible processing,
-\TeX/ would report an error at a completely different point in time than when it read the file; 
-tracing back such an error is then very difficult. Moreover, typically the error
-occurs at a different stage of processing and thus is often reported in a very
-incomprehensible and misleading way.
+It may happen that you make a typo in the `notes-*`, `intro-*`,
+`articles-*` files. If you had included the file with a typo to the whole Bible processing,
+\TeX/ would report an error at a completely different point in time than when it read the file. 
+Unfortunately, tracing back such an error is then very difficult. Moreover, typically the error
+occurs at a different stage of processing and thus it is often reported in a very
+incomprehensible and misleading message.
 
 However, it is possible to process the newly written files directly first, but with no
-connection to the core text, and in this mode errors are reported more directly.
+connection to the core text. In this mode, possible errors are reported more directly.
 To search for errors directly, use \`\checksyntax` <file list> `{}`
-Here the file list are the names of the files to be checked without the `.tex` extension.
+Here the file list are the names of the files to be checked (without the `.tex` extension).
 You can have, for example, at the end of the main file, line like this:
 
 \begtt
@@ -2149,7 +2149,7 @@ Note: using \`\checksyntax` disables the \`\processbooks` command, which in turn
 does nothing, so the core text of the Bible is not loaded at all.
 
 
-\secc Generating default files `notes`, `fmt`, `intro`
+\sec Generating default files `notes`, `fmt`, `intro`
 
 If the files `notes`, `fmt`, `intro` do not exist, \OpBible/ does not complain and
 behaves as if they were empty. But you might want to have these
@@ -2166,9 +2166,9 @@ First you need the `books.tex` file with the names and abbreviations for all the
 as mentioned in the~\ref[books] section. This can be generated, for example
 from Sword using the `mod2tex` script, see section~\ref[txs].
 
-In the `templates.tex` file, the macro `opbible.opm` must first be loaded using `\input`, 
+In the `templates.tex` file, the packagge `opbible.opm` must first be loaded using `\input`, 
 then the `books.tex` file, 
-and then you can specify file templates with the `\filegen` command as follows:
+and then you can specify file templates with the \`\filegen` command as follows:
 
 \begtt
 \filegen {<file-name>}
@@ -2176,7 +2176,7 @@ and then you can specify file templates with the `\filegen` command as follows:
 \endfile
 \endtt
 %
-There <filename> must (and <file-content> can) contain the double character `@@`, 
+The <filename> must (and <file-content> can) contain the double character `@@`, 
 which is automatically replaced by the book abbreviation <bmark> specified in `books.tex`. 
 As  many default files as there are book titles declared in `books.tex` are then automatically generated.
 For example, `templates.tex` might look like this:
@@ -2209,16 +2209,16 @@ The `optex templates` command will generate 66 files in this case
 `intro-1John.tex`, `intro-1Cor.tex`, etc. with the specified single line
 and 66 `notes` files  (`notes-1John.tex`, etc.) with the content of the specified nine lines.
 
-You can also use the triple character `@@@`in the <file-content>, which is then converted into
+You can also use the triple character `@@@` in the <file-content>, which is then converted into
 the full title of the book. So after specifying 
-`%  Introduction to the book @@@` in the `templates.tex` file
+`% Introduction to @@@` in the `templates.tex` file
 you will get the file with the text `% Introduction to The First Book of Moses (Genesis)`, 
 another with `% Introduction to The Second Book of Moses (Exodus)` etc.
 
 In the example, the file names are chosen so that they are generated in the current
 directory. If you have prepared subdirectories in this directory corresponding to
 names, it is possible to generate files directly into them, for example, write
-`\filegen {intros/intro-@@.tex}`.
+\`\filegen {intros/intro-@@.tex}`.
 
 To generate a list of files with the names other than the <bmark> list  in the `books.tex` file, 
 after reading in `books.tex`, define macro \`\genbooks` with your chosen set of abbreviations. 
@@ -2227,8 +2227,8 @@ For example, after
 \def\genbooks {Gn Ex Lv Nu Dt}
 \endtt
 %
-the `\filegen` command will only generate templates for the five books with the specified
-abbreviations. You can also define `\genbooks` before each `\filegen`, in which case
+the \`\filegen` command will only generate templates for the five books with the specified
+abbreviations. You can also define \`\genbooks` before each \`\filegen`, in which case
 you'll be able to have different book abbreviations for different file types (e.g., `intro-Gen.tex` and `notes-Gn.tex`).
 
 \sec[tricks] Tricks and Stunts  
