@@ -1081,7 +1081,7 @@ This is followed by the text of the article. Then it can continue with the next 
 All the articles for a given book are thus accumulated in a singe file.
 
 If you specify the request \`\putArticle` but the corresponding file `article-*.tex`
-or the corresponding line  \`\Article` `[<article-number>]` does not exist, the \TeX will end with 
+or the corresponding line  \`\Article` `[<article-number>]` does not exist, the \TeX/ will end with 
 an error.
 
 
@@ -2247,7 +2247,7 @@ Serious students of the Bible probably know that some parts of it are written in
 \leftline{\hskip 4em{(Matthew 19:30) } }
 \medskip
 
-or a passage:
+\noindent or a passage:
 
 \medskip
 Life of Abraham in Genesis:
@@ -2259,7 +2259,7 @@ Life of Abraham in Genesis:
 \leftline{\hskip 2em{\bf A'} Progeny and Death (22:1--25:18)}
 \medskip
 
-or, for that matter, an entire book:
+\noindent or, for that matter, an entire book:
 
 \medskip
 Leviticus:
@@ -2271,7 +2271,7 @@ Leviticus:
 \leftline{\hskip 4em{\bf C'} Purity (17--20)}
 \leftline{\hskip 3em{\bf B'} Priesthood (21--22)}
 \leftline{\hskip 2em{\bf A'} Ritual (23--27)}
-
+\medskip
 
 The way to type such structures is rather easy.
 Entire chiasm has to be enclosed inside `\begChiasm` and `\endChiasm` pair; then number of asterixes at the beginning of each new line determines the indentation.
@@ -2287,10 +2287,9 @@ You only have to type:
 \endChiasm
 \medskip
 \endtt
-
+%
 and \OpBible/ will take care of the rest. If you don't want to have the boldfaced {\bf A, B, C... B', 
-A'} at the beginning of the lines, type `\style q` right after `\begChiasm`. If then you want them 
-back, start the new chiasm with the line  `\begChiasm \style Q`. 
+A'} at the beginning of the lines, type `\style q` right after `\begChiasm`. 
 
 %...
 
@@ -2299,7 +2298,7 @@ back, start the new chiasm with the line  `\begChiasm \style Q`.
 This section loosely follows the section~\ref[fmt].
 Let's suppose you want to let the reader know which words have been added by the translators that 
 are not in the original language.
-In Daniel 4 you come to the verse 16 where there are several occurrences 
+In Daniel 4, you come to the verse 16 where there are several occurrences 
 of the word  heart: {\em Let his heart be changed from that of a man, 
 and the heart of a beast be given to him; and let seven times go by him.} (BBE)
 
@@ -2321,9 +2320,9 @@ Typing
 \fmtins{4:16}{hea}{{}}
 \fmtfont{4:16}{heart}{\em}
 \endtt
-\medskip
+%
 will do the job; the macro `\fmtfont`  will not recognize the word in `hea{}rt` as its second 
-parameter, thus applying the font change only unto the only other first `heart` that it can see, 
+parameter, thus applying the font change only into the other first `heart` that it can see, 
 which is the one you need. 
 
 
@@ -2338,7 +2337,7 @@ In other words, use
 \fmtins{4:16}{him.}{\medskip}
 \fmtfont{4:16}{him.}{\em}
 \endtt
-
+%
 and do not switch the order of these two lines.
 
 %???
@@ -2361,25 +2360,24 @@ Compare the instructions below with the sample files that come as a part of the 
 \secc Typically in the `main.tex` file
 
 \begitems
-* \`\load`: Macro package to be loaded:`\load [<macro package>]`. Example: `\load [opbible]` 
+* \`\load`: Macro package to be loaded:`\load [<macro package>]`. Example: `\load [opbible]`.
 * \`\tmark`: `\def\tmark{<t-abbreviation>}`: declaration of the t-abbreviation of a Bible 
 translation, e.g., BBE, RNKJV, etc. 
-   Example: `\def\tmark{BBE}` `%\def\tmark{NETfree}`
+   Example: `\def\tmark{BBE}`.
 * \`\txsfile`: `\def\txsfile {<filename mask>}`: `.txs` location declaration. 
-    You can use `\amark` or `\bmark` in the filename mask. 
-    Example: `\def\txsfile {./txs/\tmark-\bmark.txs}`
+    You can use \`\amark` or \`\bmark` in the filename mask. 
+    Example: `\def\txsfile {./txs/\tmark-\bmark.txs}`.
 * \`\notesfile`: `\def\notesfile {<filename mask>}`:  notes files location declaration. Example: 
-`\def\notesfile {./notes/notes-\amark.tex}`
+`\def\notesfile {./notes/notes-\amark.tex}`.
 * \`\introfile`: `\def\introfile {<filename mask>}`:  book introductions location declaration. 
-Example: `\def\introfile {./intros/intro-\amark.tex}`
+Example: `\def\introfile {./intros/intro-\amark.tex}`.
 * \`\articlefile`: `\def\articlefile {<filename mask>}`: article files location declaration. 
-   Example: `\def\articlefile {./articles/articles-\amark.tex}`
+   Example: `\def\articlefile {./articles/articles-\amark.tex}`.
 * \`\fmtfile`: `\def\fmtfile {<filename mask>}`:  formatting data files location declaration. 
-Example: `\def\fmtfile {./fmt/fmt-\tmark-\amark.tex}`
-* \`\input`: File to be read in:`\input {<file-name>}`. Example: ` \input {vars.tex} \input` 
-`{books.tex}`
-* \`\printedbooks`: `\def\printedbooks {<list of a-marks>}` of the books, separated by a space:
-    list of the books to be processed by `\processbooks`. Example: `\def\printedbooks {Gen Exod Lev` 
+Example: `\def\fmtfile {./fmt/fmt-\tmark-\amark.tex}`.
+* \`\input`: File to be read in: `\input {<file-name>}`. Example: `\input {vars.tex}`.
+* \`\printedbooks`: `\def\printedbooks {<list of a-marks>}` declares a list of the books, separated by a space:
+    the listed books are processed then by `\processbooks`. Example:\nl `\def\printedbooks {Gen Exod Lev` 
     `Num` `Deut}`
 * \`\processbooks`: instruction to process the Bible, or to be more  specific, to process the books 
 listed in `\printedbooks`.
@@ -2391,11 +2389,11 @@ read in the files `books.tex`, `vars.tex` and finally start processing with the 
 \secc Typically in the `books.tex` file
 
 \begitems
-* \`\BookTitle` `<a-mark> <b-mark> <title>`: declares  a-mark, b-mark and title for each book. 
+* \`\BookTitle` `<a-mark> <b-mark> {<title>}`: declares  a-mark, b-mark and title for each book.
   As each individual book is processed, the  `\def\amark{<a-mark>}` and `\def\bmark{b-mark}` is 
   executed. 
   The a-mark is used in references within the Bible text, while  b-mark may be used in file names.
-  Example: `\BookTitle 2Sa 2Sam {II Samuel}`
+  Example: `\BookTitle 2Sa 2Sam {II Samuel}`.
 * \`\BookException` `<a-mark> {<code>}`: before processing a book, the
   <code> is executed.
 * \`\BookPre` `<a-mark> {<code>}`: after printing the introduction, before the main text of
@@ -2406,8 +2404,7 @@ executed.
   implemented in this version of OpBible. 
   Nevertheless, feel free to create your own.
 * \`\nochapbooks`: `\def\nochapbooks{<list>}`: list of the a-marks of the books that
-  are not divided into chapters (only have one chapter). Example: `\def\nochabooks {Obad Phlm 2John 
-  3 John` `Jude}`
+  are not divided into chapters (only have one chapter). Example:\nl `\def\nochabooks {Obad Phlm 2John 3John Jude}`.
 \enditems
 
 \secc Typically in the `vars.tex` file
@@ -2418,8 +2415,8 @@ This file declares variant phrases for different versions of the Bible translati
 * \`\variants` `<number>` `<list of t-abbreviations of translation variants>`: declares the number of
   translation variants and a list of \hbox{t-abbreviations}. The `<number>` must match the number of
   t-abbreviations as well as the number of parameters of the \`\vdef` and \`\ww` commands.
-Example: 
-`\variants 6 {BBE} {Jubilee2000} {NETfree} {UKJV} {RNKJV} {Webster}` 
+Example:
+`\variants 6 {BBE} {Jubilee2000} {NETfree} {UKJV} {RNKJV} {Webster}`. 
   
 * \`\vdef` `<phrase variants>`; declares the variants of the phrase, the first of which is
  the reference one. The phrase variants are placed in brackets `{<like this>}`.
@@ -2437,13 +2434,13 @@ Example:
 \secc Typically in the `notes-*.tex` file
 
 \begitems
-* \`\Note` `<verse number> {<commented phrase>} <note text terminated by a blank line>`:
-  declares a note. Example:   `\Note 5:12 {Belteshazzar} See <"note on" 1:7>n.`  
+* \`\Note` `<chap-num>:<verse-num> {<commented phrase>} <note text terminated by a blank line>`:
+  declares a note. Example:   \code{\\Note 5:12 {Belteshazzar} See <"note on" 1:7>n.}
 * \`\ww` `<variants of phrase>`: must precede \`\Note`. In
   each translation variant, the following note will be bound to the phrase
   of a particular phrase according to the currently defined t-mark.
  Example:
-\begtt
+\begtt \catcode`<=12
 \ww {by the order of Belshazzar} % BBE
     {Belshazzar commanded}       % Jubilee2000
     {on Belshazzar's orders}     % NETfree
@@ -2461,20 +2458,17 @@ declaration.
   <phrase> is printed as is. In any other case (t-mark other than the very first one of the 
   \`\variants` list is defined),  <phrase> is printed as whatever is declared by \`\vdef` for that 
   particular t-mark.
-  Example: `\x/He-goat/`
+  Example: `\x/He-goat/`.
 * \`\putBot` `<verse number> {<title>} [<label>] (<commands>) {<code>}`:
   sets up an image/diagram at the bottom of the page containing the <verse number>.   
-  Example: 
-  
-`\putBot 2:1 {Daniel's Visions of the Four Kingdoms} [danielsvisions] () {...}`
+  Example:\nl
+`\putBot 2:1 {Daniel's Visions of the Four Kingdoms} [danielsvisions] () {...}`.
 
 * \`\putArticle`: Inserts an article, declared in the `articles-*.tex` file. 
-
-Example: `\putArticle 5:20 {Who was Darius the Mede?} [6] ()`
+Example:\nl `\putArticle 5:20 {Who was Darius the Mede?} [6] ()`
 
 * \`\putCite`: Inserts a quotation on the top of a page above the Biblical text. 
-
-Example: `\putCite 5:4 {Power corrupts; and absolute power corrupts absolutely.`
+Example: `\putCite 5:4 {Power corrupts; and absolute power corrupts absolutely.`\nl\null\qquad
          `\quotedby {Lord Acton}}` 
 
 
@@ -2489,61 +2483,49 @@ Example: `\putCite 5:4 {Power corrupts; and absolute power corrupts absolutely.`
 \begitems
 * \`\title`: 
 After you define `\title` as something like this:
-
+\nl
 `\def\title#1{\medskip\noindent{\bf#1}\par\nobreak}`
 then you can begin some paragraphs with it. 
-
 Example:
 `\title{Overview:}`, `\title{Author:}`, etc.
 
-* \`\insertBot` `{MapTitle}[map](){`
-`\inspic{map-crop.pdf}`
+* \`\insertBot` `{<MapTitle>}[<label>](<params>){<data>}` inserts `<data>` at the bottom of the current page. Example
+\begtt
+\insertBot {Map title} [label] () {
+   \inspic{map-crop.pdf}
+   \putstext 10mm 25mm {Text on the map}
+}
+\endtt
 
-`\putstext 10mm 25mm {Text on the map}`%
-                            `}`
 
-
-
-*\`\Outline`
-%\enditems
-%\begitems
-* Faithfulness of people
-* Faithfulness of God
-
-...
-%\enditems
-*`\rightnote{Right column text of the outline}`
-\enditems
+*\`\Outline` starts the last part of the introduction text. It enables nested lists declared by `\begitems`, `\enditems` and the text is printed only to the left column of the page. The command \`\rightnote {<comment>}` can be used here; the <comment> is printed to the right column.
+Example: see the end of the file `intro-Dan.tex`.
 
 %... \TODO, add
+\enditems
 
 \secc Typically in an `articles-*.tex` file
 
 \begitems
 
-*\`\Article` `[<chapter-number>]` `<text of the article.>`
-    The `<chapter-number>` could be any number, unique for that particular article, but 
+*\`\Article` `[<chapter-number>]` `<text of the article>`:
+    Declares <text of the article> for given <chapter-number>. The <text of the article> ends at the end of the file or by another `\Article` declaration.
+    The `<chapter-number>` could be any label, unique for that particular article, but 
     as we suppose that there will most likely not be more than one article per chapter,
-    it sounds logical to assign the number of the very chapter where we want the article to occur.
-    This also ensures that you will easily remember the article's number when you call it to appear 
+    it sounds logical to assign the number of the chapter where we want the article to occur.
+    This also ensures that you will easily remember the article's label when you call it to appear 
     from  the `notes-*.tex` file (see above).
 
-* \`\Cite` `<capital-letter>` `{<text of the quotation>` `\quotedby{<author of the quotation>}}`
- 
- `%\swapCites`
-
+* \`\Cite` `<capital-letter>` `{<text of the quotation>` `\quotedby{<author of the quotation>}}`.
+%`\swapCites
 This is the way to declare a quotation within an article, as described in the section~\ref[cite]. 
 Capital letter that identifies the article can be <A> if it is the first quotation in that article, 
 then <B> if it is already the second one, etc.
 After such declaration, you will probably want to make it visible somewhere. 
 You have to decide where in the article it would be best to insert it, and there you type
 
-* \`\insertCite` `A\left \`
-
-You chose between`\left` or `\right` after you make sure that all the preceding material of that 
-particular book is complete (thus ensuring that the article will not later switch pages of its 
-beginning from odd to even or vice versa) and then test it with `\swapCites`. When you are happy  
-with the outcome, feel free to disable `\swapCites`.
+* \`\insertCite` `A\left ` or \`\insertCite` `A\right`.
+See section~\ref[cite] for more information.
 
 \enditems
 
@@ -2555,16 +2537,15 @@ Data formatting file (named, for example, `fmt-BBE-Gen.tex`) can contain any of 
 commands:
 
 \begitems
-* \`\fmtpre` `{<chapter-number:verse-number>}{<command>}` inserts material (text or space) 
-before specified verse.
-* \`\fmtadd` `{<chapter-number:verse-number>}{<command>}` inserts material after specified verse.
-* \`\fmtins` `{<chapter-number:verse-number>}{<phrase>}{<command>}` inserts material after the 
+* \`\fmtpre` `{<chapter-number>:<verse-number>}{<commands>}` inserts <commands> before specified verse.
+* \`\fmtadd` `{<chapter-number>:<verse-number>}{<commands>}` inserts <commands> after specified verse.
+* \`\fmtins` `{<chapter-number>:<verse-number>}{<phrase>}{<commands>}` inserts commands just after the 
    <phrase> that has to exist in the specified verse.
 * \`\chaptit` `{<chapter-title>}` specifies the title to go before the first verse of a chapter, to 
   be used inside `\fmtpre` as its parameter, for example, `\fmtpre{1:1}{\chaptit{CHAPTER TITLE}}`.
 * \`\subtit` `{<pericope title>}` is similar to `\chaptit` except that it comes inside chapter as a 
 title of just part of a chapter. However, it could be used even before the first verse of a chapter, 
-usually in situations where the chapter title is to be immediately followed by a pericope title:
+usually in situations where the chapter title is to be immediately followed by a pericope title. Example:
 `\fmtpre{1:1}{\chaptit{CHAPTER TITLE}\subtit{Pericope Title}}`.
 
 \enditems
