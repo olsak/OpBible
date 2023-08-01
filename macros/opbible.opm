@@ -2,7 +2,7 @@
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.24 Jul 2023>}
+\_message{This is OP-Bible, version <0.25 Jul 2023>}
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1688,6 +1688,7 @@
 \_setbox\.rqqbox=\_hbox{\_kern2pt\_lower38pt\_hbox{\_setfontsize{at70pt}\_bf\LiRed“}}
 \_ht\.lqqbox=0pt \_dp\.lqqbox=0pt
 \_ht\.rqqbox=0pt \_dp\.rqqbox=0pt
+\_addto\enquotes{\_setbox0=\_box\.lqqbox \_setbox\.lqqbox=\_box\.rqqbox \_setbox\.rqqbox=\_box0 }
 
 \_def\quotedby{\_par}
 \_def\.quotedbyright#1{%
@@ -2032,6 +2033,10 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Outline
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   The \`\Outline` starts two column format in the introduction text. 
+   Nested lists are
+   printed into the first colum and comments declated by
+   \`rightnote``{<comment>}` are printed to the right column. 
    \_cod
 
 \_newdimen\.colsep
@@ -2345,6 +2350,7 @@
 \_endnamespace
 \_endcode
 
+2023-08-28 0.25 \enquotes swaps the \.lqqbox/\.rqqbox
 2023-08-17 0.24 \quotationsmark corrected secondly
 2023-07-04 0.23 \ww enables {"} parameters like \vdef
 2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
