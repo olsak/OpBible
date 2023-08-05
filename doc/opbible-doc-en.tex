@@ -2563,23 +2563,24 @@ It makes sense to use these features if the image you use is a blank map with no
 
 \begitems
 
-* \`\insertBot` `{<Map's title>}[<label>](<optional parameters>){<map legend>}` 
+* \`\insertBot` `{<Map's title>}[<label>](<optional parameters>){<data>}` 
 Map's title will show up in a horizontal bar above the image;
 <label> serves for reference purposes as usually. 
 Optional parameters can modify the dimensions of the image (e.g., `\picw=3in`) but if you are happy 
 with the default setting 
-(which is `\picw=\hsize`), type in empty brackets `()`. 
-Map legend is everything that will show over the image as text of any kind. 
+(which is `\picw=\hsize`), type in empty brackets `()`.
+The last parameter <data> includes \`\inspic` `{image-file}` command followed by an optional map legend. 
+The map legend is everything that will show over the image as text of any kind. 
 In can include definitions like
 * `\Heros \cond \setfontsize{at 9pt}\rm` to set the font;
 * \`\putstext` `2mm 108mm {\vtop{\hsize6.5cm \baselineskip9pt \noindent`
 
   `\leftskip=3pt \rightskip=3pt   Soon after Alexander' death...}}` to type a text with partially 
   transparent background over a map.
-* \`\puttext` `55mm 53mm {<"Dan 11:5 (“king of the south”)"_Dan 11:5>}` to place a text that is an 
+* \`\puttext` {\everyintt={}`55mm 53mm {<"Dan 11:5 (“king of the south”)"_Dan 11:5>}`} to place a text that is an 
    active hyperlink at the same time;
-*  `\puttext` `48mm 55mm {\c[-40/\kern1pt\pdfrotate{0}]{Jerusalem}}` to place an oblique text; 
-* `\puttext` `130mm 50mm {\c[-40/\kern4pt\pdfrotate{-1}]{ELAM}}` to place a concave or convex text.
+*  `\puttext` `48mm 55mm {`\`\c``[-40/\kern1pt]{Jerusalem}}` to place a text rotated 40°; 
+* `\puttext` `130mm 50mm {`\`\c``[-40/\kern4pt\pdfrotate{-1}]{ELAM}}` to place a concave or convex text.
 
 \enditems
 
@@ -2588,21 +2589,22 @@ In can include definitions like
 \secc When creating timelines
 \begitems
 *\`\putSpanText` `12:40 {<title>} [<label>] (<parameters>)` 
-                 `{<the timeline itself>}`
-You can use an pre-prepared image for a timeline, in which case you would call it by 
-`\putSpanImage` instead of `\putSpanText`. Remember, however, that this will rob you of the 
+                 `{<the timeline itself>}` --
+you can use an pre-prepared image for a timeline, in which case you would call it by 
+\`\putSpanImage` instead of `\putSpanText`. Remember, however, that this will rob you of the 
 possibility to have references as active hyperlinks and variations of phrases following different 
 Bible versions. If you insist on these features, it is preferable to stick with `\putSpanText`.
 
-* \`\timeline` `430`       sets the  total number of years (or other units) in the timeline.
-* \`\timelinewidth` `36cm`    the width of timeline (here: 430 years = 36 cm).
-* \`\arrowtext` `0..430 (\bf)` `{430 years (Exod 12:40; Gal 3:16--17)}` 
+\noindent The timeline itself can be created by:
+* \`\timeline` `430`  --     sets the  total number of years (or other units) in the timeline.
+* \`\timelinewidth` `36cm` --   the width of timeline (here: 430 years = 36 cm).
+* \`\arrowtext` `0..430 (\bf)` `{430 years (Exod 12:40; Gal 3:16--17)}` -- 
                          prints arrow between from..to units with the text in the middle. 
-* \`\vskip` `2\l`             `\vskip 2\baselineskip`; `\l` is only shortcut for `\baselineskip`
-* \`\tlput` `a 0 \rlap(\bf)`   `{Abraham received\cr promise (Gen 12:3-5,7; 15:5--6)}`   
+* \`\vskip` `2\l` is equal to             `\vskip 2\baselineskip`; `\l` is only shortcut for `\baselineskip`
+* \`\tlput` `a 0 \rlap(\bf)`   `{Abraham received\cr promise (Gen 12:3-5,7; 15:5--6)}` --  
        prints text; 
-* \`\tline` `0..430`         prints horizontal line from..to units;
-* \`\tlines` `{0|25|60|130|215|0}` prints vertical short lines, numbers mean distance between them.
+* \`\tline` `0..430`   --      prints horizontal line from..to units;
+* \`\tlines` `{0|25|60|130|215|0}` -- prints vertical short lines, numbers mean distance between them.
 
 \enditems
 
