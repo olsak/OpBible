@@ -51,8 +51,8 @@ General Public License (Version 2, 1991).
 You can port parts of this software into your own macros and/or make them part of other
 packages, but the package, however different from the original distribution, must not be named \OpBible/.
 
-Adaptations of specific implementations (e.g.\ fonts) are considered additional files and
-their inclusion does not violate the license.
+Adaptations of specific implementations (e.g.,\ fonts or other Bible versions) are 
+considered additional files and their inclusion does not violate the license.
 
 
 \vfill\eject
@@ -146,9 +146,9 @@ Now let's take a brief look at Daniel, chapter 2, where the animals, countries, 
 \begitems
 * {\it Bear\/} is the same everywhere but
 * {\it Leopard\/} of most tranlations is {\it Tiger\/} in Jubilee2000;
-* usual {\it Ram\/} becomes {\it Male sheep,\/} as well as {\it clay\/} changes {\it potter's earth\/} in BBE;
+* usual {\it Ram\/} becomes {\it Male sheep,\/} as well as {\it clay\/} changes into {\it potter's earth\/} in BBE;
 * ordinary {\it brass\/} turns into {\it bronze\/} in NETfree;
-* {\it Greece\/} of BBE, Jubilee2000, and NETfree is {\it Grecia\/} in UKJV, RNKJV, and Webster.
+* {\it Greece\/} of BBE, Jubilee2000, and NETfree is {\it Grecia\/} in UKJV, RNKJV, and Webster; compare all six translations.
 \enditems
 
 You can write your commentary in the way that the result would be all six translations at the same time, with no need to modify the notes file, while the notes (or charts, maps, etc.), will display the phrases as they appear in your current Bible. See the sample book of Daniel, chapter two, the chart of Daniel's visions.
@@ -412,12 +412,12 @@ The formatting files are discussed in section~\ref[fmt].
 The macro \`\notesfile` defines the location of the notes files.
 That's  where you will write your commenting notes printed with the core text. 
 
-Each book Bible has its own notes file. 
+Each book of the Bible has its own notes file. 
 The notes refer to a place in the core text, and it is the job of \TeX/ to create pages with both the core text and the commenting notes together. 
 For more details on how to write notes files, see section~\ref[note]. 
 Notice that the note files are common to all translations, i.e., there are no separate files distinguished by \`\tmark`. 
 The note writing rules allow for the possibility to have various translations over 
-one common notation, as long as they are in one language (e.g.,English; see section~\ref[translations]). If you want to write
+one common notation, so long as they are in one language (e.g.,English; see section~\ref[translations]). If you want to write
 notes for a completely different language, it is the best  to start a new project (preferably in 
 another main directory) with different `.txs` files, different formatting and note files.
 
@@ -725,8 +725,9 @@ to center-justification   and back, or how to display poetry.
 
 Since we don't want to interfere with the core text,\fnote{Think of them as the
 Holy Scriptures, therefore an “untouchable” texts. The only reason that might entitle 
-you to interfere with the basic text is the unlikely possibility that you might find an 
-error in the source from the Sword (or wherever you've got it from), when compared against the hard copy. Then it is really better to fix such error on the spot.} 
+you to interfere with the basic text is the possibility that you might find an 
+error in the source from the Sword (or wherever you've got it from), when compared against the hard copy. Then it is really better to fix such error on the spot. 
+Don't rely too much on internet sources; always check them out. They can and do contain errors. For example, Sword modules are full of missing spaces, occasionally you'll find a wrong character there, etc.} 
 you need to declare this 
 additional information and link it to the corresponding verses using the special 
 commands \`\fmtadd`, \`\fmtpre` and \`\fmtins`. 
@@ -780,7 +781,7 @@ We will first demonstrate its use in the example of the NETfree translation of
 Daniel 6:26--27:
 
 \medskip
-\centerline{\picw=.7\hsize\inspic{images/NETfreeDan-crop.pdf} }
+\centerline{\picw=.7\hsize\inspic{images/NETfree-Dan-crop.pdf} }
 \vskip-2pt % it's on two sides, so it looks a little smooth
 
 
@@ -863,20 +864,19 @@ This phrase, case-sensitive, must necessarily exist in the specified verse
 of the core text. Then \TeX/ links it to the corresponding place 
 of the core text,  ensuring that the phrase and its commenting note occur
 on the same page. In other words, the pages do not break by verse number and its corresponding note number; they break by the commented phrase.
-When a page break occurs within a verse in which more than one phrase is being commented on, the notes follow their phrases, not just the beginning of the verse.
+When a page break occurs inside a verse between two phrases that are being commented on, the notes follow their phrases, not just the beginning of the verse.
 See an example of this in section~\ref[break-verse].
-
-
-
 
 
 If the <phrase> is not present exactly in the specified verse of the core text,
 \TeX/ reports a warning to the log and to the terminal during processing and
 matches the note with the given verse as if the <phrase> were at the beginning of the verse.
+You will use the notes without specified <phrase> for summarizing comment on a larger portion of the text; see the first two notes in the sample book of Daniel.
 
-The printed note (depending on the typographic design) contains
-a repetition of the chapter and verse numbers, followed by the <phrase> that is being commented on
-(for example, in bold) followed by the actual text of the note.
+However, if two consecutive notes should both be without a specified <phrase>, they will be printed in the reverse order to the order in which they appear in the `notes-*.tex` file. In the sample book of Daniel you'll see the note on 1:1-21 to go {\it before\/} the note on 1:1-6:28. In the `notes-Dan.tex` you'll find `\Note 1:1-21` typed {\it after\/} `\Note 1:1-6:28`. If you want to change the order of the notes in such rare cases, simply switch their order in the `notes-*.tex` file. 
+
+The printed note (depending on the typographic design) then contains
+the repeated chapter and verse numbers, followed by the <phrase> that is being commented on (for example, in bold) followed by the actual text of the note.
 
 Sometimes it is necessary to search for a slightly different phrase in the core text than what
 we want to have in the printed note (e.g., the word in the core text is in
@@ -926,7 +926,7 @@ If the <phrase> for the search is blank (as in this very last example), then the
 will be placed on the same page as the beginning of the first verse in the~specified range.
 If <phrase> is non-empty, it must occur in the first verse of the range of verses. 
 The range symbol “`-`” is the only “minus” character normally available on
-keyboard. Its code is~45. It must not be any special character that somehow resembles a horizontal 
+keyboard. Its ASCII code is~45. It must not be any special character that somehow resembles a horizontal 
 dash.
 
 
@@ -937,13 +937,13 @@ in the source file is irrelevant. Notes that link to an entire verse using the e
 The phrases linked to the notes are printed in the \`\notecolor` color. By default it is red, but you can say (for example) `\let\notecolor=\relax` in your main file, if you don't want to colorize these phrases.
 
 
-\secc[break-verse] Page break within a verse  
+\secc[break-verse] Page break inside a verse  
 
 If different notes comment on different phrases within a single verse, and at the same time a page break after all formatting happens to come between those phrases in the core text, then the notes follow their phrases to their respective pages. In other words, the page break is not determined by the verse number, but by the phrase found  in the core text and synchronized with the note. 
 
 In the sample Book of Daniel (of the Webster Bible translation), you can see this happen at the verse 10:20 
 (all the searched phrases are highlighted in red color). Look at page 23
-where you read “will I return to fight with the prince of Persia” and then at page 24 where the same verse continues with the phrase “the prince of Grecia.” The notes follow their respective phrases on correct pages. 
+where you read “will I return to fight with the prince of Persia” and then at page 24 where the same verse continues with the phrase “the prince of Grecia.” The notes follow their respective phrases to correct pages. 
 (You probably do understand that in a real hard copy Bible the page 23 would be the right one, as all odd pages are, and 24 would be its other side after you turn the page, don't you?)
 
 \bigskip
@@ -1301,11 +1301,11 @@ parameters of the \`\ww` command. This does not apply to \`\Note` notes, which d
 \`\ww` in front of themselves. Then when using
 
 \begtt
-\Note <string> {<search-phrase>} <text> <blank line>
+\Note <chapter:verse> {<search-phrase>} <text> <blank line>
 \endtt
 or
 \begtt
-\Note <string> {<search-phrase>}={<what-to-print>} <text> <blank line>
+\Note <chapter:verse> {<search-phrase>}={<what-to-print>} <text> <blank line>
 \endtt
 the <search-phrase> is first transformed by the data from `\vdef`. Only if
 this data does not exist for the search phrase, <search-phrase> is being used as it is.
@@ -1320,7 +1320,7 @@ confuse it with `\end` or `\bye` so that \TeX\ doesn't stop running at this poin
 reading
 other files.)
 
-Then, below `\endinput`, we can have a few lines prepared, e.g., in this form:
+Then, below `\endinput`, you can have a few lines prepared, e.g., in this form:
 
 \begtt
 \ww {}={} % BBE
@@ -1367,7 +1367,7 @@ the following `<what to do>` is skipped. Example:
         {Jubilee2000,UKJV,RNKJV} {river of Ulai} % UKJV, RNKJV, Jubilee2000 
  \endtt
 The example shows how to print the name of Ulai river, depending on
-the language variant being processed.
+the translation variant being processed.
 
 Once \TeX/ finds a match and does `<what to do>`, then the possible following
 entries within the same `\switch` command are skipped. Furthermore, the rule is that
@@ -2126,7 +2126,7 @@ Other page formatting options are still in the planning stages and are not imple
 
 It may happen that you make a typo in the `notes-*`, `intro-*`,
 `articles-*` files. If you had included the file with a typo to the whole Bible processing,
-\TeX/ would report an error at a completely different point in time than when it read the file. 
+\TeX/ would report an error at a completely different point in time than when it had read the file. 
 Unfortunately, tracing back such an error is then very difficult. Moreover, typically the error
 occurs at a different stage of processing and thus it is often reported in a very
 incomprehensible and misleading message.
@@ -2290,6 +2290,7 @@ You only have to type:
 %
 and \OpBible/ will take care of the rest. If you don't want to have the boldfaced {\bf A, B, C... B', 
 A'} at the beginning of the lines, type `\style q` right after `\begChiasm`. 
+If you then want them back, start the new chiasm with `\begChiasm \style Q`.
 
 %...
 
@@ -2612,6 +2613,15 @@ Bible versions. If you insist on these features, it is preferable to stick with 
 
 %\recommended
 %Compare these instructions with the files that come as a part of the bundle. 
+
+\sec Generating technical documentation of \OpBible/
+
+The detailed technical documentation is prepared. The text of this documentation is part of the file `opbible.opm` itself. You can generate a PDF from this text by the command:
+\begtt
+optex -jobname opbible-techdoc '\docgen opbible'
+\endtt
+The `opbible-techdoc.pdf` is created.
+Use this command three times because the references must be correctly linked and the created Index and Table of contents needs data from previous \TeX/ run.
 
 
 \sec Index

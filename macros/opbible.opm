@@ -1,18 +1,23 @@
-%% Bible-TeX macros, see bibletex-doc.pdf
-
+%% opbible macros, see opbible-doc-en.pdf
+\_def\_opb_version {0.26, 2023-08-24}
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
-\_message{This is OP-Bible, version <0.25 Jul 2023>}
+   \_doc
+   Printing version.
+   \_cod
+
+\_message{This is OP-Bible, version <\_opb_version>}
 
    \_doc
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   \sec Preparatory work
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    Loading packages.
    \_cod
 
 \_load[vlna]  % single-letter prepositions and splitting hyphen managed specially in Czech
 \_load[mte]   % micro typographical extensions
+
+   \_doc
+   Namespace of internal macros of `opbible`. 
+   \_cod
 
 \_namespace{opb}
 
@@ -38,15 +43,19 @@
 \_def\LiRed {\_setcmykcolor{0 .2 .2 0}}
 
    \_doc
-   Fonts.
+   \sec Fonts
+   The Biblon font family has commercial license but it is very suitable for Bible
+   typesetting. If it is present on your system, we use it. Otherwise, we
+   use Termes font.
    \_cod
 
 \_fontfam[lm]
+\_fontfam[Termes]
 \_fontfam[Heros]        % fonts for notes
 \_isfile{f-biblon.opm}\_iftrue
    \_fontfam[biblon]    % fonts for Bible text
 \_else
-   \_let\Biblon=\LMfonts
+   \_let\Biblon=\Termes
 \_fi
 
 \_fontdef\.bookfont{\_setfontsize{at19.pt}\_bf}
@@ -57,6 +66,7 @@
 \_nsprivate \Biblon ;
 
    \_doc
+   \sec Usable macros
    Auxiliary macros.
    \`\.printwarn` `{<text>}` prints warning.
    \`\.sedef` `{<name>}{<body>}` is expanded `\sdef`.
@@ -105,7 +115,7 @@
      \TeX/ memory.
    * Inputs notes file if it exists. The notes are saved to the \TeX/ memory.
    * Calls \^`\bpr!<a-mark>` in order to apply the \^`\BookPre` data.
-   * Inputs `txs` file with original text of the Bible using \^`\.bibleinput`,
+   * Inputs `txs` file with original text of the Bible using \`\.bibleinput`,
      i.e.\ prints the text from `txs` file with notes from the \TeX/ memory.
    * Calls \^`\bpo!<a-mark>` in order to apply \^`\BookPost` data.
    \enditems
@@ -213,7 +223,7 @@
    \sec Book titles
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-   The macro \`\BookTile` `<a-mark> <b-mark> {<title>}` declares titles
+   The macro \`\BookTitle` `<a-mark> <b-mark> {<title>}` declares titles
    of each Bible books. The <a-mark> is an actual book mark used in printed text.
    The <b-mark> can be used in file names as \^`\bmark`. 
    The mapping is done here:
@@ -286,7 +296,7 @@
    \^`\.buff` macro is processed after all actions of given verse are done.\nl
    \`\.replpre``{<prefix>}{<text>}{<fail>}` replaces first occurrence of <text>
    by `<prefix>^<text>^` in `\.buff` macro. If the <text> is empty then
-   `<prefix>^``^` is inserted at the beginning of the `\.buff`.\nl
+   `<prefix>^``^` is inserted at the beginning of the \^`\.buff`.\nl
    If <text> does not exists then <fail> is processed. It can report failed <text> by
    the `\.text` macro.
    \_cod
@@ -305,7 +315,7 @@
 
    \_doc
    \`\.replprepost``{<text>}{<pre>}{<post>}{<fail>}`
-   searches <text> in `\.buff` and adds <pre> before and <post> after the <text>. If the
+   searches <text> in \^`\.buff` and adds <pre> before and <post> after the <text>. If the
    <text> is not found then <fail> is executed.
    The \^`\.replprepost` is used by \^`\fmtins` (with empty <pre>) because we want to insert the
    <post> material directly.
@@ -398,7 +408,7 @@
      This is done by \`\.AddNote``{<full-vref>}{<note-num>}{<tword>}`.
    \enditems
    Note that \^`\Note` is defined as `\outer` in order to report correctly typical
-   mistakes with missing empty line the ⟨text⟩ of a previous `\Note`.
+   mistakes with missing empty line the <text> of a previous `\Note`.
    \_cod
 
 \_newcount\.notenum
@@ -601,7 +611,7 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \`\fmtpre`` {<gen-vref>}{<what>}` adds <what> to \`\.fmtprebuff`, i.e.\ at the
    beginning of the verse.\nl
-   \`\ftmadd`` {<gen-vref>}{<what>}` adds <what> to \`\.buff`, i.e.\ at the end
+   \`\ftmadd`` {<gen-vref>}{<what>}` adds <what> to \^`\.buff`, i.e.\ at the end
    of the verse.\nl
    \`\fmtins`` {<gen-vref>}{<text>}{<what>}` inserts <what> after <text> in the
    verse. If <text> is not found then <what> is inserted like \^`\fmtpre` does it\nl
@@ -645,7 +655,7 @@
 
    \_doc
    \`\ind``{<number>}` gives an indentaion in the poetry environment. 
-   It is used in `\fmtpoetry`, the `\ind``{<number>}` is inserted typically
+   It is used in \^`\fmtpoetry`, the `\ind``{<number>}` is inserted typically
    by \^`\fmtins` or \^`\fmtpre`.
    It ends the current line by `\par` only if we are not at beginning of a verse~1.\nl
    The `\spacefactor` is set to 1001, this value is used
@@ -700,7 +710,7 @@
    * defines \`\.currverse` as <full-vref>,
    * prepares \`\.currversenum`, \`\.currversetext`, \`\.currchapnum` from <full-vref>,
    * defines \`\.buff` as <verse-text>,
-   * processes all actions from \`\alist!``<full-vref>`,
+   * processes all actions from \^`\alist!``<full-vref>`,
    * if \^`\.currchapnum` changed, prints `\.chapafter` (for previous chapter)
      and `\.chapbefore` (for new chapter).
    * prints verse from \^`\.buff` using \^`\.printverse`
@@ -751,7 +761,7 @@
    \`\.printbeforefirst` is a macro which is executed just before first verse
    of the chapter, after all material from \^`\fmtpre` is executed. I.e after
    printing a chapter name (if declared by \^`\fmtpre`).\nl
-   The \`\.fmtprebuf` includes \`\ind` command from \`\fmtpoetry` if the
+   The \`\.fmtprebuf` includes \^`\ind` command from \^`\fmtpoetry` if the
    verse should be indented at its begin before the verse number.
    The verse number is shifted up and it is in an `\hbox` or it is llapped in the
    poetry environment, more exactly immediatelly after \^`\ind` is used. The
@@ -1397,7 +1407,7 @@
 
    \_doc
    \`\putArticle` `<chapter>:<verse> {<title>} [<label>] (<params>)`
-   inserts an article given in the file `articles-*.tex` signed by
+   inserts an article (an additional text) given in the file `articles-*.tex` signed by
    \`\Article`` [<label>]`. The article starts at the page where
    <chapter>:<verse> is or at the next page. The article is in two-columns
    style and it is divided to $k$ two-columns parts each of them is inserted
@@ -1592,11 +1602,11 @@
 \_nspublic \insertSpanImage  \insertSpanText ;
 
    \_doc
-   \`\putSpanImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<image-file>}`
+   \`\putSpanImage` `<chatper>:<verse> {<title>} [<label>] (<params>) {<img-file>}`
    runs \^`\insertSpanImage` at the page where the begining of the verse given
    by <chapter>:<verse> exists. We register a new action by
-   \^`\.newaction{<full-vref>}{\.doSpanImage{<title>}[<label>](<params>){<image-file>}}`.\nl
-   \`\putSpanText` `<chatper>:<verse> {<title>} [<label>] (<params>) {<text>}`
+   \^`\.newaction{<full-vref>}{\.doSpanImage{<title>}[<label>](<params>){<img-file>}}`.\nl
+   \`\putSpanText` `<chatper>:<verse> {<title>} [<label>] (<params>) {<text>}` \
    runs \^`\insertSpanText` at the page where the begining of the verse given
    by <chapter>:<verse> exists. The `<text>` is saved to `\spant!\the\.spantxtnum`
    and only the name of this macro is registered by the `\.newaction`.
@@ -1641,8 +1651,8 @@
 \_nspublic \putCite ;
 
    \_doc
-   `\.dotopCite` `{<text>}` creates the citation text by
-   `\topinsert`...`\endinsert` form plain
+   \`\.dotopCite` `{<text>}` creates the citation text by
+   `\topinsert`...`\endinsert` from plain
    TeX. We distinguish two cases: the citation on a left page and the citation
    on a right page. We sawe the page position using `\_ewref` to the .ref
    file as `\sxdef{ct!<citenum>}{\.mypage}` and we know the page position in
@@ -1675,7 +1685,7 @@
 \_def\.topinsertnopar{\_umidfalse \_upagefalse \_begingroup\_setbox0=\_vbox\_bgroup\_resetattrs}
 
    \_doc
-   The `\.lqqbox` and `\.rqqbox` include the graphical marks for quotations. First
+   The \`\.lqqbox` and \`\.rqqbox` include the graphical marks for quotations. First
    one is used at the left pages, second one at the right pages.\nl
    The macro `\quotedby{<author>}` puts the author of the quatation to the
    next line. The macro `\qutedbyright` (which is used at left pages) prints
@@ -1696,12 +1706,12 @@
    \_null\_nobreak\_hskip\_iindent\_hbox{#1}}
 
    \_doc
-   The following macros `\Cite`, `\insertCite` and `\swapCites` are used for
+   The following macros \`\Cite`, \`\insertCite` and \`\swapCites` are used for
    insertion of citations to the two-cloumn printed articles.
-   The `\Cite``<label>{<text>}` simply saves the <text> to the macro
+   The \^`\Cite` `<label>{<text>}` simply saves the <text> to the macro
    `\c!<article-num>!<label>`.
-   The `\insertCite``<label><feft-or-right>` inserts the citation declared
-   by `\Cite <label>` to the text using `\vadjust`. The variant `\left` and
+   The \^`\insertCite` `<label><feft-or-right>` inserts the citation declared
+   by \^`\Cite` `<label>` to the text using `\vadjust`. The variant `\left` and
    `\right` is processed or ignored. This depends on the parity of the
    current page, which is restored from `.ref` file and saved to the macro
    `\cp!<article-num>!<label>`.
@@ -1834,7 +1844,7 @@
    The `<params>` can inclue a special setting used locally for the priting
    of this material.
 
-   \`\putBot` `<chapter>:<verse> {<title>} [<label>] (<params>) {<data>}`
+   \noindent \`\putBot` `<chapter>:<verse> {<title>} [<label>] (<params>) {<data>}`
    behaves like `\insertBot`, but the result is printed to the bottom of the
    page where the verse `<chapter>:<verse>` is, or to the next page if the
    material is unable to fit to the current one.
@@ -2083,7 +2093,7 @@
    All objects used for creating time-line are defined by `\puttext`, i.e.\
    they don't shift the current typesetting point.
 
-   `\arrowtext` `<from>..<to> (<settings>) {<text>}`
+   \`\arrowtext` `<from>..<to> (<settings>) {<text>}`
    creates a horizontal line with arrows. Its width and its position is
    given by `<from>..<to>` time units. The `<settings>` can include font
    selector, color settings of something similar for `<text>`.
@@ -2102,7 +2112,7 @@
 \_nspublic \arrowtext ;
 
    \_doc
-   `\tlput` `<above/below> <where> <llap or rlap or nothing> (<format ot text>) {<text>}`
+   \`\tlput` `<above/below> <where> <llap or rlap or nothing> (<format ot text>) {<text>}`
    puts the <text> to the timeline. The <text> can include more lines
    separated by `\cr`. The parameter `<above/below>` is `a` or `b` and means
    the <text> position: above
@@ -2146,7 +2156,7 @@
 
    By default, chapter numbers are in the outer margin and quotes characters
    too. 
-   The `\normalchapnumbers` macro moves chater numbers to the left side in the
+   The \`\normalchapnumbers` macro moves chater numbers to the left side in the
    first paragraph, cquotes characters are removed and outer margins are
    reduced because there is no material in them. 
    \_cod
@@ -2285,9 +2295,9 @@
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   \sec TODO macros
+   \sec Other macros
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The temporary macros are here. I plan to rewrite them.
+   The temporary macros are here. Maybe, they will be (more conceptually) rewritten.
    \_cod
 
 
@@ -2335,6 +2345,9 @@
 \_let\CommentedBook=\_ignoreit % for backward compatibility
 
    \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Setting active character and `\outer` macros
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    Active character \code{<} used for references.
    \_cod
 
@@ -2350,8 +2363,42 @@
 \_endnamespace
 \_endcode
 
-2023-08-28 0.25 \enquotes swaps the \.lqqbox/\.rqqbox
-2023-08-17 0.24 \quotationsmark corrected secondly
+\_doc
+   \load [doc]
+   \outlines{0}
+
+   \tit OpBible -- Technical Documentation
+   \hfil Version: \_opb_version \medskip
+
+   The code of the `opbible.opm` macro file is described here.
+   See also the user documentation in the file `opbible-doc-en.pdf`. 
+
+   \notoc\nonum\sec Table of contents
+   \maketoc
+
+   \catcode`\!=11  \catcode`\.=11
+   \sec Preparatory work
+   \printdoc opbible.opm
+
+   \sec Index
+
+   \def\_printii #1&{%
+      \ifcsname cs:#1\endcsname
+         \noindent \hskip-\iindent {\tt \link[cs:#1]\Blue{\bslash#1} }\else
+         \ifcsname cs:^#1\endcsname \noindent \hskip-\iindent {\tt\bslash#1 }\else
+            \afterfi{\afterfi{\_optexprintii #1&}}\fi\fi }
+   \def\_pgprintA #1{#1}
+
+   \begmulti 3
+      \makeindex
+   \endmulti
+   \bye
+\_cod
+
+
+2023-08-24 0.26 Tech. doc corrections
+2023-07-28 0.25 \enquotes swaps the \.lqqbox/\.rqqbox
+2023-07-17 0.24 \quotationsmark corrected secondly
 2023-07-04 0.23 \ww enables {"} parameters like \vdef
 2023-06-24 0.22 \ind: \ignorespaces added, \fmtopoetry with \quotationsmark corrected
                 \begChiasm: \.keepstyle corrected
