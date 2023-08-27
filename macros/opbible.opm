@@ -1,5 +1,6 @@
-%% opbible macros, see opbible-doc-en.pdf
+%% opbible macros, see opbible-doc.pdf
 \_def\_opb_version {0.26, 2023-08-24}
+
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
    \_doc
