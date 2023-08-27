@@ -2330,8 +2330,8 @@ which is the one you need.
 \watchout
 If you want to insert vertical space (e.g., `\medskip`) after the verse in which you have 
 applied the font change on a word, then `\fmtins` containing `\medskip` must precede `\fmtfont` 
-command. Otherwise \TeX/ will crash and you end up with the message `You can't use \/ in vertical 
-mode.`
+command. Otherwise \TeX/ will crash and you end up with the mysterious message
+`You can't use \/ in vertical mode.`
 In other words, use 
 
 \begtt
@@ -2510,7 +2510,7 @@ Example: see the end of the file `intro-Dan.tex`.
 \begitems
 
 *\`\Article` `[<chapter-number>]` `<text of the article>`:
-    Declares <text of the article> for given <chapter-number>. The <text of the article> ends at the end of the file or by another `\Article` declaration.
+    Declares <text of the article> for the given <chapter-number>. The <text of the article> ends at the end of the file or by another `\Article` declaration.
     The `<chapter-number>` could be any label, unique for that particular article, but 
     as we suppose that there will most likely not be more than one article per chapter,
     it sounds logical to assign the number of the chapter where we want the article to occur.

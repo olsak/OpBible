@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.26, 2023-08-24}
+\_def\_opb_version {0.27, 2023-08-27}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -51,11 +51,10 @@
    \_cod
 
 \_fontfam[lm]
-\_fontfam[Termes]
 \_fontfam[Heros]        % fonts for notes
-\_isfile{f-biblon.opm}\_iftrue
-   \_fontfam[biblon]    % fonts for Bible text
-\_else
+\_fontfam[biblon]       % fonts for Bible text
+\_ifx\Biblon\_undefined % replace font if Biblon is unavailable:
+   \_fontfam[Termes]
    \_let\Biblon=\Termes
 \_fi
 
@@ -146,7 +145,7 @@
       \_begingroup
          \_edef\.currbook{#1}
          \.newbook{#1}
-         \_wterm{** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **}
+         \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **^^J}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
          \_else \.printwarn{File with introduction text \introfile\_space not found}\_fi
@@ -2088,6 +2087,7 @@
 \_def\.timelinewidth{\_afterassignment\.timelinewidthA\.tlwidth}
 \_def\.timelinewidthA{\_par\_hbox to\.tlwidth{}}
 
+\_let\l=\_undefined
 \_nspublic \l \timeline \timelinewidth ;
 
    \_doc
@@ -2397,6 +2397,7 @@
 \_cod
 
 
+2023-08-27 0.27 Termes if Biblon is unavailable
 2023-08-24 0.26 Tech. doc corrections
 2023-07-28 0.25 \enquotes swaps the \.lqqbox/\.rqqbox
 2023-07-17 0.24 \quotationsmark corrected secondly
