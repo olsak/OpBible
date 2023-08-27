@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.27, 2023-08-27}
+\_def\_opb_version {0.28, 2023-08-27}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -1973,7 +1973,8 @@
    \_cod
 
 \_def\.c[#1/#2]#3{% text podel krivky: \c[init-rotace/repetice]{text}
-   \_pdfsave\_pdfrotate{#1}\_rlap{\_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
+   \_pdfsave\_pdfrotate{#1}\_rlap{\_let\.printwarn=\_ignoreit
+                 \_edef\.tmpb{#3}\_replstring\.tmpb{ }{{ }}\_def\.tmpa{#2}%
                  \_ea\_foreach\.tmpb\_do{##1\.tmpa}}\_pdfrestore \_kern10mm
 }
 \_let\c=\_undefined
@@ -2397,6 +2398,7 @@
 \_cod
 
 
+2023-08-27 0.28 \c switches off the \.printwarn because it expands its parameters
 2023-08-27 0.27 Termes if Biblon is unavailable
 2023-08-24 0.26 Tech. doc corrections
 2023-07-28 0.25 \enquotes swaps the \.lqqbox/\.rqqbox
