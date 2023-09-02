@@ -1,3 +1,6 @@
+% This file is derived from hebrew.tex used loacaly by Simon Konecny.
+% A small set of Hebrew phrases are defined here.
+
 \initunifonts
 \suppressfontnotfounderror=1
 \font\HebrewFont=[Shlomo]\relax
@@ -7,11 +10,11 @@
       \def\Hebrew#1{\ifhmode\unskip\fi}
       \wlog{{Hebrew ignored, font not found}}
    \else
-      \def\Hebrew#1{{\quitvmode \let\\=\ignoreit \HebrewFont\resizethefont#1}}
+      \def\Hebrew#1{{\quitvmode \let\\=\hebkern \HebrewFont\resizethefont#1}}
       \wlog{{Hebrew: DavidCLM-Medium font}}
    \fi
 \else
-   \def\Hebrew#1{{\quitvmode \let\\=\ignoreit \setfontsize{mag.85}\HebrewFont\resizethefont#1}}
+   \def\Hebrew#1{{\quitvmode \let\\=\hebkern \setfontsize{mag.85}\HebrewFont\resizethefont#1}}
    \wlog{{Hebrew: Shlomo font}}
 \fi
 \font\OldPersianFont=[OldPersianCuneiformRegular]\relax
@@ -99,12 +102,12 @@
 
 % Words:
 
-\def\\#1#2{\kern0.#1em  #2\kern-0.#1em }
-\def\!#1#2{\kern-0.#1em #2\kern0.#1em }
+\def\hebkern#1#2{\kern0.#1em  #2\kern-0.#1em } % will be \\
+%\def\!#1#2{\kern-0.#1em #2\kern0.#1em }
 
 \def \Karan        {\Hebrew{\FinalNun\\4{\Patach}\Resh\\3\Kamatz\Qof}} %karan záøila Ex 34:30
 \def \Keren        {\Hebrew{\FinalNun\\4\Segol\Resh\\3\Segol\Qof}} %keren roh 1 Sam 16:13
-\def \Tsaba        {\Hebrew{\Aleph\\{25}\Kamatz\Bet\\{15}\Kamatz\Dagesh\!1\Tsadik}}
+\def \Tsaba        {\Hebrew{\Aleph\\{25}\Kamatz\Bet\\{15}\Kamatz\Dagesh\kern-.1em\Tsadik\kern.1em }}
 \def \Chartumim    {\Hebrew{\FinalMem\Yod\\3\Dagesh\\3\Hiriq\Mem\\2\Kubutz\Tet\\5\Shva\Resh\\2\Patach\Chet}}
 \def \Ashapim      {\Hebrew{\FinalMem\Yod\\{25}\Hiriq\Pe\\{35}\Dagesh\\2\Kamatz\Shin\\2\Patach\Aleph}}
 \def \Idan         {\Hebrew{\FinalNun\\4\Kamatz\DageshDalet\\2\Hiriq\Ayin}}
