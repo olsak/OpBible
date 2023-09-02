@@ -1,9 +1,28 @@
 \initunifonts
-\font\HebrewFont=[Shlomo]
-\font\OldPersianFont=[OldPersianCuneiformRegular]
-
-\def\Hebrew {\setfontsize{mag.85}\HebrewFont\resizethefont}
-\def\OldPersian {\OldPersianFont\resizethefont}
+\suppressfontnotfounderror=1
+\font\HebrewFont=[Shlomo]\relax
+\ifx\HebrewFont\nullfont 
+   \font\HebrewFont=[DavidCLM-Medium]\relax
+   \ifx\HebrewFont\nullfont
+      \def\Hebrew#1{\ifhmode\unskip\fi}
+      \wlog{{Hebrew ignored, font not found}}
+   \else
+      \def\Hebrew#1{{\quitvmode \let\\=\ignoreit \HebrewFont\resizethefont#1}}
+      \wlog{{Hebrew: DavidCLM-Medium font}}
+   \fi
+\else
+   \def\Hebrew#1{{\quitvmode \let\\=\ignoreit \setfontsize{mag.85}\HebrewFont\resizethefont#1}}
+   \wlog{{Hebrew: Shlomo font}}
+\fi
+\font\OldPersianFont=[OldPersianCuneiformRegular]\relax
+\ifx\OldPersianFont\nullfont 
+    \def\OldPersian#1{\ifhmode\unskip\fi}
+    \wlog{{OldPerian: ignored, font not found}}
+\else
+    \def\OldPersian#1{{\quitvmode \OldPersianFont\resizethefont#1}}
+    \wlog{{OldPersian: OldPersianCuneiformRegular font}}
+\fi
+\suppressfontnotfounderror=0
 
 \chardef \Aleph       1488
 \chardef \Bet         1489
@@ -44,9 +63,9 @@
 \def\DageshFinalKaf   {\kern.25em \Dagesh \kern-.25em \FinalKaf}
 \def\DageshTav        {\kern.3em  \Dagesh \kern-.3em  \Tav}
 \def\DageshPe         {\kern.35em \Dagesh \kern-.35em \Pe}
-\def\DageshYod        {\quitvmode\raise.05em\hbox{\\1\Dagesh}\Yod}
+\def\DageshYod        {\raise.05em\hbox{\\1\Dagesh}\Yod}
 \def\DageshMem        {{\kern.3em\Dagesh\kern-.3em\Mem}}
-\def\KamatzFinalKaf   {\quitvmode\raise0.5em\hbox{\\2\Kamatz}\FinalKaf}
+\def\KamatzFinalKaf   {\raise0.5em\hbox{\\2\Kamatz}\FinalKaf}
 
 \chardef \Hiriq       1460
 \chardef \Tsere       1461
@@ -83,55 +102,55 @@
 \def\\#1#2{\kern0.#1em  #2\kern-0.#1em }
 \def\!#1#2{\kern-0.#1em #2\kern0.#1em }
 
-\def \Karan        {{\Hebrew \FinalNun\\4{\Patach}\Resh\\3\Kamatz\Qof}} %karan záøila Ex 34:30
-\def \Keren        {{\Hebrew \FinalNun\\4\Segol\Resh\\3\Segol\Qof}} %keren roh 1 Sam 16:13
-\def \Tsaba        {{\Hebrew \Aleph\\{25}\Kamatz\Bet\\{15}\Kamatz\Dagesh\!1\Tsadik}}
-\def \Chartumim    {{\Hebrew \FinalMem\Yod\\3\Dagesh\\3\Hiriq\Mem\\2\Kubutz\Tet\\5\Shva\Resh\\2\Patach\Chet}}
-\def \Ashapim      {{\Hebrew \FinalMem\Yod\\{25}\Hiriq\Pe\\{35}\Dagesh\\2\Kamatz\Shin\\2\Patach\Aleph}}
-\def \Idan         {{\Hebrew \FinalNun\\4\Kamatz\DageshDalet\\2\Hiriq\Ayin}}
-\def \Shmajabar    {{\Hebrew \Resh\\{25}\Patach\Bet~\Aleph\\1\Kamatz\\{075}\Dagesh\Yod\\3\Patach\Mem\\{275}\Shva\Shin}}
-\def \BenAdam      {{\Hebrew \FinalMem\\{35}\Kamatz\Dalet\\2\Kamatz\Aleph\Maqef\FinalNun\\2\Segol\DageshBet}}
-\def \Emek         {{\Hebrew \Qof\\3\Kamatz\Mem\\1\Tsere\Ayin}}
-\def \Gai          {{\Hebrew \Aleph\\2\Shva\Yod\\{05}\Patach\DageshGimel}}
-\def \Naar         {{\Hebrew \Resh\\1\Patach\Ayin\\1\Patach\Nun}}
-\def \Nurav        {{\Hebrew \Waw\Yod\\4\Kamatz\Resh\\2\Kubutz\Ayin\\1\Shva\\1\Dagesh\Nun}}
-\def \Homlak       {{\Hebrew \quitvmode\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Shva\Mem\\2\Kamatz\He}}
-\def \Malak        {{\Hebrew \quitvmode\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Kamatz\Mem}}
-\def \Qabbel       {{\Hebrew \Lamed\\2\Tsere\DageshBet\\2\Patach\Qof}}
-\def \Dariawush    {{\Hebrew \Shin\\1\Segol\Waw\\2\Kamatz\Yod\\4\Shva\Resh\\3\Kamatz\Dalet}}
-\def \Dariahuuish  {{\OldPersian\char100 \char97 \char114 \char121 \char118 \char117 \char83}}
-\def \PRS          {{\Hebrew \Samech\\3\Tsere\Resh\\2\Shva\DageshPe}}
-\def \Persat       {{\Hebrew \Tav\\2\Patach\Samech\Yod\\4\Hiriq\Resh\\2\Shva\DageshPe}}
-\def \Paras        {{\Hebrew \Samech\\4\Kamatz\Resh\\2\Kamatz\Pe}}
-\def \LaMedeUParas {{\Hebrew \Samech\\4\Kamatz\Resh\\2\Kamatz\Pe\\1\Dagesh\Waw \space \Yod\\4\Patach\Dalet\\2\Kamatz\Mem\\2\Shva\Lamed}}
-\def \ErevBoker    {{\Hebrew \Resh\\3\Segol\Qof\Cholem\DageshBet\space\Bet\\4\Segol\Resh\\2\Segol\Ayin}}
-\def \Ahasueros    {{\Hebrew \Shin\Cholem\Waw\Resh\\1\Tsere\Waw\\3\Shva\Shin\\2\Patach\Chet\\2\ShvaPatach\Aleph}}
-\def \Xerxes       {{\OldPersian \char72 \char83 \char121 \char97 \char114 \char83 \char97}}
-\def \Raza         {{\Hebrew \He\\1\Kamatz\Zayin\\4\Kamatz\Resh}}
-\def \Raz          {{\Hebrew \Zayin\\4\Kamatz\Resh}}
-\def \Kasdain      {{\Hebrew \FinalNun\Yod\\3\Hiriq\Aleph\\4\Kamatz\DageshDalet\\3\Shva\Sin\\2\Patach\DageshKaf}}%3:8
-\def \BarElohin    {{\Hebrew \FinalNun\Yod\\3\Hiriq\He\\2\Patach\Lamed\\1\ShvaSegol\Aleph\Maqef\Resh\\2\Patach\Bet}}
-\def \Shamai       {{\Hebrew \Aleph\\1\Kamatz\DageshYod\\3\Patach\Mem\\3\Shva\Shin}}
-\def \Lev          {{\Hebrew \Bet\\2\Kamatz\Bet\\3\Shva\Lamed}}
-\def \YishreLev    {{\Hebrew \Bet\\2\Tsere\Lamed\Maqef\Yod\\4\Tsere\Resh\\3\Shva\Shin\\2\Hiriq\Yod}}%Ps 7:10  upright heart
-\def \KasheLev     {{\Hebrew \Bet\\2\Tsere\Lamed\Maqef\Yod\\2\Tsere\Shin\\2\Shva\Qof}}%hard-harted Ez 3:7
-\def \GevahLev     {{\Hebrew \Bet\\2\Tsere\Lamed \Maqef\ \MappiqHe\\2\Patach\Bet\\2\Shva\DageshGimel}}%vyvýšeného srdce Př. 16:5
-\def \LevVaLev     {{\Hebrew \Bet\\2\Tsere\Lamed \\1\Kamatz\Waw \ \Bet\\2\Tsere\Lamed}}%dvojího srdce Ž 12:2
-\def \AmitzLibo    {{\Hebrew \HolamMale\Waw\DageshBet\\{25}\Hiriq\Lamed \ \FinalTsadik\Yod\\3\Hiriq\DageshMem\\2\Kamatz\Aleph}} %Mocnéhosrdce, Am 2:16
-\def \LevTahor     {{\Hebrew \Resh\HolamMale\Waw\He\\{25}\Kamatz\Tet  \ \Bet\\2\Tsere\Lamed}}%čisté srdce Ž 51:12 %HolamHaser  ž 51 srdce zkroušené
-\def \LevNishbarVeNidkeh{{\Hebrew \He\\{15}\Segol\DageshKaf\\5\Shva\Dalet\\{15}\Hiriq\Nun\\2\Shva\Waw \ 
+\def \Karan        {\Hebrew{\FinalNun\\4{\Patach}\Resh\\3\Kamatz\Qof}} %karan záøila Ex 34:30
+\def \Keren        {\Hebrew{\FinalNun\\4\Segol\Resh\\3\Segol\Qof}} %keren roh 1 Sam 16:13
+\def \Tsaba        {\Hebrew{\Aleph\\{25}\Kamatz\Bet\\{15}\Kamatz\Dagesh\!1\Tsadik}}
+\def \Chartumim    {\Hebrew{\FinalMem\Yod\\3\Dagesh\\3\Hiriq\Mem\\2\Kubutz\Tet\\5\Shva\Resh\\2\Patach\Chet}}
+\def \Ashapim      {\Hebrew{\FinalMem\Yod\\{25}\Hiriq\Pe\\{35}\Dagesh\\2\Kamatz\Shin\\2\Patach\Aleph}}
+\def \Idan         {\Hebrew{\FinalNun\\4\Kamatz\DageshDalet\\2\Hiriq\Ayin}}
+\def \Shmajabar    {\Hebrew{\Resh\\{25}\Patach\Bet~\Aleph\\1\Kamatz\\{075}\Dagesh\Yod\\3\Patach\Mem\\{275}\Shva\Shin}}
+\def \BenAdam      {\Hebrew{\FinalMem\\{35}\Kamatz\Dalet\\2\Kamatz\Aleph\Maqef\FinalNun\\2\Segol\DageshBet}}
+\def \Emek         {\Hebrew{\Qof\\3\Kamatz\Mem\\1\Tsere\Ayin}}
+\def \Gai          {\Hebrew{\Aleph\\2\Shva\Yod\\{05}\Patach\DageshGimel}}
+\def \Naar         {\Hebrew{\Resh\\1\Patach\Ayin\\1\Patach\Nun}}
+\def \Nurav        {\Hebrew{\Waw\Yod\\4\Kamatz\Resh\\2\Kubutz\Ayin\\1\Shva\\1\Dagesh\Nun}}
+\def \Homlak       {\Hebrew{\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Shva\Mem\\2\Kamatz\He}}
+\def \Malak        {\Hebrew{\raise0.7ex\hbox{\\2\Shva}\FinalKaf\\2\Patach\Lamed\\2\Kamatz\Mem}}
+\def \Qabbel       {\Hebrew{\Lamed\\2\Tsere\DageshBet\\2\Patach\Qof}}
+\def \Dariawush    {\Hebrew{\Shin\\1\Segol\Waw\\2\Kamatz\Yod\\4\Shva\Resh\\3\Kamatz\Dalet}}
+\def \Dariahuuish  {\OldPersian{\char100 \char97 \char114 \char121 \char118 \char117 \char83}}
+\def \PRS          {\Hebrew{\Samech\\3\Tsere\Resh\\2\Shva\DageshPe}}
+\def \Persat       {\Hebrew{\Tav\\2\Patach\Samech\Yod\\4\Hiriq\Resh\\2\Shva\DageshPe}}
+\def \Paras        {\Hebrew{\Samech\\4\Kamatz\Resh\\2\Kamatz\Pe}}
+\def \LaMedeUParas {\Hebrew{\Samech\\4\Kamatz\Resh\\2\Kamatz\Pe\\1\Dagesh\Waw \space \Yod\\4\Patach\Dalet\\2\Kamatz\Mem\\2\Shva\Lamed}}
+\def \ErevBoker    {\Hebrew{\Resh\\3\Segol\Qof\Cholem\DageshBet\space\Bet\\4\Segol\Resh\\2\Segol\Ayin}}
+\def \Ahasueros    {\Hebrew{\Shin\Cholem\Waw\Resh\\1\Tsere\Waw\\3\Shva\Shin\\2\Patach\Chet\\2\ShvaPatach\Aleph}}
+\def \Xerxes       {\OldPersian{\char72 \char83 \char121 \char97 \char114 \char83 \char97}}
+\def \Raza         {\Hebrew{\He\\1\Kamatz\Zayin\\4\Kamatz\Resh}}
+\def \Raz          {\Hebrew{\Zayin\\4\Kamatz\Resh}}
+\def \Kasdain      {\Hebrew{\FinalNun\Yod\\3\Hiriq\Aleph\\4\Kamatz\DageshDalet\\3\Shva\Sin\\2\Patach\DageshKaf}}%3:8
+\def \BarElohin    {\Hebrew{\FinalNun\Yod\\3\Hiriq\He\\2\Patach\Lamed\\1\ShvaSegol\Aleph\Maqef\Resh\\2\Patach\Bet}}
+\def \Shamai       {\Hebrew{\Aleph\\1\Kamatz\DageshYod\\3\Patach\Mem\\3\Shva\Shin}}
+\def \Lev          {\Hebrew{\Bet\\2\Kamatz\Bet\\3\Shva\Lamed}}
+\def \YishreLev    {\Hebrew{\Bet\\2\Tsere\Lamed\Maqef\Yod\\4\Tsere\Resh\\3\Shva\Shin\\2\Hiriq\Yod}}%Ps 7:10  upright heart
+\def \KasheLev     {\Hebrew{\Bet\\2\Tsere\Lamed\Maqef\Yod\\2\Tsere\Shin\\2\Shva\Qof}}%hard-harted Ez 3:7
+\def \GevahLev     {\Hebrew{\Bet\\2\Tsere\Lamed \Maqef\ \MappiqHe\\2\Patach\Bet\\2\Shva\DageshGimel}}%vyvýšeného srdce Př. 16:5
+\def \LevVaLev     {\Hebrew{\Bet\\2\Tsere\Lamed \\1\Kamatz\Waw \ \Bet\\2\Tsere\Lamed}}%dvojího srdce Ž 12:2
+\def \AmitzLibo    {\Hebrew{\HolamMale\Waw\DageshBet\\{25}\Hiriq\Lamed \ \FinalTsadik\Yod\\3\Hiriq\DageshMem\\2\Kamatz\Aleph}} %Mocnéhosrdce, Am 2:16
+\def \LevTahor     {\Hebrew{\Resh\HolamMale\Waw\He\\{25}\Kamatz\Tet  \ \Bet\\2\Tsere\Lamed}}%čisté srdce Ž 51:12 %HolamHaser  ž 51 srdce zkroušené
+\def \LevNishbarVeNidkeh{\Hebrew{\He\\{15}\Segol\DageshKaf\\5\Shva\Dalet\\{15}\Hiriq\Nun\\2\Shva\Waw \ 
                            \Resh\\2\Kamatz\DageshBet\\3\Shva\Shin\\{15}\Hiriq\Nun \Maqef \Bet\\2\Tsere\Lamed}} 
-\def \BeKalLebabeka {{\Hebrew \KamatzFinalKaf\\{3}\Shva\Bet\\2\Kamatz\Bet\\3\Shva\Lamed \Maqef \Lamed \\2\Kamatz\Kaf\\{3}\Shva\DageshBet}}
+\def \BeKalLebabeka {\Hebrew{\KamatzFinalKaf\\{3}\Shva\Bet\\2\Kamatz\Bet\\3\Shva\Lamed \Maqef \Lamed \\2\Kamatz\Kaf\\{3}\Shva\DageshBet}}
 %Gn 13:14 světové strany
-\def \Negba         {{\Hebrew \He\\2\Kamatz\DageshBet\\1\Shva\Gimel\\1\Segol\Nun}}%jih
-\def \Tzafna        {{\Hebrew \He\\1\Kamatz\Nun\\1\HolamHaser\Pe\\2\Kamatz\Tsadik}}%sever mount Zaphon, Jebel Aqra 
-\def \Kedma         {{\Hebrew \He\\2\Kamatz\Mem\\5\Shva\Dalet\\2\Tsere\Qof}}%východ
-\def \Yama          {{\Hebrew \He\\2\Kamatz\Mem\\1\Kamatz\Yod}}
-\def \Ehiyeh        {{\Hebrew \He\\1\Segol\Yod\\3\Shva\He\\2\Segol\Aleph}}
-\def \Asher         {{\Hebrew \Resh\\2\Segol\Shin\\2\ShvaPatach\Aleph}}
-\def \Yahweh        {{\Hebrew \He\Waw\He\Yod}}
+\def \Negba         {\Hebrew{\He\\2\Kamatz\DageshBet\\1\Shva\Gimel\\1\Segol\Nun}}%jih
+\def \Tzafna        {\Hebrew{\He\\1\Kamatz\Nun\\1\HolamHaser\Pe\\2\Kamatz\Tsadik}}%sever mount Zaphon, Jebel Aqra 
+\def \Kedma         {\Hebrew{\He\\2\Kamatz\Mem\\5\Shva\Dalet\\2\Tsere\Qof}}%východ
+\def \Yama          {\Hebrew{\He\\2\Kamatz\Mem\\1\Kamatz\Yod}}
+\def \Ehiyeh        {\Hebrew{\He\\1\Segol\Yod\\3\Shva\He\\2\Segol\Aleph}}
+\def \Asher         {\Hebrew{\Resh\\2\Segol\Shin\\2\ShvaPatach\Aleph}}
+\def \Yahweh        {\Hebrew{\He\Waw\He\Yod}}
 
-\def \Moab          {{\Hebrew\Bet\\2\Kamatz\Aleph\\1\HolamHaser\Waw\Mem}}
-\def \BenAmi        {{\Hebrew\Yod\\3\Hiriq\DageshMem\\2\Patach\Ayin\Maqef\FinalNun\\2\Segol\DageshBet}}
+\def \Moab          {\Hebrew{\Bet\\2\Kamatz\Aleph\\1\HolamHaser\Waw\Mem}}
+\def \BenAmi        {\Hebrew{\Yod\\3\Hiriq\DageshMem\\2\Patach\Ayin\Maqef\FinalNun\\2\Segol\DageshBet}}
 
-\def\Jatsar         {{\Hebrew\Resh\\2\Patach\Tsadik\\1\Kamatz\Yod}} % <Gn 2:7>n
+\def\Jatsar         {\Hebrew{\Resh\\2\Patach\Tsadik\\1\Kamatz\Yod}} % <Gn 2:7>n
