@@ -727,7 +727,7 @@ Holy Scriptures, therefore an “untouchable” texts. The only reason that migh
 you to interfere with the core text is the possibility that you might find an 
 error in the source from the Sword (or wherever you've got it from), when compared against the hard copy. Then it is really better to fix such error on the spot; if so, do it in `*.out` file and recompile it with `maketxs` afterwards. 
 Never rely too much on internet sources; always check them out. They can and do contain errors. For example, Sword modules are full of missing spaces, occasionally you'll find a wrong character there, or even a missing part of a verse, etc. See the file `errata-BKR.txt` on the project's homepage to learn how many such errors can one Sword module contain.} 
-you need to declare this additional information and link it to the corresponding verses using the special commands \`\fmtadd`, \`\fmtpre` and \`\fmtins`. 
+you need to declare this additional information and link it to the corresponding verses using the special commands \`\fmtadd`, \`\fmtpre`, \`\fmtins`, \`\fmtfont` and \`\fmtkeep`. 
 These commands are typically in the `fmt-*-*.tex` files,
 for example, `fmt-BBE-Dan.tex`. It is advisable to maintain these formatting files
 dependent both on the book (Daniel in the example above) and on the translation (the Bible in Basic English in the example). 
@@ -740,6 +740,8 @@ The syntax for using these commands is as follows:
 \fmtpre{<chapter-number>:<verse-number>}{<fmt-command>}
 \fmtadd{<chapter-number>:<verse-number>}{<fmt-command>}
 \fmtins{<chapter-number>:<verse-number>}{<phrase>}{<fmt-command>}
+\fmtfont{<chapter-number>:<verse-number>}{<phrase>}{<fmt-command>}
+\fmtkeep{<chapter-number>:<verse-number>}{<phrase>}
 \endtt
 where <fmt-command> is the \"command" given to \TeX/ for formatting.
 %\mnote{\code{\\endgraf} \code{\\begcenter} \code{\\endcenter}}
@@ -765,6 +767,8 @@ is used to highlight the selected phrase with the selected font.
 For example, the `\fmtfont{1:7}{the name of}{\em}` in the book of Daniel will print the words
 \"the name of\thinspace "  in italics (to indicate the word not in original language), because `\em` is an intelligent italics switch (it automatically adds the italics correction `\/` after the word, which you don't have to worry about, but which you would have to if you switched to italics with an ordinary `\it`).
 Any other font switch can be used instead of `\em`.
+
+The command \`\fmtkeep``{<chapter-number>:<verse-number>}{<phrase>}` makes first occurence of the <phrase> unsearchable. So you can apply a next `\fmt*` command to the next occurrence of the <phrase>.
 
 In addition to \`\begcenter` and \`\endcenter`, it is also possible to use controlled 
 indentation with \`\ind``<number>` (as indent). 
