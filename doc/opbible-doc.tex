@@ -10,8 +10,8 @@
 \def\`{\bgroup \_setverb \toindex}
 \def\toindex#1`{\egroup{\tt\Magenta #1}\ea\iindex\ea{\ignoreit#1}}
 \def\_printii #1&{\noindent{\tt\bslash#1}\quad}
-\def\watchout{\par\noindent {\bf What to watch out for:} }
-\def\recommended{\par\noindent {\bf Recommended:} } 
+\def\watchout{\par\medskip\noindent {\bf What to watch out for:} }
+\def\recommended{\par\medskip\noindent {\bf Recommended:} } 
 
 \verbchar`
 \catcode`<=13 \def<#1>{{$\langle$\it#1$\rangle$}}
@@ -31,8 +31,8 @@
 \bigskip\bigskip
 \centerline{\it Revised \the\day. \the\month. \the\year}
 \bigskip
-\centerline{https://petr.olsak.net/opbible.html}
-
+%\centerline{https://petr.olsak.net/opbible.html}
+\centerline{\url{http://opbible.org}}
 \vfill
 {\it
 \rightline{It is too small a thing for you to be my servant}
@@ -60,7 +60,7 @@ considered additional files and their inclusion does not violate the license.
 \nonum\sec[preface] Preface
 
 
-The verse from Isaiah 49 on the title page is inspiring: It would be a small thing to write and typeset using \TeX/  just one Bible commentary  as one's life's work. The \OpBible/ offers the opportunity to write a commentary on any Bible version to anyone anywhere; once the notes apparatus is complete, the study Bible is typeset. 
+The verse from Isaiah 49 on the title page is inspiring: It would be a small thing to write and typeset using \TeX/  just one Bible commentary on one Bible version as one's life's work. The \OpBible/ offers the opportunity to write a commentary on any Bible version (up to as many as there are Bible translations in one particular language) to anyone anywhere; once the notes apparatus is complete, the study Bible is typeset.
 
 Šimon Konečný's long-standing vision of using \TeX/ to automatically typeset study Bibles came to fruition through a collaboration with Petr Olšák.  Starting from the realistic assumption that
 those who will use OpBible the most will also be those who have the least experience with \TeX/, we tried to make the usage as simple as possible.
@@ -128,13 +128,13 @@ The main advantages of the \OpBible/ over traditional typesetting are:
   to pay for several years to hand-typeset the Study Bible.
         \enditems
 * {\bf Time:} Typesetting an entire Study Bible takes minutes, not years. 
- When providing the full text 
-of a~Study Bible  that breaks up the pages so that the notes end up on the same pages with
-  the verses they're commenting on, on a system with a quad-core Ryzen 3 processor, it took about
-  ten minutes. If you're working on a particular book and only processing one, it's usually a matter 
-  of seconds.
+ When providing the full text of a~Study Bible  that breaks up the pages 
+ so that the notes end up on the same pages with the verses they're commenting on, 
+ it took about   ten minutes on a system with a quad-core Ryzen 3 processor. 
+ If you're working on a particular book and only processing one, 
+ it's usually a matter of seconds.
 * {\bf Flexibility:} The result is not just one single version of the Bible in which you cannot 
- make  any changes. If you decide to edit some notes, delete some or add some more, etc.,
+ make  any changes. If you later decide to edit some notes, delete some or add some more, etc.,
   you have this new revised version immediately typeset and ready for print.
 * {\bf Variability:} The result may not be
   just one Bible. The notes can be written in a way that allows as many Bibles as there are 
@@ -151,12 +151,12 @@ Now let's take a brief look at Daniel, chapter 2, where the animals, countries, 
 * {\it Greece\/} of BBE, Jubilee2000, and NETfree is {\it Grecia\/} in UKJV, RNKJV, and Webster; compare all six translations.
 \enditems
 
-You can write your commentary in the way that the result would be all six translations at the same time, with no need to modify the notes file, while the notes (or charts, maps, etc.), will display the phrases as they appear in your current Bible. See the sample book of Daniel, chapter two, the chart of Daniel's visions.
+You can write your commentary in the way that the result would be all six translations at the same time, with no need to modify the notes file, while the notes (or charts, maps, etc.), will display the phrases as they appear in your current Bible. See the sample book of Daniel, chapter two, the chart of Daniel's visions; compare all six translations.
 
 In English, there are over 450 different translations of the Bible.
 Most of them are not being used anymore, but still, 
 you can choose from \ulink[https://bibleanswers.study/about-the-bible/types-of-bible-versions]{more than sixty} various English versions. 
-Actually, you can write your notes in a way that sixty (or a a hundred) various translations can be used with them at the same time, 
+Actually, you can write your notes in a way that sixty (or four hundred and fifty) various translations can be used with them at the same time, 
 without a need to change anything in the notes.
 
 
@@ -165,7 +165,7 @@ without a need to change anything in the notes.
   These make an invaluable aid for proof-reading  before submission to the print (see below).
 
 * {\bf Precision:} \begitems
-  * The average study Bible contains around 20,000 notes and within them around 80,000
+  * The average study Bible contains around 20.000 notes and within them around 60 to 80.000
   references to Bible verses and other notes. The notes are written by humans; it is inevitable  that  they will contain errors from oversight or typos. It is practically beyond the human power 
   to find and correct  all of them. It is, however, within the power of a machine. \OpBible/ prints warning messages  if, for example, a note refers to a non-existent note or verse.
 *  You can  check for the accurateness of references to verses and notes that do exist (thus they do 
@@ -215,8 +215,7 @@ And of course, we recommend -- or rather, consider it a prerequisite -- at least
 If you don't have any experience with \TeX, try starting 
 \ulink[https://www.ctan.org/tex-archive/info/gentle]{here}\fnote{This text is, to a degree, obsolete, as it refers to DVI output of \TeX/. Nowadays, modern \TeX/ ouputs directly to the PDF format.}. 
 The time invested in this preliminary education will not be wasted; the more you understand \TeX/, 
-the better (and more enjoyably) you will find writing your Bible notes.
-
+the better (and more joyfully) you will write your notes.
 
 \sec[Installation] What we need to run \OpBible/
 
@@ -252,12 +251,31 @@ needed for \OpBible/.
 
 \secc[OverLeaf] Variant: remote access on Overleaf.com
 
-Overleaf is a web-based environment for shared preparation of \TeX/ documents, perhaps by multiple 
-users. You do not need to have \TeX/live installed; you can run it online via 
-\ulink[https://www.overleaf.com]{Overleaf}. \TODO The \ulink[??]{default project} containing files 
-for processing by \OpBible/ is also available. As an Overleaf user, you can copy (clone) it to your 
-project and continue working there. However, working with the \TeX/ distribution directly on your 
-computer is significantly faster and more convenient.
+Overleaf is a web-based environment for shared preparation of \TeX/ documents, perhaps 
+by multiple users. You do not need to have \TeX/live installed; you can run it online 
+via \ulink[https://www.overleaf.com]{Overleaf}. \TODO The \ulink[??]{default project} 
+containing files for processing by \OpBible/ is also available. 
+As an Overleaf user, you can copy (clone) it to your 
+project and continue working there. However, working with the \TeX/ distribution 
+directly on your 
+computer is significantly faster and more convenient. 
+
+\recommended
+Something to consider is the time limit of Overleaf \TeX/ processing. 
+Free Overleaf registration gives you just twenty seconds, all paid  subscriptions 4 
+minutes or less. 
+While twentyu seconds could be quite OK if you only work on one particular book, 
+it can turn out that even 4 minutes might be not enough for the entire Study Bible 
+when it is completed. 
+This is just an opinion, not tested and verified fact, though. 
+What we know for sure, is that one minute (the free time limit before October 6, 2023) 
+is not sufficient even for a Bible with no notes at all.
+So if you insist on working on Overleaf 
+(for example, when you often  work from different locations), 
+before compiling the entire Bible, it may be wise to download the project in your 
+computer and finish it from there.
+
+
 
 %\secc[evince] Evince
 
@@ -398,7 +416,7 @@ If you need some other existing translation, you need to get it into a format us
 The `maketxs` script (see~\ref[txs]) will help you prepare individual `.txs` books from an existing source.
 
 If you are going to create a brand new translation and plan to use it with OpBible, it probably wouldn't hurt to compose files one by one for each book directly in the desired format, 
-or even better: create the file `your-translation.out` for the entire Bible, and run `maketxs yourtranslation.out` to create all the `.txs` files needed; see also~\ref[txs].
+or even better: create the file `your-translation.out` for the entire Bible, and run `maketxs your-translation.out` to create all the `.txs` files needed; see also~\ref[txs].
 
 The \`\fmtfile` macro defines the location of the files specifying the formatting
 of the core text. Each book of the Bible of each translation uses its own formatting file.
@@ -556,7 +574,7 @@ declare the location of the `.txs` files using \`\bmark` instead of \`\amark`, i
 \begtt
 \def\txsfile {sources/\tmark-\bmark.txs}
 \endtt
-and have the files `BKR-Gen.txs`, `BKR-Exod.txs`, while in the text (including the references) we use
+and have the files `BBE-Gen.txs`, `BBE-Exod.txs`, while in the text (including the references) we use
 the marks `Gn`, `Ex`, etc., not `Gen`, `Exod`. The <b-mark>s are never printed in the text.
 
 The macro \`\amark` contains the `<a-mark>` of the currently processed book and the macro
@@ -570,9 +588,8 @@ In the third parameter after \`\BookTitle`, the book names are in brackets.
 File with 66 entries of \`\BookTitle` %(Protestant canon) The 
 is generated automatically after extracting
 the core texts from Sword download using a program `mod2tex` and a python script `maketxs` (see
-section~\ref[txs]). Feel free to use them, but `<a-tags>` and book titles will
-probably need to be manually modified according to the conventions of the translation, as demonstrated
-in the example above.
+section~\ref[txs]). Feel free to use them, but `<a-mark>`s and book titles will
+probably need to be manually modified according to the conventions of the translation, as demonstrated in the example above.
 
 Additional information about individual books can be added to the book title file
 using the \`\BookException`, \`\BookPre`, \`\BookPost` commands. They have the following syntax:
@@ -605,11 +622,11 @@ Then the `notes-\amark.tex` files, for example, are actually named `notes-Z.tex`
 Ž, Př, Pís, etc.
 
 There are five books in the Bible that have only one chapter (Obadiah, Philemon, 2 and 3 John and Jude).
-Because the references to them are not written with the chapter number (`Ph 1:4`) but only with the verse number (`Ph 4`), 
+Because the references to them are not written with the chapter number (`Phlm 1:4`) but only with the verse number (`Phlm 4`), 
 we have to teach \TeX\ which ones they are so that it does not expect the chapter number but knows that it's the number 1 which in turn is not written anywhere.
 When you refer to one of such books, the reference is being interpreted in a different way, see section~\ref[vudaj].
 This is achieved by defining a macro \`\nochapbooks` which must contain the <a-marks> of these books:
-`\def\nochapbooks {Ob Pm 2Jn 3Jn Jd}`, obviously identical to those already listed in the `\BookTitle` definition (in the `books.tex` file).
+`\def\nochapbooks {Obad Phlm 2John 3John Jude}`, obviously identical to those already listed in the `\BookTitle` definition (in the `books.tex` file), as well as those listed in `\printedbooks` definition in the `main.tex` file.
 
 
 \secc[txs] Core text format, called `.txs` files
@@ -669,7 +686,7 @@ contains the titles and abbreviations of each book, so there is:
 
 These titles are in English, as the Sword source does not use non-English module names. 
 If your language is a non-English then it is necessary to manually edit this file and insert the titles of your local language instead of English ones.
-The abbreviations of the books are listed twice as well. The first one should be changed according to convention of abbreviations in your language's Bibles and the second column of abbreviations can stay in English as it already is (as these second abbreviations, the <b-marks>, will be part of the `.txs` file names).  
+The abbreviations of the books are listed twice as well. The first one `<a-mark>` should be changed according to convention of abbreviations in your language's Bibles and the second column of abbreviations can stay in English as it already is (as these second abbreviations, the <b-marks>, will be part of the `.txs` file names).  
 
 Then the declaration 
 \begtt
@@ -726,7 +743,8 @@ Since we don't want to interfere with the core text,\fnote{Think of them as the
 Holy Scriptures, therefore an “untouchable” texts. The only reason that might entitle 
 you to interfere with the core text is the possibility that you might find an 
 error in the source from the Sword (or wherever you've got it from), when compared against the hard copy. Then it is really better to fix such error on the spot; if so, do it in `*.out` file and recompile it with `maketxs` afterwards. 
-Never rely too much on internet sources; always check them out. They can and do contain errors. For example, Sword modules are full of missing spaces, occasionally you'll find a wrong character there, or even a missing part of a verse, etc. See the file `errata-BKR.txt` on the project's homepage to learn how many such errors can one Sword module contain.} 
+Never rely too much on internet sources; always check them out. They can and do contain errors. For example, Sword modules are full of missing spaces, occasionally you'll find a wrong character there, or even a missing part of a verse, etc. See the file `errata-BKR.txt` on the project's \ulink[opbible.org]{homepage} 
+to learn how many such errors can one Sword module contain.} 
 you need to declare this additional information and link it to the corresponding verses using the special commands \`\fmtadd`, \`\fmtpre`, \`\fmtins`, \`\fmtfont` and \`\fmtkeep`. 
 These commands are typically in the `fmt-*-*.tex` files,
 for example, `fmt-BBE-Dan.tex`. It is advisable to maintain these formatting files
@@ -768,7 +786,7 @@ For example, the `\fmtfont{1:7}{the name of}{\em}` in the book of Daniel will pr
 \"the name of\thinspace "  in italics (to indicate the word not in original language), because `\em` is an intelligent italics switch (it automatically adds the italics correction `\/` after the word, which you don't have to worry about, but which you would have to if you switched to italics with an ordinary `\it`).
 Any other font switch can be used instead of `\em`.
 
-The command \`\fmtkeep``{<chapter-number>:<verse-number>}{<phrase>}` makes first occurence of the <phrase> unsearchable. So you can apply a next `\fmt*` command to the next occurrence of the <phrase>.
+The command \`\fmtkeep``{<chapter-number>:<verse-number>}{<phrase>}` makes first occurence of the <phrase> unsearchable. So you can apply a next `\fmt*` command to the next occurrence of the <phrase>. You will probably not need this too often; if you do, see the section~\ref[dirty].
 
 In addition to \`\begcenter` and \`\endcenter`, it is also possible to use controlled 
 indentation with \`\ind``<number>` (as indent). 
@@ -801,11 +819,11 @@ The poetic part of this sample was typeset this way:
 
 
 
-\`\fmtpoetry``{<chapter-number>:<version-number>}{<formatting-data>}` determines the 
+\`\fmtpoetry``{<chapter-number>:<verse-number>}{<formatting-data>}` determines the 
 format of a particular verse. The <formatting-data>
-contain words from the ends of a line followed by one or more slashes. Number of
-of slashes indicates how many paragraph indents the next line after the
-that word is shifted to the right. <formatting-data> must necessarily end with one or more
+contain the word from the end of the line followed by one or more slashes. Number of
+of slashes indicates how many paragraph indents the next line after 
+that word will be shifted to the right. <formatting-data> must necessarily end with one or more
 slashes and may (but do not have to) begin with one or more slashes.  If
 it does, then the beginning of the line is indented by the appropriate number of paragraph indents,
 but the verse number is set off slightly to the left to the space of a paragraph
@@ -1003,7 +1021,7 @@ page from the  the image itself.
 * `<label>` specifies the image's  reference label. You can then refer to it using \hfil\break
 \code{...see image \\ref [daniels-visions] on page \\pg}, which, 
 %  ...see image` \`\ref` `[<daniels-visions>]` on page \`\pg`, which,  
-  in the case of our example, prints ... see image {\Blue Daniel's Visions} on page~123.
+  in the case of our example, prints ... see image {\Blue Daniel's Visions} on page~{\Blue 123}.
   In doing so, the text in this link will be hyperlinked to the place where the image occurs. 
   If you don't want to use `<label>`, type `[]`   (an empty label).
   
@@ -1081,7 +1099,7 @@ Then it can continue with the next article given by another command
 All the articles for a given book are thus accumulated in a singe file.
 
 If you specify the request \`\putArticle` but the corresponding file `article-*.tex`
-or the corresponding line  \`\Article` `[<article-number>]` does not exist, the \TeX/ will end with 
+or the corresponding line  \`\Article` `[<article-number>]` does not exist,  \TeX/ will end with 
 an error.
 
 
@@ -1142,8 +1160,9 @@ insertion of the quotation).
 
 The reason why it is necessary to give two locations for \`\insertCite` is  following: 
 We don't know ahead on which page (odd or even) the article with the inserted quotation
-will appear. Since the quote should stick out in the outer margin, it should be placed on the left
-page in the first column, and on the right page in the second column, that is 
+will appear. Since the quotation should stick out in the outer margin, 
+it should be placed  in the first column on the left page, 
+and in the second column on the right page, that is 
 somewhere slightly different. The location of `\insertCite <letter>\left` should therefore
 correspond to a line in the first column and `\insertCite <letter>\right`
 to another line in the second column of the article.
@@ -1218,7 +1237,7 @@ But if there is a `\def\tmark{Jubilee2000}` in the main file, then
 
 
 Selected parameters of \`\vdef` may be empty (written as ~`{}`),
-indicating an undefined phrase for that language.
+indicating an undefined phrase for that translation.
 If such undefined phrase needs to be used with \`\x/.../`, a warning will be printed.
 
 In addition, the parameter may contain a single `"` character, indicating that the
@@ -1242,7 +1261,7 @@ The \`\ww` command has as many parameters as there are translation variants decl
 `{<wanted-phrase>}`) or compound (in the format
 `{<search-phrase>}={<what-to-print>}`). The immediately following \`\Note`
 will then ignore its parameter for the search phrase and use the parameter from \`\ww`
-corresponding to the language variant being processed. For example:
+corresponding to the translation variant being processed. For example:
 
 \begtt \typosize[8/11] \catcode`<=12
 \ww {if you do not make clear to me the dream and the sense of it} % BBE
@@ -1260,8 +1279,8 @@ The `Note 2:5` given here searches the text in verse 2:5 for \"if you do not mak
 dream and the sense of it" when a variant translation of the BBE is being processed, and looks up 
 the text \"if ye will not make known unto me the dream with its interpretation" when the Jubilee2000 
 translation variant is being processed.
-The example assumes that six `\variants` have been declared using the `\variants` command
-translation variants in the specified order. 
+The example assumes that six `\variants` have been declared using the 
+`\variants` command for translation variants in the specified order. 
 
 Whenever \`\ww` preceeds a \`\Note`, the brackets for a `{<phrase>}` after the \`\Note` can contain anything and it will not be displayed, as it will be replaced by the content of \`\ww`. However, they always have to be present, even if empty.
 
@@ -1303,6 +1322,34 @@ or
 the <search-phrase> is first transformed by the data from `\vdef`. Only if
 such data do not exist for the search phrase, <search-phrase> is being used as it is.
 
+\watchout
+Keep in mind that formatting a phrase (see~\ref[fmt]) 
+prevents it from being found, as the formatting sticks its own commands to it.
+So if your note is commenting on a phrase that already underwent 
+some formatting  
+(e.g., a line break  within a poetry passage, or a font change, etc.)
+pick the closest  word that is not influenced by this formatting as the search 
+phrase, and use the complete phrase that you want to display as the replacement 
+(`<what-to-print>`) one.
+
+For example, you want to comment on the phrase  {\em How great are his signs!} 
+in Daniel 4:3. Writing directly 
+`\Note 4:3 {How great are his signs!}` would yield a warning message and the 
+phrase would not be found. That is because in some translations (e.g., NETfree, 
+see the file `fmt-NETfree-Dan.tex`), the word {\em sign!} at the end of the 
+sentence is part of formatting, while in some  others 
+(e.g., Jubilee2000 or Webster) the core 
+text contains extra characters `[]` around some words that are being 
+converted into font change command using `\cnvtext` (see~\ref[txs]) .
+
+Therefore, you have to work around by using replacement (`<what-to-print>`) 
+phrase: 
+
+\begtt
+\Note 4:3 {How great}={How great are his signs!}
+\endtt
+
+
 \recommended 
 For clarity, it is worthwhile to have each translation on a new line, and to label it after the 
 commenting percentage sign, so that we know where what belongs without groping.
@@ -1324,7 +1371,7 @@ Then, below `\endinput`, you can have a few lines prepared, e.g., in this form:
     {}={} % Webster
 \Note 1:1 {}={}
 \endtt
-and then just copy these lines in place of the new note, edit the chapter number and verses after 
+and then just copy these lines in place of the new note, edit the chapter  and verse number after 
 `\Note`, or delete `={}` where they are not needed. This way you don't lose track of
 which phrases belong where, whether you write them out manually or paste them from a Bible program 
 or online resources.
@@ -1333,9 +1380,9 @@ or online resources.
 \secc[switch] Text processing branching by translation variants
 
 %\mnote{\code{\\switch}}
-You can use the \`\switch` command to branch the text processing in
+You can use the \`\switch` command to branch the text processing,
 depending on the set value of the \`\tmark` parameter, i.e., depending on
-the language variant currently being processed. The command has the following syntax:
+the translation variant currently being processed. The command has the following syntax:
 \begtt
 \switch {<list of variants>} {<what to do>}%
         {<list of variants>} {<what to do>}% ... etc.
@@ -1343,13 +1390,12 @@ the language variant currently being processed. The command has the following sy
 \endtt
 The pairs `{<list of variants>} {<what to do>}` can be given as many times as you like.
 After each pair `{<list of variants>}{<what to do>}` (except for the very last pair) must be 
-followed immediately and without spaces by another such pair,
+followed immediately and without spaces by another such pair.
 Therefore, when moving to the next line, write a percent sign after the closing parenthesis to cover 
 the space from the end of the line. Spaces at the beginning of the next line do not matter.
 You can understand the percent sign after the pair as “next pair continues”.
 
-The `<list of variants>` is a single translation variant mark or a list of translation variant marks separated 
-by a comma and no spaces. The \TeX/ then works as follows:
+The `<list of variants>` is a single translation variant mark or a list of translation variant marks separated by a comma and no spaces. The \TeX/ then works as follows:
 If a variant defined by the \`\tmark` parameter occurs in the `<variant list>`, then
 the following `<what to do>` is executed. If there is no such variant,
 the following `<what to do>` is skipped. Example:
@@ -1389,7 +1435,7 @@ command `\x/<phrase>/` works inside `\switch`.
 
 %\mnote{\code{\\renum}}
 Some translation variants have different verse numbering. In this case, the
-the \`\renum` command can be used as follows:
+\`\renum` command can be used as follows:
 
 \begtt
 \renum <book-abbreviation> <default-chapter-number>:<default-verse-number> = <translation> 
@@ -1411,7 +1457,7 @@ We number the notes according to the translation given as the first parameter of
 Renumbered translations change the note number according to the actual verse number that the note 
 comments on, including the reference, which is then printed as “See note on 10:21.”
 
-If the renumbering refer only to a single verse, then the identical 
+If the renumbering refers to a single verse only, then the identical 
 `<verse-number-from>` and `<verse-number-to>`  should be given, as in the example below:
 
 \begtt
@@ -1461,11 +1507,12 @@ numbered from one. So there is no need to have \TeX/ generate these numbers
 automatically (as it does when typesetting, say, a technical text that is divided into
 chapters and sections), and thus there is no need to use labels in the source
 document (which \TeX/ would assigns to the generated numbers during processing) and to refer by these labels in the source file, 
-as described in section 1.4.3 of the \OpTeX/ documentation. 
+as described in section \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf]{1.4.3} of the 
+\ulink[http://petr.olsak.net/optex/]{\OpTeX/} documentation. 
 It is much more efficient to refer directly to a specific place in the Bible that already has
 for many centuries now,  fixed chapter and verse numbers.\fnote{%
-The Archbishop of Canterbury, Stephen Langton, in the early 13th century, when he was teaching at the University of Paris [and has not yet become an 
-archbishop] divided the Bible into chapters. 
+The Archbishop of Canterbury, Stephen Langton, in the early 13th century, when he was teaching at the University of Paris (and has not yet become an 
+archbishop) divided the Bible into chapters. 
 Then, in the mid-16th century, the French books printer Robert Estienne divided the New Testament into verses and added the Old Testament, 
 which Jewish scribes had centuries earlier divided into verses (but not into chapters).
 Since 1553, when Estienne published the first French Bible thus numbered, we have used this system to this day.}
@@ -1630,9 +1677,9 @@ prints ... see {\Blue Dan~9:11b}, but the link leads to Dan~9:11.
 \secc Hidden data
 
 When none of the rules are sufficient to create an internal link from a link
-listed above, you can enclose everything in the link to be printed in `"..."` 
-and hide the subsequent entry to create the internal link. 
-To do this, just append underscore `_` followed by the data right after the closing prgrammers' quotation mark  `"` Such entry is not printed. For example,
+listed above, you can enclose everything in the link to be printed in the programmer's 
+quotation marks `"..."` and hide the subsequent entry to create the internal link. 
+To do this, just append underscore `_` followed by the data right after the closing programmers' quotation mark  `"` Such entry is not printed. For example,
 \begtt \catcode`<=12
 <"First Book of Samuel"_1Sam 1:1>
 \endtt
@@ -1707,15 +1754,17 @@ Then \code{<"viz" 1Pa 2:3>} yields  {\Blue viz 1Pa~2:3} in most of Czech transla
 
 If a reference is made to a non-existent verse or a non-existent note, then
 there are two possibilities. If it is a reference to a book that is intentionally not being printed
-(since, for example, you are working on a test books selection,
+(because, for example, you are working on a test books selection,
 see also \`\printedbooks` in section~\ref[main]), then the link is  colored
 as if it were active, but it is not, and \TeX/ gives
 no warning. However, if the link points to a non-existent verse or
 note within the printed books, then the link is active, the click goes to
 the last page of the PDF file, and a warning appears in the log, saying that the link
-is incorrect. However, when\TeX/ runs the first time, all
-links lead to nowhere, thus there is a large number of warnings about incorrect links in the log.
-Only after you run \TeX/ the second time, the links pointing to existing places are correctly interlinked.
+is incorrect. Be aware, though, that when\TeX/ runs for the first time, all
+links lead to nowhere (as they are being created for the first time), 
+thus there is a large number of warnings about incorrect links in the log.
+Only after you run \TeX/ the second time, 
+the links pointing to existing places are correctly interlinked.
 
 
 \secc Link Tracing
@@ -1866,7 +1915,7 @@ together to look like one continuous text.
 
 In the example above we have the name of the city of Jerusalem printed at an oblique angle but along a straight line so that it 
 does not clash with “king of the South” and can be seen clearly.
-This can be achieved by using the \`\c` command without `\pdfrotate` parameter parameter:
+This can be achieved by using the \`\c` command without `\pdfrotate` parameter:
 
 \begtt
 \puttext 48mm 55mm {\c[-40/\kern1pt]{Jerusalem}}
@@ -1876,8 +1925,8 @@ The number `-40` was used to tilt the inscription.
 
 \secc[bkgrnd] Partially transparent background of continuous text
 
-In the sample above, the continuous blocks of text have slightly lighter background through 
-which the map from below is still visible.
+In the sample above, the continuous blocks of text have slightly lighter background 
+through which the map from beneath is still visible.
 This can be achieved by typing \`\putstext` (think of Put-Shadowed-Text) in the place of 
 \`\puttext`. This way you don't need any pre-prepared lighter spots on the blind map (see the 
 image bellow), having to “hit” it with the text. 
@@ -1893,7 +1942,7 @@ Before using \`\putstext` for the first time, the level of transparency of the w
 If you set `\def\shadowparameter{1}` then a solid opaque white background; the smaller the number means the more transparency. 
 
 However, this value is then stored in the page-resources of the output PDF and is used 
-the same  on all subsequent pages, so it cannot be changed and have it  different in 
+the same  on all subsequent pages, so you cannot change it and have it  different in 
 different places of the same document. 
 If perhaps there should be an unexpectedly excessive 
 demand for the ability to change the transparency level on the fly, this may be an incentive for 
@@ -2147,7 +2196,7 @@ If the files `notes`, `fmt`, `intro` do not exist, \OpBible/ does not complain a
 behaves as if they were empty. But you might want to have these
 files for all the books of the Bible already prepared in the appropriate directories and
 with a short introduction. Templates for such files can be
-written them in a separate file (e.g.,`templates.tex`) and then
+written  in a separate file (e.g.,`templates.tex`) and then
 run such file using the `optex templates` command. This will generate the default files
 according to the specified templates for all the books of the Bible.
 If a file with the specified name already exists, it is retained (i.e., it is not
@@ -2169,7 +2218,7 @@ and then you can specify file templates with the \`\filegen` command as follows:
 \endtt
 %
 The <filename> must (and <file-content> can) contain the double character `@@`, 
-which is automatically replaced by the book abbreviation <bmark> specified in `books.tex`. 
+which is automatically replaced by the book abbreviation <b-mark> specified in `books.tex`. 
 As  many default files as there are book titles declared in `books.tex` are then automatically generated.
 For example, `templates.tex` might look like this:
 
@@ -2212,7 +2261,7 @@ directory. If you have prepared subdirectories in this directory corresponding t
 names, it is possible to generate files directly into them, for example, write
 \`\filegen {intros/intro-@@.tex}`.
 
-To generate a list of files with the names other than the <bmark> list  in the `books.tex` file, 
+To generate a list of files with the names other than the <b-mark> list  in the `books.tex` file, 
 after reading in `books.tex`, define macro \`\genbooks` with your chosen set of abbreviations. 
 For example, after
 \begtt
@@ -2222,6 +2271,9 @@ For example, after
 the \`\filegen` command will only generate templates for the five books with the specified
 abbreviations. You can also define \`\genbooks` before each \`\filegen`, in which case
 you'll be able to have different book abbreviations for different file types (e.g., `intro-Gen.tex` and `notes-Gn.tex`).
+
+\watchout 
+If you work online on Overleaf, you must not forget that Overleaf does not keep the files that have been generated during \TeX/ run. This makes generating the templates a bit clumsy: after generating them (but before quitting Overleaf) you would have to download the file(s) and manually upload it (them) again. The files that you manually upload do not get deleted when you leave the project.
 
 \sec[tricks] Tricks and Stunts  
 
@@ -2286,37 +2338,60 @@ If you then want them back, start the new chiasm with `\begChiasm \style Q`.
 
 %...
 
-\secc Formatting Dirty Tricks
+\secc[dirty] Formatting Tricks
 
-This section loosely follows the section~\ref[fmt].
-Let's suppose you want to let the reader know which words have been added by the translators that 
-are not in the original language.
-In Daniel 4, you come to the verse 16 where there are several occurrences 
-of the word  heart: {\em Let his heart be changed from that of a man, 
-and the heart of a beast be given to him; and let seven times go by him.} (BBE)
+This section  follows the section~\ref[fmt].
+We are formatting the text of the book ofDaniel, in the BBE translation, 
+therefore we work inside the `fmt-BBE-Dan.tex` file.
+Let's suppose you want to let the reader know which words have been added by the 
+translators that are not in the original language.
 
-%{\em  let his heart be changed from a man’s heart, and let a beast’s heart
-%be given unto him...} (Jubilee2000). 
+In BBE,  Daniel 1:7, we read:
 
-Now let's also suppose that you want to typeset the last heart, the beast's 
-one,  as emphasized by a font change.
-Normally you could do it quite simply just by typing `\fmtfont{4:16}{heart}{\em}`. 
-In this particular case, however, this would not work as expected because it will only 
-change the first occurrence of the word {\em heart} which is “his heart” 
-near the beginning of the verse. 
-
-The way to handle this is a real dirty trick which will help you discard the first “heart” by 
-inserting an empty group `{}` somewhere inside the word.
-Typing
 \medskip
+\moveright 1in\vbox{\advance\hsize by -2in 
+\noindent
+And the captain of the unsexed servants gave them names; 
+to Daniel he gave the name of Belteshazzar, 
+to Hananiah the name of Shadrach, 
+to Mishael the name of Meshach, 
+and to Azariah the name of Abed-nego.} 
+\medskip
+
+The phrase {\em the name of} was added by the BBE translators, it is not in the original Hebrew Bible and you want to indicate that by a font change.
+Typing `\fmtfont{1:7}{the name of}{\em}` would do the job just fine, but only for the very first occurrence of the phrase. In this particular case, however, we run into a problem because the exactly same phrase is there four times in the same verse, and  all in the need of the font change. The phrase that have been searched for and found cannot be searched for again.
+
+There is a way around, as mentioned in \ref[fmt].
+
+The macro \`\fmtkeep``{<chapter-number>:<verse-number>}{<phrase>}` will help us here because it will make the first occurrence of the `<phrase>` unsearchable by hiding it inside the brackets `{}`.  
+We use it repeatedly because we also need to exclude from search  the second and the third occurrences of the phrase. The second time it will disable the next first visible phrase, which is now the second one, and so forth.
+\medskip
+Typing 
+
 \begtt
-\fmtins{4:16}{hea}{{}}
-\fmtfont{4:16}{heart}{\em}
+\fmtfont{1:7}{the name of}{\em}
+\fmtkeep{1:7}{the name of}
+\fmtfont{1:7}{the name of}{\em}
+\fmtkeep{1:7}{the name of}
+\fmtfont{1:7}{the name of}{\em}
+\fmtkeep{1:7}{the name of}
+\fmtfont{1:7}{the name of}{\em}
 \endtt
-%
-will do the job; the macro `\fmtfont`  will not recognize the word in `hea{}rt` as its second 
-parameter, thus applying the font change only into the other first `heart` that it can see, 
-which is the one you need. 
+
+
+solves the problem neatly and to everybody's satisfaction, resulting in:
+
+\medskip
+\moveright 1in\vbox{\advance\hsize by -2in 
+\noindent
+And the captain of the unsexed servants gave them names; 
+to Daniel he gave {\em the name of} Belteshazzar, 
+to Hananiah {\em the name of} Shadrach, 
+to Mishael {\em the name of} Meshach, 
+and to Azariah {\em the name of} Abed-nego.} 
+\medskip
+
+See the sample file of Daniel in BBE translation, verse 1:7.
 
 
 \watchout
@@ -2327,8 +2402,8 @@ command. Otherwise \TeX/ will crash and you end up with the mysterious message
 In other words, use 
 
 \begtt
-\fmtins{4:16}{him.}{\medskip}
-\fmtfont{4:16}{him.}{\em}
+\fmtins{1:7}{Abed-nego.}{\medskip}
+\fmtfont{1:7}{the name of}{\em}
 \endtt
 %
 and do not switch the order of these two lines.
@@ -2614,6 +2689,19 @@ optex -jobname opbible-techdoc '\docgen opbible'
 \endtt
 The `opbible-techdoc.pdf` is created.
 Use this command three times because the references must be correctly linked and the created Index and Table of contents needs data from previous \TeX/ run.
+
+\sec After you're done
+
+After you finish writing your commentary, you have all the formatting done, 
+you have checked all the references to make sure they are correct, 
+there are no more warning messages in the log file, 
+and you are quite happy about how your Study Bible looks like, you can now disable blue color of the 
+links by typing (somewhere in the `main.tex` file) `\hyperlinks\relax\relax`.
+
+The printing house to which you would submit your resulting PDF should be able to add their own 
+crop marks. If for some reason you want to do it yourself, you can use the macro `cropmarks.tex` which is part of \ulink[http://petr.olsak.net/optex/optex-tricks.html]{\OpTeX/}.
+
+
 
 
 \sec Index
