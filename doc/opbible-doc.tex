@@ -392,7 +392,7 @@ One of the translations must always be active, in other words, \`\tmark` has to 
 you forget to put a percent sign before the line you want to comment out, the world won't fall 
 apart; the very last definition that \TeX\ loads will apply, which will redefine any previous ones.
 
-\`\input {vars.tex}` reads the configuration concerning the translation variants
+The command \`\input {vars.tex}` reads the configuration concerning the translation variants
 from the `vars.tex` file. 
 See section~\ref[vars] for details. Do not touch this line, even though you will probably be editing 
 the `vars.tex` file called by this line.
@@ -964,6 +964,7 @@ In the sample Book of Daniel (of the Webster Bible translation), you can see thi
 where you read “will I return to fight with the prince of Persia” and then at page 24 where the same verse continues with the phrase “the prince of Grecia.” The notes follow their respective phrases to correct pages. 
 (You probably do understand that in a real hard copy Bible the page 23 would be the right one, as all odd pages are, and 24 would be its other side after you turn the page, don't you?)
 
+\filbreak
 \bigskip
 \picw=200pt
 \line{\hskip10pt\inspic{images/Webster-Dan-10-20A-crop.pdf} \hss
@@ -1484,15 +1485,48 @@ If the renumbering refers to a single verse only, then the identical
 %references to Darius the Mede in the book of Daniel are historical errors.
 %\medskip}
 
-%Even such tidbits as shifting a number by a mere part of a verse can be dealt with.
-%BDB Da 2:28 \"there is a God in heaven who reveals secret things" is in the SNC \"God who is in heaven reveals secrets." 2:27;
-%So before the note on this phrase, we will put `Renum Da 2:28 = SNC 2:27-27`. 
-%But then we also need a note on the phrase \"in the latter days" of the same verse, but -- world wonder -- the phrase
-%\"in the latter days" is already
-%is in the SNC in verse 2:28! We don't need to speculate why the SNC translators try such tricks on us by sending half a verse under a different number than everyone else;
-%it is enough that we know how to handle it: 
-%We write ``renum Da 2:28 = SNC 2:28-28'' before this new note, and everything works as it should: Where the numbering diverges, it renumbers; where it
-%it matches, it stays the same.
+The macro `\renum` can handle even such tidbits as shifting a number of a mere part of a verse.
+This example comes from the Czech SNC translation where the phrase \uv{jen Bůh, který je v nebesích, odhaluje tajemství} (\"there is a God in heaven 
+who reveals secret things"), is for no clear reason a part of the verse 2:27 while all other Bibles have it in the verse 2:28. 
+But the fun does not end here; if you want to comment also on the phrase \uv{posledních dnů} (\"the latter days") you'll now find it in the verse 2:28
+where the rest of the Bibles have it as well. What are you going to do? How can you renumber just half of the verse?
+
+Well, you can do it by applying `\renum` on the same verse twice: the first time {\em before} the `\Note` on the first phrase, and the second time {\em after} it.
+So you type:
+\begtt
+\renum Da 2:28 = SNC 2:27-27
+\ww {jest Bůh na nebi, kterýž zjevuje tajné věci}       %BKR
+    {v nebesích je Bůh, zjevující tajemství}            %PSP
+    {jest Bůh na nebesích, zjevující tajemství}         %CSP
+    {je Bůh v nebesích, který odhaluje tajemství}       %CEP
+    {Na nebi je však Bůh, který zjevuje tajemství}      %B21 
+    {jen Bůh, který je v nebesích, odhaluje tajemství}  %SNC    
+\Note 2:28 {} Podobně jako Josef v Egyptě (<Gn 40:8>; <Gn 41:16>) si ani \x/Daniel/
+nepřisvojuje poznání a výklad snu, nýbrž připisuje je Bohu.
+
+\renum Da 2:28 = SNC 2:28-28
+\ww {v potomních dnech}   %BKR
+    {v posledku dní}      %PSP
+    {v budoucích dnech}   %CSP
+    {v posledních dnech}  %CEP
+    {v posledních dnech}  %B21 
+    {posledních dnů}      %SNC
+\Note 2:28 {} Dosl. \uv{v posledních dnech}, čemuž sz lidé rozuměli jako době obnovy národa 
+po návratu z exilu (viz <Dt 4:30>). Tatáž fráze může označovat jakoukoliv budoucnost
+(<Gn 49:1>). V NZ je použita celkem pětkrát, z čehož dvakrát odkazuje na věk, započatý
+o Letnicích (<Sk 2:17>; <Žd 1:2>), a třikrát na závěr dějin 
+před Kristovým druhým příchodem (<2Tm 3:1>; <Jk 5:3> a <2Pt 3:3>). 
+
+\endtt
+
+Now everything works as it should: Where the numbering diverges, it renumbers; where it it matches, it stays the same. All Bibles except SNC have the first `\Note` numbered 2:28 but SNC has it as 2:27; then all of them have the second `\Note` as 2:28.
+
+\recommended
+You may want to use `\renum` also in other files, e.g., intro or fmt, not just 
+notes. In such cases, if would be advisable to use `\renum` inside the 
+`vars.tex` file, so that it applies everywhere without the need to retype 
+the same instruction more times (for example, both in intro and notes files).
+
 
 
 \sec[links] Methods of creating hyperlinks
@@ -1555,7 +1589,7 @@ specifier, which is one of the letters:
 * `n` ... refers to a note,
 * `a` ... refers to an article,
 * `i` ... refers to an introduction,
-* `g` ... refers to a gloss (which will hopefully come into play in some of the next versions of \OpBible/ with the core text typeset in two columns).
+* `g` ... refers to a gloss (which will hopefully come into play in one of the next versions of \OpBible/ with the core text typeset in two columns).
 \enditems
 The link specifier is not printed in PDF, it is just internal information where 
 the active link should click. If the closing character `>` 
@@ -1939,7 +1973,7 @@ image bellow), having to “hit” it with the text.
 \smallskip
 
 Before using \`\putstext` for the first time, the level of transparency of the white shadow can be set.  The default value is `\def\shadowparameter{.1}`. 
-If you set `\def\shadowparameter{1}` then a solid opaque white background; the smaller the number means the more transparency. 
+If you set `\def\shadowparameter{1}` you get a solid opaque white background; the smaller the number the more transparency. 
 
 However, this value is then stored in the page-resources of the output PDF and is used 
 the same  on all subsequent pages, so you cannot change it and have it  different in 
@@ -1947,7 +1981,7 @@ different places of the same document.
 If perhaps there should be an unexpectedly excessive 
 demand for the ability to change the transparency level on the fly, this may be an incentive for 
 implementation in a possible future version of \OpBible/.
-For the moment, we did not find it necessary to complicate the macros by creating more and more 
+For the time being, we did not find it necessary to complicate the macros by creating more and more 
 page-resources, so the user should be satisfied with the option to set the transparency of the 
 shadow under the text on maps uniformly for the entire Bible.  
 
@@ -2072,7 +2106,7 @@ vertical line, and the numbers between them indicate the distance between adjace
 \tline 0..100
 \tlines 20|20|20|20|20|
 \endtt
-creates a 100th horizontal line and vertical lines on top of it to denote 20,
+creates a 100 horizontal line and vertical lines on top of it to denote 20,
 40, 60 and 80 years.
 
 \`\arrowtext` `<from>..<to> (<setting>) {<text>}`
@@ -2282,7 +2316,7 @@ than what average \OpBible/ users might be satisfied with.
 
 \secc Chiasm
 
-Serious students of the Bible probably know that some parts of it are written in form of chiasm, for example, a single verse:
+Serious students of the Bible probably know that some parts of it are written in form of chiasm; for example, a single verse:
 \medskip
 \leftline{\hskip 2em{\bf A} Many that are first}
 \leftline{\hskip 3em{\bf B} shall be last;}
