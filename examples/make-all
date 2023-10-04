@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# ...... English variants:
+
+cd english
+
+rm *.log *.ref *.xrf
+for i in BBE Jubilee2000 NETfree UKJV RNKJV Webster ; do
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+done
+
+cd ..
+
+# ....... Czech variants:
+
+cd czech
+
+rm *.log *.ref *.xrf
+for i in CEP BKR CSP PSP B21 SNC ; do
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+done
+# third TeX run is needed:
+for i in CEP PSP SNC ; do
+   optex -jobname Bible-$i "\def\tmark{$i} \input bible"
+done
+
+cd ..
+
+# ....... Generating texdoc:
+
+optex -jobname opbible-techdoc '\docgen opbible'
+optex -jobname opbible-techdoc '\docgen opbible'
+optex -jobname opbible-techdoc '\docgen opbible'
+
+# ....... Printing warnings summary:
+
+echo Warnings summary:
+grep WARNING english/*.log | grep -v '\[Biblon\]'
+grep WARNING czech/*.log | grep -v '\[Biblon\]'
+grep warning english/*.log czech/*.log
+
+exit
+

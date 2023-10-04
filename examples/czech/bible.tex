@@ -1,0 +1,69 @@
+\load[opbible]  % macros OP-Bible
+
+%\overfullrule0pt
+
+\def\shadowparameter{0.075}
+%\checksyntax fmt/fmt-CzeSNC-Da  intro-Da.tex notes-Da.tex articles-Da.tex  {}
+
+\input opbible-hebrew  % Hebrew phrases are declared here
+%\input greek   % Greek  -"-
+\cslang
+\let\notecolor=\relax
+
+\def\nadpis#1{\medskip\noindent{\bf#1}\par\nobreak} %pro intro
+
+\normalchapnumbers
+
+\ifx\tmark\udefined
+%\def\tmark    {PSP}
+%\def\tmark    {BKR}
+%\def\tmark    {CSP}
+\def\tmark    {CEP}   % Variant of translation
+%\def\tmark    {B21}
+%\def\tmark     {SNC}
+\fi
+
+\def\txsfile   {./txs/Cze\tmark-\bmark.txs}     % Localization of .txs files   \amark for SNC + PSP
+\def\fmtfile   {./fmt/fmt-\tmark-\amark.tex} % Localisation of fmts
+\def\notesfile {./notes/notes-\amark.tex}         % Localisation of notes
+\def\introfile   {./intros/intro-\amark.tex}       % Localisation introductions
+\def\articlefile {./articles/article-\amark.tex}    % Localisation of articles
+
+\switch {BKR}{\def\bibname{Bible kralická}}%
+        {B21}{\def\bibname{Bible pro 21. století}}%
+        {CEP}{\def\bibname{Český ekumenický překlad}}%
+        {CSP}{\def\bibname{Český studijní překlad}}%
+        {PSP}{\def\bibname{Pavlíkův studijní překlad}}%
+        {SNC}{\def\bibname{Slovo na cestu}}%
+        {NBK}{\def\bibname{Nová Bible Kralická}}%
+        {Jeruzalem}{\def\bibname{Jeruzalem}}%
+        {HejclCol}{\def\bibname{Hejcl-Col}}%
+        {RBK}{\def\bibname{Revidovaná Bible Kralická}}%
+
+\quotationmarks{„}{“}
+
+\input {vars.tex}         % Language variants
+\input {./books.tex}  % Czech book titles
+
+\def\printedbooks {%
+   Gn Ex Lv Nu Dt Joz Sd Rt 1Sa 2Sa 1Kr 2Kr 1Pa 2Pa Ezd Neh
+   Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
+   Na Abk Sf Ag Za Mal
+   Mt Mk Lk Jn Sk Ř 1Kor 2Kor Ga Ef Fp Ko 1Te 2Te 1Tm 2Tm
+   Tt Fm Žd Jk 1Pt 2Pt 1Jn 2Jn 3Jn Ju Zj
+}
+
+\def\printedbooks {Da}
+%\def\printedbooks {Ex}
+%\def\printedbooks {1Pt}
+%\def\printedbooks {Lk}
+%\def\printedbooks{Gn}
+
+%\hfill Varianta: \tmark
+
+\processbooks % Generates books declared in \printedbooks
+
+
+
+
+\bye

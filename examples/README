@@ -1,0 +1,21 @@
+This directory includes examples of six variants of the book Daniel in
+English language and other six variants of the same book in Czech.
+
+You can try to generate them. You have to copy the macros to a directory
+where LuaTeX is able to find them and then you can run the script ./make-all
+from this directory. All 12 variants will be generated and, moreover, the
+opbible-texdoc is generated to this directory.
+
+To be more accurrate: If you are running TeXlive on a Unix system, then you can do
+
+cd opbible/examples
+mkdir -p ~/texmf/tex/opbible
+cp ../macros/* ~/texmf/tex/opbible/
+./make-all
+
+These commands generate 6 variants in english/ directory, 6 variants in czech/ 
+directory and opbible-techdoc.pdf in the examples/ directory.
+
+If you have not a commercial font Biblon installed, then the generated examples 
+use Termes font family instead Biblon.
+

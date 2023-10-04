@@ -1,0 +1,71 @@
+\load[opbible]  % macros OP-Bible
+\input opbible-hebrew  % Hebrew phrases are declared here
+\enquotes
+
+ \cnvtext{[}{\bgroup\it}   \cnvtext{]}{\/\egroup} 
+
+%\normalchapnumbers
+%\mergednotes
+
+\ifx\tmark\undefined
+\def\tmark   {BBE}        
+%\def\tmark   {Jubilee2000} %OK!
+%\def\tmark   {NETfree}    
+%\def\tmark   {UKJV}       %OK
+%\def\tmark   {RNKJV}    %Jméno YHWH píše pozpátku, takže původní text je upraven na  \flip{\HebrewFont YHWH}. Přesto při kompilaci protestuje, že hebrejská písmena nemá v Biblon fontu,  nevím proč, ale když se \HebrewFont spustí pro celou Bibli, sazí to bez potíží, jenom text není Biblonem.
+%\def\tmark   {Webster}    %OK  
+\fi
+
+\def\txsfile   {./txs/\tmark-\bmark.txs}     % Localization of .txs files
+\def\fmtfile   {./fmt/fmt-\tmark-\amark.tex} % Localisation of fmts
+\def\notesfile {./notes/notes-\amark.tex}         % Localisation of notes
+\def\introfile   {./intros/intro-\amark.tex}       % Localisation introductions
+\def\articlefile {./articles/articles-\amark.tex}    % Localisation of articles
+
+\switch
+     {BBE}        {\def\bibname{Bible in Basic English}}%   
+     {Jubilee2000}{\def\bibname{Jubilee 2000 Bible}}%
+     {NETfree}    {\def\bibname{New English Translation}}%
+     {RNKJV}      {\def\bibname{Restored Name King James Version}}% 
+     {UKJV}       {\def\bibname{Updated King James Version}}%
+     {Webster}    {\def\bibname{Noah Webster's Bible}}% 
+
+\switch {NETfree}   {\quotationmarks{“}{”}}
+
+%\hyperlinks\relax\relax
+
+\input {vars.tex}         % Language variants
+
+\input {books.tex}  % English book titles
+
+%\def\printedbooks {%
+%   Gn Ex Lv Nu Dt Joz Sd Rt 1Sa 2Sa 1Kr 2Kr 1Pa 2Pa Ezd Neh
+%   Est Jb Ž Př Kaz Pís Iz Jr Pl Ez Da Oz Jl Am Abd Jon Mi
+%   Na Abk Sf Ag Za Mal
+%   Mt Mk Lk Jn Sk Ř 1Kor 2Kor Ga Ef Fp Ko 1Te 2Te 1Tm 2Tm
+%   Tt Fm Žd Jk 1Pt 2Pt 1Jn 2Jn 3Jn Ju Zj
+%}
+%\def\printedbooks {Gen Exod Lev Num Deut        
+%                   Josh Judg Ruth
+%                   1Sam 2Sam 1Kgs 2Kgs 1Chr 2Chr   
+%                   Ezra Neh Esth   
+%                   Job Ps Prov Eccl Song   
+%                   Isa Jer Lam Ezek Dan    
+%                   Hos Joel Amos Obad Jonah Mic Nah Hab Zeph   
+%                   Hag Zech Mal    
+%                   Matt Mark Luke John Acts
+%                   Rom 1Cor 2Cor Gal Eph Phil Col 1Thess 2Thess 1Tim 2Tim %Titus Phlm
+%                   Heb Jas 1Pet 2Pet 1John 2John 3John Jude Rev
+%                   }
+
+
+%\mergednotes
+
+\def\printedbooks{Dan}
+
+%\checksyntax notes-Dan {} %fmt/fmt-NETfree-Dan  {}
+%\HebrewFont % for RNKJV only
+
+\processbooks % Generates books declared in \printedbooks
+
+\bye
