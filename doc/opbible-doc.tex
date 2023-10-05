@@ -790,6 +790,12 @@ Any other font switch can be used instead of `\em`.
 The command \`\fmtrepl``{<chapter-number>:<verse-number>}{<phrase>}{<replaced phrase>}`
 replaces first occurrence of <phrase> by <replaced-phrase>.
 
+Occasionally (although rather rarely) you may run across the situation where something in the core text requires very specific 
+handling. For example, the RNKJV translation attempts to display Hebrew names, especially God's name YHWH, in Hebrew alphabet, even in 
+the midst of  surrounding text in Latin alphabet.  Hebrew language writes from right to left and you will have to manage to typeset Hebrew words 
+correctly.  In case you download the core text containing such Hebrew words (like RNKJV does), you can use the macro \`\fmtrepl` which searches the occurrences of such Hebrew words and does what we want to print. 
+Consult the file `fmt-RNKJV-Dan.tex`. 
+
 The command \`\fmtkeep``{<chapter-number>:<verse-number>}{<phrase>}` makes first occurrence of the <phrase> unsearchable. So you can apply a next `\fmt*` command to the next occurrence of the <phrase>. You will probably not need this too often; if you do, see the section~\ref[dirty].
 
 In addition to \`\begcenter` and \`\endcenter`, it is also possible to use controlled 
@@ -807,7 +813,6 @@ Daniel 6:26--27:
 \vskip-2pt % it's on two sides, so it looks a little smooth
 
 
-
 The poetic part of this sample was typeset this way:
 \begtt
 \fmtpoetry{6:26}{God;// forever./ destroyed;//}
@@ -815,13 +820,6 @@ The poetic part of this sample was typeset this way:
   \fmtins{6:26}{Daniel.}{\medskip\hglue-2mm}
   \fmtadd{6:27}{\bigskip}
 \endtt
-
-
-
-
-
-
-
 
 \`\fmtpoetry``{<chapter-number>:<verse-number>}{<formatting-data>}` determines the 
 format of a particular verse. The <formatting-data>
@@ -845,20 +843,27 @@ the first `\medskip` is executed at the beginning of the poetic part of the vers
 \recommended
 If the poetry line starts with the left quotation marks, it is a typographical convention to let 
 them sick out to the left of the text block so that only the letters are aligned, and the empty 
-space bellow the quotation marks does not disturb that alignment. (The same reason applies for the verse numbers but you don't have to worry about these, as they are shifted automatically.)
+space bellow the quotation marks does not disturb that alignment. (The same reason applies for the verse numbers but you don't have to 
+worry about these, as they are shifted automatically.)
 Therefore, you can add some negative horizontal space in order to stick the quotation marks out of 
 the poetry block. In the example above, we used `\hglue-2mm`. 
 
-% To zrušíme, jestli půjde uvozovky vystrkovat automaticky. Kdyby ne, takhle to může fungovat taky.
 
-\secc Notes in `notes-*.tex` files
-
-These files (located according to the `\notesfile` declaration in the main file)
-contain, among other things, notes on individual verses or parts of verses. 
- The command \`\Note` will be the most frequent command in the `notes-*.tex` files, designed to type in the particular notes.  Since the commentary apparatus is the main reason why the
-the \OpBible/ package was created, an entire section~\ref[note] is devoted to it.
+%\secc Notes in `notes-*.tex` files
+%These files (located according to the `\notesfile` declaration in the main file)
+%contain, among other things, notes on individual verses or parts of verses. 
+% The command \`\Note` will be the most frequent command in the `notes-*.tex` files, designed to type in the particular notes.  Since 
+% the commentary apparatus is the main reason why the
+%the \OpBible/ package was created, an entire section~\ref[note] is devoted to it.
 
 \sec Notes and other objects linked to the core text
+
+Notes in `notes-*.tex` files (located according to the `\notesfile` declaration in the main file)
+contain, among other things, notes on individual verses or parts of verses. 
+The command \`\Note` will be the most frequent command in the `notes-*.tex` files, designed to type in the particular notes.  Since 
+the commentary apparatus is the main reason why the the \OpBible/ package was created, the entire section~\ref[note] is devoted to it.
+
+
 
 \secc[note] Notes linked to core text phrases: The `\Note` command
 
