@@ -1,5 +1,5 @@
 = OpBible
 
-== Processing commented Bible texts using OpTeX
+== Automatic Study Bible Typesetting Using OpTeX 
 
-This project funded by Šimon Konečný is under construction now.
+See also http://opbible.org
