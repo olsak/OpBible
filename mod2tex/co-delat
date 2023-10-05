@@ -1,9 +1,0 @@
-moduly stahnute z:
-https://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles
-rozbalit (v atualnim adresari vznikne adresar modules s daty)
-installmgr -l
-ukaze seznam pristupnych modulu
-./mod2tex modul > modul.out
-vznikne TeX soubor
-./maketxs modul.out
-vznikne 66 txs souboru a jeden books soubor.
