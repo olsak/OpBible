@@ -1029,8 +1029,7 @@ For example:
 In the default typographic settings, it is printed in a strip that separates the upper part of the 
 page from the  the image itself.
 * `<label>` specifies the image's  reference label. You can then refer to it using \hfil\break
-\code{...see image \\ref [daniels-visions] on page \\pg}, which, 
-%  ...see image` \`\ref` `[<daniels-visions>]` on page \`\pg`, which,  
+\code{...see image \\ref [daniels-visions] on page \\pgref[daniels-vision]}, which, 
   in the case of our example, prints ... see image {\Blue Daniel's Visions} on page~{\Blue 123}.
   In doing so, the text in this link will be hyperlinked to the place where the image occurs. 
   If you don't want to use `<label>`, type `[]`   (an empty label).
@@ -1845,6 +1844,11 @@ then you can link to that page using \`\pgref``[<label>]`; this
 Similar to `\cref`, you can use `\pgref[<label>]{<text>}`
 to print a `<text>` other than the page number; the text now clicks  to the place where
 where the `\pglabel[<label>]` is located.
+
+If a link is created by \code{<...>} then the abbreviation \`\pg` may follow
+and it creates a linked page number which refers to the page where the destination of the
+previous link \code{<...>} is. For example {\tt\catcode`<=12 ...see note <Dan 1:2>n on page~`\pg`}
+prints ...see note {\Blue Dan~1:2} on page~{\Blue 123}.  
 
 \sec[maps] Maps, images and their legends
 
