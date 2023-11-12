@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.31, 2023-10-04}
+\_def\_opb_version {0.32, 2023-11-12}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -125,7 +125,8 @@
    Note2: each book of the Bible is processed in the group.
    It means that all data from notes, formats etc. are stored
    in the memory only temporary for processing single book. After
-   the Book is finalized, the \TeX/ memory is freed.
+   the Book is finalized, the \TeX/ memory is freed.\nl
+   Finally, the \^`\processbooks` macro runs \^`\.finalwork`.
    \_cod
 
 \_def\.processbooks {\_par
@@ -133,6 +134,7 @@
    \.checknochapbooks
    \_useit{\_ea\.processbooksA \printedbooks} {}
    \_useit{\_ea\.processbooksB \printedbooks} {}
+   \.finalwork
 }
 \_def\.processbooksA #1 {%
    \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\.processbooksA \_fi
@@ -171,19 +173,22 @@
 \_def\.newbook#1{\_vfil\_supereject
    \_let\.prelinkB=\.currbook \.chapnum=0
    \_def\.prelinkC{0}\_def\.prelinkV{0}
-   \_global\_headline={\_hfil \_ea\.setheadline\_ea{\.btit}}
+   \_ea\.iniheadline\_ea{\.btit}
    \_line{\_hss\.bookfont\.btit\_hss}
    \_label[cref!#1]\_wlabel{#1}
    \_par\_nobreak\_medskip
 }
 
    \_doc
-   \`\.setheadline``{<book-title>}` sets `\_headline`. It is re-set for each
+   \`\.iniheadline``{<book-title>}` sets `\_headline` with delay
+   (current page is without head line, next pages include headlines).
+   It uses \`\.setheadline``{<book-title>}`. It is re-set for each
    new book by \^`\.newbook`.\nl
    The \`\bibname` can be defined by user as a name of the translating variant
    of the Bible. If it is not defined then it is empty by default.
    \_cod
 
+\_def\.iniheadline#1{\_global\_headline={\_hfil \.setheadline{#1}}}
 \_def\.setheadline#1{\_global\_headline={\.headfont
    \_ifodd\_pageno
        \_rlap{\_it\bibname\_hss}%
@@ -216,6 +221,14 @@
       \.printwarn{\_noexpand\nochapbooks (boks without chapters) undefined.}%
       \_def\nochapbooks{}%
    \_else  \_edef\nochapbooks{\_space\nochapbooks\_space}\_fi
+}
+
+   \_doc
+   \`\.finalwork` runs end game when all books are printed.
+   \_cod
+
+\_def\.finalwork{
+   \_wterm{^^J==== Total \_csstring\\Note's number = \_the\.notenum.^^J}
 }
 
    \_doc
@@ -552,7 +565,7 @@
    the \`\.punctpword` macro. Note that <pword> is saved to `\.tmpb`.
    \_cod
 
-\_def\.punctpword{\_replstring\.tmpb{!.\_relax}{!}\_replstring\.tmpb{?.\_rleax}{?}%
+\_def\.punctpword{\_replstring\.tmpb{!.\_relax}{!}\_replstring\.tmpb{?.\_relax}{?}%
    \_replstring\.tmpb{..\_relax}{.}}
 
    \_doc
@@ -790,7 +803,7 @@
    \_quitvmode \_mark{\.currchapnum:\.currversetext}%
    \_ifx\.verseto\_empty \.trymakedest{v:\.currverse}%
    \_else \_fornum \.versefrom..\.verseto \_do{%
-       \_wlog{xxxxx v:\.currbook/\.currchapnum:##1}\.trymakedest{v:\.currbook/\.currchapnum:##1}}%
+       \.trymakedest{v:\.currbook/\.currchapnum:##1}}%
    \_fi
    \.preindbuff
    \_raise5pt\.hboxorllap{\_unless\_ifnum\.currversenum=1 \.markfont\.currversetext\,\_fi}%
@@ -877,7 +890,7 @@
          \.iscolonin #1:\_iftrue \.brefBookChapterVerse #1>%
          \_else \.brefBookChapter #1>\_fi
    \_else \.iscolonin #1:\_iftrue \.brefChapterVerse #1>%
-   \_else \.brefVerse #1>%
+          \_else \.brefVerse #1>%
    \_fi\_fi
    \_def\.linkpre{v}%
    \_isnextchar n{\_def\.linkpre{n}\.brefC}%
@@ -927,7 +940,7 @@
 \_def\.ltextBin #1~#2/{\_ifx^#1^\.prelinkB \_else #1\_immediateassignment\_def\.prelinkB{#1}\_fi/}
 \_def\.ltextCin #1:#2/{\_ifx^#1^\.prelinkC \_else #1\_immediateassignment\_def\.prelinkC{#1}\_fi:}
 \_def\.ltextVin #1:#2/{\_ifx^#1^\.prelinkV \_else #1\_immediateassignment\_def\.prelinkV{#1}\_fi}
-\_def\.ltextnCin #1:#2/{\.prelinkC:\_immediateassignment\_let\.ltextCin=\.ltextsCin}
+\_def\.ltextnCin #1:#2/{1:\_immediateassignment\_let\.ltextCin=\.ltextsCin}
 \_let\.ltextsCin=\.ltextCin
 
    \_doc
@@ -972,7 +985,6 @@
    \_if a\.linkpre\_relax \_ea\.linkfspecarticle \.linkfspec\_end \_fi
    \_if i\.linkpre\_relax \_ea\.linkfspecintro \.linkfspec\_end \_fi
    \_ifx \.ltextB\_empty \_else \_ea \.newltextB \.ltextB \_fi
-%   \message{\meaning\.linkfspec, \meaning\.ltextC, \meaning\.currchapnum}%
    \.reducelinktext
    \.linklog{\.sspace <\_unexpanded\_ea{\.linkspec}>\.linkpost = [\.linkpre:\.linkfspec]%
            {\_ifx\.brefH\_empty \.ltextP \_else \.linktext\_fi}}%
@@ -2413,6 +2425,10 @@
    \bye
 \_cod
 
+2023-11-12 0.32 \_punctpword with ? corrected
+                \.setheadline: bug (for very short books) fixed
+                references to \nochapbooks: bug fixed
+                Total \Note's number added to \.finalwork
 2023-10-04 0.31 \fmtrepl introduced
 2023-09-13 0.30 \.replpre improved
 2023-09-12 0.29 \fmtkeep introduced
