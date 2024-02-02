@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.32, 2023-11-12}
+\_def\_opb_version {0.33, 2024-02-02}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -172,7 +172,7 @@
 
 \_def\.newbook#1{\_vfil\_supereject
    \_let\.prelinkB=\.currbook \.chapnum=0
-   \_def\.prelinkC{0}\_def\.prelinkV{0}
+   \_def\.prelinkC{0}\_def\.prelinkV{0}\_mark{}%
    \_ea\.iniheadline\_ea{\.btit}
    \_line{\_hss\.bookfont\.btit\_hss}
    \_label[cref!#1]\_wlabel{#1}
@@ -193,7 +193,7 @@
    \_ifodd\_pageno
        \_rlap{\_it\bibname\_hss}%
        \_hfil \_the\_pageno\_hfil
-       \_hbox to\.lrmargin{\_hss\_bf#1\_ifx^\_botmark^\_else\_space \_botmark\_fi}%
+       \_hbox to\.lrmargin{\_hss\_bf#1\_if^\_botmark^\_else\_space \_botmark\_fi}%
        \_kern-\.lrmargin
    \_else
        \_kern-\.lrmargin
@@ -2425,6 +2425,7 @@
    \bye
 \_cod
 
+2024-02-02 0.33 \_mark set to empty in \.newbook
 2023-11-12 0.32 \_punctpword with ? corrected
                 \.setheadline: bug (for very short books) fixed
                 references to \nochapbooks: bug fixed
