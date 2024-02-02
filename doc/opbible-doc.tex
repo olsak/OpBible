@@ -25,7 +25,7 @@
 
 \centerline{\typosize [16/]\bf Automatic Study Bible Typesetting Using \TeX/}
 \bigskip
-\centerline{\bi Version 0.31}
+\centerline{\bi Version 0.32}
 \bigskip
 \centerline{\setfontsize{at15pt}\it Petr Olšák, Šimon Konečný}
 \bigskip\bigskip
@@ -186,9 +186,12 @@ without a need to change anything in the notes.
 Although the intent of this program is to spread God's Word and the Good news contained therein, the 
 \OpBible/ itself {\it forgives nothing!} 
 (After all, what'd you expect, it's a software. Go to God for forgiveness.) As you'll learn below, 
-the \OpBible/ loads one entire book of the Bible into memory at a time and only then  
-begins to digest your notes and piece them together into pages with their respective verses. If you 
-happen to make a mistake in \TeX/ syntax (e.g., forget a closing bracket, etc.), \TeX/ will see the 
+the \OpBible/ first loads everything that you have written (e.g., notes, introductions, articles, quotations, 
+formatting commands, maps legends, timelines, etc.) on one particular book of the Bible into memory. 
+Only then does it add that book of the Bible itself, and finally, it puts its verses on the pages, sifted through the 
+net of your instructions.
+
+If you happen to make a mistake in \TeX/ syntax (e.g., forget a closing bracket, etc.), \TeX/ will see the 
 error somewhere in the middle of this matching procedure, and this in turn will result in a 
 cluttered error message, in which it is highly likely that you will get lost and not find your way 
 around.
@@ -508,7 +511,7 @@ The number of phrases listed after \`\vdef` must be exactly the same as the numb
 \vdef {Greece} {Greece} {Greece} {Grecia} {Grecia} {Grecia}
 \endtt
 declares that the name of Greece is transcribed differently in different
-variants of translation: it is {\it Greece\/} in BBE, Jubilee2000, and NETfree, but changes to Grecia in UKJV, RNKJV, and Webster. 
+variants of translation: it is {\it Greece\/} in BBE, Jubilee2000, and NETfree, but changes to {\it Grecia\/} in UKJV, RNKJV, and Webster. 
 
 When we write notes concerning this country in the
 notes file, we will just write `\x/Greece/` (the first translation variant in the definition of `\variants`)
@@ -784,7 +787,7 @@ An example of how the `\fmt*` commands can be used can be seen in the file
 The command \`\fmtfont``{<chapter-number>:<verse-number>}{<phrase>}{<font>}`
 is used to highlight the selected phrase with the selected font.
 For example, the `\fmtfont{1:7}{the name of}{\em}` in the book of Daniel will print the words
-\"the name of\thinspace "  in italics (to indicate the word not in original language), because `\em` is an intelligent italics switch (it automatically adds the italics correction `\/` after the word, which you don't have to worry about, but which you would have to if you switched to italics with an ordinary `\it`).
+\"the name of\thinspace "  in italics (to indicate the word not in original language), because `\em` is an    intelligent italics switch (it automatically adds the italics correction `\/` after the word, which you don't have to worry about, but which you would have to if you switched to italics with an ordinary `\it`).
 Any other font switch can be used instead of `\em`.
 
 The command \`\fmtrepl``{<chapter-number>:<verse-number>}{<phrase>}{<replaced phrase>}`
@@ -1029,7 +1032,8 @@ For example:
 In the default typographic settings, it is printed in a strip that separates the upper part of the 
 page from the  the image itself.
 * `<label>` specifies the image's  reference label. You can then refer to it using \hfil\break
-\code{...see image \\ref [daniels-visions] on page \\pgref[daniels-vision]}, which, 
+\code{...see image \\ref [daniels-visions] on page \\pg}, which, 
+%  ...see image` \`\ref` `[<daniels-visions>]` on page \`\pg`, which,  
   in the case of our example, prints ... see image {\Blue Daniel's Visions} on page~{\Blue 123}.
   In doing so, the text in this link will be hyperlinked to the place where the image occurs. 
   If you don't want to use `<label>`, type `[]`   (an empty label).
@@ -1387,7 +1391,7 @@ Then, below `\endinput`, you can have a few lines prepared, e.g., in this form:
     {}={} % Webster
 \Note 1:1 {}={}
 \endtt
-and then just copy these lines in place of the new note, edit the chapter  and verse number after 
+and then just copy these lines in place of each new note, edit the chapter  and verse number after 
 `\Note`, or delete `={}` where they are not needed. This way you don't lose track of
 which phrases belong where, whether you write them out manually or paste them from a Bible program 
 or online resources.
@@ -1405,7 +1409,7 @@ the translation variant currently being processed. The command has the following
         {<list of variants>} {<what to do>}
 \endtt
 The pairs `{<list of variants>} {<what to do>}` can be given as many times as you like.
-After each pair `{<list of variants>}{<what to do>}` (except for the very last pair) must be 
+Each pair `{<list of variants>}{<what to do>}` (except for the very last pair) must be 
 followed immediately and without spaces by another such pair.
 Therefore, when moving to the next line, write a percent sign after the closing parenthesis to cover 
 the space from the end of the line. Spaces at the beginning of the next line do not matter.
@@ -1844,11 +1848,6 @@ then you can link to that page using \`\pgref``[<label>]`; this
 Similar to `\cref`, you can use `\pgref[<label>]{<text>}`
 to print a `<text>` other than the page number; the text now clicks  to the place where
 where the `\pglabel[<label>]` is located.
-
-If a link is created by \code{<...>} then the abbreviation \`\pg` may follow
-and it creates a linked page number which refers to the page where the destination of the
-previous link \code{<...>} is. For example {\tt\catcode`<=12 ...see note <Dan 1:2>n on page~`\pg`}
-prints ...see note {\Blue Dan~1:2} on page~{\Blue 123}.  
 
 \sec[maps] Maps, images and their legends
 
