@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.33, 2024-02-02}
+\_def\_opb_version {0.33, 2024-02-04}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -99,7 +99,12 @@
    and it must be defined in the main file. The `\_useit` trick is used here
    in order we want to add `<space>{}` at the end of the expanded
    \^`\printedbooks`.
-   The first loop body sets \`\pbook!``<a-mark>` used for hyperlinks.
+
+   The first loop sets \`\pbook!``<a-mark>` used for hyperlinks.
+   It is done by \`\.setpbooks` macro. This macro is called from
+   \^`\.bref` too (becausse \^`\.bref` can be used before \^`\processbooks`),
+   and we want to run it only once.
+
    The second loop body does:
    \begitems
    * Defines \`\amark` as <a-mark> (an actual mark of the book used in the text).
@@ -132,12 +137,16 @@
 \_def\.processbooks {\_par
    \_ifx\tmark\_undefined \_def\tmark{none}\_fi
    \.checknochapbooks
-   \_useit{\_ea\.processbooksA \printedbooks} {}
+   \.setpbooks
    \_useit{\_ea\.processbooksB \printedbooks} {}
    \.finalwork
 }
-\_def\.processbooksA #1 {%
-   \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\.processbooksA \_fi
+\_def\.setpbooks{%
+   \_useit{\_ea\.setpbooksA \printedbooks} {}
+   \_glet\.setpbooks=\_relax
+}
+\_def\.setpbooksA #1 {%
+   \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\.setpbooksA \_fi
 }
 \_def\.processbooksB #1 {%
    \_if\_relax#1\_relax \_else
@@ -860,7 +869,10 @@
 
    The \code{\<} will be set to active as character equivalent to
    the macro \`\.bref``<text>>`. This macro does all job with the hyperlinks.
-   Fist of all, it scans the parts of the `<text>` and saves them to
+   Fist of all, it runs \^`\.setpbooks` for initialization, what books are
+   printed. This is done only once, because \^`\.setpbooks` gets `\relax`
+   meaning after the initialization is done.
+   Then \^`\.bref` scans the parts of the `<text>` and saves them to
    \begitems
    * \`\.ltextP` ... the text before a link specification (given in `"..."`)
    * \`\.ltextB` ... the book mark followed by `~`
@@ -879,7 +891,8 @@
    \_cod
 
 \_def\.linktext{\.ltextP\.ltextB\.ltextC\.ltextV\.ltextS\.ltextF\.ltextN}
-\_def\.bref #1>{\_let\.brefH=\_relax \_def\.linkspec{#1}\_isnextchar"{\.brefA}{\.brefA""}#1>}
+\_def\.bref #1>{\.setpbooks
+   \_let\.brefH=\_relax \_def\.linkspec{#1}\_isnextchar"{\.brefA}{\.brefA""}#1>}
 \_def\.brefA"#1"{\_def\.ltextP{#1}%
    \_isnextchar{ }{\_addto\.ltextP{~}\_afterassignment\.brefB\_let\.next= }%
       {\_isnextchar{_}{\_def\.brefH{}\_afterassignment\.brefB\_let\.next= }{\.brefB}}%
@@ -2425,7 +2438,12 @@
    \bye
 \_cod
 
-2024-02-02 0.33 \_mark set to empty in \.newbook
+%% To generate technical documentation run:
+%%   optex -jobname opbible-techdoc '\docgen opbible'
+%% three times.
+
+2024-02-04 0.33 \_mark set to empty in \.newbook
+                \.setpbooks (initialization of hyperlinks) inserted to \.bref
 2023-11-12 0.32 \_punctpword with ? corrected
                 \.setheadline: bug (for very short books) fixed
                 references to \nochapbooks: bug fixed
