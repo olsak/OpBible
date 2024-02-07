@@ -25,7 +25,7 @@
 
 \centerline{\typosize [16/]\bf Automatic Study Bible Typesetting Using \TeX/}
 \bigskip
-\centerline{\bi Version 0.32}
+\centerline{\bi Version 0.34}
 \bigskip
 \centerline{\setfontsize{at15pt}\it Petr Olšák, Šimon Konečný}
 \bigskip\bigskip
@@ -595,14 +595,43 @@ section~\ref[txs]). Feel free to use them, but `<a-mark>`s and book titles will
 probably need to be manually modified according to the conventions of the translation, as demonstrated in the example above.
 
 Additional information about individual books can be added to the book title file
-using the \`\BookException`, \`\BookPre`, \`\BookPost` commands. They have the following syntax:
+using the \`\BookPart`, \`\BookException`, \`\BookPre`, \`\BookPost` commands. They have the following syntax:
 \begtt
+\BookPart <a-mark> {<text-before-Bible-part>}
 \BookException <a-mark> {<exception-text>}
 \BookPre <a-mark> {<text-before-book>}
 \BookPost <a-mark> {<text-after-book>}
 \endtt
 
-The <exception-text> is inserted before reading all files of the book (`.txs`, format, notes, intro, article files)
+When a single Bible book given by <a-mark> is processed, then \TeX/ by default
+does following:
+
+\begitems
+* goes to a next page,
+* resets header of pages to empty,
+* prints <text-before-Bible-part> if declared by `\BookPart`,
+* opens a TeX group,
+* goes to a next page if the current page isn't empty,
+* prints a title of the Bible book declared by `\BookTitle`,
+* sets headers for next pages according to the title of the book,
+* runs <exception text> if declared by `\BookException`,
+* prints the text from introduction file if exists,
+* reads formating file if exists (section~\ref[fmt]),
+* reads the file with notes if exists (section~\ref[notes]),
+* runs <text-before-book> (if declared by `\BookPre`),
+* reads the core text from the {\tt txs} file (ssection~\ref[txs]) and prints it together with the notes,
+* runs <text-after-book> (if declared by `\BookPost`),
+* closes a TeX group.
+\enditems
+
+The `\BookPart` declaration can be used for printing an introduction to a
+large parts of Bible.
+For example, the command `\BookPart Mt {\input intro-to-NT}` will insert
+Introduction to the New Testament between Malachi and Matthew (given that the file
+`intro-to-NT.tex` exists).
+
+
+The `\BookException` declaration is inserted before reading all files of the book (`.txs`, format, notes, intro, article files)
 inside the cycle  for reading all books with \`\processbooks`. Then
 the <text-before-book> is inserted after the book files have been read but before
 the first verse (or introduction text) is processed. Finally, the <text-after-book> is inserted after the last
@@ -859,7 +888,7 @@ the poetry block. In the example above, we used `\hglue-2mm`.
 % the commentary apparatus is the main reason why the
 %the \OpBible/ package was created, an entire section~\ref[note] is devoted to it.
 
-\sec Notes and other objects linked to the core text
+\sec[notes] Notes and other objects linked to the core text
 
 Notes in `notes-*.tex` files (located according to the `\notesfile` declaration in the main file)
 contain, among other things, notes on individual verses or parts of verses. 
@@ -1571,14 +1600,22 @@ Then, in the mid-16th century, the French books printer Robert Estienne divided 
 which Jewish scribes had centuries earlier divided into verses (but not into chapters).
 Since 1553, when Estienne published the first French Bible thus numbered, we have used this system to this day.}
 
-
- 
- 
 The references to a specific place in the Bible are written between \code{<} and \code{>} in the source file.
 The text between these characters is printed as written (with the exceptions mentioned below). 
 Nevertheless, \TeX/ has to be able to interpret the reference correctly in order to
 make it active with a clicking capability to the correct place in the Bible. This is done by
 rather large amount of rules, therefore this section is dedicated to them.
+
+\watchout
+When you use introduction file that is not connected to a particular biblical book (e.g.,
+Introduction to Pentateuch) and such file should
+come before the first book of the `\printedbooks` list (usually Genesis), the
+command that calls that file (e.g., `\input intro-Pentateuch`) should come
+{\em after} the commands `\input books.tex` and `\def\printedbooks`.
+Otherwise the hyperlinks in the Introduction to Pentateuch will not work correctly.
+
+Introductions to other larger parts that should come {\em between} Biblical books can be
+called via `\BookPart` command (as described in section~\ref[books]).
 
 
 \secc[uudaj] Basic rule with complete data
@@ -1848,6 +1885,7 @@ then you can link to that page using \`\pgref``[<label>]`; this
 Similar to `\cref`, you can use `\pgref[<label>]{<text>}`
 to print a `<text>` other than the page number; the text now clicks  to the place where
 where the `\pglabel[<label>]` is located.
+
 
 \sec[maps] Maps, images and their legends
 

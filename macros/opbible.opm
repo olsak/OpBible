@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.33, 2024-02-04}
+\_def\_opb_version {0.34, 2024-02-07}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -94,25 +94,23 @@
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec The main loop over Bible books
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   The \`\processbooks` macro does two loops over all marks in \^`\printedbooks`.
+   The \`\processbooks` macro does a loop over all marks in \^`\printedbooks`.
    The macro \`\printedbooks` is a list of `<a-marks>` of Bible books separated by spaces
    and it must be defined in the main file. The `\_useit` trick is used here
    in order we want to add `<space>{}` at the end of the expanded
    \^`\printedbooks`.
 
-   The first loop sets \`\pbook!``<a-mark>` used for hyperlinks.
-   It is done by \`\.setpbooks` macro. This macro is called from
-   \^`\.bref` too (becausse \^`\.bref` can be used before \^`\processbooks`),
-   and we want to run it only once.
-
-   The second loop body does:
+   The loop body does:
    \begitems
+   * Runs \`\.initbook``{<a-mark>}`,
+   * Calls \^`\bpa!<a-mark>` in order to apply the \^`\BookPart` data.
    * Defines \`\amark` as <a-mark> (an actual mark of the book used in the text).
    * Defines \`\bmark` as <b-mark> (a mark of the book used in file names).
    * Defines \`\.btit` as the book title.
+   * Opens a \TeX/ group,
    * Saves `<a-mark>` to the \`\.currbook` macro.
-   * Calls \^`\.newbook{<a-mark>}`
    * Prints title of the book to the terminal and to the log.
+   * Calls \^`\.newbook{<a-mark>}`
    * Calls \^`\bex!<a-mark>` in order to apply the \^`\BookException` data.
    * Inputs introduction file if it exists. The real `\input` and formating
      of the introduction text is done by the `\.printintro` macro.
@@ -136,27 +134,21 @@
 
 \_def\.processbooks {\_par
    \_ifx\tmark\_undefined \_def\tmark{none}\_fi
-   \.checknochapbooks
-   \.setpbooks
    \_useit{\_ea\.processbooksB \printedbooks} {}
    \.finalwork
 }
-\_def\.setpbooks{%
-   \_useit{\_ea\.setpbooksA \printedbooks} {}
-   \_glet\.setpbooks=\_relax
-}
-\_def\.setpbooksA #1 {%
-   \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\.setpbooksA \_fi
-}
 \_def\.processbooksB #1 {%
    \_if\_relax#1\_relax \_else
+      \.initbook{#1}
+      \_headline={}
+      \_cs{bpa!#1}
       \_edef\amark{#1}
       \_edef\bmark{\_cs{f!#1}}
       \_edef\.btit{\_cs{btit!#1}}
       \_begingroup
          \_edef\.currbook{#1}
-         \.newbook{#1}
          \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **^^J}
+         \.newbook{#1}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
          \_else \.printwarn{File with introduction text \introfile\_space not found}\_fi
@@ -176,8 +168,13 @@
 \_nspublic \processbooks ;
 
    \_doc
-   \`\.newbook``{<a-mark>}` ejects previous page, prepeares header and prints the book title.
+   \`\.initbook``{<a-mark>}` ejects previous page, sets header to empty.
+   Maybe, an introduction to a Bible part should follow.\nl
+   \`\.newbook``{<a-mark>}` ejects previous page, prints book title,
+   prepeares header and prints the book title.
    \_cod
+
+\_def\.initbook#1{\_vfil\_supereject \_headline={}}
 
 \_def\.newbook#1{\_vfil\_supereject
    \_let\.prelinkB=\.currbook \.chapnum=0
@@ -215,24 +212,6 @@
 \_def\bibname{}
 
    \_doc
-   We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
-   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
-   There is a list of single-chapter books \`\nochapbooks`. User
-   must define it. The marks of these single-chapter books are separated by spaces
-   here. The first and the last space are added to the \^`\nochapbooks`
-   macro because we need them in \`\.brefBookChapter`. 
-   The \`\.checknochapbooks` macro does it, moreower, it checks if the 
-   \^`\nochapbooks` is defined. If not, it prints warning.
-   \_cod
-
-\_def\.checknochapbooks {%
-   \_ifx\nochapbooks\_undefined
-      \.printwarn{\_noexpand\nochapbooks (boks without chapters) undefined.}%
-      \_def\nochapbooks{}%
-   \_else  \_edef\nochapbooks{\_space\nochapbooks\_space}\_fi
-}
-
-   \_doc
    \`\.finalwork` runs end game when all books are printed.
    \_cod
 
@@ -266,14 +245,16 @@
    \`\bex!``<a-mark>` macro. It is used in \^`\processbooks`
    loop in the group before files are read. You can redefine some filenames
    or something more special here.\nl
-   Macros \`\BookPre` `<a-mark> {<code>}` and \`\BookPost` `<a-mark> {<code>}`
+   Macros \`\BookPart` `<a-mark> {<code>}`,
+   \`\BookPre` `<a-mark> {<code>}` and \`\BookPost` `<a-mark> {<code>}`
    are defined similarly. They add <code> to the \`\bpr!``<a-mark>` and to
    the \`\bpo!``<a-mark>` macros repectively.
    \_cod
 
-\_outer\_long\_def\.BookException #1 #2{\.myaddto{bex!#1}{#2}}
-\_outer\_long\_def\.BookPre       #1 #2{\.myaddto{bpr!#1}{#2}}
-\_outer\_long\_def\.BookPost      #1 #2{\.myaddto{bpo!#1}{#2}}
+\_outer\_long\_def\.BookException #1 #2{\.myaddto{bex!#1}{#2\_relax}}
+\_outer\_long\_def\.BookPart      #1 #2{\.myaddto{bpa!#1}{#2\_relax}}
+\_outer\_long\_def\.BookPre       #1 #2{\.myaddto{bpr!#1}{#2\_relax}}
+\_outer\_long\_def\.BookPost      #1 #2{\.myaddto{bpo!#1}{#2\_relax}}
 
 \_nspublic \BookTitle \BookException \BookPre \BookPost ;
 
@@ -1112,6 +1093,40 @@
 \_def\.trymakedest#1{%
    \_ifcsname #1\_endcsname \_dest[#1]\_ea\_glet\_csname #1\_endcsname \_undefined \_fi
    \_ewref\.Xdest{{#1}}%
+}
+
+   \_doc
+   The hyperlinks are active only for destinations of given
+   \^`\printedbooks`. This is determined by the existence of \`\pbook!``<a-mark>`.
+   These macros are initialized when the \^`\.bref` macro is run firstly by \`\.setpbooks`.
+   This macro deactivates itself because we want to run it only once.
+   \_cod
+
+\_def\.setpbooks{%
+   \_useit{\_ea\.setpbooksA \printedbooks} {}
+   \.checknochapbooks
+   \_glet\.setpbooks=\_relax
+}
+\_def\.setpbooksA #1 {%
+   \_if\_relax#1\_relax \_else \_sxdef{pbook!#1}{}\_ea\.setpbooksA \_fi
+}
+
+   \_doc
+   We want \code{<Fm 4>} to be a link to Fm/1:4 because it is a
+   single-chapter book. Compare \code{<Gn 4>} which is a link to Gn/4:1.
+   There is a list of single-chapter books \`\nochapbooks`. User
+   must define it. The marks of these single-chapter books are separated by spaces
+   here. The first and the last space are added to the \^`\nochapbooks`
+   macro because we need them in \`\.brefBookChapter`.
+   The \`\.checknochapbooks` macro does it, moreower, it checks if the
+   \^`\nochapbooks` is defined. If not, it prints warning.
+   \_cod
+
+\_def\.checknochapbooks {%
+   \_ifx\nochapbooks\_undefined
+      \.printwarn{\_noexpand\nochapbooks (boks without chapters) undefined.}%
+      \_def\nochapbooks{}%
+   \_else  \_edef\nochapbooks{\_space\nochapbooks\_space}\_fi
 }
 
    \_doc
@@ -2268,7 +2283,6 @@
 \_def\.prelinkB{BK}
 \_def\.prelinkC{BK}
 \_def\.prelinkV{0}
-\_def\nochapbooks{BK}
 \_let\<=<
 
 \_def\x/#1/{\_def\.tmpb{#1}%
@@ -2442,6 +2456,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-02-07 0.34 \BookPart added
 2024-02-04 0.33 \_mark set to empty in \.newbook
                 \.setpbooks (initialization of hyperlinks) inserted to \.bref
 2023-11-12 0.32 \_punctpword with ? corrected
