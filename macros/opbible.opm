@@ -256,7 +256,7 @@
 \_outer\_long\_def\.BookPre       #1 #2{\.myaddto{bpr!#1}{#2\_relax}}
 \_outer\_long\_def\.BookPost      #1 #2{\.myaddto{bpo!#1}{#2\_relax}}
 
-\_nspublic \BookTitle \BookException \BookPre \BookPost ;
+\_nspublic \BookTitle \BookException \BookPre \BookPost \BookPart ;
 
    \_doc
    The `\ChapterPre``{<code>}` and `\ChapterPost``{<code>}` inserts <code>
