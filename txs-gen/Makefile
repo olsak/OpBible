@@ -5,35 +5,19 @@
 
 ## definitions
 
-CXX = g++
-LD = g++
-LIBS = -lsword
-LDFLAGS = $(LIBS)
-CXXFLAGS = -I/usr/include/sword
+LDLIBS = $(shell pkg-config --libs sword)
 
-target = mod2tex
-objects = mod2tex.o
+CXXFLAGS += $(shell pkg-config --cflags sword)
 
 ## static rules
 
 .PHONY : all
 
-all : $(target)
-
-$(target) : $(objects)
-	$(LD) -o $@ $< $(LDFLAGS)
-
-$(objects) : %.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) -o $@ $<
+all : mod2tex
 
 .PHONY : clean
 
 clean :
-	-rm -f *~ $(objects) $(target)
-
-## pattern rules
-
-%.o : %.cpp
-	$(CXX) -c $(CFLAGS) $(CXXFLAGS) -o $@ $<
+	-rm -f *~ mod2tex
 
 ### Makefile ends here
