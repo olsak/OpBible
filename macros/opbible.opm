@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.37, 2024-08-09}
+\_def\_opb_version {0.38, 2024-08-17}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -860,8 +860,6 @@
    * \`\.ltextC` ... the chapter number followed by `:`
    * \`\.ltextV` ... the verse number
    * \`\.ltextS` ... sub-verse identifier (`a` if there is a verse `4a`)
-   * \`\.ltextF` ... the `--` if the `<from>-<to>` format is given
-   * \`\.ltextN` ... the `<to>` part from the `<from>-<to>` format.
    \enditems
    All these macros above can be empty if the appropriate part of the
    scanned `<text>` is missing.
@@ -871,7 +869,7 @@
    and printed by \`\.linktext`.
    \_cod
 
-\_def\.linktext{\.ltextP\.ltextB\.ltextC\.ltextV\.ltextS\.ltextF\.ltextN}
+\_def\.linktext{\.ltextP\.ltextB\.ltextC\.ltextV\.ltextS}
 \_def\.bref #1>{\.setpbooks
    \_let\.brefH=\_relax \_def\.linkspec{#1}\_isnextchar"{\.brefA}{\.brefA""}#1>}
 \_def\.brefA"#1"{\_def\.ltextP{#1}%
@@ -879,18 +877,20 @@
       {\_isnextchar{_}{\_def\.brefH{}\_afterassignment\.brefB\_let\.next= }{\.brefB}}%
 }
 \_def\.brefB #1>{% #1 is link-spec
-   \_def\.ltextB{}\_def\.ltextC{}\_def\.ltextF{}\_def\.ltextN{}%
+   \_def\.ltextB{}\_def\.ltextC{}\_def\.brefFT{}%
    \.isspacein #1 \_iftrue
          \.iscolonin #1:\_iftrue \.brefBookChapterVerse #1>%
          \_else \.brefBookChapter #1>\_fi
    \_else \.iscolonin #1:\_iftrue \.brefChapterVerse #1>%
-          \_else \.brefVerse #1>%
+          \_else \.brefVerseX #1>%
    \_fi\_fi
    \_def\.linkpre{v}%
+   \_ifx\.ltextV\_empty \_let\.brefVerseX=\.brefChapter \_else \_let\.brefVerseX=\.brefVerse \_fi
    \_isnextchar n{\_def\.linkpre{n}\.brefC}%
       {\_isnextchar g{\_def\.linkpre{g}\.brefC}%
          {\_isnextchar a{\_def\.linkpre{a}\.brefC}%
              {\_isnextchar i{\_def\.linkpre{i}\.brefC}{\.brefD}}}}%
+   \_ifx\.brefFT\_empty \_else \_ea\.bref \.brefFT \_fi % repeat \.bref "--"to>
 }
 \_def\.brefC{\_afterassignment\.brefD \_let\.next= }
 
@@ -904,12 +904,13 @@
    \.isdivisin #1-\_iftrue \.brefFromTo #1>%
    \_else \.versedef#1\_relax\_fi
 }
+\_let\.brefVerseX=\.brefVerse
 \_def\.brefChapter #1>{%
    \.isdivisin #1-\_iftrue \.brefFromTo #1>\_let\.ltextC=\.ltextV
    \_else \_def\.ltextC{#1}\_fi
    \_def\.ltextV{}\_def\.ltextS{}%
 }
-\_def\.brefFromTo #1-#2>{\.versedef#1\_relax\_def\.ltextF{--}\_def\.ltextN{#2}}
+\_def\.brefFromTo #1-#2>{\.versedef#1\_relax\_def\.brefFT{"--"#2>}}
 
    \_doc
    Because the verse number can be in the format `11b`, we need to separate
@@ -991,17 +992,6 @@
 \_def\.renumlinktext #1/#2:#3\_relax #4/#5:#6\_relax{%
    \_ifx\.ltextC\_empty \_else \_def\.ltextC{#5:}\_fi
    \_def\.ltextV{#6}%
-   \_ifx\.ltextN\_empty \_else
-      \_ifx\.ltextF\.ltextDD
-          \_isinlist\.ltextN{:}\_iftrue
-             \_ifcsname rn!\tmark!#1/\.ltextN\_endcsname \_edef\.ltextN{\_cs{rn!\tmark!#1/\.ltextN}}%
-             \_fi
-          \_else \_edef\.ltextN{\_the\_numexpr#6+\.ltextN-#3\_relax}\_fi
-      \_else \_let\.tmp=\_ignoreit % \.ltextN is a list of verses, for example 7,9,13
-          \_ea\_foreach\.ltextN,\_do ##1,{\_edef\.tmp{\.tmp,\_the\_numexpr#6+##1-#3}}%
-          \_let\.ltextN=\.tmp
-      \_fi
-   \_fi
 }
 \_def\.ltextDD{--}
 
@@ -2465,6 +2455,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-17 0.38 <8:1-15> is equivalent to <8:1><"--"15>
 2024-08-09 0.37 \spanpadding introduced
 2024-08-08 0.36 \righnote corrected
                 \begingroup/\endgroup used in \.beginblock/\.endblock

@@ -1607,7 +1607,7 @@ make it active with a clicking capability to the correct place in the Bible. Thi
 rather large amount of rules, therefore this section is dedicated to them.
 
 \watchout
-When you use introduction file that is not connected to a particular biblical book (e.g.,
+When you use an introduction file that is not connected to a particular biblical book (e.g.,
 Introduction to Pentateuch) and such file should
 come before the first book of the `\printedbooks` list (e.g.\ Genesis), the
 command that calls that file (e.g., `\input intro-Pentateuch`) should come
@@ -1624,7 +1624,7 @@ The reference between \code{<} and \code{>} is of the form
 \begtt\catcode`<=12
 <"text" data>
 \endtt
-\ or just \code{<}`data`\code{>}. 
+or just \code{<}`data`\code{>}. 
 The complete `<data>` is of the form `<book> <chapter>:<verse>`. Here `<book>` is the abbreviation of the book (it must be followed by
 space), `<chapter>` is the chapter number, and `<verse>` is the verse number.
 Example:
@@ -1673,7 +1673,8 @@ You can omit `:` and verse number in your reference text. Then the reference poi
 ... Joseph's story (<Gn 39-41>)
 \endtt
 In the second example, the range of chapters is given and \TeX/ creates an internal link to
-the first verse of chapter 39. Compare also with the section~\ref[verse range].
+the first verse of chapter 39 and to the first verse of chapter 41.
+Compare also with the section~\ref[verse range].
 
 
 \secc[vudaj] Exception for the format of the full entry for some books
@@ -1734,12 +1735,15 @@ only apply internally so that the active link will work properly after a mouse c
 
 
 
-\secc[verse range] Format for the verse range and for the section in the verse
+\secc[verse range] Format for the verse range
 
-In each entry, it is possible to have  a range of verses in the format `<from>-<to>`
-instead of just `<verse>` or `<chapter>:<verse>`. 
- The \TeX/ will create an internal link to the first verse of the range only and
-turns the hyphen sign (character `-`, ASCII 45) in the range into an en-dash. 
+In each entry, it is possible to have a range of verses in the format `<from>-<to>`
+instead of just `<verse>` or `<chapter>:<verse>`.
+ The \TeX/ will create two internal links: to the first verse of the range
+and to the last verse of the range. Moreover, the hyphen sign 
+(character `-`, ASCII 45) is replaced by en-dash.
+More exactly, if you write \code{<}`<data>-<to>`\code{>} then it is
+interpreted as \code{<}`<data>`\code{><}`"--"<to>`\code{>}.
 
 Examples:
 
@@ -1750,7 +1754,7 @@ Examples:
 <8:3-7>.
 \endtt
 For example, the first link in this example prints as {\Blue Jer 8:3--7}
-and offers a link only to Jer~8:3.
+and offers links to Jer~8:3 and Jer~8:7.
 
 The same can be applied to the chapter range, as shown in the example in the section~\ref[tochapter].
 
