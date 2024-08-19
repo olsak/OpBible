@@ -800,6 +800,7 @@
    \.firstversefalse
    \.prepareversetext
    \.prebuff\.printCnote\.buff \_space
+   \.writeout
 }
 \_def\.hboxorllap{\_ifnum\_spacefactor=1001 \_ea\_llap \_else \_ea\_hbox \_fi}
 
@@ -841,6 +842,38 @@
    \_cod
 
 \_def\.chapbefore{\_bigskip}  \_def\.chapafter{}
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Creating `.out` files
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   ...
+   \_cod
+
+\_newwrite\.outfile
+\_def\.createout{
+   \_immediate\_openout\.outfile=\_jobname.out
+   \_let\.writeout=\.dowriteout
+}
+\_nspublic \createout ;
+\_def\.dowriteout{%
+   \_bgroup
+   \_def\.doNote ##1##2{{\_cs{pword!##1}}{\_pcent^^J\.sspace\.sspace \_cs{notetext!##1}}^^J\.sspace}%
+   \_let\.doCNote=\.doNote
+   \_adef<{<}% 
+   \_def\<{\_string\<}%
+   \_let\Hebrew=\_detokenize
+   \_let\pg=\_relax
+   \_def\endgraf{}%
+   \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
+   \_def\_ignorespaces{}%
+   \_immediate\_write\.outfile{%
+      \.currchapnum:\.currversetext\_space
+      \.buff \.prebuff}%
+   \_egroup
+}
+
+\_let\.writeout=\_relax
 
 
    \_doc
