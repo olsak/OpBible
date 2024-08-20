@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.38, 2024-08-17}
+\_def\_opb_version {0.39, 2024-08-20}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -134,6 +134,7 @@
 
 \_def\.processbooks {\_par
    \_ifx\tmark\_undefined \_def\tmark{none}\_fi
+   \.wout{**** Translation: \tmark^^J}
    \_useit{\_ea\.processbooksB \printedbooks} {}
    \.finalwork
 }
@@ -148,6 +149,7 @@
       \_begingroup
          \_edef\.currbook{#1}
          \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **^^J}
+         \.wout{** \_cs{btit!#1} {#1}^^J}
          \.newbook{#1}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
@@ -851,15 +853,18 @@
    \_cod
 
 \_newwrite\.outfile
-\_def\.createout{
+\_def\.createout{%
    \_immediate\_openout\.outfile=\_jobname.out
+   \_def\.wout{\_immediate\_write\.outfile}
    \_let\.writeout=\.dowriteout
+   \_def\.writetmark{\_immediate\_write\_outfile{**** Translation: \tmark^^J}}%
+   \_def\.writebookname##1{** ##1 (\_cs{btit!##1})}%
 }
 \_nspublic \createout ;
 \_def\.dowriteout{%
    \_bgroup
-   \_def\.doNote ##1##2{{\_cs{pword!##1}}{\_pcent^^J\.sspace\.sspace \_cs{notetext!##1}}^^J\.sspace}%
-   \_let\.doCNote=\.doNote
+   \_def\.doNote {\.writeNote\MidNote}%
+   \_def\.doCNote{\.writeNote\VerseNote}%
    \_adef<{<}% 
    \_def\<{\_string\<}%
    \_let\Hebrew=\_detokenize
@@ -867,13 +872,14 @@
    \_def\endgraf{}%
    \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
    \_def\_ignorespaces{}%
-   \_immediate\_write\.outfile{%
-      \.currchapnum:\.currversetext\_space
-      \.buff \.prebuff}%
+   \.wout{\.currchapnum:\.currversetext\_space \.prebuff\.buff}%
    \_egroup
 }
+\_def\.writeNote #1#2#3{#3\_string#1{\_cs{pword!#2}}{\_pcent^^J%
+   \.sspace\.sspace \_cs{notetext!#2}}^^J\.sspace}
 
 \_let\.writeout=\_relax
+\_def\.wout#1{}
 
 
    \_doc
@@ -2488,6 +2494,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-20 0.39 \createout implemented
 2024-08-17 0.38 <8:1-15> is equivalent to <8:1><"--"15>
 2024-08-09 0.37 \spanpadding introduced
 2024-08-08 0.36 \righnote corrected

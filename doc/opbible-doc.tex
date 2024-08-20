@@ -1220,6 +1220,17 @@ switch the left/right position of the quotation.
 But this should not be left on for the final printing, thus activated
 `\swapCites` will cause a warning printed to the terminal and to the log file.
 
+\secc[out] Exporting core text with notes into a text file
+
+If you insert the command \`\createout` into the main file (beefore the
+\`\processbooks` command) then \TeX/ not olny prints the result to `.pfd`
+file and creates `.log` file as usuall, but it creates the additional text
+file `<main-file-name>.out` and inserts here all processed core texts
+including all texts from `\Note`s. The output is structured: each verse
+starts at a new line with its chtapter and verse numbers and the notes are
+inserted into the verse text where the noted <phrase> is and they are
+properly marked. You can use such a file for a future processing.
+
 \sec[translations] Different (but similar) versions of the core text
 
 See section~\ref[vars] for an introduction to this issue. This is detailed documentation for 
@@ -1720,6 +1731,12 @@ This rule applies locally to a single text object: note, article, introduction, 
 first entry in  a given text object is incomplete, the unspecified information is replaced with by 
 the abbreviation of the book currently being processed, or by the number of the current chapter,
 or verse, respectively.
+
+If the previous refenence is a reference to a whole chapter
+(section~\ref[tochapter]) and the current reference is a single number, then
+this number means a chapter number, no verse number. Example:
+if you write: {\tt\catcode`<=12 see chapters <Gn 3>, <5>, <7>} 
+then \TeX/ creates links to Genesis 3:1, 5:1, 7:1. 
 
 If an incomplete entry is prefixed with `\`, the unspecified information is taken from
 the book or chapter or verse currently being processed, regardless of which entry
