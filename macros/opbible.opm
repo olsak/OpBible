@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.39, 2024-08-20}
+\_def\_opb_version {0.40, 2024-08-21}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -148,7 +148,7 @@
       \_edef\.btit{\_cs{btit!#1}}
       \_begingroup
          \_edef\.currbook{#1}
-         \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark) **^^J}
+         \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark \runnum) **^^J}
          \.wout{** \_cs{btit!#1} {#1}^^J}
          \.newbook{#1}
          \_cs{bex!#1}
@@ -167,6 +167,8 @@
       \_ea \.processbooksB
    \_fi
 }
+\_ifx\runnum\_undefined \_def\runnum{}\_fi  % additional info may be defined in command line
+
 \_nspublic \processbooks ;
 
    \_doc
@@ -857,8 +859,6 @@
    \_immediate\_openout\.outfile=\_jobname.out
    \_def\.wout{\_immediate\_write\.outfile}
    \_let\.writeout=\.dowriteout
-   \_def\.writetmark{\_immediate\_write\_outfile{**** Translation: \tmark^^J}}%
-   \_def\.writebookname##1{** ##1 (\_cs{btit!##1})}%
 }
 \_nspublic \createout ;
 \_def\.dowriteout{%
@@ -2494,6 +2494,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-21 0.40 \runnum used
 2024-08-20 0.39 \createout implemented
 2024-08-17 0.38 <8:1-15> is equivalent to <8:1><"--"15>
 2024-08-09 0.37 \spanpadding introduced
