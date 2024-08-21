@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.40, 2024-08-21}
+\_def\_opb_version {0.41, 2024-08-21}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -870,6 +870,7 @@
    \_let\Hebrew=\_detokenize
    \_let\pg=\_relax
    \_def\endgraf{}%
+   \_def\xref[##1]{##1}%
    \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
    \_def\_ignorespaces{}%
    \.wout{\.currchapnum:\.currversetext\_space \.prebuff\.buff}%
@@ -880,7 +881,6 @@
 
 \_let\.writeout=\_relax
 \_def\.wout#1{}
-
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1173,12 +1173,46 @@
 \_nspublic \pg ;
 
    \_doc
-   `\cref` if simply `\ref` with `cref!` prefix.
+   \`\cref` if simply `\ref` with `cref!` prefix.
    \_cod
 
 \_def\.cref[#1]{\_ref[cref!#1]}
 
 \_nspublic \cref ;
+
+   \_doc
+   The \`\xref``[<text>]` prints \"<text> on page~<num>" and creates
+   hyperlrinks to the destination, where \`\xsec`` <text>` is. The \^`\xsec`
+   prints a subsetion header (the header is <text>) and it should be
+   inserted into introductions text of the currently processed book.
+   If a user want to create a reference outside the currently processed
+   book, he can write \^`\xref``[<a-mark>/<text>`.
+   The \`\nsec`` <text>` prints the same as \^`\xsec` but
+   doesn't create a hyperlink destination.
+   \_cod
+
+\_def\.xref [#1]{%
+   {\_def\.xA ##1/{##1}\_xdef\_tmp{#1}}%
+   \_isinlist \_tmp{/}\_iftrue \.xrefA #1\_end \_else \.xrefB \.currbook/#1\_end \_fi
+}
+\_def\.xrefA #1/#2\_end {\_ref[#1/#2]{#1 #2} \_mtext{onpage}~\_pgref[#1/#2]}
+\_def\.xrefB #1/#2\_end {\_ref[#1/#2]{#2}    \_mtext{onpage}~\_pgref[#1/#2]}
+
+\_eoldef\.xsec #1{\_medskip
+   \_noindent{\_bf #1}%
+   {\_def\.xA##1/{##1}\_label[\.currbook/#1]\_wlabel{}}%
+   \_par\_nobreak
+}
+\_eoldef\.nsec #1{\_medskip
+   \_noindent{\_bf #1}%
+   \_par\_nobreak
+}
+
+\_sdef{_mt:onpage:en}{on page}
+\_sdef{_mt:onpage:cs}{na straně}
+\_def\.currbook {} % empty <a-mark> if we are in the Bible introduction.
+
+\_nspublic \xref \xsec \nsec ;
 
 
    \_doc
@@ -2494,6 +2528,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-21 0.41 \xref, \xsec, \nsec implemented
 2024-08-21 0.40 \runnum used
 2024-08-20 0.39 \createout implemented
 2024-08-17 0.38 <8:1-15> is equivalent to <8:1><"--"15>

@@ -1898,6 +1898,41 @@ to be printed and to become the active link. So, for example
 `\cref[Gen 2]{The Day of Rest}` will print {\Blue The Day of Rest} with a~link to the beginning of 
 the corresponding chapter (Gen 2:1).
 
+\secc Links to sections declared by `\xsec`
+
+You can divide the introductions into sections by \`\xsec` or \`\nsec` macro. 
+Both macros have the same syntax
+\begtt
+\xsec <text><end-of-line>
+\nsec <text><end-of-line>
+\endtt
+I.e. its parameter <text> is finalized by end of line. Both macros uses <text>
+as a header of a new subsection in your introduction text. Moreover, `\xsec`
+creates an internal hyperlink destination in the place where the header is.
+You can reference this destination (for example in notes) by \`\xref``[<text>]` macro.
+The `\xref[<text>]` prints <text> on page <num>. The <text> and <num> are
+active hyperlinks here (after second \TeX/ run).
+
+Each Bible book can have the same <text> in `\xsec <text>` and the `\xref` refers
+locally to the header of currently read book. If you want to use `\xref`
+which refers outside the currently read book then use long specification in
+the `\xref` parameter in the form `[<a-mark>/<text>]`. For example there is
+`\xsec Author` in the introduction of Genesis. Then you can reference it by
+`see~\xref[Author]` inside Genesis notes and it prints see~{\Blue Author} on
+page~{\Blue 13} and blue text are active hyperlinks. If you want to refer
+this place in a note outside Genesis, use `see~\xref[Gn/Author]` and it
+prints see~{\Blue Gn Author} on page~{\Blue 13}. 
+
+If you have an introducition of the whole Bible, then you can use `\xsec`
+here too and you can reference it by `\xref[/<text>]`.
+
+The automatically generated text \"on page" depends on the current language.
+For example it prints \"na straně" if the language is `\cslang` (Czech). You
+can define these phrases for more languages using \OpTeX/ language support
+of the phrase `onpage` and using `\sdef`. For example, for German define
+`\sdef{_mt:onpage:de}{auf Seite}`.
+
+
 \secc Links to pages
 
 You can place an invisible page link target in your text using \`\pglabel``[<label>]` and
