@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.41, 2024-08-21}
+\_def\_opb_version {0.42, 2024-08-22}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -1188,19 +1188,22 @@
    If a user want to create a reference outside the currently processed
    book, he can write \^`\xref``[<a-mark>/<text>`.
    The \`\nsec`` <text>` prints the same as \^`\xsec` but
-   doesn't create a hyperlink destination.
+   doesn't create a hyperlink destination.\nl
+   The parameter of `\xsec` and `\xref` can include `\x/<text>/` and `~`.
+   We have to expand them in special mode before the parameter is used as a label.
    \_cod
 
-\_def\.xref [#1]{%
-   {\_def\.xA ##1/{##1}\_xdef\_tmp{#1}}%
+\_def\.xref [#1]{\_bgroup
+   \_def\.xA ##1/{##1}\_def~{ }\_edef\_tmp{#1}%
    \_isinlist \_tmp{/}\_iftrue \.xrefA #1\_end \_else \.xrefB \.currbook/#1\_end \_fi
 }
-\_def\.xrefA #1/#2\_end {\_ref[#1/#2]{#1 #2} \_mtext{onpage}~\_pgref[#1/#2]}
-\_def\.xrefB #1/#2\_end {\_ref[#1/#2]{#2}    \_mtext{onpage}~\_pgref[#1/#2]}
+\_def\.xrefA #1/#2\_end {\_ea\_egroup\_ea \.xrefC \_expanded{[#1/#2]}{\_ifx^#1^#2\_else #1 #2\_fi}}
+\_def\.xrefB #1/#2\_end {\_ea\_egroup\_ea \.xrefC \_expanded{[#1/#2]}{#2}}
+\_def\.xrefC [#1]#2{\_ref[#1]{#2} \_mtext{onpage}~\_pgref[#1]}
 
 \_eoldef\.xsec #1{\_medskip
    \_noindent{\_bf #1}%
-   {\_def\.xA##1/{##1}\_label[\.currbook/#1]\_wlabel{}}%
+   {\_def\.xA##1/{##1}\_def~{ }\_label[\.currbook/#1]\_wlabel{}}%
    \_par\_nobreak
 }
 \_eoldef\.nsec #1{\_medskip
@@ -2528,6 +2531,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-22 0.42 \xref improved
 2024-08-21 0.41 \xref, \xsec, \nsec implemented
 2024-08-21 0.40 \runnum used
 2024-08-20 0.39 \createout implemented
