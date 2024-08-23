@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.42, 2024-08-22}
+\_def\_opb_version {0.43, 2024-08-23}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -873,7 +873,7 @@
    \_def\xref[##1]{##1}%
    \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
    \_def\_ignorespaces{}%
-   \.wout{\.currchapnum:\.currversetext\_space \.prebuff\.buff}%
+   \.wout{\_string\Verse{\.currchapnum:\.currversetext}{\_pcent^^J\.sspace\.prebuff\.buff}}%
    \_egroup
 }
 \_def\.writeNote #1#2#3{#3\_string#1{\_cs{pword!#2}}{\_pcent^^J%
@@ -929,7 +929,6 @@
       {\_isnextchar g{\_def\.linkpre{g}\.brefC}%
          {\_isnextchar a{\_def\.linkpre{a}\.brefC}%
              {\_isnextchar i{\_def\.linkpre{i}\.brefC}{\.brefD}}}}%
-   \_ifx\.brefFT\_empty \_else \_ea\.bref \.brefFT \_fi % repeat \.bref "--"to>
 }
 \_def\.brefC{\_afterassignment\.brefD \_let\.next= }
 
@@ -1023,6 +1022,7 @@
    \.linklog{\.sspace <\_unexpanded\_ea{\.linkspec}>\.linkpost = [\.linkpre:\.linkfspec]%
            {\_ifx\.brefH\_empty \.ltextP \_else \.linktext\_fi}}%
    \.ensuredest \.createlink
+   \_ifx\.brefFT\_empty \_else \_ea\.bref \.brefFT \_fi % repeat \.bref "--"to>
 }
 \_def\.linkfspecone #1:#2\_end {\_def\.linkfspec{#1:1}\_def\.prelinkV{1}}
 \_def\.linkfspecarticle #1/#2:#3\_end {\_def\.linkfspec{#1/#2}}
@@ -2531,6 +2531,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-23 0.43 bug fixed (bad <from-to> implementation) + .out format modified
 2024-08-22 0.42 \xref improved
 2024-08-21 0.41 \xref, \xsec, \nsec implemented
 2024-08-21 0.40 \runnum used
