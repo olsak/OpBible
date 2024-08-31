@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.43, 2024-08-23}
+\_def\_opb_version {0.44, 2024-08-31}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -2284,6 +2284,42 @@
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \sec Concordance
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   \`\ccd`` <item><cr><next data><empty line>` declares a concordance. They will
+   be sorted alphabetically by <item>.
+   \_cod
+
+\_eoldef\.ccd #1{{\.nowarn\_edef\_tmp{#1}\_ea}\_ea\.ccdA\_ea{\_tmp}}
+\_def\.ccdA#1#2\_par{\_ea\_addto\_ea\.ccdlist\_ea{\_csname+#1\_endcsname}%
+   \_sdef{+#1}{\_noindent{\_bf#1} \_ignorespaces #2\_smallskip}%
+}
+\_def\.nowarn{\_def\.xA##1/{##1}}
+\_def\.ccdlist{}
+\_def\+{\_nl$\_bullet$}
+
+   \_doc
+   \`\concordance` `{<file-name>}` opens the group, reads data of concordances
+   (declared by \^`\ccd`), sorts them, opens three-column mode, prints the sorted data,
+   closes three-colum mode, closes the group.
+   \_cod
+
+\_def\.concordance #1{\_par
+   \_begingroup
+   \_everyeof{\_par}
+   \_input{#1}
+   \_dosorting\.ccdlist
+   \_rightskip=0pt plus 1fil minus3pt
+   \_begmulti 3
+   \.ccdlist
+   \_endmulti
+   \_endgroup
+}
+\_nspublic \ccd \concordance ;
+
+
+   \_doc
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    \sec Typesetting variants
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2488,6 +2524,7 @@
 \_outer\_def\ChapterPre  {\.ChapterPre}
 \_outer\_def\ChapterPost {\.ChapterPost}
 \_outer\_def\BookTilte   {\.BookTitle}
+\_outer\_def\ccd  {\.ccd}
 
 \_def\_afterload{\_adef<{\.bref}}
 \_afterload
@@ -2531,6 +2568,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-08-31 0.44 \concordance implemented
 2024-08-23 0.43 bug fixed (bad <from-to> implementation) + .out format modified
 2024-08-22 0.42 \xref improved
 2024-08-21 0.41 \xref, \xsec, \nsec implemented

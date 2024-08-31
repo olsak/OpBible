@@ -2283,7 +2283,59 @@ and was typeset as follows:
 }%end of \putSpanText
 \endtt
 
-\filbreak
+\sec Concordance
+
+When the Bible text is finished by the `\processbooks` command then there
+can be more commands for generating final pages of the Bible before the `\bye`
+command in the main file. An example of the final part of the main file
+should looks like this:
+
+\begtt
+...
+\processbooks % Generates books declared in \printedbooks
+\vfil\supereject  % go to the next page
+
+\nonum\sec Concordance
+\concordance {ccd.tex} % printing concordance
+\bye  % the end of the TeX work
+\endtt
+
+This example starts the new page with the section title \"Concordance" and
+then the command \`\concordance` `{<file-name>}` reads the file <file-name>
+where the concordances can be prepared in the form similar to this example:
+
+\begtt \catcode`<=12
+\ccd Ježíš
+Bohu Syn
+\+ Život: Rodokmen  <Mt 1:1-17>; <Lk 3:21-37>.
+   Narození  <Mt 2:1-12>; <Lk 2:1-40>. Útěk do Egypta
+   <Mt 2:13-23>.
+\+ Zázraky: Uzdravení <Mt 4:5> ...
+\+ Učení: ... <Mt 6:7> ...
+\+ Podobenství: ... ... ...
+
+\ccd \x/Cýros/
+\+ Život: <Da 1:8-13>
+\+ Setkání: \x/Daniel/ <Da 1:9>, \x/Balsazar/ <Da 1:10> ...
+\endtt
+
+Each single concordance begins with the command `\ccd` followed by the
+heading phrase of the concordance. This phrase will be printed bold and
+concordances will be sorted alphabetically by this phrase. Next lines
+includes additional text of the concordance. The command
+\`\+`` <word>:` means that the <word> will be printed at the next line and it
+can be formatted specially. By default, the concordances are printed in the
+three columns mode like in a dictionary.
+
+Concordances must be divided by empty lines in the source file. You need not
+to write them in the alphabetically order becuase the sortig is done by
+\TeX.
+
+You can use words in more translation variats. For example `\x/Cýros/`
+is printed as Cýros in the BKR variant but as Kýros in the CEP variant. It
+means that it is sorted before Jesus in BKR but after Jesus in CEP.
+
+
 
 \sec Page formatting variants
 
