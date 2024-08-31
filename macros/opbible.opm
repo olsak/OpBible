@@ -2291,7 +2291,10 @@
    \_cod
 
 \_eoldef\.ccd #1{{\.nowarn\_edef\_tmp{#1}\_ea}\_ea\.ccdA\_ea{\_tmp}}
-\_def\.ccdA#1#2\_par{\_ea\_addto\_ea\.ccdlist\_ea{\_csname+#1\_endcsname}%
+
+\_def\.ccdA#1#2% \_par or \par
+
+{\_ea\_addto\_ea\.ccdlist\_ea{\_csname+#1\_endcsname}%
    \_sdef{+#1}{\_noindent{\_bf#1} \_ignorespaces #2\_smallskip}%
 }
 \_def\.nowarn{\_def\.xA##1/{##1}}
@@ -2304,9 +2307,13 @@
    closes three-colum mode, closes the group.
    \_cod
 
+\_def\.emptyline{%
+
+}% it is \_par or \par
+
 \_def\.concordance #1{\_par
    \_begingroup
-   \_everyeof{\_par}
+   \_everyeof\_ea{\.emptyline}
    \_input{#1}
    \_dosorting\.ccdlist
    \_rightskip=0pt plus 1fil minus3pt

@@ -2305,36 +2305,36 @@ then the command \`\concordance` `{<file-name>}` reads the file <file-name>
 where the concordances can be prepared in the form similar to this example:
 
 \begtt \catcode`<=12
-\ccd Ježíš
-Bohu Syn
-\+ Život: Rodokmen  <Mt 1:1-17>; <Lk 3:21-37>.
-   Narození  <Mt 2:1-12>; <Lk 2:1-40>. Útěk do Egypta
-   <Mt 2:13-23>.
-\+ Zázraky: Uzdravení <Mt 4:5> ...
-\+ Učení: ... <Mt 6:7> ...
-\+ Podobenství: ... ... ...
+\ccd Jesus
+Son of God
+\+ Life: Genealogy  <Matt 1:1-17>; <Luke 3:21-37>.
+   Birth:  <Matt 2:1-12>; <Luke 2:1-40>.
+   Escape to Egypt   <Matt 2:13-23>.
+\+ Miracles: Healing <Matt 4:5> ...
+\+ Teaching: ... <Matt 6:7> ...
+\+ Parables: ... ... ...
 
-\ccd \x/Cýros/
-\+ Život: <Da 1:8-13>
-\+ Setkání: \x/Daniel/ <Da 1:9>, \x/Balsazar/ <Da 1:10> ...
+\ccd \x/Cyrus/
+\+ Prophecied: <Isa 44:28>; <45:1>.
+\+ Decree:  <Ezra 1:2-4>, <6:3-5> ...
 \endtt
 
-Each single concordance begins with the command `\ccd` followed by the
+Each single concordance item begins with the command `\ccd` followed by the
 heading phrase of the concordance. This phrase will be printed bold and
 concordances will be sorted alphabetically by this phrase. Next lines
-includes additional text of the concordance. The command
+includes additional text of the item. The command
 \`\+`` <word>:` means that the <word> will be printed at the next line and it
 can be formatted specially. By default, the concordances are printed in the
 three columns mode like in a dictionary.
 
-Concordances must be divided by empty lines in the source file. You need not
-to write them in the alphabetically order becuase the sortig is done by
+Individual items must be separated by empty lines in the source file. You need not
+to write them in the alphabetical order becuase the sortig is done by
 \TeX.
 
 You can use words in more translation variats. For example `\x/Cýros/`
-is printed as Cýros in the BKR variant but as Kýros in the CEP variant. It
-means that it is sorted before Jesus in BKR but after Jesus in CEP.
-
+is printed as Cýros in the BKR variant but as Kýros in the CEP variant
+(both are Czech Bibles; English translations usually do not alter the spelling of the names of the rulers).
+It means that it is sorted before Jesus in BKR but after Jesus in CEP.
 
 
 \sec Page formatting variants
