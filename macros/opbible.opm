@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.44, 2024-08-31}
+\_def\_opb_version {0.45, 2024-09-03}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -2295,7 +2295,7 @@
 \_def\.ccdA#1#2% \_par or \par
 
 {\_ea\_addto\_ea\.ccdlist\_ea{\_csname+#1\_endcsname}%
-   \_sdef{+#1}{\_noindent{\_bf#1} \_ignorespaces #2\_smallskip}%
+   \_sdef{+#1}{\_noindent{\_bf#1}\_mark{#1} \_ignorespaces #2\_smallskip}%
 }
 \_def\.nowarn{\_def\.xA##1/{##1}}
 \_def\.ccdlist{}
@@ -2303,26 +2303,120 @@
 
    \_doc
    \`\concordance` `{<file-name>}` opens the group, reads data of concordances
-   (declared by \^`\ccd`), sorts them, opens three-column mode, prints the sorted data,
-   closes three-colum mode, closes the group.
+   (declared by \^`\ccd`), sorts them, sets `\headline`, sets font by
+   `\.ccdset`, opens three-column mode, prints the sorted data,
+   closes three-colum mode, closes the group, ejects the last page and sets
+   `\headline` to empty.
    \_cod
-
-\_def\.emptyline{%
-
-}% it is \_par or \par
 
 \_def\.concordance #1{\_par
    \_begingroup
    \_everyeof\_ea{\.emptyline}
    \_input{#1}
    \_dosorting\.ccdlist
-   \_rightskip=0pt plus 1fil minus3pt
+   \_global\_headline={\.ccdheadline}
+   \.ccdset
+   \.migratemarks
    \_begmulti 3
    \.ccdlist
    \_endmulti
+   \.stopmigratemarks
    \_endgroup
+   \_vfil\_break
+   \_global\_headline={\_hfil\_the\_pageno\_hfil}
 }
+\_def\.ccdset{\Heros\cond \_scalemain \_typoscale[800/800]% Heros condensed 80%
+   \_rightskip=0pt plus 1fil minus3pt \_relax
+}
+\_def\.emptyline{%
+
+}% it is \_par or \par
+
+\_def\.ccdheadline{\_rlap{\_firstmark}\_hss\_the\_pageno \_hss\_llap{\_botmark}}
+
 \_nspublic \ccd \concordance ;
+
+   \_doc
+   We want to print the first and last concordance item to the page header using
+   `\_mark`, `\_firstmark` and `\_botmark` primitives. But these marks are hidden
+   in the three-column mode; the problem is described and solved at
+   \url{https://tex.stackexchange.com/questions/696841}.
+   We have to migrate these marks from inner boxes to outer vertical list using Lua
+   function `migrate_marks`. It is registered by \`\.migratemarks`
+   and unregistered by \`\.stopmigratemarks`. 
+   \_cod
+
+\_let\_insertmark=\_ignoreit % deactivate marks in the \sec macro.
+
+\_def\.migratemarks{\_directlua{
+   callback.add_to_callback('buildpage_filter',migrate_marks,'migrate_marks')
+}}
+\_def\.stopmigratemarks{\_directlua{
+   callback.remove_from_callback('buildpage_filter','migrate_marks')
+}}
+
+\_newattribute\.insattr
+
+\_directlua{
+local hlist = node.id('hlist')
+local vlist = node.id('vlist')
+local ins = node.id('ins')
+local mark = node.id('mark')
+local has_attribute = node.has_attribute
+local set_attribute = node.set_attribute
+local ins_attribute = registernumber('_opb_insattr')
+
+local function locate(head,first,last)
+    local current = head
+    while current do
+        local id = current.id
+        if id == vlist or id == hlist then
+            current.list, first, last = locate(current.list,first,last)
+            current = current.next
+        elseif id == ins or id == mark then
+            local insert = current
+            head, current = node.remove(head,current)
+            insert.next = nil
+            if first then
+                insert.prev, last.next = last, insert
+            else
+                insert.prev, first = nil, insert
+            end
+            last = insert
+        else
+            current = current.next
+        end
+    end
+    return head, first, last
+end
+
+function migrate_marks(where)
+    local current = tex.lists.contrib_head
+    while current do
+        local id = current.id
+        if id == vlist or id == hlist and not has_attribute(current,ins_attribute) then
+            set_attribute(current,ins_attribute,1)
+            local h, first, last = current.list, nil, nil
+            while h do
+                local id = h.id
+                if id == vlist or id == hlist then
+                    h, first, last = locate(h,first,last)
+                end
+                h = h.next
+            end
+            if first then
+                local n = current.next
+                if n then
+                    last.next, n.prev = n, last
+                end
+                current.next, first.prev = first, current
+                current = last
+            end
+        end
+        current = current.next
+    end
+end
+}
 
 
    \_doc
@@ -2575,6 +2669,7 @@
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-09-03 0.45 Runing headers in \concordance implemented
 2024-08-31 0.44 \concordance implemented
 2024-08-23 0.43 bug fixed (bad <from-to> implementation) + .out format modified
 2024-08-22 0.42 \xref improved
