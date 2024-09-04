@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.45, 2024-09-03}
+\_def\_opb_version {0.46, 2024-09-04}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -134,7 +134,7 @@
 
 \_def\.processbooks {\_par
    \_ifx\tmark\_undefined \_def\tmark{none}\_fi
-   \.wout{**** Translation: \tmark^^J}
+   \.wout{\_string\Translation{\tmark}}
    \_useit{\_ea\.processbooksB \printedbooks} {}
    \.finalwork
 }
@@ -149,7 +149,7 @@
       \_begingroup
          \_edef\.currbook{#1}
          \_wterm{^^J** \_cs{btit!#1} {#1} (\string\tmark: \tmark \runnum) **^^J}
-         \.wout{** \_cs{btit!#1} {#1}^^J}
+         \.wout{^^J\_string\BibleBook{#1}{\_cs{btit!#1}}}
          \.newbook{#1}
          \_cs{bex!#1}
          \_isfile{\introfile}\_iftrue \.printintro 
@@ -872,12 +872,12 @@
    \_def\endgraf{}%
    \_def\xref[##1]{##1}%
    \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
-   \_def\_ignorespaces{}%
+   \_def\_ignorespaces##1{##1}%
    \.wout{\_string\Verse{\.currchapnum:\.currversetext}{\_pcent^^J\.sspace\.prebuff\.buff}}%
    \_egroup
 }
-\_def\.writeNote #1#2#3{#3\_string#1{\_cs{pword!#2}}{\_pcent^^J%
-   \.sspace\.sspace \_cs{notetext!#2}}^^J\.sspace}
+\_def\.writeNote #1#2#3{\_string#1{#3}\_pcent^^J%
+   \.sspace\.sspace{\_cs{pword!#2}}{\_cs{notetext!#2}}^^J\.sspace}
 
 \_let\.writeout=\_relax
 \_def\.wout#1{}
@@ -2002,7 +2002,7 @@
 \_def\.printintro{%
    \.begblock
       \_dest[i:\.currbook/]
-      \.chaptit{\_mtext{intro}}%
+      \.chaptitg{\_mtext{intro}}%
       \_input{\introfile}
    \.endblock
 }
@@ -2187,7 +2187,7 @@
 \_def\.Outline{
    \_medskip
 %   \filbreak
-   \.chaptit{\_mtext{outline}}%
+   \.chaptitg{\_mtext{outline}}%
    \_everylist={\_ifcase\_ilevel \_or \_style I \_or \_style A \_or \_style n \_fi}
    \_sdef{_item:A}{\_strut\_uppercase\_ea{\_athe\_itemnum}. }
    \_sdef{_item:I}{\_strut\_uppercase\_ea{\_romannumeral\_itemnum}. }
@@ -2585,10 +2585,12 @@ end
 }
 \_nspublic \quotationmarks ;
 
-\_def\.chaptit#1{\_line{\_hss\.chapfont\Red#1\_hss}
+\_def\.chaptitg#1{\_line{\_hss\.chapfont\Red#1\_hss}
    \_nobreak
 }
-\_def\.schaptit#1{\_bigskip\.chaptit{#1}\_nobreak\_medskip}
+\_def\.chaptit#1{\.chaptitg{#1}\.wout{^^J\_string\SubTitle{#1}}}
+
+\_def\.schaptit#1{\_bigskip\.chaptitg{#1}\_nobreak\_medskip}
 
 \_def\.subtit#1{\_par
    \_ifnum\.currversenum=1 \_else \_medskip\_fi
@@ -2669,6 +2671,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-09-04 0.46 .out format modified
 2024-09-03 0.45 Runing headers in \concordance implemented
 2024-08-31 0.44 \concordance implemented
 2024-08-23 0.43 bug fixed (bad <from-to> implementation) + .out format modified
