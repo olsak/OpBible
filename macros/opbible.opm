@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.46, 2024-09-04}
+\_def\_opb_version {0.47, 2024-09-05}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -872,7 +872,7 @@
    \_def\endgraf{}%
    \_def\xref[##1]{##1}%
    \_def\.xA##1/{\_ifx\tmarkA\_undefined ##1\_else \_ifx\tmark\tmarkA ##1\_else /##1/\_fi\_fi}%
-   \_def\_ignorespaces##1{##1}%
+   \_def\_ignorespaces{\_nospaceafter\_empty}%
    \.wout{\_string\Verse{\.currchapnum:\.currversetext}{\_pcent^^J\.sspace\.prebuff\.buff}}%
    \_egroup
 }
@@ -2332,7 +2332,8 @@
 
 }% it is \_par or \par
 
-\_def\.ccdheadline{\_rlap{\_firstmark}\_hss\_the\_pageno \_hss\_llap{\_botmark}}
+\_def\.ccdheadline{\_rlap{\.hefontbf\_firstmark}\_hss\_the\_pageno \_hss\_llap{\.hefontbf\_botmark}}
+\_def\.hefontbf{\Heros\cond\_bf}
 
 \_nspublic \ccd \concordance ;
 
@@ -2671,6 +2672,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-09-05 0.47 expandable \ignorespaces corrected, header in \concordance modified
 2024-09-04 0.46 .out format modified
 2024-09-03 0.45 Runing headers in \concordance implemented
 2024-08-31 0.44 \concordance implemented
