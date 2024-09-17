@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.49, 2024-09-09}
+\_def\_opb_version {0.50, 2024-09-17}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -141,6 +141,7 @@
 \_def\.processbooksB #1 {%
    \_if\_relax#1\_relax \_else
       \.initbook{#1}
+      \_let\.brefVerseX=\.brefVerse % \.initbook can change \.brefVerseX
       \_headline={}
       \_cs{bpa!#1}
       \_edef\amark{#1}
@@ -184,10 +185,19 @@
    \_let\.prelinkB=\.currbook \.chapnum=0
    \_def\.prelinkC{0}\_def\.prelinkV{0}\_mark{}%
    \_ea\.iniheadline\_ea{\.btit}
-   \_line{\_hss\.bookfont\.btit\_hss}
+   \_line{\_hss\.bookfont\.btit \.booktotoc{#1}\_hss}
    \_label[cref!#1]\_wlabel{#1}
    \_par\_nobreak\_medskip
 }
+\_def\.booktotoc#1{%
+   \_incr \_tocrefnum
+   \_dest[toc:\_the\_tocrefnum]%
+   \_ewref\_Xtoc{{2}{biblebook}{#1}{}\_detokenize\_ea{\.btit}}%
+}
+\_def\_tocdotfill{\.klap \_nobreak\_leaders\_hbox to1.2em{\_hss\.ckern.\_hss}\_hskip 1em plus1fill\_relax}
+\_def\.klapori {\_def\.ckern{\_kern.6em}\_gdef\.klap{\_def\.ckern{\_kern-.6em}\_glet\.klap=\.klapori}}
+\_let\.klap=\.klapori
+
 
    \_doc
    \`\.iniheadline``{<book-title>}` sets `\_headline` with delay
@@ -2328,6 +2338,7 @@
    \_global\_headline={\.ccdheadline}
    \.ccdset
    \.migratemarks
+   \_let\.linklog=\_ignoreit
    \_begmulti 3
    \_ea\_xargs \_ea\.printccd \.ccdlist ;
    \_endmulti
@@ -2684,6 +2695,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-09-17 0.50 \.booktotoc implemented, first attempt
 2024-09-09 0.49 merging \ccd's with equal phrases
 2024-09-06 0.48 \ccd: dimension too large, bug fixed
 2024-09-05 0.47 expandable \ignorespaces corrected, header in \concordance modified
