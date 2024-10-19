@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.51, 2024-10-16}
+\_def\_opb_version {0.52, 2024-10-18}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -1524,6 +1524,7 @@
 \_def\.doImage #1[#2](#3)#4{% {Title}[label](params){image-file.pdf}
    \.botinsert
       \.botTitle{#1}[#2]%
+      \_ewref\.Xfig{{#2}{}{#1}}%
       \_kern3pt \_nobreak
       \_hbox{\picw=\hsize #3\inspic{#4}}%
    \.endbot
@@ -1585,6 +1586,7 @@
 \_def\.doArticle#1[#2](#3){% {Title}[number](params)
    \_incr\.articlenum
    \.botinsert
+      \_ewref\.Xart{{#2}{}{#1}}%
       \_def\.botDest##1[##2]{\.trymakedest{a:\.currbook/##2}}
       \_parindent=12pt \_iindent=\_parindent
       \_setbox0=\_vbox{\_hsize=.458\_hsize \_emergencystretch=1em
@@ -1624,6 +1626,32 @@
 }
 \_def\.roundexpr#1{\_ea\.roundexprA\_expanded{\_expr{#1}}\_relax}
 \_def\.roundexprA#1.#2\_relax{\_ifnum#1=0 0\_else #1\_fi}
+
+   \_doc
+   \`\makeLOF` generates the list of figures and \`\makeART` generates the list
+   of articles. This code is inspired from OpTeX trick 0066.
+   The `#2` parameter of `\.Xfig` and `\.Xart` (generated number of the
+   figure/article) is unused here. See also `\_ewref` in the `\.doImage` and
+   `\.doArticle` macros above.
+   \_cod
+
+\_refdecl{%
+   \_def\.loflist{} \_def\.artlist{}^^J
+   \_def\.Xfig#1#2#3{\_addto\.loflist{\.lline{#1}{#2}{#3}}%
+      \_ea\_addto\_ea\.loflist\_ea{\_currpage}}^^J
+   \_def\.Xart#1#2#3{\_addto\.artlist{\.lline{#1}{#2}{#3}}%
+      \_ea\_addto\_ea\.artlist\_ea{\_currpage}}^^J
+}
+\_def\.lline#1#2#3#4#5{\_line{\_hskip20pt #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+
+\_def\.makell#1#2{\_par
+   \_ifx#1\_undefined \_opwarning{no data for list of #2, try to run TeX again}\_openref
+   \_else #1\_fi
+}
+\_def\.makeLOF{\.makell\.loflist{figures}}
+\_def\.makeART{\.makell\.artlist{articles}}
+
+\_nspublic \makeLOF \makeART ;
 
    \_doc
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2695,6 +2723,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-10-18 0.52 \makeLOF, \makeART introduced
 2024-10-16 0.51 \_protected\_def\.switch
 2024-09-17 0.50 \.booktotoc implemented, first attempt
 2024-09-09 0.49 merging \ccd's with equal phrases
