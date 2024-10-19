@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.50, 2024-09-17}
+\_def\_opb_version {0.51, 2024-10-16}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -1359,7 +1359,7 @@
    \_cod
 
 \_newtoks\.switchD
-\_def\.switch {\_let\.switchN=\.switchA \_suppressoutererror=1 \.switchN}
+\_protected\_def\.switch {\_let\.switchN=\.switchA \_suppressoutererror=1 \.switchN}
 \_long\_def\.switchA #1#2{\.switchD={#2\_let\.switchN=\.switchI}%
    \_ifx\_relax#1\_relax \_the\.switchD
    \_else \_foreach #1,\_do ##1,{\_def\tmp{##1}\.switchC}%
@@ -2695,6 +2695,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2024-10-16 0.51 \_protected\_def\.switch
 2024-09-17 0.50 \.booktotoc implemented, first attempt
 2024-09-09 0.49 merging \ccd's with equal phrases
 2024-09-06 0.48 \ccd: dimension too large, bug fixed
