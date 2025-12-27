@@ -3,6 +3,10 @@ You can generate txs files (needed by OpBible) from Sword sources.
 You need to have libsword-dev package installed in your computer because
 sword sources are binary files able to be read only by specific software.
 
+Compile the mod2tex binary (which is a simple wrapper to libsword libraries) by
+
+   make mod2tex
+
 You can download a "module" (i.e. Bible text in given language+variant) from
 https://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles
 
@@ -11,11 +15,11 @@ a module name is crated. If you do in working directory:
 
    installmgr -l
 
-the downloaded modules are listed.
+the downloaded modules are listed. Then you can run ("module" is a real module name) 
 
    mod2tex module > module.out
 
-a single text file with all Bible text fro given module is created in module.out
+a single text file with all Bible text from given module is created in module.out
 
    maketxs.py module.out
 

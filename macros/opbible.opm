@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.52, 2024-10-18}
+\_def\_opb_version {0.53, 2025-12-27}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -102,7 +102,7 @@
 
    The loop body does:
    \begitems
-   * Runs \`\.initbook``{<a-mark>}`,
+   * Runs \^`\.initbook``{<a-mark>}`,
    * Calls \^`\bpa!<a-mark>` in order to apply the \^`\BookPart` data.
    * Defines \`\amark` as <a-mark> (an actual mark of the book used in the text).
    * Defines \`\bmark` as <b-mark> (a mark of the book used in file names).
@@ -261,7 +261,8 @@
    or something more special here.\nl
    Macros \`\BookPart` `<a-mark> {<code>}`,
    \`\BookPre` `<a-mark> {<code>}` and \`\BookPost` `<a-mark> {<code>}`
-   are defined similarly. They add <code> to the \`\bpr!``<a-mark>` and to
+   are defined similarly. They add <code> to the \`\bpa!``<a-mark>`,
+   to the \`\bpr!``<a-mark>` and to
    the \`\bpo!``<a-mark>` macros repectively.
    \_cod
 
@@ -2383,7 +2384,8 @@
 
 }% it is \_par or \par
 
-\_def\.ccdheadline{\.headfont\_rlap{\.hefontbf\_firstmark}\_hss\_the\_pageno \_hss\_llap{\.hefontbf\_botmark}}
+\_def\.ccdheadline{\.headfont\_rlap{\.hefontbf\_firstmark}\_hss\_the\_pageno 
+   \_hss\_llap{\.hefontbf\_botmark}}
 \_fontdef\.hefontbf{\Heros\cond\_bf}
 
 \_nspublic \ccd \concordance ;
@@ -2662,6 +2664,7 @@ end
 \_def\.bibleinput#1 {\_bgroup
    \_catcode`##=13 \_bgroup\_lccode`~=`## \_lowercase{\_egroup\_let~}=\.processline
    \_input{#1}%
+   \_par
    \_egroup
 }
 \_let\FormatedBook=\_ignoreit  % for backward compatibility
@@ -2706,13 +2709,6 @@ end
 
    \sec Index
 
-   \def\_printii #1&{%
-      \ifcsname cs:#1\endcsname
-         \noindent \hskip-\iindent {\tt \link[cs:#1]\Blue{\bslash#1} }\else
-         \ifcsname cs:^#1\endcsname \noindent \hskip-\iindent {\tt\bslash#1 }\else
-            \afterfi{\afterfi{\_optexprintii #1&}}\fi\fi }
-   \def\_pgprintA #1{#1}
-
    \begmulti 3
       \makeindex
    \endmulti
@@ -2723,6 +2719,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2025-12-27 0.53 \.bibleinput: \_par inserted (bug fixed)
 2024-10-18 0.52 \makeLOF, \makeART introduced
 2024-10-16 0.51 \_protected\_def\.switch
 2024-09-17 0.50 \.booktotoc implemented, first attempt
