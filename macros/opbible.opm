@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.53, 2025-12-27}
+\_def\_opb_version {0.54, 2026-03-14}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -2338,7 +2338,7 @@
 {\_ifcsname+#1\_endcsname
      \_ea \_addto \_csname+#1\_endcsname { #2}%
  \_else \_incr\.ccdnum \_ea\_addto\_ea\.ccdlist\_ea{\_csname+#1\_endcsname}%
-     \_sdef{+#1}{\_noindent{\_bf#1}\_mark{#1} \_ignorespaces #2}%
+     \_sdef{+#1}{\_noindent{\_bf#1}\_mark{#1}\.ccddest{#1} \_ignorespaces #2}%
  \_fi
 }
 \_def\.specskip{\_smallskip
@@ -2348,6 +2348,17 @@
 \_def\.nowarn{\_def\.xA##1/{##1}}
 \_def\.ccdlist{}
 \_def\+{\_nl$\_bullet$}
+
+   \_doc
+   The `\cd!<name>` control sequence is set by \`\ccdlink` if the link to the
+   given concordance is needed. We need to set detination for such
+   concordance here.
+   \_cod
+
+\_def\.ccddest#1{\_ifcsname cd!\_unexpanded{#1}\_endcsname \_label[#1]\_wlabel{}\_fi}
+\_def\.ccdlink[#1]{\_sxdef{cd!\_unexpanded{#1}}{}\_ref[#1]}
+
+
 
    \_doc
    \`\concordance` `{<file-name>}` opens the group, reads data of concordances
@@ -2681,7 +2692,7 @@ end
 \_outer\_def\ww   {\.ww}
 \_outer\_def\ChapterPre  {\.ChapterPre}
 \_outer\_def\ChapterPost {\.ChapterPost}
-\_outer\_def\BookTilte   {\.BookTitle}
+\_outer\_def\BookTitle   {\.BookTitle}
 \_outer\_def\ccd  {\.ccd}
 
 \_def\_afterload{\_adef<{\.bref}}
@@ -2719,6 +2730,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2026-03-14 0.54 \ccdlink introduced
 2025-12-27 0.53 \.bibleinput: \_par inserted (bug fixed)
 2024-10-18 0.52 \makeLOF, \makeART introduced
 2024-10-16 0.51 \_protected\_def\.switch
