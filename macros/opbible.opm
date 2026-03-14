@@ -2355,8 +2355,8 @@
    concordance here.
    \_cod
 
-\_def\.ccddest#1{\_ifcsname cd!\_unexpanded{#1}\_endcsname \_label[#1]\_wlabel{}\_fi}
-\_def\.ccdlink[#1]{\_sxdef{cd!\_unexpanded{#1}}{}\_ref[#1]}
+\_def\.ccddest#1{\_ifcsname cd!\_unexpanded{#1}\_endcsname \_label[cd!#1]\_wlabel{}\_fi}
+\_def\.ccdlink[#1]{\_sxdef{cd!\_unexpanded{#1}}{}\_ref[cd!#1]}
 
    \_doc
    \`\concordance` `{<file-name>}` opens the group, reads data of concordances
