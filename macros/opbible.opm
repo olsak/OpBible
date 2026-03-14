@@ -2358,8 +2358,6 @@
 \_def\.ccddest#1{\_ifcsname cd!\_unexpanded{#1}\_endcsname \_label[#1]\_wlabel{}\_fi}
 \_def\.ccdlink[#1]{\_sxdef{cd!\_unexpanded{#1}}{}\_ref[#1]}
 
-
-
    \_doc
    \`\concordance` `{<file-name>}` opens the group, reads data of concordances
    (declared by \^`\ccd`), sorts them, sets `\headline`, sets font by
@@ -2399,7 +2397,7 @@
    \_hss\_llap{\.hefontbf\_botmark}}
 \_fontdef\.hefontbf{\Heros\cond\_bf}
 
-\_nspublic \ccd \concordance ;
+\_nspublic \ccd \concordance \ccdlink ;
 
    \_doc
    We want to print the first and last concordance item to the page header using
