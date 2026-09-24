@@ -1,5 +1,5 @@
 %% opbible macros, see opbible-doc.pdf
-\_def\_opb_version {0.54, 2026-03-14}
+\_def\_opb_version {0.55, 2026-09-21}
 
 \_codedecl \processbooks {OpBible: macros for creating annotated Bible}
 
@@ -946,7 +946,8 @@
 \_def\.brefBookChapterVerse #1 #2:#3>{\_def\.ltextB{#1~}\.brefChapterVerse #2:#3>}
 \_def\.brefBookChapter #1 #2>{\_def\.ltextB{#1~}%
     \_isinlist\nochapbooks{ #1 }\_iftrue
-        \_def\.ltextC{}\_let\.ltextCin=\.ltextnCin \_afterfi{\.brefVerse #2>}%
+       \_def\.ltextC{1}\_def\.ltextCredef{\_def\.ltextC{}\_let\.ltextCredef=\_empty}%
+       \_afterfi{\.brefVerse #2>}%
     \_else \_afterfi{\.brefChapter #2>}\_fi}
 \_def\.brefChapterVerse #1:#2>{\_def\.ltextC{#1:}\.brefVerse #2>}
 \_def\.brefVerse #1>{%
@@ -979,13 +980,13 @@
    \_ifnum 0\.ltextV=0 \_def\.ltextV{}\_fi
    \_if a\.linkpre \_ifx\.ltextV\_empty \_else \_edef\.ltextC{\.ltextV:}\_def\.ltextV{}\_fi\_fi
    \_edef\.linkfspec{\_ea\.ltextBin\.ltextB~/\_ea\.ltextCin\.ltextC:/\_ea\.ltextVin\.ltextV:/}%
+   \.ltextCredef % \_def\.ltextC{} if one of \nochapbooks is processed
    \.brefL
 }
 \_def\.ltextBin #1~#2/{\_ifx^#1^\.prelinkB \_else #1\_immediateassignment\_def\.prelinkB{#1}\_fi/}
 \_def\.ltextCin #1:#2/{\_ifx^#1^\.prelinkC \_else #1\_immediateassignment\_def\.prelinkC{#1}\_fi:}
 \_def\.ltextVin #1:#2/{\_ifx^#1^\.prelinkV \_else #1\_immediateassignment\_def\.prelinkV{#1}\_fi}
-\_def\.ltextnCin #1:#2/{1:\_immediateassignment\_let\.ltextCin=\.ltextsCin}
-\_let\.ltextsCin=\.ltextCin
+\_let\.ltextCredef=\_empty
 
    \_doc
    \`\.prelinkB` is <book-mark> of last referenced book.
@@ -996,6 +997,7 @@
    \_cod
 
 \_def\<{\_let\.prelinkB=\.currbook \_let\.prelinkC=\.currchapnum \_let\.prelinkV=\.currversenum \.bref}
+\_def\.currchapnum{1}
 
    \_doc
    Macro \`\.brefL` recalculates \^`\.linkfspec` and \^`\.linktext` due to \^`\renum` data
@@ -2351,7 +2353,7 @@
 
    \_doc
    The `\cd!<name>` control sequence is set by \`\ccdlink` if the link to the
-   given concordance is needed. We need to set detination for such
+   given concordance is needed. We need to set destination for such
    concordance here.
    \_cod
 
@@ -2728,6 +2730,7 @@ end
 %%   optex -jobname opbible-techdoc '\docgen opbible'
 %% three times.
 
+2026-09-21 0.55 In \nochapbooks: links corrected
 2026-03-14 0.54 \ccdlink introduced
 2025-12-27 0.53 \.bibleinput: \_par inserted (bug fixed)
 2024-10-18 0.52 \makeLOF, \makeART introduced
